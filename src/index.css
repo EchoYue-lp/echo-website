@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #0a0a0a;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* ── Animations ─────────────────────────────────────────────── */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+/* ── Docs Markdown Styles ───────────────────────────────────── */
+
+.prose-docs {
+  color: #d4d4d8;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+
+.prose-docs img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.prose-docs pre code {
+  display: block;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 0.5rem;
+  color: #a1a1aa;
+}
+
+.prose-docs :not(pre) > code {
+  background: #27272a;
+  color: #93c5fd;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.8125rem;
+}
+
+.prose-docs table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  margin: 1rem 0;
+}
+
+.prose-docs th {
+  background: #18181b;
+  font-weight: 600;
+  color: #e4e4e7;
+  text-align: left;
+  padding: 0.625rem 1rem;
+  border-bottom: 1px solid #27272a;
+}
+
+.prose-docs td {
+  padding: 0.625rem 1rem;
+  border-bottom: 1px solid rgba(39, 39, 42, 0.5);
+  color: #d4d4d8;
+}
+
+.prose-docs tr:hover td {
+  background: rgba(39, 39, 42, 0.3);
+}
+
+.prose-docs blockquote {
+  border-left: 3px solid rgba(59, 130, 246, 0.4);
+  background: rgba(59, 130, 246, 0.05);
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.prose-docs blockquote p {
+  margin: 0.25rem 0;
+}
+
+.prose-docs ul,
+.prose-docs ol {
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.prose-docs li {
+  margin: 0.25rem 0;
+}
+
+.prose-docs li::marker {
+  color: #52525b;
+}
+
+.prose-docs hr {
+  border-color: #27272a;
+  margin: 2rem 0;
+}
+
+.prose-docs strong {
+  color: #fafafa;
+  font-weight: 600;
+}
+
+.prose-docs em {
+  color: #a1a1aa;
+}
+
+.prose-docs del {
+  color: #71717a;
+  text-decoration: line-through;
+}
+
+/* Scrollbar styling for docs */
+.prose-docs pre::-webkit-scrollbar,
+.prose-docs pre code::-webkit-scrollbar {
+  height: 6px;
+}
+
+.prose-docs pre::-webkit-scrollbar-track,
+.prose-docs pre code::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.prose-docs pre::-webkit-scrollbar-thumb,
+.prose-docs pre code::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border-radius: 3px;
+}
+
+.prose-docs pre::-webkit-scrollbar-thumb:hover,
+.prose-docs pre code::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
+}
