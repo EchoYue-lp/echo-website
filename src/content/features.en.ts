@@ -15,7 +15,7 @@ export const frameworkHeroEn = {
   },
   stats: [
     { value: "67+", label: "Built-in Tools" },
-    { value: "66", label: "Runnable Examples" },
+    { value: "70", label: "Runnable Examples" },
     { value: "40+", label: "Doc Topics" },
     { value: "8", label: "Crate Modules" },
   ],
@@ -118,35 +118,12 @@ export const comparisonEn = {
   ],
 };
 
-export const architectureEn = {
-  title: "Architecture Overview",
-  subtitle: "Modular design for scalability and maintainability",
-  components: [
-    {
-      layer: "Application Layer",
-      items: ["CLI Interface", "TUI (Terminal UI)", "GUI (Tauri Desktop)"],
-    },
-    {
-      layer: "Agent Layer",
-      items: ["ReAct Engine", "Planning System", "Tool Executor", "Memory Manager"],
-    },
-    {
-      layer: "Framework Layer",
-      items: ["Tool Registry (MCP/LSP/Web/Data/Git)", "MCP Client", "DAG Workflow Engine", "Multi-Agent Orchestrator", "Eval & Self-Improvement"],
-    },
-    {
-      layer: "Infrastructure",
-      items: ["tokio Runtime", "Rust Type System", "Async I/O", "Checkpoint Store"],
-    },
-  ],
-};
-
 // ── EchoCoWork (Product) content ────────────────────────────────
 
 export const productHeroEn = {
   title: "EchoCoWork",
   tagline: "Your AI Collaboration Partner",
-  subtitle: "A production-grade agent product built on the echo-agent framework, focused on four core scenarios: coding, data analysis, literature search, and academic paper writing, with human-in-the-loop interaction",
+  subtitle: "A production-grade agent product built on the echo-agent framework, focused on five core scenarios: coding, data analysis, literature search, academic paper writing, and medical research, with human-in-the-loop interaction",
   badges: ["Production Ready", "TUI + GUI", "Rust Powered", "Human-in-the-Loop"],
   cta: {
     primary: "Quick Start",
@@ -157,16 +134,16 @@ export const productHeroEn = {
     secondary: "https://github.com/EchoYue-lp/echo-agent-cli",
   },
   stats: [
-    { value: "4", label: "Core Scenarios" },
+    { value: "5", label: "Core Scenarios" },
     { value: "2", label: "Interaction Modes" },
-    { value: "6", label: "Built-in Themes" },
     { value: "67+", label: "Available Tools" },
+    { value: "12", label: "Product Features" },
   ],
 };
 
 export const echocoworkFeaturesEn = {
   title: "Product Features",
-  subtitle: "A professional agent built for developers, researchers, and data scientists across four core scenarios",
+  subtitle: "A professional agent built for developers, researchers, and data scientists across five core scenarios",
   features: [
     {
       icon: "🤝",
@@ -198,11 +175,41 @@ export const echocoworkFeaturesEn = {
       title: "Slash Command System",
       description: "/help, /mode, /model, /reset, /stats and more — quickly control agent behavior",
     },
+    {
+      icon: "🔌",
+      title: "MCP Protocol Integration",
+      description: "Model Context Protocol standard support — connect browsers, databases, GitHub, and other external tools to infinitely extend agent capabilities",
+    },
+    {
+      icon: "🧩",
+      title: "Plugin System",
+      description: "PluginRegistry manages plugin lifecycle, supports custom tools, skills, and hooks — community ecosystem continuously expanding",
+    },
+    {
+      icon: "⚡",
+      title: "Hooks Automation",
+      description: "Lifecycle hooks (SessionStart, ToolCall, TaskComplete) trigger automation scripts, webhooks, and notifications",
+    },
+    {
+      icon: "💬",
+      title: "IM Channel Integration",
+      description: "Built-in QQ Bot and Feishu (Webhook/Long Poll) channels — let agents directly participate in team collaboration",
+    },
+    {
+      icon: "🎯",
+      title: "Skills System",
+      description: "SkillsHub manages reusable skills with marketplace support, version control, and automatic dependency resolution — one-click install community skills",
+    },
+    {
+      icon: "🚀",
+      title: "Multi-Agent Orchestration",
+      description: "SubAgent system supports DAG task orchestration, parallel execution, and dependency management — complex tasks automatically decomposed and executed",
+    },
   ],
 };
 
 export const echocoworkUseCasesEn = {
-  title: "Four Core Scenarios",
+  title: "Five Core Scenarios",
   subtitle: "EchoCoWork focuses on these core capabilities, differentiated from Claude Code / Codex / Cursor",
   cases: [
     {
@@ -261,6 +268,20 @@ export const echocoworkUseCasesEn = {
       ],
       color: "from-purple-500 to-pink-500",
     },
+    {
+      icon: "🏥",
+      title: "Medical Research",
+      tagline: "PubMed, clinical trials, evidence-based medicine",
+      description: "A specialized agent for medical researchers, supporting PubMed literature search, clinical trial queries, PICO framework construction, GRADE evidence grading, and MeSH terminology matching.",
+      highlights: [
+        "PubMed literature search",
+        "ClinicalTrials.gov trial queries",
+        "Automatic PICO framework construction",
+        "GRADE evidence quality grading",
+        "MeSH terminology intelligent matching",
+      ],
+      color: "from-rose-500 to-red-500",
+    },
   ],
   quickStart: {
     title: "Quick Start",
@@ -284,18 +305,15 @@ export const footerEn = {
     framework: [
       { label: "Documentation", href: "https://github.com/EchoYue-lp/echo-agent/tree/main/docs" },
       { label: "Examples", href: "https://github.com/EchoYue-lp/echo-agent/tree/main/examples" },
-      { label: "API Reference", href: "https://github.com/EchoYue-lp/echo-agent/tree/main/docs/api" },
-      { label: "Changelog", href: "https://github.com/EchoYue-lp/echo-agent/blob/main/CHANGELOG.md" },
     ],
     product: [
-      { label: "Quick Start", href: "https://github.com/EchoYue-lp/echo-agent-cli/tree/main/docs" },
-      { label: "Configuration", href: "https://github.com/EchoYue-lp/echo-agent-cli/tree/main/docs/configuration" },
-      { label: "Architecture", href: "https://github.com/EchoYue-lp/echo-agent-cli/tree/main/docs/architecture" },
-      { label: "Use Cases", href: "https://github.com/EchoYue-lp/echo-agent-cli/tree/main/docs/use-cases" },
+      { label: "README", href: "https://github.com/EchoYue-lp/echo-agent-cli" },
+      { label: "Configuration", href: "https://github.com/EchoYue-lp/echo-agent-cli/blob/main/docs/configuration.md" },
+      { label: "Architecture", href: "https://github.com/EchoYue-lp/echo-agent-cli/blob/main/docs/architecture.md" },
     ],
     community: [
-      { label: "GitHub", href: "https://github.com/EchoYue-lp/echo-agent-cli" },
-      { label: "Contributing", href: "https://github.com/EchoYue-lp/echo-agent/blob/main/CONTRIBUTING.md" },
+      { label: "GitHub (Framework)", href: "https://github.com/EchoYue-lp/echo-agent" },
+      { label: "GitHub (Product)", href: "https://github.com/EchoYue-lp/echo-agent-cli" },
     ],
   },
   githubUrl: "https://github.com/EchoYue-lp/echo-agent-cli",

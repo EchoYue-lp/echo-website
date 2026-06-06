@@ -1,0 +1,312 @@
+# 记忆系统（Memory）
+
+## 是什么
+
+echo-agent 的记忆系统分为两个核心层次，分别解决不同粒度的"记住"问题：
+
+| 层次 | 接口 | 类比 | 解决的问题 |
+|------|------|------|-----------|
+| **短期记忆** | `Checkpointer` | 录音机 | 同一线程在进程重启后可恢复执行上下文 |
+| **长期记忆** | `Store` | 笔记本 | 跨会话保留领域知识和用户偏好 |
+
+这一设计直接对应 LangGraph 的 `Checkpointer`（短期）和 `Store`（长期）两层架构。
+
+---
+
+## 短期记忆：Checkpointer
+
+### 解决什么问题
+
+LLM 的上下文窗口在每次请求结束后就消失了。如果 Agent 在处理长任务时被中断，或者用户想在明天继续昨天的对话，没有 Checkpointer 就需要从头开始。
+
+Checkpointer 在每轮对话结束后自动将运行时线程状态保存到磁盘（或内存），下次使用同一 `session_id` 启动时自动恢复，实现**线程连续性**。
+
+### 工作原理
+
+```
+session_id: "user-123-chat-5"
+                │
+                ▼
+checkpoints.json:
+{
+  "user-123-chat-5": {
+    "session_id": "user-123-chat-5",
+    "messages": [
+      { "role": "system",    "content": "你是一个助手" },
+      { "role": "user",      "content": "帮我写一首诗" },
+      { "role": "assistant", "content": "..." },
+      { "role": "user",      "content": "改成七言绝句" }
+    ]
+  }
+}
+```
+
+### 使用方式
+
+```rust
+use echo_agent::prelude::*;
+
+// 方式一：通过 AgentConfig 自动管理（推荐）
+let config = AgentConfig::new("qwen3-max", "assistant", "你是一个助手")
+    .session_id("user-alice-thread-1")       // 线程 ID：用于 Checkpointer 恢复
+    .conversation_id("conv-alice-2026-001") // 可选：用于历史 transcript 投影
+    .checkpointer_path("./checkpoints.json"); // 持久化文件路径
+
+let mut agent = ReactAgent::new(config);
+// 首次运行：保存线程状态到文件
+// 再次运行（同 session_id）：自动恢复上次的线程状态
+let _ = agent.execute("你好").await?;
+
+// 方式二：手动操作 Checkpointer（用于审计、跨 Agent 读取等）
+let cp = FileCheckpointer::new("./checkpoints.json")?;
+
+// 读取某个会话的历史
+if let Some(checkpoint) = cp.get("user-alice-session-1").await? {
+    println!("历史消息数: {}", checkpoint.messages.len());
+}
+
+// 列出所有会话
+let sessions = cp.list_sessions().await?;
+println!("所有会话: {:?}", sessions);
+
+// 删除某个会话
+cp.delete_session("user-alice-session-1").await?;
+```
+
+---
+
+## 长期记忆：Store
+
+### 解决什么问题
+
+Checkpointer 保存的是运行时线程状态（消息流和执行连续性），但很多信息不应该以原始对话形式存储，而是需要以结构化方式持久保存，例如：
+- 用户偏好（"偏好古典音乐"）
+- 领域知识（"项目代号是 OMEGA"）
+- 任务成果（"分析结果：斐波那契前10项为..."）
+
+Store 提供 `namespace + key → JSON value` 的 KV 存储，并支持关键词搜索，用于积累和检索**跨会话的知识**。
+
+### Namespace 隔离
+
+Store 使用 namespace（字符串数组）对数据进行逻辑隔离：
+
+```
+store.json:
+├── ["math_agent", "memories"]   ← math_agent 的专属记忆
+├── ["writer_agent", "memories"] ← writer_agent 的专属记忆
+└── ["shared", "facts"]          ← 共享知识库
+```
+
+同一个物理文件，不同 namespace，数据完全不可互访（除非持有 Store 对象的代码显式跨 namespace 查询）。
+
+启用 `enable_memory=true` 时，Agent 会自动使用 `[agent_name, "memories"]` 作为命名空间。
+
+### 工作原理
+
+Agent 通过三个内置工具操作 Store（无需手动调用 API）：
+
+```
+LLM 决定记住某件事
+    │
+    └─► remember("斐波那契前10项: 1,1,2,3,5,8,13,21,34,55", importance=8)
+            │
+            └─► store.put(["agent_name", "memories"], uuid, {
+                    "content": "斐波那契前10项...",
+                    "importance": 8,
+                    "created_at": "2026-02-28T..."
+                })
+
+LLM 需要检索时
+    │
+    └─► recall("斐波那契")
+            │
+            └─► store.search(["agent_name", "memories"], "斐波那契", limit=5)
+                    → 关键词匹配（先精确匹配，再词频相关性评分）
+                    → 返回最相关的 5 条记忆
+```
+
+### 使用方式
+
+```rust
+use echo_agent::prelude::*;
+
+// 方式一：通过 AgentConfig 自动注册 remember/recall/forget 工具
+let config = AgentConfig::new("qwen3-max", "my_agent", "你是一个助手")
+    .enable_memory(true)
+    .memory_path("./store.json");
+
+let mut agent = ReactAgent::new(config);
+// LLM 可以自主调用 remember / recall / forget 工具
+
+// 方式二：直接操作 Store API（无需 Agent）
+let store = FileStore::new("./store.json")?;
+
+// 写入记忆
+store.put(
+    &["my_agent", "memories"],
+    "fact-001",
+    serde_json::json!({ "content": "用户偏好深色主题", "importance": 7 })
+).await?;
+
+// 关键词搜索
+let results = store.search(&["my_agent", "memories"], "主题", 5).await?;
+for item in results {
+    let content = item.value["content"].as_str().unwrap_or("");
+    println!("[score={:.2}] {}", item.score.unwrap_or(0.0), content);
+}
+
+// 精确获取
+let item = store.get(&["my_agent", "memories"], "fact-001").await?;
+
+// 删除
+store.delete(&["my_agent", "memories"], "fact-001").await?;
+
+// 列出所有 namespace
+let namespaces = store.list_namespaces(None).await?;
+```
+
+---
+
+## 两层记忆对比
+
+```
+用户第 1 天：
+  user: "我叫张三，喜欢古典音乐"
+  agent → remember("张三喜欢古典音乐")  ← 存入 Store（跨会话永久保存）
+  session 结束 → Checkpointer 保存线程状态
+
+第 2 天，同一线程继续：
+  Checkpointer 恢复：agent 知道昨天说了什么（"帮我写一首诗" 等历史消息）
+  user: "推荐一首曲子"
+  agent → recall("音乐偏好") → "张三喜欢古典音乐"
+  → 推荐巴赫的哥德堡变奏曲
+
+第 3 天，全新线程：
+  Checkpointer: 没有此 session_id → 空的消息历史（不知道第 1 天说了什么）
+  user: "推荐一首曲子"
+  agent → recall("音乐偏好") → "张三喜欢古典音乐"（Store 还在！）
+  → 仍然推荐古典音乐
+```
+
+---
+
+## 内存实现（测试用）
+
+```rust
+use echo_agent::prelude::*;
+
+// 内存版 Checkpointer（进程退出后数据丢失，适合测试）
+let cp = InMemoryCheckpointer::new();
+
+// 内存版 Store（适合测试）
+let store = InMemoryStore::new();
+```
+
+---
+
+## 上下文隔离
+
+每个 Agent 都有独立的 Store namespace 和 Checkpointer `session_id`：
+
+```
+主 Agent    session_id = "main-001"     namespace = ["main_agent", "memories"]
+SubAgent A  session_id = "sub-a-001"    namespace = ["sub_a", "memories"]
+SubAgent B  session_id = "sub-b-001"    namespace = ["sub_b", "memories"]
+```
+
+- SubAgent A 无法读取 SubAgent B 的记忆（不同 namespace）
+- SubAgent A 无法看到主 Agent 的线程状态（不同 session_id）
+- 主 Agent 持有 `Store` 和 `Checkpointer` 对象，可以显式跨 namespace / session 读取（用于审计）
+
+---
+
+## 历史投影
+
+`ConversationStore` 与 `Checkpointer` 是分开的：
+
+- `session_id`：运行时线程标识，只用于恢复 / 续接
+- `conversation_id`：产品层历史标识，只用于把 transcript/history 投影到 `ConversationStore`
+
+如果启用了 `ConversationStore`，应显式设置 `conversation_id`。它已经不再回退使用 `session_id`。
+
+对应示例：`examples/demo14_memory_isolation.rs`
+
+---
+
+## 分层记忆系统（TieredMemory）
+
+> **新增于 v0.2.1。** 自动管理记忆的存储、检索和淘汰。
+
+`TieredMemory` 实现四层记忆架构，自动管理记忆条目在不同层级之间的迁移：
+
+### 四层架构
+
+| 层 | 名称 | 特点 | 存储位置 |
+|----|------|------|---------|
+| **Working** | 工作层 | 当前对话轮次的活跃消息 | 上下文窗口 |
+| **ShortTerm** | 短期层 | 最近的结构化记忆条目 | 内存（`Vec<MemoryEntry>`） |
+| **LongTerm** | 长期层 | 归档记忆，可按需搜索 | 持久化存储（`Store`） |
+| **Core** | 核心层 | 永久记忆，注入系统提示词 | 内存（`CoreMemory`） |
+
+### 配置
+
+```rust
+use echo_core::memory::tiered::TieredMemory;
+
+let memory = TieredMemory::new(
+    5,     // max_short_term: 短期层最大条目数
+    2000,  // max_core_chars: 核心层字符上限
+)
+.with_overflow_bound(50)   // 溢出队列上限
+.with_store(store);        // 可选：附加持久化存储（LongTerm 层）
+```
+
+### 自动淘汰
+
+当 `short_term` 超过 `max_short_term` 时，**importance 最低**的条目被移到 `overflow_queue`（按重要性淘汰，非按时间）。溢出队列满时：
+- 有 `Store`：等待 `flush_overflow()` 写入长期层
+- 无 `Store`：淘汰重要性最低的条目
+
+### 使用示例
+
+```rust
+use echo_core::memory::tiered::TieredMemory;
+use echo_core::memory::MemoryEntry;
+
+let mut memory = TieredMemory::new(3, 2000).with_overflow_bound(10);
+
+// 添加记忆（简单方式）
+memory.add_short_term_simple("用户喜欢简洁的代码风格".into());
+memory.add_short_term_simple("项目使用 Rust + tokio".into());
+
+// 添加结构化记忆
+memory.add_short_term(MemoryEntry::new(
+    "用户正在开发 Agent 框架".into(),
+    7.5,                          // importance (1.0-10.0)
+    vec!["project".into()],       // tags
+    "conversation".into(),        // source
+));
+
+// 检索相关记忆（关键词匹配）
+let results = memory.recall("Rust 项目", 3);
+println!("相关记忆: {:?}", results);
+
+// 构建上下文注入（Core + ShortTerm，按重要性排序）
+if let Some(ctx) = memory.build_context_injection() {
+    println!("上下文注入: {}", ctx);
+}
+```
+
+### 与 Agent 集成
+
+`TieredMemory` 目前与 `AgentConfig` 解耦，通过独立构造后与 Agent 系统配合使用：
+
+```rust
+use echo_core::memory::tiered::TieredMemory;
+
+let mut memory = TieredMemory::new(5, 2000)
+    .with_store(store);
+// 通过 memory subsystem 或自定义逻辑与 Agent 集成
+```
+
+详见 [demo63_tiered_memory.rs](../examples/demo63_tiered_memory.rs)。

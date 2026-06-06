@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, useParams } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import FeatureGrid from './components/FeatureGrid';
@@ -25,7 +26,6 @@ import {
 
 type Language = 'zh' | 'en';
 type Product = 'echo-agent' | 'echocowork';
-type View = 'home' | 'docs';
 
 const pageTitles: Record<string, Record<Language, string>> = {
   'echo-agent-home': {
@@ -48,8 +48,8 @@ const pageDescriptions: Record<string, Record<Language, string>> = {
     en: 'A production-grade Rust AI Agent development framework with ReAct engine, DAG task orchestration, self-improvement loop, 67+ built-in tools (MCP/LSP/Web/Data/Git), and multi-agent orchestration.',
   },
   'echocowork-home': {
-    zh: '基于 echo-agent 构建的生产级 Agent 产品，专注于编码、数据分析、文献检索和学术论文写作四大核心场景，支持 Human-in-the-Loop 交互。',
-    en: 'A production-grade agent product built on echo-agent, focused on four core scenarios: coding, data analysis, literature search, and academic paper writing, with human-in-the-loop interaction.',
+    zh: '基于 echo-agent 构建的生产级 Agent 产品，专注于编码、数据分析、文献检索、学术论文写作和医学研究五大核心场景，支持 Human-in-the-Loop 交互。',
+    en: 'A production-grade agent product built on echo-agent, focused on five core scenarios: coding, data analysis, literature search, academic paper writing, and medical research, with human-in-the-loop interaction.',
   },
   'docs': {
     zh: 'Echo Agent 完整文档 — 快速开始、核心概念、框架功能、工具集成和 API 参考。',
@@ -57,101 +57,152 @@ const pageDescriptions: Record<string, Record<Language, string>> = {
   },
 };
 
-function App() {
-  const [language, setLanguage] = useState<Language>('zh');
-  const [product, setProduct] = useState<Product>('echo-agent');
-  const [view, setView] = useState<View>('home');
+// ── Page Components ──────────────────────────────────────────────────────────
 
-  // Parse URL hash for initial docs slug
-  useEffect(() => {
-    if (window.location.hash === '#docs') {
-      setView('docs');
-    }
-  }, []);
-
-  const toggleLanguage = () => setLanguage(l => l === 'zh' ? 'en' : 'zh');
+function HomePage({ language, product }: {
+  language: Language;
+  product: Product;
+}) {
   const isZh = language === 'zh';
+  const frameworkHero = isZh ? frameworkHeroZh : frameworkHeroEn;
+  const productHero = isZh ? productHeroZh : productHeroEn;
 
-  // Dynamic document title and meta description
+  // Update meta tags
   useEffect(() => {
-    const key = view === 'docs' ? 'docs' : `${product}-home`;
+    const key = `${product}-home`;
     document.title = pageTitles[key]?.[language] ?? 'Echo';
     const descMeta = document.querySelector('meta[name="description"]');
     if (descMeta) {
       descMeta.setAttribute('content', pageDescriptions[key]?.[language] ?? '');
     }
     document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
-  }, [product, language, view]);
+  }, [product, language]);
 
-  // Select hero data based on product AND language
-  const frameworkHero = isZh ? frameworkHeroZh : frameworkHeroEn;
-  const productHero = isZh ? productHeroZh : productHeroEn;
+  return (
+    <main>
+      <Hero
+        language={language}
+        product={product}
+        frameworkHero={frameworkHero}
+        productHero={productHero}
+      />
+      {product === 'echo-agent' ? (
+        <>
+          <FeatureGrid language={language} />
+          <Architecture language={language} />
+          <ComparisonTable
+            title={isZh ? comparisonZh.title : comparisonEn.title}
+            subtitle={isZh ? comparisonZh.subtitle : comparisonEn.subtitle}
+            headers={isZh ? comparisonZh.headers : comparisonEn.headers}
+            rows={isZh ? comparisonZh.rows : comparisonEn.rows}
+            advantages={isZh ? comparisonZh.advantages : comparisonEn.advantages}
+          />
+        </>
+      ) : (
+        <>
+          <EchoCoWorkFeatures
+            title={isZh ? echocoworkFeaturesZh.title : echocoworkFeaturesEn.title}
+            subtitle={isZh ? echocoworkFeaturesZh.subtitle : echocoworkFeaturesEn.subtitle}
+            features={isZh ? echocoworkFeaturesZh.features : echocoworkFeaturesEn.features}
+          />
+          <EchoCoWorkUseCases
+            title={isZh ? echocoworkUseCasesZh.title : echocoworkUseCasesEn.title}
+            subtitle={isZh ? echocoworkUseCasesZh.subtitle : echocoworkUseCasesEn.subtitle}
+            cases={isZh ? echocoworkUseCasesZh.cases : echocoworkUseCasesEn.cases}
+            quickStart={isZh ? echocoworkUseCasesZh.quickStart : echocoworkUseCasesEn.quickStart}
+          />
+        </>
+      )}
+    </main>
+  );
+}
 
-  const handleSwitchView = (v: View) => {
-    setView(v);
+function DocsRoute({ language }: { language: Language }) {
+  const { slug } = useParams<{ slug?: string }>();
+
+  useEffect(() => {
+    document.title = pageTitles['docs']?.[language] ?? 'Docs — Echo';
+    const descMeta = document.querySelector('meta[name="description"]');
+    if (descMeta) {
+      descMeta.setAttribute('content', pageDescriptions['docs']?.[language] ?? '');
+    }
+    document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
+  }, [language]);
+
+  return <DocsPage language={language} initialSlug={slug} />;
+}
+
+// ── App Shell ────────────────────────────────────────────────────────────────
+
+function AppShell() {
+  const [language, setLanguage] = useState<Language>('zh');
+  const [product, setProduct] = useState<Product>('echo-agent');
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const toggleLanguage = () => setLanguage(l => l === 'zh' ? 'en' : 'zh');
+
+  const isDocsView = location.pathname.startsWith('/docs');
+  const isEchoCoWork = location.pathname.startsWith('/echocowork');
+
+  // Sync product state with URL
+  useEffect(() => {
+    if (isEchoCoWork) {
+      setProduct('echocowork');
+    } else if (!isDocsView) {
+      setProduct('echo-agent');
+    }
+  }, [isEchoCoWork, isDocsView]);
+
+  const handleSwitchView = (view: 'home' | 'docs') => {
+    if (view === 'docs') {
+      navigate('/docs');
+    } else {
+      navigate(product === 'echocowork' ? '/echocowork' : '/');
+    }
     window.scrollTo(0, 0);
   };
+
+  const handleSwitchProduct = (p: Product) => {
+    setProduct(p);
+    if (isDocsView) {
+      // Stay on docs but could switch to product-specific docs
+    } else {
+      navigate(p === 'echocowork' ? '/echocowork' : '/');
+    }
+    window.scrollTo(0, 0);
+  };
+
+  const isZh = language === 'zh';
+  const footerProduct = isEchoCoWork ? 'echocowork' : 'echo-agent';
 
   return (
     <div className="min-h-screen bg-zinc-950">
       <Navbar
         language={language}
         product={product}
-        view={view}
+        view={isDocsView ? 'docs' : 'home'}
         onToggleLanguage={toggleLanguage}
-        onSwitchProduct={setProduct}
+        onSwitchProduct={handleSwitchProduct}
         onSwitchView={handleSwitchView}
       />
 
-      {view === 'docs' ? (
-        <DocsPage language={language} />
-      ) : (
-        <main>
-          {product === 'echo-agent' ? (
-            <>
-              <Hero
-                language={language}
-                product={product}
-                frameworkHero={frameworkHero}
-                productHero={productHero}
-              />
-              <FeatureGrid language={language} />
-              <Architecture language={language} />
-              <ComparisonTable
-                title={isZh ? comparisonZh.title : comparisonEn.title}
-                subtitle={isZh ? comparisonZh.subtitle : comparisonEn.subtitle}
-                headers={isZh ? comparisonZh.headers : comparisonEn.headers}
-                rows={isZh ? comparisonZh.rows : comparisonEn.rows}
-                advantages={isZh ? comparisonZh.advantages : comparisonEn.advantages}
-              />
-            </>
-          ) : (
-            <>
-              <Hero
-                language={language}
-                product={product}
-                frameworkHero={frameworkHero}
-                productHero={productHero}
-              />
-              <EchoCoWorkFeatures
-                title={isZh ? echocoworkFeaturesZh.title : echocoworkFeaturesEn.title}
-                subtitle={isZh ? echocoworkFeaturesZh.subtitle : echocoworkFeaturesEn.subtitle}
-                features={isZh ? echocoworkFeaturesZh.features : echocoworkFeaturesEn.features}
-              />
-              <EchoCoWorkUseCases
-                title={isZh ? echocoworkUseCasesZh.title : echocoworkUseCasesEn.title}
-                subtitle={isZh ? echocoworkUseCasesZh.subtitle : echocoworkUseCasesEn.subtitle}
-                cases={isZh ? echocoworkUseCasesZh.cases : echocoworkUseCasesEn.cases}
-                quickStart={isZh ? echocoworkUseCasesZh.quickStart : echocoworkUseCasesEn.quickStart}
-              />
-            </>
-          )}
-        </main>
-      )}
+      <Routes>
+        <Route path="/" element={
+          <HomePage language={language} product={product} />
+        } />
+        <Route path="/echocowork" element={
+          <HomePage language={language} product="echocowork" />
+        } />
+        <Route path="/docs" element={<DocsRoute language={language} />} />
+        <Route path="/docs/:slug" element={<DocsRoute language={language} />} />
+        <Route path="/echocowork/docs" element={<DocsRoute language={language} />} />
+        <Route path="/echocowork/docs/:slug" element={<DocsRoute language={language} />} />
+      </Routes>
 
-      {view !== 'docs' && (
+      {!isDocsView && (
         <Footer
-          product={product}
+          product={footerProduct}
           description={isZh ? footerZh.description : footerEn.description}
           links={isZh ? footerZh.links : footerEn.links}
           items={isZh ? footerZh.items : footerEn.items}
@@ -160,6 +211,14 @@ function App() {
         />
       )}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppShell />
+    </BrowserRouter>
   );
 }
 

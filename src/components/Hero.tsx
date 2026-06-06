@@ -20,7 +20,7 @@ interface HeroProps {
   productHero: HeroData;
 }
 
-export default function Hero({ product, frameworkHero, productHero }: HeroProps) {
+export default function Hero({ language, product, frameworkHero, productHero }: HeroProps) {
   const data = product === 'echo-agent' ? frameworkHero : productHero;
 
   const gradientClass = product === 'echo-agent'
@@ -98,11 +98,23 @@ export default function Hero({ product, frameworkHero, productHero }: HeroProps)
               {data.cta.secondary}
             </a>
           </div>
+
+          {/* Stats */}
+          <div className="flex items-center justify-center lg:justify-start gap-8 animate-fade-in" style={{ animationDelay: '400ms' }}>
+            {data.stats.map((stat) => (
+              <div key={stat.label} className="text-center">
+                <div className={`text-2xl md:text-3xl font-bold bg-gradient-to-r ${gradientClass} bg-clip-text text-transparent`}>
+                  {stat.value}
+                </div>
+                <div className="text-xs md:text-sm text-zinc-500 mt-1">{stat.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Right: Terminal */}
         <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
-          <TerminalAnimation product={product} />
+          <TerminalAnimation product={product} language={language} />
         </div>
       </div>
 

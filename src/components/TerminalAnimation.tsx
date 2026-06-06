@@ -9,7 +9,7 @@ interface TerminalLine {
 const frameworkScenes: TerminalLine[][] = [
   // Scene 1: Code review
   [
-    { type: 'command', text: '$ ecw "review src/auth.rs for security issues"' },
+    { type: 'command', text: '$ echo-agent "review src/auth.rs for security issues"' },
     { type: 'think', text: '⟡ Reading src/auth.rs...' },
     { type: 'tool', text: '🔧 read_file("src/auth.rs") → 142 lines' },
     { type: 'think', text: '⟡ Analyzing authentication flow...' },
@@ -20,7 +20,7 @@ const frameworkScenes: TerminalLine[][] = [
   ],
   // Scene 2: Data analysis
   [
-    { type: 'command', text: '$ ecw "analyze sales_2024.csv"' },
+    { type: 'command', text: '$ echo-agent "analyze sales_2024.csv"' },
     { type: 'tool', text: '🔧 read_file("sales_2024.csv") → 15,832 rows' },
     { type: 'tool', text: '🔧 profile_data() → 12 columns detected' },
     { type: 'info', text: '  Revenue: ¥2.4M | Growth: +23% YoY' },
@@ -30,7 +30,7 @@ const frameworkScenes: TerminalLine[][] = [
   ],
   // Scene 3: Build project
   [
-    { type: 'command', text: '$ ecw "create a REST API with Rust + Axum"' },
+    { type: 'command', text: '$ echo-agent "create a REST API with Rust + Axum"' },
     { type: 'think', text: '⟡ Planning project structure...' },
     { type: 'tool', text: '🔧 write_file("Cargo.toml")' },
     { type: 'tool', text: '🔧 write_file("src/main.rs")' },
@@ -41,7 +41,7 @@ const frameworkScenes: TerminalLine[][] = [
   ],
 ];
 
-const echocoworkScenes: TerminalLine[][] = [
+const echocoworkScenesZh: TerminalLine[][] = [
   // Scene 1: TUI interaction
   [
     { type: 'command', text: '> 帮我重构这个函数，提高可读性' },
@@ -76,12 +76,50 @@ const echocoworkScenes: TerminalLine[][] = [
   ],
 ];
 
+const echocoworkScenesEn: TerminalLine[][] = [
+  // Scene 1: TUI interaction
+  [
+    { type: 'command', text: '> Refactor this function for better readability' },
+    { type: 'think', text: '⟡ Analyzing process_data() function...' },
+    { type: 'tool', text: '📖 read_file("src/processor.rs")' },
+    { type: 'think', text: '⟡ Found 3 optimization points: deep nesting, unclear naming, missing error handling' },
+    { type: 'tool', text: '✏️ edit_file → extract validate_input()' },
+    { type: 'tool', text: '✏️ edit_file → rename data → records' },
+    { type: 'tool', text: '✏️ edit_file → add Result<T> return type' },
+    { type: 'success', text: '✓ Refactored — readability score 6.2 → 8.7' },
+  ],
+  // Scene 2: Research mode
+  [
+    { type: 'command', text: '> Search for latest LLM Agent papers from 2024' },
+    { type: 'tool', text: '🔍 arxiv_search("LLM Agent", 2024)' },
+    { type: 'info', text: '  📄 "Toolformer: Language Models as Tool Users"' },
+    { type: 'info', text: '  📄 "Voyager: An Open-Ended Embodied Agent"' },
+    { type: 'info', text: '  📄 "AutoGPT: An Autonomous Agent Framework"' },
+    { type: 'tool', text: '🔍 semantic_scholar_citations() → sorted' },
+    { type: 'tool', text: '📄 pdf_fetch(top_3) → downloaded' },
+    { type: 'success', text: '✓ Saved to research_notes.md' },
+  ],
+  // Scene 3: Data mode
+  [
+    { type: 'command', text: '> Analyze sales data trends in this Excel' },
+    { type: 'tool', text: '📊 read_excel("sales_q4.xlsx") → 3 sheets' },
+    { type: 'tool', text: '📊 descriptive_stats() → generated' },
+    { type: 'info', text: '  Q4 Revenue: ¥12.47M  |  MoM +18.3%' },
+    { type: 'info', text: '  Top product: Series A (42% share)' },
+    { type: 'tool', text: '📊 generate_chart("trend.png")' },
+    { type: 'success', text: '✓ Report saved → sales_report.md' },
+  ],
+];
+
 interface TerminalAnimationProps {
   product: 'echo-agent' | 'echocowork';
+  language?: 'zh' | 'en';
 }
 
-export default function TerminalAnimation({ product }: TerminalAnimationProps) {
-  const scenes = product === 'echo-agent' ? frameworkScenes : echocoworkScenes;
+export default function TerminalAnimation({ product, language = 'zh' }: TerminalAnimationProps) {
+  const scenes = product === 'echo-agent'
+    ? frameworkScenes
+    : (language === 'en' ? echocoworkScenesEn : echocoworkScenesZh);
   const [sceneIndex, setSceneIndex] = useState(0);
   const [lineIndex, setLineIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);

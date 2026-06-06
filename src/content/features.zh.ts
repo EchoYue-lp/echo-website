@@ -15,7 +15,7 @@ export const frameworkHeroZh = {
   },
   stats: [
     { value: "67+", label: "内置工具" },
-    { value: "66", label: "可运行示例" },
+    { value: "70", label: "可运行示例" },
     { value: "40+", label: "文档主题" },
     { value: "8", label: "Crate 模块" },
   ],
@@ -118,35 +118,12 @@ export const comparisonZh = {
   ],
 };
 
-export const architectureZh = {
-  title: "架构概览",
-  subtitle: "模块化设计，可扩展且易维护",
-  components: [
-    {
-      layer: "应用层",
-      items: ["CLI 接口", "TUI（终端界面）", "GUI（Tauri 桌面）"],
-    },
-    {
-      layer: "Agent 层",
-      items: ["ReAct 引擎", "规划系统", "工具执行器", "记忆管理器"],
-    },
-    {
-      layer: "框架层",
-      items: ["工具注册表（MCP/LSP/Web/Data/Git）", "MCP 客户端", "DAG 工作流引擎", "多 Agent 编排器", "评估与自检改进化"],
-    },
-    {
-      layer: "基础设施",
-      items: ["tokio 运行时", "Rust 类型系统", "异步 I/O", "检查点存储"],
-    },
-  ],
-};
-
 // ── EchoCoWork (产品) 内容 ──────────────────────────────────────
 
 export const productHeroZh = {
   title: "EchoCoWork",
   tagline: "你的 AI 协作伙伴",
-  subtitle: "基于 echo-agent 框架构建的生产级 Agent 产品，专注于编码、数据分析、文献检索和学术论文写作四大核心场景，支持人在回路交互",
+  subtitle: "基于 echo-agent 框架构建的生产级 Agent 产品，专注于编码、数据分析、文献检索、学术论文写作和医学研究五大核心场景，支持人在回路交互",
   badges: ["生产就绪", "TUI + GUI", "Rust 驱动", "Human-in-the-Loop"],
   cta: {
     primary: "快速开始",
@@ -157,16 +134,16 @@ export const productHeroZh = {
     secondary: "https://github.com/EchoYue-lp/echo-agent-cli",
   },
   stats: [
-    { value: "4", label: "核心场景" },
+    { value: "5", label: "核心场景" },
     { value: "2", label: "交互方式" },
-    { value: "6", label: "内置主题" },
     { value: "67+", label: "可用工具" },
+    { value: "12", label: "产品特性" },
   ],
 };
 
 export const echocoworkFeaturesZh = {
   title: "产品特性",
-  subtitle: "为开发者、研究人员和数据科学家打造的专业 Agent，支持四大核心场景",
+  subtitle: "为开发者、研究人员和数据科学家打造的专业 Agent，支持五大核心场景",
   features: [
     {
       icon: "🤝",
@@ -198,11 +175,41 @@ export const echocoworkFeaturesZh = {
       title: "Slash 命令系统",
       description: "/help、/mode、/model、/reset、/stats 等丰富命令，快速操控 Agent 行为",
     },
+    {
+      icon: "🔌",
+      title: "MCP 协议集成",
+      description: "Model Context Protocol 标准支持，连接浏览器、数据库、GitHub 等外部工具，无限扩展 Agent 能力边界",
+    },
+    {
+      icon: "🧩",
+      title: "插件系统",
+      description: "PluginRegistry 管理插件生命周期，支持自定义工具、技能、Hooks，社区生态持续扩展",
+    },
+    {
+      icon: "⚡",
+      title: "Hooks 自动化",
+      description: "生命周期钩子（SessionStart、ToolCall、TaskComplete），触发自动化脚本、Webhook、通知",
+    },
+    {
+      icon: "💬",
+      title: "IM 频道集成",
+      description: "内置 QQ Bot、飞书（Webhook/Long Poll）通道，让 Agent 直接参与团队协作对话",
+    },
+    {
+      icon: "🎯",
+      title: "技能系统",
+      description: "SkillsHub 管理可复用技能，支持技能市场、版本控制、自动依赖解析，一键安装社区技能",
+    },
+    {
+      icon: "🚀",
+      title: "多 Agent 编排",
+      description: "SubAgent 系统支持 DAG 任务编排、并行执行、依赖管理，复杂任务自动分解执行",
+    },
   ],
 };
 
 export const echocoworkUseCasesZh = {
-  title: "四大核心场景",
+  title: "五大核心场景",
   subtitle: "EchoCoWork 专注于以下核心能力，区别于 Claude Code / Codex / Cursor",
   cases: [
     {
@@ -261,6 +268,20 @@ export const echocoworkUseCasesZh = {
       ],
       color: "from-purple-500 to-pink-500",
     },
+    {
+      icon: "🏥",
+      title: "医学研究",
+      tagline: "PubMed、临床试验、循证医学",
+      description: "面向医学研究人员的专业 Agent，支持 PubMed 文献检索、临床试验查询、PICO 框架构建、GRADE 证据分级和 MeSH 术语匹配。",
+      highlights: [
+        "PubMed 文献检索",
+        "ClinicalTrials.gov 临床试验查询",
+        "PICO 框架自动构建",
+        "GRADE 证据质量分级",
+        "MeSH 术语智能匹配",
+      ],
+      color: "from-rose-500 to-red-500",
+    },
   ],
   quickStart: {
     title: "快速开始",
@@ -284,18 +305,15 @@ export const footerZh = {
     framework: [
       { label: "文档", href: "https://github.com/EchoYue-lp/echo-agent/tree/main/docs/zh" },
       { label: "示例", href: "https://github.com/EchoYue-lp/echo-agent/tree/main/examples" },
-      { label: "API 参考", href: "https://github.com/EchoYue-lp/echo-agent/tree/main/docs/zh/api" },
-      { label: "更新日志", href: "https://github.com/EchoYue-lp/echo-agent/blob/main/CHANGELOG.md" },
     ],
     product: [
-      { label: "快速开始", href: "https://github.com/EchoYue-lp/echo-agent-cli/tree/main/docs" },
-      { label: "配置指南", href: "https://github.com/EchoYue-lp/echo-agent-cli/tree/main/docs/configuration" },
-      { label: "架构说明", href: "https://github.com/EchoYue-lp/echo-agent-cli/tree/main/docs/architecture" },
-      { label: "使用场景", href: "https://github.com/EchoYue-lp/echo-agent-cli/tree/main/docs/use-cases" },
+      { label: "README", href: "https://github.com/EchoYue-lp/echo-agent-cli" },
+      { label: "配置指南", href: "https://github.com/EchoYue-lp/echo-agent-cli/blob/main/docs/configuration.md" },
+      { label: "架构说明", href: "https://github.com/EchoYue-lp/echo-agent-cli/blob/main/docs/architecture.md" },
     ],
     community: [
-      { label: "GitHub", href: "https://github.com/EchoYue-lp/echo-agent-cli" },
-      { label: "贡献", href: "https://github.com/EchoYue-lp/echo-agent/blob/main/CONTRIBUTING.md" },
+      { label: "GitHub (框架)", href: "https://github.com/EchoYue-lp/echo-agent" },
+      { label: "GitHub (产品)", href: "https://github.com/EchoYue-lp/echo-agent-cli" },
     ],
   },
   githubUrl: "https://github.com/EchoYue-lp/echo-agent-cli",

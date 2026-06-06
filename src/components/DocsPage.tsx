@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DocsSidebar from './DocsSidebar';
@@ -13,6 +14,27 @@ interface DocsPageProps {
 export default function DocsPage({ language, initialSlug }: DocsPageProps) {
   const [activeSlug, setActiveSlug] = useState(initialSlug ?? getDefaultSlug());
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Sync activeSlug when URL param changes
+  useEffect(() => {
+    if (initialSlug) {
+      setActiveSlug(initialSlug);
+    }
+  }, [initialSlug]);
+
+  // Navigate to doc and update URL
+  const handleNavigate = useCallback((slug: string) => {
+    setActiveSlug(slug);
+    // Determine base path from current location
+    const basePath = location.pathname.startsWith('/echocowork/docs')
+      ? '/echocowork/docs'
+      : '/docs';
+    navigate(`${basePath}/${slug}`);
+    setSidebarOpen(false);
+    window.scrollTo(0, 0);
+  }, [navigate, location.pathname]);
 
   const doc = useMemo(() => findDocBySlug(activeSlug), [activeSlug]);
   const content = useMemo(() => {
@@ -38,7 +60,7 @@ export default function DocsPage({ language, initialSlug }: DocsPageProps) {
       <DocsSidebar
         language={language}
         activeSlug={activeSlug}
-        onNavigate={setActiveSlug}
+        onNavigate={handleNavigate}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />

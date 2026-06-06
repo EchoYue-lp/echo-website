@@ -9,69 +9,97 @@ interface ArchitectureProps {
 const data = {
   zh: {
     title: '架构概览',
-    subtitle: '模块化设计，可扩展且易维护',
+    subtitle: '8 个 Crate 组成的分层架构，模块化设计可扩展且易维护',
     layers: [
       {
-        id: 'app',
-        name: '应用层',
-        items: ['CLI 接口', 'TUI 终端', 'GUI 桌面'],
-        color: '#3b82f6',
-        description: '用户直接交互的界面层，支持终端、桌面两种模式',
-      },
-      {
         id: 'agent',
-        name: 'Agent 层',
-        items: ['ReAct 引擎', '规划系统', '工具执行器', '记忆管理'],
+        name: 'Agent 层 (echo-agents)',
+        items: ['ReAct 引擎', '规划系统', 'SubAgent 调度', '上下文管理'],
         color: '#06b6d4',
         description: '核心智能层 — 推理、决策、执行、记忆的完整循环',
       },
       {
-        id: 'framework',
-        name: '框架层',
-        items: ['工具注册表（MCP/LSP/Web/Data/Git）', 'MCP 客户端', 'DAG 工作流引擎', '多 Agent 编排', '评估与自检改进化'],
-        color: '#8b5cf6',
-        description: '基础设施层 — 提供 Agent 所需的所有能力原语',
+        id: 'execution',
+        name: '执行层 (echo-execution)',
+        items: ['工具注册表', '技能系统', 'Hook 系统', '沙箱 (Docker/K8s)', '风险分类'],
+        color: '#3b82f6',
+        description: '工具执行引擎 — 注册、调度、安全隔离、生命周期管理',
       },
       {
-        id: 'infra',
-        name: '基础设施',
-        items: ['tokio 运行时', '类型系统', '异步 I/O', '检查点存储'],
+        id: 'integration',
+        name: '集成层 (echo-integration)',
+        items: ['LLM 提供商 (OpenAI/Anthropic/Gemini/Ollama)', 'MCP 客户端', 'LSP 客户端', 'IM 频道 (飞书/QQ)'],
+        color: '#8b5cf6',
+        description: '外部系统集成 — LLM、协议、语言服务、即时通讯',
+      },
+      {
+        id: 'orchestration',
+        name: '编排层 (echo-orchestration)',
+        items: ['DAG 工作流引擎', '任务调度器', '进度跟踪', '检查点存储', '后台任务'],
+        color: '#f59e0b',
+        description: '复杂任务编排 — DAG 依赖、并行调度、断点恢复、长时间运行',
+      },
+      {
+        id: 'core',
+        name: '核心层 (echo-core)',
+        items: ['Trait 定义 (Agent/Tool/Store/Plugin)', '类型系统', '错误处理', '内存存储抽象'],
         color: '#ec4899',
-        description: 'Rust 提供的零成本抽象 — 安全、并发、高性能',
+        description: '抽象基础 — 所有 trait 和类型的定义，零实现依赖',
+      },
+      {
+        id: 'tools',
+        name: '工具层 (echo-tools)',
+        items: ['文件操作', 'Shell/Git', 'Web 搜索/抓取', '数据 (Excel/PDF/Chart)', '研究 (arXiv/PubMed)'],
+        color: '#10b981',
+        description: '67+ 内置工具实现 — 开箱即用的能力集合',
       },
     ],
   },
   en: {
     title: 'Architecture Overview',
-    subtitle: 'Modular design for scalability and maintainability',
+    subtitle: '8-crate layered architecture — modular, extensible, and maintainable',
     layers: [
       {
-        id: 'app',
-        name: 'Application Layer',
-        items: ['CLI Interface', 'TUI Terminal', 'GUI Desktop'],
-        color: '#3b82f6',
-        description: 'The user-facing interface layer with terminal and desktop modes',
-      },
-      {
         id: 'agent',
-        name: 'Agent Layer',
-        items: ['ReAct Engine', 'Planning System', 'Tool Executor', 'Memory Manager'],
+        name: 'Agent Layer (echo-agents)',
+        items: ['ReAct Engine', 'Planning System', 'SubAgent Dispatch', 'Context Manager'],
         color: '#06b6d4',
         description: 'Core intelligence — the complete loop of reasoning, decision, execution, and memory',
       },
       {
-        id: 'framework',
-        name: 'Framework Layer',
-        items: ['Tool Registry (MCP/LSP/Web/Data/Git)', 'MCP Client', 'DAG Workflow Engine', 'Multi-Agent Orchestrator', 'Eval & Self-Improvement'],
-        color: '#8b5cf6',
-        description: 'Capability primitives — everything an agent needs to operate',
+        id: 'execution',
+        name: 'Execution Layer (echo-execution)',
+        items: ['Tool Registry', 'Skill System', 'Hook System', 'Sandbox (Docker/K8s)', 'Risk Classification'],
+        color: '#3b82f6',
+        description: 'Tool execution engine — registration, scheduling, safety isolation, lifecycle management',
       },
       {
-        id: 'infra',
-        name: 'Infrastructure',
-        items: ['tokio Runtime', 'Type System', 'Async I/O', 'Checkpoint Store'],
+        id: 'integration',
+        name: 'Integration Layer (echo-integration)',
+        items: ['LLM Providers (OpenAI/Anthropic/Gemini/Ollama)', 'MCP Client', 'LSP Client', 'IM Channels (Feishu/QQ)'],
+        color: '#8b5cf6',
+        description: 'External system integration — LLMs, protocols, language services, messaging',
+      },
+      {
+        id: 'orchestration',
+        name: 'Orchestration Layer (echo-orchestration)',
+        items: ['DAG Workflow Engine', 'Task Scheduler', 'Progress Tracking', 'Checkpoint Store', 'Background Tasks'],
+        color: '#f59e0b',
+        description: 'Complex task orchestration — DAG dependencies, parallel scheduling, checkpoint/resume, long-running support',
+      },
+      {
+        id: 'core',
+        name: 'Core Layer (echo-core)',
+        items: ['Trait Definitions (Agent/Tool/Store/Plugin)', 'Type System', 'Error Handling', 'Memory Store Abstractions'],
         color: '#ec4899',
-        description: 'Zero-cost Rust abstractions — safety, concurrency, and performance',
+        description: 'Abstract foundation — all trait and type definitions with zero implementation dependencies',
+      },
+      {
+        id: 'tools',
+        name: 'Tools Layer (echo-tools)',
+        items: ['File Operations', 'Shell/Git', 'Web Search/Fetch', 'Data (Excel/PDF/Chart)', 'Research (arXiv/PubMed)'],
+        color: '#10b981',
+        description: '67+ built-in tool implementations — ready-to-use capability set',
       },
     ],
   },
@@ -82,19 +110,12 @@ export default function Architecture({ language }: ArchitectureProps) {
   const [hoveredLayer, setHoveredLayer] = useState<string | null>(null);
   const { ref, inView } = useInView(0.1);
 
-  const counters = language === 'zh'
-    ? [
-        { end: 67, suffix: '+', label: 'Built-in Tools', labelZh: '内置工具', color: 'from-blue-400 to-cyan-400' },
-        { end: 66, suffix: '', label: 'Runnable Examples', labelZh: '可运行示例', color: 'from-cyan-400 to-emerald-400' },
-        { end: 40, suffix: '+', label: 'Doc Topics', labelZh: '文档主题', color: 'from-purple-400 to-pink-400' },
-        { end: 8, suffix: '', label: 'Core Crates', labelZh: '核心 Crates', color: 'from-pink-400 to-rose-400' },
-      ]
-    : [
-        { end: 67, suffix: '+', label: 'Built-in Tools', labelZh: '内置工具', color: 'from-blue-400 to-cyan-400' },
-        { end: 66, suffix: '', label: 'Runnable Examples', labelZh: '可运行示例', color: 'from-cyan-400 to-emerald-400' },
-        { end: 40, suffix: '+', label: 'Doc Topics', labelZh: '文档主题', color: 'from-purple-400 to-pink-400' },
-        { end: 8, suffix: '', label: 'Core Crates', labelZh: '核心 Crates', color: 'from-pink-400 to-rose-400' },
-      ];
+  const counters = [
+    { end: 67, suffix: '+', label: 'Built-in Tools', labelZh: '内置工具', color: 'from-blue-400 to-cyan-400' },
+    { end: 70, suffix: '', label: 'Runnable Examples', labelZh: '可运行示例', color: 'from-cyan-400 to-emerald-400' },
+    { end: 40, suffix: '+', label: 'Doc Topics', labelZh: '文档主题', color: 'from-purple-400 to-pink-400' },
+    { end: 8, suffix: '', label: 'Core Crates', labelZh: '核心 Crates', color: 'from-pink-400 to-rose-400' },
+  ];
 
   return (
     <section
@@ -113,37 +134,28 @@ export default function Architecture({ language }: ArchitectureProps) {
 
         {/* Architecture diagram — interactive layers */}
         <div className="relative space-y-4 mb-20">
-          {/* SVG connection lines */}
+          {/* SVG connection lines between layers */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" style={{ overflow: 'visible' }}>
-            {[0, 1, 2].map((i) => (
-              <line
-                key={i}
-                x1="50%"
-                y1={`${22 + i * 26}%`}
-                x2="50%"
-                y2={`${26 + i * 26}%`}
-                stroke={hoveredLayer === content.layers[i].id || hoveredLayer === content.layers[i + 1].id ? content.layers[i].color : '#3f3f46'}
-                strokeWidth="2"
-                strokeDasharray="6 4"
-                className="transition-all duration-300"
-                style={{
-                  opacity: hoveredLayer === content.layers[i].id || hoveredLayer === content.layers[i + 1].id ? 1 : 0.4,
-                }}
-              />
-            ))}
-            {/* Arrow heads */}
-            {[0, 1, 2].map((i) => (
-              <polygon
-                key={`arrow-${i}`}
-                points="0,-6 5,0 -5,0"
-                fill={hoveredLayer === content.layers[i + 1].id ? content.layers[i].color : '#52525b'}
-                className="transition-all duration-300"
-                style={{
-                  transform: `translate(50%, ${26 + i * 26}%)`,
-                  opacity: hoveredLayer === content.layers[i + 1].id ? 1 : 0.4,
-                }}
-              />
-            ))}
+            {content.layers.slice(0, -1).map((_, i) => {
+              const yStart = 10 + i * 15;
+              const yEnd = yStart + 3;
+              return (
+                <line
+                  key={i}
+                  x1="50%"
+                  y1={`${yStart}%`}
+                  x2="50%"
+                  y2={`${yEnd}%`}
+                  stroke={hoveredLayer === content.layers[i].id || hoveredLayer === content.layers[i + 1].id ? content.layers[i].color : '#3f3f46'}
+                  strokeWidth="2"
+                  strokeDasharray="6 4"
+                  className="transition-all duration-300"
+                  style={{
+                    opacity: hoveredLayer === content.layers[i].id || hoveredLayer === content.layers[i + 1].id ? 1 : 0.4,
+                  }}
+                />
+              );
+            })}
           </svg>
 
           {/* Layer cards */}
