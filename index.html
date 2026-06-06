@@ -3,48 +3,76 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#09090b" />
+    <meta name="color-scheme" content="dark" />
 
     <!-- Primary Meta Tags -->
-    <title>Echo Agent - Rust AI Agent 开发框架 | EchoCoWork 智能协作助手</title>
-    <meta name="title" content="Echo Agent - Rust AI Agent 开发框架 | EchoCoWork 智能协作助手" />
-    <meta name="description" content="echo-agent: 基于 Rust 的生产级 AI Agent 开发框架，提供 ReAct 引擎、67+ 内置工具、MCP 协议支持和多 Agent 编排。EchoCoWork: 基于 echo-agent 构建的智能协作助手，专注于编码、数据分析、文献检索、论文写作和医学研究五大核心场景。" />
-    <meta name="keywords" content="AI Agent, Rust, 人工智能, Agent框架, ReAct, MCP, 多Agent, 编码助手, 数据分析, 学术研究, EchoCoWork, echo-agent, LLM, 大语言模型, AI开发" />
+    <title>Echo Agent — 高性能 Rust AI Agent 框架 | EchoCoWork 智能协作助手</title>
+    <meta name="title" content="Echo Agent — 高性能 Rust AI Agent 框架 | EchoCoWork 智能协作助手" />
+    <meta name="description" content="echo-agent 是基于 Rust 的高性能 AI Agent 开发框架，从零到一为新手友好，提供 ReAct 引擎、DAG 任务编排、67+ 内置工具（MCP/LSP/Web/Data/Git）、多 Agent 编排和自检改进化循环。EchoCoWork 是基于 echo-agent 构建的生产级 Agent 产品，专注于编码、学术研究、数据处理与分析、医学研究四大场景，简单易用、功能完备。" />
+    <meta name="keywords" content="AI Agent,Rust,AI框架,Agent开发,ReAct引擎,MCP协议,多Agent,编码助手,数据分析,学术研究,医学研究,论文写作,文献检索,大语言模型,LLM,AI开发框架,EchoCoWork,echo-agent,Claude Code,Cursor,Codex,Agent框架,新手友好,Rust性能,高性能Agent" />
     <meta name="author" content="Echo Team" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
     <link rel="canonical" href="https://echo-agent.dev" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://echo-agent.dev" />
-    <meta property="og:title" content="Echo Agent - Rust AI Agent 开发框架" />
-    <meta property="og:description" content="基于 Rust 的生产级 AI Agent 开发框架，提供 ReAct 引擎、67+ 内置工具、MCP 协议支持和多 Agent 编排。" />
+    <meta property="og:title" content="Echo Agent — 高性能 Rust AI Agent 框架" />
+    <meta property="og:description" content="基于 Rust 的高性能 AI Agent 框架，从零到一新手友好。67+ 内置工具、ReAct 引擎、DAG 任务编排、多 Agent 协作。EchoCoWork 覆盖编码、学术研究、数据分析、医学研究四大场景。" />
     <meta property="og:image" content="https://echo-agent.dev/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Echo Agent — Rust AI Agent Framework" />
     <meta property="og:site_name" content="Echo Agent" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:locale:alternate" content="en_US" />
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://echo-agent.dev" />
-    <meta property="twitter:title" content="Echo Agent - Rust AI Agent 开发框架" />
-    <meta property="twitter:description" content="基于 Rust 的生产级 AI Agent 开发框架，提供 ReAct 引擎、67+ 内置工具、MCP 协议支持和多 Agent 编排。" />
-    <meta property="twitter:image" content="https://echo-agent.dev/twitter-card.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://echo-agent.dev" />
+    <meta name="twitter:title" content="Echo Agent — 高性能 Rust AI Agent 框架" />
+    <meta name="twitter:description" content="基于 Rust 的高性能 AI Agent 框架。67+ 工具、ReAct 引擎、DAG 编排。覆盖编码、学术研究、数据分析、医学研究。" />
+    <meta name="twitter:image" content="https://echo-agent.dev/twitter-card.svg" />
+    <meta name="twitter:image:alt" content="Echo Agent — Rust AI Agent Framework" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
+    <link rel="manifest" href="/manifest.json" />
 
-    <!-- Preconnect to external resources -->
+    <!-- Alternate language versions -->
+    <link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev" />
+    <link rel="alternate" hreflang="en" href="https://echo-agent.dev?lang=en" />
+    <link rel="alternate" hreflang="x-default" href="https://echo-agent.dev" />
+
+    <!-- Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- Structured Data (JSON-LD) -->
+    <!-- Structured Data: Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Echo Team",
+      "url": "https://echo-agent.dev",
+      "logo": "https://echo-agent.dev/favicon.svg",
+      "sameAs": [
+        "https://github.com/EchoYue-lp/echo-agent",
+        "https://github.com/EchoYue-lp/echo-agent-cli"
+      ]
+    }
+    </script>
+
+    <!-- Structured Data: echo-agent SoftwareApplication -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       "name": "echo-agent",
-      "description": "基于 Rust 的生产级 AI Agent 开发框架",
+      "alternateName": "Echo Agent Framework",
+      "description": "基于 Rust 的高性能 AI Agent 开发框架，从零到一新手友好，提供 ReAct 引擎、DAG 任务编排、67+ 内置工具、多 Agent 编排",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Linux, macOS, Windows",
       "offers": {
@@ -54,20 +82,31 @@
       },
       "author": {
         "@type": "Organization",
-        "name": "Echo Team",
-        "url": "https://github.com/EchoTeam"
+        "name": "Echo Team"
       },
       "programmingLanguage": "Rust",
-      "license": "https://opensource.org/licenses/MIT"
+      "license": "https://opensource.org/licenses/MIT",
+      "featureList": [
+        "ReAct 推理引擎",
+        "DAG 任务编排",
+        "67+ 内置工具",
+        "MCP 协议支持",
+        "LSP 集成",
+        "多 Agent 编排",
+        "自检改进化循环",
+        "插件系统"
+      ]
     }
     </script>
 
+    <!-- Structured Data: EchoCoWork SoftwareApplication -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       "name": "EchoCoWork",
-      "description": "基于 echo-agent 构建的智能协作助手，专注于编码、数据分析和学术研究",
+      "alternateName": "EchoCoWork Agent",
+      "description": "基于 echo-agent 构建的生产级 Agent 产品，专注于编码、学术研究、数据处理与分析、医学研究，简单易用、功能完备",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Linux, macOS, Windows",
       "offers": {
@@ -78,21 +117,61 @@
       "author": {
         "@type": "Organization",
         "name": "Echo Team"
-      }
+      },
+      "featureList": [
+        "代码生成与审查",
+        "学术论文检索与写作",
+        "数据分析与可视化",
+        "医学文献检索",
+        "Human-in-the-Loop 交互",
+        "TUI + GUI 双模式"
+      ]
     }
     </script>
 
+    <!-- Structured Data: WebSite -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Echo Agent",
       "url": "https://echo-agent.dev",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://echo-agent.dev/search?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
+      "description": "Echo Agent — 高性能 Rust AI Agent 开发框架与智能协作助手",
+      "inLanguage": ["zh-CN", "en"]
+    }
+    </script>
+
+    <!-- Structured Data: FAQ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "echo-agent 是什么？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "echo-agent 是基于 Rust 的高性能 AI Agent 开发框架，提供 ReAct 引擎、DAG 任务编排、67+ 内置工具、多 Agent 编排和自检改进化循环，适合从零到一构建生产级 AI Agent。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "EchoCoWork 支持哪些场景？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "EchoCoWork 专注于四大核心场景：编码（代码生成、审查、重构）、学术研究（文献检索、论文写作）、数据处理与分析（统计、可视化）、医学研究（PubMed、临床试验）。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "echo-agent 和 Claude Code、Cursor 有什么区别？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "echo-agent 使用 Rust 编写，性能比 Python 框架快 10-100 倍，内存安全无数据竞争。同时提供完整的框架能力（DAG 编排、多 Agent、插件系统）和开箱即用的产品（EchoCoWork），覆盖编码、学术研究、数据分析、医学研究四大场景。"
+          }
+        }
+      ]
     }
     </script>
   </head>

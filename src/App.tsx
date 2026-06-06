@@ -29,31 +29,31 @@ type Product = 'echo-agent' | 'echocowork';
 
 const pageTitles: Record<string, Record<Language, string>> = {
   'echo-agent-home': {
-    zh: 'echo-agent — Rust AI Agent 开发框架',
-    en: 'echo-agent — Rust AI Agent Framework',
+    zh: 'echo-agent — 高性能 Rust AI Agent 框架 | 从零到一新手友好',
+    en: 'echo-agent — High-Performance Rust AI Agent Framework | Beginner Friendly',
   },
   'echocowork-home': {
-    zh: 'EchoCoWork — 你的 AI 协作伙伴',
-    en: 'EchoCoWork — Your AI Collaboration Partner',
+    zh: 'EchoCoWork — 编码·学术研究·数据分析·医学研究 AI Agent',
+    en: 'EchoCoWork — Coding · Academic Research · Data Analysis · Medical Research AI Agent',
   },
   'docs': {
-    zh: '文档 — Echo Agent',
-    en: 'Docs — Echo Agent',
+    zh: '文档 — echo-agent 高性能 AI Agent 框架',
+    en: 'Docs — echo-agent High-Performance AI Agent Framework',
   },
 };
 
 const pageDescriptions: Record<string, Record<Language, string>> = {
   'echo-agent-home': {
-    zh: '基于 Rust 的生产级 AI Agent 开发框架，提供 ReAct 引擎、DAG 任务编排、自检改进化循环、67+ 内置工具（MCP/LSP/Web/Data/Git）和多 Agent 编排。',
-    en: 'A production-grade Rust AI Agent development framework with ReAct engine, DAG task orchestration, self-improvement loop, 67+ built-in tools (MCP/LSP/Web/Data/Git), and multi-agent orchestration.',
+    zh: 'echo-agent 是基于 Rust 的高性能 AI Agent 开发框架，从零到一新手友好。提供 ReAct 引擎、DAG 任务编排、67+ 内置工具（MCP/LSP/Web/Data/Git）、多 Agent 编排和自检改进化循环。性能比 Python 框架快 10-100 倍，内存安全无数据竞争。',
+    en: 'echo-agent is a high-performance Rust AI Agent framework, beginner-friendly from zero to one. Features ReAct engine, DAG task orchestration, 67+ built-in tools (MCP/LSP/Web/Data/Git), multi-agent orchestration, and self-improvement loop. 10-100x faster than Python frameworks with memory safety.',
   },
   'echocowork-home': {
-    zh: '基于 echo-agent 构建的生产级 Agent 产品，专注于编码、数据分析、文献检索、学术论文写作和医学研究五大核心场景，支持 Human-in-the-Loop 交互。',
-    en: 'A production-grade agent product built on echo-agent, focused on five core scenarios: coding, data analysis, literature search, academic paper writing, and medical research, with human-in-the-loop interaction.',
+    zh: 'EchoCoWork 是基于 echo-agent 构建的生产级 Agent，简单易用、功能完备。专注于编码（代码生成、审查、重构）、学术研究（文献检索、论文写作）、数据处理与分析（统计、可视化）、医学研究（PubMed、临床试验）四大核心场景。',
+    en: 'EchoCoWork is a production-grade agent built on echo-agent, simple and feature-complete. Focused on four core scenarios: coding (generation, review, refactoring), academic research (literature search, paper writing), data analysis (statistics, visualization), and medical research (PubMed, clinical trials).',
   },
   'docs': {
-    zh: 'Echo Agent 完整文档 — 快速开始、核心概念、框架功能、工具集成和 API 参考。',
-    en: 'Complete Echo Agent documentation — quick start, core concepts, framework features, integrations, and API reference.',
+    zh: 'echo-agent 完整文档 — 快速开始、核心概念、ReAct 引擎、工具系统、记忆管理、DAG 任务编排、多 Agent、MCP 协议、LSP 集成、插件系统、安全模型。',
+    en: 'echo-agent complete documentation — quick start, core concepts, ReAct engine, tool system, memory management, DAG task orchestration, multi-agent, MCP protocol, LSP integration, plugin system, security model.',
   },
 };
 

@@ -4,7 +4,7 @@
 
 set -e
 
-PROJECT_DIR="/path/to/echo-website"   # 改成你的项目路径
+PROJECT_DIR="/root/ylp-agent/echo-website"
 DEPLOY_DIR="/var/www/echo-website"
 
 echo "📥 拉取最新代码..."
