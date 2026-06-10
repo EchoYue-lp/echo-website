@@ -3,7 +3,7 @@
 export const frameworkHeroZh = {
   title: "echo-agent",
   tagline: "用 Rust 构建生产级 AI Agent",
-  subtitle: "一个综合性 Rust 框架，提供 ReAct 引擎、DAG 任务编排、自检改进化循环、67+ 内置工具（MCP/LSP/Web/Data/Git）和多 Agent 编排",
+  subtitle: "一个综合性 Rust 框架，提供 ReAct 引擎、意图路由、自检改进化循环、67+ 内置工具（MCP/LSP/Web/Data/Git）、多 Agent 并行池和 DAG 任务编排",
   badges: ["开源", "MIT 许可", "Rust 1.95+"],
   cta: {
     primary: "查看文档",
@@ -33,39 +33,45 @@ export const featuresZh = {
     },
     {
       icon: "🔄",
-      title: "ReAct 引擎",
-      description: "高级推理与行动循环，支持多步规划、自我反思和自适应决策",
-      highlight: "生产就绪的 Agent 循环",
+      title: "ReAct 引擎 + 意图路由",
+      description: "高级推理与行动循环，支持 IntentRouter 智能路由、ChainedClassifier（关键词→LLM）意图分类、自我反思和自适应决策",
+      highlight: "IntentRouter + 智能分类",
+    },
+    {
+      icon: "🏊",
+      title: "多 Agent 并行池",
+      description: "AgentPool 支持多个 Agent 实例并行执行，共享资源池（LLM、工具、记忆），独立上下文和执行锁，实现真正的多任务并发",
+      highlight: "AgentPool 并行执行",
+    },
+    {
+      icon: "✅",
+      title: "自检改进化 + Verifier",
+      description: "内置评估框架、Critic/Verifier 自检系统、LlmCritic 评分反馈循环。Agent 生成答案后自动评估，不合格则迭代改进",
+      highlight: "Critic + Verifier 循环",
     },
     {
       icon: "📊",
       title: "DAG 任务编排",
-      description: "基于有向无环图的工作流引擎，支持条件分支、并行执行、数据流水线和人在回路",
-      highlight: "声明式 DAG 工作流",
+      description: "基于有向无环图的工作流引擎，支持 TaskNode 状态追踪（Pending→Running→Success/Failed）、条件分支、并行执行、数据流水线",
+      highlight: "TaskNode DAG 状态机",
     },
     {
       icon: "⏱️",
       title: "长程任务支持",
-      description: "检查点与恢复机制，让长程运行的 Agent 可以中断后续传，进度追踪，Cron 定时任务",
-      highlight: "检查点 / 断点续传",
-    },
-    {
-      icon: "🧪",
-      title: "自检改进化",
-      description: "内置评估框架与自检改进化循环，Agent 可从运行结果中学习、优化自身策略",
-      highlight: "评估 + 自检改进化循环",
+      description: "Rich Checkpoint（消息+计划+技能+TaskNode）、断点续传、进度追踪、Cron 定时任务、LoopDetector 防无限循环",
+      highlight: "Rich Checkpoint + DAG",
     },
     {
       icon: "🛠️",
       title: "丰富工具生态",
-      description: "67+ 内置工具跨 8 个 Crate，涵盖 MCP/LSP/Web/Data/Git/DB 等，开箱即用",
-      highlight: "MCP / LSP / Web / Data / Git",
+      description: "67+ 内置工具跨 8 个 Crate，涵盖 MCP/LSP/Web/Data/Git/DB 等。ToolExecutionPipeline 13 阶段可组合执行",
+      highlight: "MCP / LSP / Pipeline",
     },
     {
       icon: "🧠",
-      title: "记忆系统",
-      description: "灵活的记忆架构，支持短期、长期和分层记忆，让 Agent 真正理解项目上下文",
-      highlight: "分层记忆架构",
+      title: "分层记忆系统",
+      description: "灵活的记忆架构，支持短期、长期和分层记忆、MemoryPromoter 自动提升、VisibilityHorizon 压缩",
+      highlight: "分层记忆 + 自动压缩",
     },
     {
       icon: "🔌",
@@ -123,8 +129,8 @@ export const comparisonZh = {
 export const productHeroZh = {
   title: "EchoCoWork",
   tagline: "你的 AI 协作伙伴",
-  subtitle: "基于 echo-agent 框架构建的生产级 Agent 产品，专注于编码、数据分析、文献检索、学术论文写作和医学研究五大核心场景，支持人在回路交互",
-  badges: ["生产就绪", "TUI + GUI", "Rust 驱动", "Human-in-the-Loop"],
+  subtitle: "基于 echo-agent 框架构建的生产级 Agent 产品，专注于编码、数据分析、文献检索、学术论文写作和医学研究五大核心场景。支持多 Agent 并行池、技能驱动架构、人在回路交互",
+  badges: ["生产就绪", "TUI + GUI", "Rust 驱动", "AgentPool 并行"],
   cta: {
     primary: "快速开始",
     secondary: "GitHub 仓库",
@@ -136,44 +142,49 @@ export const productHeroZh = {
   stats: [
     { value: "5", label: "核心场景" },
     { value: "2", label: "交互方式" },
+    { value: "11", label: "内置技能" },
     { value: "67+", label: "可用工具" },
-    { value: "12", label: "产品特性" },
   ],
 };
 
 export const echocoworkFeaturesZh = {
   title: "产品特性",
-  subtitle: "为开发者、研究人员和数据科学家打造的专业 Agent，支持五大核心场景",
+  subtitle: "为开发者、研究人员和数据科学家打造的专业 Agent，技能驱动、并行执行、五大核心场景",
   features: [
+    {
+      icon: "🏊",
+      title: "AgentPool 并行执行",
+      description: "多 Agent 实例并行池，共享资源（LLM、工具、记忆）、独立上下文和执行锁。GUI/TUI 后台任务隔离，真正的多任务并发",
+    },
+    {
+      icon: "🎯",
+      title: "技能驱动架构",
+      description: "11 个内置 SKILL.md（编码、数据分析、文献检索、学术写作、医学研究等），SKILL-first 意图路由，按需激活，取代传统 Mode 切换",
+    },
+    {
+      icon: "🧭",
+      title: "智能意图路由",
+      description: "IntentRouter + ChainedClassifier（关键词零成本→LLM 语义兜底），自动识别用户意图并路由到对应技能，无需手动切换",
+    },
     {
       icon: "🤝",
       title: "Human-in-the-Loop",
-      description: "高风险操作（文件写入、命令执行）自动请求确认，Once/Always/Deny 三种审批策略，作者始终保持主导权",
+      description: "高风险操作（文件写入、命令执行）自动请求确认，Once/Always/Deny 三种审批策略，TUI 和 GUI 统一权限模式",
+    },
+    {
+      icon: "✅",
+      title: "Verifier 自检系统",
+      description: "LlmCritic 评分 + Verifier 反馈循环，Agent 生成答案后自动评估质量，不合格则迭代改进，确保输出质量",
     },
     {
       icon: "🖥️",
       title: "双模式交互",
-      description: "全屏终端界面（TUI）和桌面应用（Tauri GUI）两种交互模式，满足不同使用场景",
+      description: "全屏终端界面（TUI）和桌面应用（Tauri GUI）两种交互模式。TUI 支持 AgentPool 后台任务隔离，GUI 支持多对话并行",
     },
     {
       icon: "💾",
-      title: "记忆与持久化",
-      description: "跨会话记忆系统、对话历史持久化、工作区管理，让 Agent 真正了解你的项目",
-    },
-    {
-      icon: "🔄",
-      title: "长程任务支持",
-      description: "后台任务系统、断点续传、进度追踪、Cron 定时任务、工作流编排",
-    },
-    {
-      icon: "🎨",
-      title: "6 种内置主题",
-      description: "dark、light、monokai、solarized、dracula、one-dark，支持运行时切换",
-    },
-    {
-      icon: "⌨️",
-      title: "Slash 命令系统",
-      description: "/help、/mode、/model、/reset、/stats 等丰富命令，快速操控 Agent 行为",
+      title: "Rich Checkpoint",
+      description: "完整状态检查点（消息历史+当前计划+活跃技能+TaskNode DAG），断点续传、进度追踪、Cron 定时任务",
     },
     {
       icon: "🔌",
@@ -188,7 +199,7 @@ export const echocoworkFeaturesZh = {
     {
       icon: "⚡",
       title: "Hooks 自动化",
-      description: "生命周期钩子（SessionStart、ToolCall、TaskComplete），触发自动化脚本、Webhook、通知",
+      description: "生命周期钩子（SessionStart、ToolCall、TaskComplete、SubagentStart），触发自动化脚本、Webhook、通知",
     },
     {
       icon: "💬",
@@ -196,14 +207,9 @@ export const echocoworkFeaturesZh = {
       description: "内置 QQ Bot、飞书（Webhook/Long Poll）通道，让 Agent 直接参与团队协作对话",
     },
     {
-      icon: "🎯",
-      title: "技能系统",
-      description: "SkillsHub 管理可复用技能，支持技能市场、版本控制、自动依赖解析，一键安装社区技能",
-    },
-    {
       icon: "🚀",
       title: "多 Agent 编排",
-      description: "SubAgent 系统支持 DAG 任务编排、并行执行、依赖管理，复杂任务自动分解执行",
+      description: "SubAgent 系统支持 DAG 任务编排、TaskNode 状态追踪、并行执行、依赖管理，复杂任务自动分解执行",
     },
   ],
 };

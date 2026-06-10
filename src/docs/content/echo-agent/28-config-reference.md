@@ -361,7 +361,7 @@ echo-agent 支持通过 `echo-agent.yaml` 进行声明式配置。
 
 ```yaml
 model:
-  name: "qwen-plus"
+  name: "qwen3.6-plus"
   temperature: 0.7
   max_tokens: 4096
 

@@ -1,21 +1,15 @@
 // Dynamic markdown loader using Vite's import.meta.glob
-// Loads all docs from echo-agent and echo-agent-cli as raw strings.
+// Loads all docs from local content/ directory (copied from source repos).
 
-// Glob import all zh docs from echo-agent
+// Glob import all echo-agent docs (copied locally)
 const agentDocs = import.meta.glob(
-  '../../../echo-agent/docs/zh/**/*.md',
+  './content/echo-agent/**/*.md',
   { query: '?raw', import: 'default', eager: true }
 ) as Record<string, string>;
 
-// Glob import CLI docs
+// Glob import CLI docs (copied locally)
 const cliDocs = import.meta.glob(
-  '../../../echo-agent-cli/docs/*.md',
-  { query: '?raw', import: 'default', eager: true }
-) as Record<string, string>;
-
-// CLI README
-const cliReadme = import.meta.glob(
-  '../../../echo-agent-cli/README.md',
+  './content/echo-agent-cli/**/*.md',
   { query: '?raw', import: 'default', eager: true }
 ) as Record<string, string>;
 
@@ -24,28 +18,23 @@ const cliReadme = import.meta.glob(
  * Maps registry file paths to the glob-imported modules.
  */
 export function loadDocContent(filePath: string): string | null {
-  // Normalize the registry path to match Vite's glob keys
-  // Registry uses: '../echo-agent/docs/zh/01-react-agent.md'
-  // Glob keys use absolute or resolved paths
+  // Registry paths: './content/echo-agent/01-react-agent.md'
+  // Glob keys: full resolved paths ending with the same relative path
+
+  // Extract the filename from registry path
+  const fileName = filePath.replace(/^\.\/content\//, '');
 
   // Try agent docs
   for (const [key, content] of Object.entries(agentDocs)) {
-    if (key.includes(filePath.replace('../', ''))) {
+    if (key.includes(fileName)) {
       return content;
     }
   }
 
   // Try CLI docs
-  if (filePath.includes('echo-agent-cli/README.md')) {
-    for (const [, content] of Object.entries(cliReadme)) {
+  for (const [key, content] of Object.entries(cliDocs)) {
+    if (key.includes(fileName)) {
       return content;
-    }
-  }
-  if (filePath.includes('echo-agent-cli/docs/')) {
-    for (const [key, content] of Object.entries(cliDocs)) {
-      if (key.includes(filePath.replace('../echo-agent-cli/', ''))) {
-        return content;
-      }
     }
   }
 
@@ -57,6 +46,5 @@ export function getAvailableDocs(): string[] {
   return [
     ...Object.keys(agentDocs),
     ...Object.keys(cliDocs),
-    ...Object.keys(cliReadme),
   ];
 }

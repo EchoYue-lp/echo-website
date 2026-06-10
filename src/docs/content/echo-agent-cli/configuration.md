@@ -178,7 +178,7 @@ model:
 ```yaml
 model:
   provider: "openai"
-  name: "gpt-4o"
+  name: "gpt-5.5"
 ```
 
 **Anthropic Claude：**

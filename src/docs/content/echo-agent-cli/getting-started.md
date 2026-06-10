@@ -46,7 +46,7 @@ cargo run --bin echo-agent-cli -- onboard
 
 ```yaml
 model:
-  name: "qwen-plus"
+  name: "qwen3.6-plus"
   
 agent:
   name: "echo-assistant"
@@ -181,7 +181,7 @@ EchoCoWork 支持长期记忆：
 # ~/.echo-agent/config.yaml（或 ./echo-agent.yaml）
 
 model:
-  name: "qwen-plus"
+  name: "qwen3.6-plus"
   # max_tokens: 4096          # 可选
   # temperature: 0.7          # 可选
 
