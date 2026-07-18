@@ -145,7 +145,7 @@ pub trait ModeEngine: Send + Sync {
 | General | 0（不限制） | 所有已注册工具 |
 | Coding | 7 | shell, file_read, file_write, file_list, file_delete, code_search, git |
 | Research | 8 | arxiv_search, semantic_scholar_search, pdf_fetch, bibtex_generate, web_search, web_fetch, file_read, file_write |
-| Data | 16 | file_read, read_data, data_stats, profile_data, filter_data, aggregate_data, generate_chart, sample_data, correlate_data, pivot_data, time_series, hypothesis_test, regression, missing_value_analysis, outlier_detection, consistency_check |
+| Data | 16 | file_read, read_data, data_stats, profile_data, filter_data, aggregate_data, generate_chart, sample_data, correlate_data, pivot_data, time_series, exploratory_statistics, run_code, missing_value_analysis, outlier_detection, consistency_check |
 | Writing | 4 | file_read, file_write, web_search, web_fetch |
 
 ### LocalizedModeEngine
