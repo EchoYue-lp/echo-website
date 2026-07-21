@@ -1,5 +1,5 @@
 type Language = 'zh' | 'en';
-type Product = 'echo-agent' | 'echocowork';
+type Product = 'echo-agent' | 'eko';
 type View = 'home' | 'docs';
 
 interface NavbarProps {
@@ -14,7 +14,7 @@ interface NavbarProps {
 const labels: Record<Language, { agent: string; product: string; lang: string; langLabel: string; navLabel: string; switchLabel: string; docs: string }> = {
   zh: {
     agent: 'echo-agent',
-    product: 'EchoCoWork',
+    product: 'EKO',
     lang: 'EN',
     langLabel: '切换到英文',
     navLabel: '主导航',
@@ -23,7 +23,7 @@ const labels: Record<Language, { agent: string; product: string; lang: string; l
   },
   en: {
     agent: 'echo-agent',
-    product: 'EchoCoWork',
+    product: 'EKO',
     lang: '中文',
     langLabel: 'Switch to Chinese',
     navLabel: 'Main navigation',
@@ -92,9 +92,9 @@ export default function Navbar({ language, product, view, onToggleLanguage, onSw
             </button>
             <button
               role="tab"
-              aria-selected={product === 'echocowork'}
-              className={tabClass(product === 'echocowork')}
-              onClick={() => onSwitchProduct('echocowork')}
+              aria-selected={product === 'eko'}
+              className={tabClass(product === 'eko')}
+              onClick={() => onSwitchProduct('eko')}
             >
               {l.product}
             </button>

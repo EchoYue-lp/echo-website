@@ -1,7 +1,7 @@
 import TerminalAnimation from './TerminalAnimation';
 
 type Language = 'zh' | 'en';
-type Product = 'echo-agent' | 'echocowork';
+type Product = 'echo-agent' | 'eko';
 
 interface HeroData {
   title: string;

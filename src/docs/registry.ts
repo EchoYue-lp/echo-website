@@ -307,7 +307,7 @@ export const docCategories: DocCategory[] = [
     ],
   },
   {
-    title: { zh: 'EchoCoWork (CLI)', en: 'EchoCoWork (CLI)' },
+    title: { zh: 'EKO (CLI)', en: 'EKO (CLI)' },
     icon: '💻',
     docs: [
       {

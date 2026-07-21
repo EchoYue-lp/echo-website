@@ -9,7 +9,7 @@ Showcase website for the Echo Agent ecosystem, built with React + Vite + Tailwin
 - 📱 Responsive design for all screen sizes
 - 🎨 Modern, clean UI showcasing two products:
   - **echo-agent**: Rust AI Agent development framework
-  - **EchoCoWork**: Production CLI agent built on echo-agent
+  - **EKO**: Production CLI agent built on echo-agent
 
 ## Sections
 

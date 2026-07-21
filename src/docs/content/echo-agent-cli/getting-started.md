@@ -1,4 +1,4 @@
-# EchoCoWork 快速入门
+# EKO 快速入门
 
 ## 安装
 
@@ -143,7 +143,7 @@ echo-agent-cli sessions delete <id>   # 删除会话
 
 ### 3. 工具使用
 
-EchoCoWork 内置了 67+ 工具，包括：
+EKO 内置了 67+ 工具，包括：
 
 - **文件操作**: read, write, edit, list
 - **Shell 执行**: bash, powershell
@@ -167,7 +167,7 @@ EchoCoWork 内置了 67+ 工具，包括：
 
 ### 5. 记忆系统
 
-EchoCoWork 支持长期记忆：
+EKO 支持长期记忆：
 
 - 自动记录重要信息
 - 跨会话保持上下文

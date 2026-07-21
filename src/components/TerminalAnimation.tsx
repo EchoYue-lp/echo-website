@@ -41,7 +41,7 @@ const frameworkScenes: TerminalLine[][] = [
   ],
 ];
 
-const echocoworkScenesZh: TerminalLine[][] = [
+const ekoScenesZh: TerminalLine[][] = [
   // Scene 1: TUI interaction
   [
     { type: 'command', text: '> 帮我重构这个函数，提高可读性' },
@@ -76,7 +76,7 @@ const echocoworkScenesZh: TerminalLine[][] = [
   ],
 ];
 
-const echocoworkScenesEn: TerminalLine[][] = [
+const ekoScenesEn: TerminalLine[][] = [
   // Scene 1: TUI interaction
   [
     { type: 'command', text: '> Refactor this function for better readability' },
@@ -112,14 +112,14 @@ const echocoworkScenesEn: TerminalLine[][] = [
 ];
 
 interface TerminalAnimationProps {
-  product: 'echo-agent' | 'echocowork';
+  product: 'echo-agent' | 'eko';
   language?: 'zh' | 'en';
 }
 
 export default function TerminalAnimation({ product, language = 'zh' }: TerminalAnimationProps) {
   const scenes = product === 'echo-agent'
     ? frameworkScenes
-    : (language === 'en' ? echocoworkScenesEn : echocoworkScenesZh);
+    : (language === 'en' ? ekoScenesEn : ekoScenesZh);
   const [sceneIndex, setSceneIndex] = useState(0);
   const [lineIndex, setLineIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
@@ -206,7 +206,7 @@ export default function TerminalAnimation({ product, language = 'zh' }: Terminal
           </div>
           <div className="flex-1 text-center">
             <span className="text-xs text-zinc-500 font-mono">
-              {product === 'echo-agent' ? 'echo-agent' : 'echocowork'} — bash
+              {product === 'echo-agent' ? 'echo-agent' : 'eko'} — bash
             </span>
           </div>
           <div className="w-[52px]" />

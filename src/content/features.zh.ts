@@ -124,10 +124,10 @@ export const comparisonZh = {
   ],
 };
 
-// ── EchoCoWork (产品) 内容 ──────────────────────────────────────
+// ── EKO (产品) 内容 ──────────────────────────────────────
 
 export const productHeroZh = {
-  title: "EchoCoWork",
+  title: "EKO",
   tagline: "你的 AI 协作伙伴",
   subtitle: "基于 echo-agent 框架构建的生产级 Agent 产品，专注于编码、数据分析、文献检索、学术论文写作和医学研究五大核心场景。支持多 Agent 并行池、技能驱动架构、人在回路交互",
   badges: ["生产就绪", "TUI + GUI", "Rust 驱动", "AgentPool 并行"],
@@ -147,7 +147,7 @@ export const productHeroZh = {
   ],
 };
 
-export const echocoworkFeaturesZh = {
+export const ekoFeaturesZh = {
   title: "产品特性",
   subtitle: "为开发者、研究人员和数据科学家打造的专业 Agent，技能驱动、并行执行、五大核心场景",
   features: [
@@ -214,15 +214,15 @@ export const echocoworkFeaturesZh = {
   ],
 };
 
-export const echocoworkUseCasesZh = {
+export const ekoUseCasesZh = {
   title: "五大核心场景",
-  subtitle: "EchoCoWork 专注于以下核心能力，区别于 Claude Code / Codex / Cursor",
+  subtitle: "EKO 专注于以下核心能力，区别于 Claude Code / Codex / Cursor",
   cases: [
     {
       icon: "💻",
       title: "Coding",
       tagline: "代码生成、审查、重构、调试、测试",
-      description: "EchoCoWork 能理解整个项目上下文，帮你快速定位 Bug、生成测试、重构代码。支持 Git 隔离工作区，让 Agent 安全地修改代码。",
+      description: "EKO 能理解整个项目上下文，帮你快速定位 Bug、生成测试、重构代码。支持 Git 隔离工作区，让 Agent 安全地修改代码。",
       highlights: [
         "代码审查与缺陷检测",
         "自动生成单元测试",

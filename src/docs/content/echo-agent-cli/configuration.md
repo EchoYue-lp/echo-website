@@ -1,8 +1,8 @@
-# EchoCoWork 配置指南
+# EKO 配置指南
 
 ## 配置文件位置
 
-EchoCoWork 按以下优先级查找配置文件：
+EKO 按以下优先级查找配置文件：
 
 1. 命令行参数: `--config <path>`
 2. 当前目录: `./echo-agent.yaml`

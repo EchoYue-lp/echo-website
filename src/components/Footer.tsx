@@ -4,7 +4,7 @@ interface FooterItem {
 }
 
 interface FooterProps {
-  product: 'echo-agent' | 'echocowork';
+  product: 'echo-agent' | 'eko';
   description: string;
   links: Record<string, string>;
   items: Record<string, FooterItem[]>;
@@ -23,7 +23,7 @@ export default function Footer({ product, description, links, items, githubUrl, 
           {/* Brand */}
           <div className="md:col-span-2">
             <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
-              {product === 'echo-agent' ? 'echo-agent' : 'EchoCoWork'}
+              {product === 'echo-agent' ? 'echo-agent' : 'EKO'}
             </h3>
             <p className="text-zinc-400 leading-relaxed">
               {description}

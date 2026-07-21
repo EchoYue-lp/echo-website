@@ -6,20 +6,20 @@ interface Feature {
   description: string;
 }
 
-interface EchoCoWorkFeaturesProps {
+interface EKOFeaturesProps {
   title: string;
   subtitle: string;
   features: Feature[];
 }
 
-export default function EchoCoWorkFeatures({ title, subtitle, features }: EchoCoWorkFeaturesProps) {
+export default function EKOFeatures({ title, subtitle, features }: EKOFeaturesProps) {
   return (
-    <section aria-labelledby="echocowork-features-heading" className="py-24 px-4 bg-zinc-950">
+    <section aria-labelledby="eko-features-heading" className="py-24 px-4 bg-zinc-950">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <ScrollReveal>
           <div className="text-center mb-16">
-            <h2 id="echocowork-features-heading" className="text-3xl md:text-4xl font-bold text-white mb-4">{title}</h2>
+            <h2 id="eko-features-heading" className="text-3xl md:text-4xl font-bold text-white mb-4">{title}</h2>
             <p className="text-zinc-400 text-lg">{subtitle}</p>
           </div>
         </ScrollReveal>

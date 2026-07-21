@@ -28,8 +28,8 @@ export default function DocsPage({ language, initialSlug }: DocsPageProps) {
   const handleNavigate = useCallback((slug: string) => {
     setActiveSlug(slug);
     // Determine base path from current location
-    const basePath = location.pathname.startsWith('/echocowork/docs')
-      ? '/echocowork/docs'
+    const basePath = location.pathname.startsWith('/eko/docs')
+      ? '/eko/docs'
       : '/docs';
     navigate(`${basePath}/${slug}`);
     setSidebarOpen(false);

@@ -14,21 +14,21 @@ interface QuickStart {
   steps: { cmd: string; desc: string }[];
 }
 
-interface EchoCoWorkUseCasesProps {
+interface EKOUseCasesProps {
   title: string;
   subtitle: string;
   cases: UseCase[];
   quickStart: QuickStart;
 }
 
-export default function EchoCoWorkUseCases({ title, subtitle, cases, quickStart }: EchoCoWorkUseCasesProps) {
+export default function EKOUseCases({ title, subtitle, cases, quickStart }: EKOUseCasesProps) {
   return (
-    <section aria-labelledby="echocowork-usecases-heading" className="py-24 px-4 bg-zinc-900">
+    <section aria-labelledby="eko-usecases-heading" className="py-24 px-4 bg-zinc-900">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <ScrollReveal>
           <div className="text-center mb-16">
-            <h2 id="echocowork-usecases-heading" className="text-3xl md:text-4xl font-bold text-white mb-4">{title}</h2>
+            <h2 id="eko-usecases-heading" className="text-3xl md:text-4xl font-bold text-white mb-4">{title}</h2>
             <p className="text-zinc-400 text-lg">{subtitle}</p>
           </div>
         </ScrollReveal>

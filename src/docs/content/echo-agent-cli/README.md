@@ -1,4 +1,4 @@
-# EchoCoWork
+# EKO
 
 > 一个基于 [echo-agent](https://github.com/EchoYue-lp/echo-agent) 的通用 AI Agent 产品，支持 Coding、数据分析和学术研究三大核心能力。
 
@@ -7,7 +7,7 @@
 
 ## 📋 项目简介
 
-EchoCoWork 是一个生产级的通用 Agent 产品，基于 Rust 生态构建，提供 **TUI（终端界面）** 和 **GUI（桌面应用）** 两种交互模式，专注于以下核心场景：
+EKO 是一个生产级的通用 Agent 产品，基于 Rust 生态构建，提供 **TUI（终端界面）** 和 **GUI（桌面应用）** 两种交互模式，专注于以下核心场景：
 
 - **💻 Coding** — 代码生成、审查、重构、调试、测试
 - **📊 数据分析** — 结构化数据分析、统计、可视化、报告生成
@@ -105,7 +105,7 @@ export ECHOCOWORK_MODEL="deepseek-v4-flash"
 
 #### 配置文件位置
 
-EchoCoWork 按以下优先级查找配置文件：
+EKO 按以下优先级查找配置文件：
 
 1. 命令行参数: `--config <path>`
 2. 当前目录: `./echo-agent.yaml`
@@ -204,11 +204,11 @@ echo-agent-cli
 ```bash
 # Bash / Zsh（添加到 ~/.bashrc 或 ~/.zshrc）
 alias ecw='echo-agent-cli'
-alias echocowork='echo-agent-cli'
+alias eko='echo-agent-cli'
 
 # Fish（添加到 ~/.config/fish/config.fish）
 alias ecw='echo-agent-cli'
-alias echocowork='echo-agent-cli'
+alias eko='echo-agent-cli'
 
 # 重新加载配置
 source ~/.zshrc  # 或 source ~/.bashrc
@@ -218,7 +218,7 @@ source ~/.zshrc  # 或 source ~/.bashrc
 
 ```bash
 ecw          # 快捷进入 TUI
-echocowork   # 完整命令名
+eko   # 完整命令名
 ```
 
 ### GUI — 桌面应用
@@ -229,7 +229,7 @@ cargo run --bin echo-agent-tauri --no-default-features --features gui
 
 # 方式二：编译后安装到系统（macOS 示例）
 cargo build --bin echo-agent-tauri --no-default-features --features gui --release
-sudo cp target/release/echo-agent-tauri /Applications/EchoCoWork.app/Contents/MacOS/echocowork
+sudo cp target/release/echo-agent-tauri /Applications/EKO.app/Contents/MacOS/eko
 ```
 
 ---
@@ -504,7 +504,7 @@ echo-agent (AI Agent 框架)
 三层记忆架构：
 
 - **User** — 全局用户偏好和指令（`~/.echo-agent/`）
-- **Project** — 项目级上下文和规则（`.echocowork/`）
+- **Project** — 项目级上下文和规则（`.eko/`）
 - **Local** — 本地开发环境特定配置
 
 支持 `/auto-memory` 自动从会话中提取记忆。
@@ -528,7 +528,7 @@ echo-agent (AI Agent 框架)
 ```
 workspaces/
 ├── {workspace-id}/
-│   └── .echocowork/
+│   └── .eko/
 │       ├── sessions/         # 会话历史（SQLite + FTS）
 │       ├── conversations/    # 对话记录
 │       ├── memory/            # 记忆存储

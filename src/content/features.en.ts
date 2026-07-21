@@ -118,10 +118,10 @@ export const comparisonEn = {
   ],
 };
 
-// ── EchoCoWork (Product) content ────────────────────────────────
+// ── EKO (Product) content ────────────────────────────────
 
 export const productHeroEn = {
-  title: "EchoCoWork",
+  title: "EKO",
   tagline: "Your AI Collaboration Partner",
   subtitle: "A production-grade agent product built on the echo-agent framework, focused on five core scenarios: coding, data analysis, literature search, academic paper writing, and medical research, with human-in-the-loop interaction",
   badges: ["Production Ready", "TUI + GUI", "Rust Powered", "Human-in-the-Loop"],
@@ -141,7 +141,7 @@ export const productHeroEn = {
   ],
 };
 
-export const echocoworkFeaturesEn = {
+export const ekoFeaturesEn = {
   title: "Product Features",
   subtitle: "A professional agent built for developers, researchers, and data scientists across five core scenarios",
   features: [
@@ -208,15 +208,15 @@ export const echocoworkFeaturesEn = {
   ],
 };
 
-export const echocoworkUseCasesEn = {
+export const ekoUseCasesEn = {
   title: "Five Core Scenarios",
-  subtitle: "EchoCoWork focuses on these core capabilities, differentiated from Claude Code / Codex / Cursor",
+  subtitle: "EKO focuses on these core capabilities, differentiated from Claude Code / Codex / Cursor",
   cases: [
     {
       icon: "💻",
       title: "Coding",
       tagline: "Code generation, review, refactoring, debugging, testing",
-      description: "EchoCoWork understands your entire project context, helping you quickly locate bugs, generate tests, and refactor code. Git worktree isolation keeps agent edits safe.",
+      description: "EKO understands your entire project context, helping you quickly locate bugs, generate tests, and refactor code. Git worktree isolation keeps agent edits safe.",
       highlights: [
         "Code review & defect detection",
         "Automatic unit test generation",

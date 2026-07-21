@@ -22,7 +22,7 @@ A modern, bilingual showcase website for the Echo Agent ecosystem.
 
 1. **Hero Section** (`Hero.tsx`)
    - Full-screen landing with gradient background
-   - Two product cards: echo-agent (framework) + EchoCoWork (CLI)
+   - Two product cards: echo-agent (framework) + EKO (CLI)
    - Feature lists and CTAs
    - Scroll indicator animation
 
@@ -128,7 +128,7 @@ echo-website/
 
 ## 🎯 Key Features Implemented
 
-✅ Two product showcase cards (echo-agent + EchoCoWork)
+✅ Two product showcase cards (echo-agent + EKO)
 ✅ 6-card feature grid with icons
 ✅ 4-layer architecture diagram
 ✅ Feature comparison table (7 rows × 5 columns)
