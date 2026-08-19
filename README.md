@@ -38,9 +38,10 @@ system dependencies.
 
 ## Documentation synchronization
 
-Framework documentation is vendored from the bilingual source directories in `echo-agent` and is
-loaded on demand. Every copied file, source path, source revision, and SHA-256 digest is recorded in
-`docs-sync-manifest.json`.
+Framework documentation with matching English and Chinese source paths is vendored from
+`echo-agent` and loaded on demand. Language-specific contributor material stays on the authoritative
+framework repository instead of producing a false bilingual route. Every copied file, source path,
+source revision, and SHA-256 digest is recorded in `docs-sync-manifest.json`.
 
 CI deliberately checks out both `echo-agent/main` and `echo-agent-cli/main` in separate paths and
 runs the source-aware drift check. A framework documentation change or EKO application change

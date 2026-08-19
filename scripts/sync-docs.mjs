@@ -76,9 +76,18 @@ function sha256(path) {
   return createHash('sha256').update(readFileSync(path)).digest('hex');
 }
 
-function copyTree(sourceRoot, destinationRoot, sourcePrefix) {
-  return filesBelow(sourceRoot).map((source) => {
-    const relativePath = relative(sourceRoot, source);
+function relativeMarkdownPaths(directory) {
+  return filesBelow(directory).map((path) => relative(directory, path).replaceAll('\\', '/'));
+}
+
+function bilingualMarkdownPaths(englishRoot, chineseRoot) {
+  const chinesePaths = new Set(relativeMarkdownPaths(chineseRoot));
+  return relativeMarkdownPaths(englishRoot).filter((path) => chinesePaths.has(path));
+}
+
+function copyTree(sourceRoot, destinationRoot, sourcePrefix, relativePaths) {
+  return relativePaths.map((relativePath) => {
+    const source = join(sourceRoot, relativePath);
     const destination = join(destinationRoot, relativePath);
     mkdirSync(dirname(destination), { recursive: true });
     cpSync(source, destination);
@@ -145,6 +154,14 @@ function syncFramework(
   rmSync(destinationRoot, { recursive: true, force: true });
   rmSync(join(contentRoot, 'echo-agent-cli'), { recursive: true, force: true });
 
+  const standardPaths = bilingualMarkdownPaths(
+    join(resolvedRoot, 'docs/en'),
+    join(resolvedRoot, 'docs/zh'),
+  );
+  const knowledgePaths = bilingualMarkdownPaths(
+    join(resolvedRoot, 'docs/knowledge/en'),
+    join(resolvedRoot, 'docs/knowledge/zh'),
+  );
   const files = [];
   for (const language of ['en', 'zh']) {
     files.push(
@@ -152,11 +169,13 @@ function syncFramework(
         join(resolvedRoot, `docs/${language}`),
         join(destinationRoot, language),
         `docs/${language}`,
+        standardPaths,
       ),
       ...copyTree(
         join(resolvedRoot, `docs/knowledge/${language}`),
         join(destinationRoot, language, 'knowledge'),
         `docs/knowledge/${language}`,
+        knowledgePaths,
       ),
     );
   }
@@ -166,7 +185,8 @@ function syncFramework(
     framework: {
       repository: 'https://github.com/EchoYue-lp/echo-agent',
       revision: gitRevision(resolvedRoot),
-      authority: 'Framework documentation is copied without semantic edits.',
+      authority:
+        'Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.',
       files: files.sort((left, right) => left.destination.localeCompare(right.destination)),
     },
     applicationProjection: applicationProjection(
