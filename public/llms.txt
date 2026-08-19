@@ -1,0 +1,149 @@
+# Echo Agent
+
+> Official discovery index for echo-agent and EKO. Chinese routes are the default; English routes use `/en`.
+
+# echo-agent
+Build agents from explicit, composable runtime parts.
+A Rust workspace for ReAct execution, tools, context, tasks, subagents, integrations, and observable event streams. Product policy stays in the application that embeds it.
+## Easy to start, powerful to compose
+Runnable examples, focused crates, typed events, optional features, tests, and bilingual documentation keep the path from first run to extension explicit.
+- Start: Runnable examples. Clone the repository, configure a provider, and run a checked-in example.
+- Compose: Focused crates + features. ReAct, tools, skills, state, tasks, Subagents, and integrations stay at explicit boundaries.
+- Learn: Typed APIs + bilingual docs. Typed events, examples, tests, guides, and references shorten change feedback.
+## Framework capabilities
+Every item below corresponds to code and documentation in the echo-agent workspace.
+- Simple to start: Use the public builder and runnable examples to assemble and run a first agent.
+- Powerful by composition: Combine ReAct, typed tools, skills, memory, tasks, Subagents, and streamed events.
+- Fast feedback for iteration: Focused crates, feature flags, typed events, examples, and tests keep changes bounded.
+- Bilingual documentation: Follow English and Chinese onboarding, concepts, references, and knowledge guides.
+- Tasks and Subagents: Model task graphs and delegate bounded work through one Subagent vocabulary.
+- Open integration boundaries: Connect MCP, LSP, channels, hooks, and tracing through optional adapters.
+
+# EKO
+One capable agent, built for your own machine.
+EKO is the desktop, terminal, CLI, and channel application built on echo-agent. Its interfaces use the shared application core; capability parity across those interfaces is the product contract.
+## Purpose-built local workspaces
+Coding, data analysis, academic research, biomedical literature research, and long-horizon work are routed through explicit application profiles and inspectable local artifacts.
+- Work profiles: Code · data · research. Each profile binds relevant tools and evidence expectations through the application core.
+- Research trail: Sources + artifacts. Research connectors and workspaces keep sources, entities, citations, and outputs visible.
+- Long horizon: Budget + checkpoint + resume. Task runtime state supports scheduled, pausable, and resumable work on the local machine.
+## Work EKO is designed to carry
+Each capability below is grounded in a production binding in the current application code. Duration and results depend on configuration, models, tools, and source availability.
+- Coding: Work with files, shells, Git, LSP, isolated worktrees, and bounded Subagent runs.
+- Data processing and analysis: Use data workspaces and Polars-backed tools with reviewable Python or R scripts, manifests, and artifacts.
+- Academic research: Search arXiv and Semantic Scholar, work with Zotero, and retain sources in a research workspace.
+- Biomedical literature research: Search PubMed and Europe PMC and organize biomedical entities and sources for literature synthesis, not diagnosis.
+- Tens-of-hours long-horizon tasks: TaskRuntime, checkpoints, pause and resume, budgets, and scheduling support work designed to continue for hours or tens of hours.
+- Complete local multi-interface agent: TUI, GUI, CLI, and channels use the shared application core; capability parity is the product contract.
+
+## Documentation
+- echo-agent 文档: https://echo-agent.dev/docs
+- 概述 | echo-agent 文档: https://echo-agent.dev/docs/overview
+- 快速开始 | echo-agent 文档: https://echo-agent.dev/docs/getting-started
+- echo-agent 如何工作 | echo-agent 文档: https://echo-agent.dev/docs/how-it-works
+- 工具系统 | echo-agent 文档: https://echo-agent.dev/docs/tools
+- 记忆系统 | echo-agent 文档: https://echo-agent.dev/docs/memory
+- 上下文压缩 | echo-agent 文档: https://echo-agent.dev/docs/compression
+- 流式输出 | echo-agent 文档: https://echo-agent.dev/docs/streaming
+- 上下文系统 | echo-agent 文档: https://echo-agent.dev/docs/context-system
+- 结构化输出 | echo-agent 文档: https://echo-agent.dev/docs/structured-output
+- 对话系统 | echo-agent 文档: https://echo-agent.dev/docs/chat
+- Subagent 多智能体 | echo-agent 文档: https://echo-agent.dev/docs/subagent
+- 多 Agent 编排 | echo-agent 文档: https://echo-agent.dev/docs/multi-agent
+- Human-in-the-Loop | echo-agent 文档: https://echo-agent.dev/docs/human-loop
+- DAG 任务系统 | echo-agent 文档: https://echo-agent.dev/docs/tasks
+- 长程任务 | echo-agent 文档: https://echo-agent.dev/docs/long-running-tasks
+- 技能系统 | echo-agent 文档: https://echo-agent.dev/docs/skills
+- 技能开发指南 | echo-agent 文档: https://echo-agent.dev/docs/skill-authoring
+- 安全守卫 | echo-agent 文档: https://echo-agent.dev/docs/guard-system
+- 评估框架 | echo-agent 文档: https://echo-agent.dev/docs/eval-system
+- 自我改进 | echo-agent 文档: https://echo-agent.dev/docs/self-improvement
+- 插件系统 | echo-agent 文档: https://echo-agent.dev/docs/plugin-system
+- Graph 工作流 | echo-agent 文档: https://echo-agent.dev/docs/graph-workflow
+- 工厂模式 | echo-agent 文档: https://echo-agent.dev/docs/factory-modes
+- MCP 协议 | echo-agent 文档: https://echo-agent.dev/docs/mcp
+- LSP 集成 | echo-agent 文档: https://echo-agent.dev/docs/lsp
+- Web 工具 | echo-agent 文档: https://echo-agent.dev/docs/web-tools
+- 常用工具 | echo-agent 文档: https://echo-agent.dev/docs/common-tools
+- 研究工具 | echo-agent 文档: https://echo-agent.dev/docs/research-tools
+- 代码搜索 | echo-agent 文档: https://echo-agent.dev/docs/code-search
+- 语义搜索 | echo-agent 文档: https://echo-agent.dev/docs/semantic-search
+- Hooks 自动化 | echo-agent 文档: https://echo-agent.dev/docs/hooks
+- IM 频道 | echo-agent 文档: https://echo-agent.dev/docs/im-channels
+- Shell 与文本工具 | echo-agent 文档: https://echo-agent.dev/docs/shell-text-tools
+- 数据库工具 | echo-agent 文档: https://echo-agent.dev/docs/database-tools
+- 数据管道 | echo-agent 文档: https://echo-agent.dev/docs/pipelines
+- 数据质量与统计 | echo-agent 文档: https://echo-agent.dev/docs/data-quality
+- 数据输出格式 | echo-agent 文档: https://echo-agent.dev/docs/data-output-format
+- 追踪与观测 | echo-agent 文档: https://echo-agent.dev/docs/tracing
+- ReAct 安全模式 | echo-agent 文档: https://echo-agent.dev/docs/react-safety
+- 配置参考 | echo-agent 文档: https://echo-agent.dev/docs/config-reference
+- 安全 | echo-agent 文档: https://echo-agent.dev/docs/security
+- 无头模式 | echo-agent 文档: https://echo-agent.dev/docs/headless-mode
+- Git 隔离 | echo-agent 文档: https://echo-agent.dev/docs/git-isolation
+- Mock 与测试 | echo-agent 文档: https://echo-agent.dev/docs/testing
+- 知识库概述 | echo-agent 文档: https://echo-agent.dev/docs/knowledge-overview
+- Agent 设计模式 | echo-agent 文档: https://echo-agent.dev/docs/agent-patterns
+- MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
+- 技能系统指南 | echo-agent 文档: https://echo-agent.dev/docs/skill-system-guide
+- A2A 协议 | echo-agent 文档: https://echo-agent.dev/docs/a2a-protocol
+- EKO 文档: https://echo-agent.dev/eko/docs
+- 产品概述 | EKO 文档: https://echo-agent.dev/eko/docs/overview
+- 快速开始 | EKO 文档: https://echo-agent.dev/eko/docs/getting-started
+- 能力边界 | EKO 文档: https://echo-agent.dev/eko/docs/capabilities
+- 本地数据 | EKO 文档: https://echo-agent.dev/eko/docs/storage
+- echo-agent Documentation: https://echo-agent.dev/en/docs
+- Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/overview
+- Getting Started | echo-agent Documentation: https://echo-agent.dev/en/docs/getting-started
+- How echo-agent Works | echo-agent Documentation: https://echo-agent.dev/en/docs/how-it-works
+- Tools | echo-agent Documentation: https://echo-agent.dev/en/docs/tools
+- Memory | echo-agent Documentation: https://echo-agent.dev/en/docs/memory
+- Compression | echo-agent Documentation: https://echo-agent.dev/en/docs/compression
+- Streaming | echo-agent Documentation: https://echo-agent.dev/en/docs/streaming
+- Context System | echo-agent Documentation: https://echo-agent.dev/en/docs/context-system
+- Structured Output | echo-agent Documentation: https://echo-agent.dev/en/docs/structured-output
+- Chat System | echo-agent Documentation: https://echo-agent.dev/en/docs/chat
+- Subagent | echo-agent Documentation: https://echo-agent.dev/en/docs/subagent
+- Multi-Agent Orchestration | echo-agent Documentation: https://echo-agent.dev/en/docs/multi-agent
+- Human-in-the-Loop | echo-agent Documentation: https://echo-agent.dev/en/docs/human-loop
+- DAG Tasks | echo-agent Documentation: https://echo-agent.dev/en/docs/tasks
+- Long-Running Tasks | echo-agent Documentation: https://echo-agent.dev/en/docs/long-running-tasks
+- Skills | echo-agent Documentation: https://echo-agent.dev/en/docs/skills
+- Skill Authoring Guide | echo-agent Documentation: https://echo-agent.dev/en/docs/skill-authoring
+- Guard System | echo-agent Documentation: https://echo-agent.dev/en/docs/guard-system
+- Eval System | echo-agent Documentation: https://echo-agent.dev/en/docs/eval-system
+- Self-Improvement | echo-agent Documentation: https://echo-agent.dev/en/docs/self-improvement
+- Plugins | echo-agent Documentation: https://echo-agent.dev/en/docs/plugin-system
+- Graph Workflow | echo-agent Documentation: https://echo-agent.dev/en/docs/graph-workflow
+- Factory Modes | echo-agent Documentation: https://echo-agent.dev/en/docs/factory-modes
+- MCP Protocol | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp
+- LSP Integration | echo-agent Documentation: https://echo-agent.dev/en/docs/lsp
+- Web Tools | echo-agent Documentation: https://echo-agent.dev/en/docs/web-tools
+- Common Tools | echo-agent Documentation: https://echo-agent.dev/en/docs/common-tools
+- Research Tools | echo-agent Documentation: https://echo-agent.dev/en/docs/research-tools
+- Code Search | echo-agent Documentation: https://echo-agent.dev/en/docs/code-search
+- Semantic Search | echo-agent Documentation: https://echo-agent.dev/en/docs/semantic-search
+- Hooks | echo-agent Documentation: https://echo-agent.dev/en/docs/hooks
+- IM Channels | echo-agent Documentation: https://echo-agent.dev/en/docs/im-channels
+- Shell & Text Tools | echo-agent Documentation: https://echo-agent.dev/en/docs/shell-text-tools
+- Database Tools | echo-agent Documentation: https://echo-agent.dev/en/docs/database-tools
+- Data Pipelines | echo-agent Documentation: https://echo-agent.dev/en/docs/pipelines
+- Data Quality & Statistics | echo-agent Documentation: https://echo-agent.dev/en/docs/data-quality
+- Data Output Format | echo-agent Documentation: https://echo-agent.dev/en/docs/data-output-format
+- Tracing & Observability | echo-agent Documentation: https://echo-agent.dev/en/docs/tracing
+- ReAct Safety Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/react-safety
+- Config Reference | echo-agent Documentation: https://echo-agent.dev/en/docs/config-reference
+- Security | echo-agent Documentation: https://echo-agent.dev/en/docs/security
+- Headless Mode | echo-agent Documentation: https://echo-agent.dev/en/docs/headless-mode
+- Git Isolation | echo-agent Documentation: https://echo-agent.dev/en/docs/git-isolation
+- Mock & Testing | echo-agent Documentation: https://echo-agent.dev/en/docs/testing
+- Knowledge Base Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/knowledge-overview
+- Agent Design Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/agent-patterns
+- MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive
+- Skill System Guide | echo-agent Documentation: https://echo-agent.dev/en/docs/skill-system-guide
+- A2A Protocol | echo-agent Documentation: https://echo-agent.dev/en/docs/a2a-protocol
+- EKO Documentation: https://echo-agent.dev/en/eko/docs
+- Overview | EKO Documentation: https://echo-agent.dev/en/eko/docs/overview
+- Getting Started | EKO Documentation: https://echo-agent.dev/en/eko/docs/getting-started
+- Capability Scope | EKO Documentation: https://echo-agent.dev/en/eko/docs/capabilities
+- Local Data | EKO Documentation: https://echo-agent.dev/en/eko/docs/storage

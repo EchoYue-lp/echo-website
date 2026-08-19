@@ -1,223 +1,294 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Menu, Undo2 } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import DocsSidebar from './DocsSidebar';
-import { findDocBySlug, getDefaultSlug, docCategories, type Language } from '../docs/registry';
+import DocsLanding from './DocsLanding';
+import { resolveMarkdownAsset, resolveMarkdownHref } from '../docs/links';
 import { loadDocContent } from '../docs/loader';
+import {
+  findDocBySlug,
+  getDefaultSlug,
+  getDocCategories,
+  type Language,
+  type Product,
+} from '../docs/registry';
+import { getDocsBasePath, withLanguage } from '../routing';
+import { applyDocMetadata } from '../seo';
 
 interface DocsPageProps {
   language: Language;
+  product: Product;
   initialSlug?: string;
 }
 
-export default function DocsPage({ language, initialSlug }: DocsPageProps) {
-  const [activeSlug, setActiveSlug] = useState(initialSlug ?? getDefaultSlug());
+type ContentState =
+  | { status: 'idle'; content: null }
+  | { status: 'loading'; content: null }
+  | { status: 'ready'; content: string }
+  | { status: 'error'; content: null };
+
+export default function DocsPage({ language, product, initialSlug }: DocsPageProps) {
+  const isLanding = initialSlug === undefined;
+  const activeSlug = initialSlug ?? '';
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [contentState, setContentState] = useState<ContentState>({
+    status: 'idle',
+    content: null,
+  });
   const navigate = useNavigate();
   const location = useLocation();
+  const doc = useMemo(() => findDocBySlug(product, activeSlug), [activeSlug, product]);
+  const docCategories = useMemo(() => getDocCategories(product), [product]);
 
-  // Sync activeSlug when URL param changes
-  useEffect(() => {
-    if (initialSlug) {
-      setActiveSlug(initialSlug);
-    }
-  }, [initialSlug]);
-
-  // Navigate to doc and update URL
-  const handleNavigate = useCallback((slug: string) => {
-    setActiveSlug(slug);
-    // Determine base path from current location
-    const basePath = location.pathname.startsWith('/eko/docs')
-      ? '/eko/docs'
-      : '/docs';
-    navigate(`${basePath}/${slug}`);
-    setSidebarOpen(false);
-    window.scrollTo(0, 0);
-  }, [navigate, location.pathname]);
-
-  const doc = useMemo(() => findDocBySlug(activeSlug), [activeSlug]);
-  const content = useMemo(() => {
-    if (!doc) return null;
-    return loadDocContent(doc.filePath);
-  }, [doc]);
-
-  const docTitle = doc
-    ? language === 'zh' ? doc.title.zh : doc.title.en
-    : '';
-
-  // Find which category this doc belongs to (for breadcrumb)
-  const category = docCategories.find(cat =>
-    cat.docs.some(d => d.slug === activeSlug)
+  const handleNavigate = useCallback(
+    (slug: string) => {
+      navigate(withLanguage(`${getDocsBasePath(product)}/${slug}`, language));
+      setSidebarOpen(false);
+      window.scrollTo(0, 0);
+    },
+    [language, navigate, product],
   );
-  const catTitle = category
-    ? language === 'zh' ? category.title.zh : category.title.en
-    : '';
+
+  useEffect(() => {
+    let active = true;
+    if (isLanding || !doc) {
+      setContentState({ status: 'idle', content: null });
+      return () => {
+        active = false;
+      };
+    }
+
+    setContentState({ status: 'loading', content: null });
+    void loadDocContent(product, language, doc.filePath)
+      .then((content) => {
+        if (active) setContentState({ status: 'ready', content });
+      })
+      .catch(() => {
+        if (active) setContentState({ status: 'error', content: null });
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [doc, isLanding, language, product]);
+
+  useEffect(() => {
+    if (doc) applyDocMetadata(product, language, doc, location.pathname);
+  }, [doc, language, location.pathname, product]);
+
+  useEffect(() => {
+    if (contentState.status !== 'ready' || !location.hash) return;
+    let targetId = location.hash.slice(1);
+    try {
+      targetId = decodeURIComponent(targetId);
+    } catch {
+      // Keep the literal fragment when an external link contains invalid encoding.
+    }
+    window.requestAnimationFrame(() => document.getElementById(targetId)?.scrollIntoView());
+  }, [contentState.status, location.hash]);
+
+  const docTitle = doc ? doc.title[language] : '';
+  const category = docCategories.find((candidate) =>
+    candidate.docs.some((entry) => entry.slug === activeSlug),
+  );
+  const categoryTitle = category ? category.title[language] : '';
 
   return (
-    <div className="pt-14 min-h-screen bg-zinc-950">
-      {/* Sidebar */}
+    <div className="min-h-screen bg-[#0b0d0c] pt-[108px] sm:pt-16">
       <DocsSidebar
         language={language}
+        product={product}
         activeSlug={activeSlug}
         onNavigate={handleNavigate}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
 
-      {/* Main content area */}
       <div className="lg:pl-72">
-        {/* Mobile header */}
-        <div className="sticky top-14 z-20 flex items-center gap-3 px-4 py-2 bg-zinc-950/90 backdrop-blur-sm border-b border-zinc-800 lg:hidden">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-800 transition-colors cursor-pointer"
-            aria-label="Open sidebar"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          <span className="text-sm text-zinc-400">{catTitle}</span>
-          <span className="text-zinc-600">/</span>
-          <span className="text-sm text-zinc-200 font-medium">{docTitle}</span>
-        </div>
+        {!isLanding && (
+          <div className="sticky top-[108px] z-20 flex min-w-0 items-center gap-3 border-b border-white/10 bg-[#0b0d0c]/95 px-4 py-2 backdrop-blur-sm sm:top-16 lg:hidden">
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(true)}
+              className="shrink-0 rounded-md p-2 text-zinc-400 hover:bg-white/5 hover:text-white"
+              aria-label={language === 'zh' ? '打开文档导航' : 'Open documentation navigation'}
+            >
+              <Menu aria-hidden="true" className="size-5" />
+            </button>
+            <span className="truncate text-sm text-zinc-400">{categoryTitle}</span>
+            <span className="text-zinc-600">/</span>
+            <span className="truncate text-sm font-medium text-zinc-200">{docTitle}</span>
+          </div>
+        )}
 
-        {/* Breadcrumb (desktop) */}
-        <div className="hidden lg:flex items-center gap-2 px-8 pt-6 pb-2 text-sm text-zinc-500">
-          <span>{catTitle}</span>
-          <span>/</span>
-          <span className="text-zinc-300">{docTitle}</span>
-        </div>
+        {!isLanding && (
+          <div className="hidden items-center gap-2 px-8 pb-2 pt-6 text-sm text-zinc-500 lg:flex">
+            <span>{categoryTitle}</span>
+            <span>/</span>
+            <span className="text-zinc-300">{docTitle}</span>
+          </div>
+        )}
 
-        {/* Doc content */}
-        <article className="px-4 py-6 lg:px-8 lg:py-4 max-w-4xl">
-          {content ? (
-            <div className="prose-docs">
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  // Custom heading renderers with anchors
-                  h1: ({ children }) => (
-                    <h1 className="text-3xl font-bold text-white mt-2 mb-6 pb-3 border-b border-zinc-800">
-                      {children}
-                    </h1>
-                  ),
-                  h2: ({ children, id }) => (
-                    <h2 id={id} className="text-2xl font-bold text-white mt-10 mb-4 pb-2 border-b border-zinc-800/50">
-                      {children}
-                    </h2>
-                  ),
-                  h3: ({ children, id }) => (
-                    <h3 id={id} className="text-xl font-semibold text-zinc-100 mt-8 mb-3">
-                      {children}
-                    </h3>
-                  ),
-                  h4: ({ children, id }) => (
-                    <h4 id={id} className="text-lg font-semibold text-zinc-200 mt-6 mb-2">
-                      {children}
-                    </h4>
-                  ),
-                  // Code blocks
-                  code: ({ className, children, ...props }) => {
-                    const isBlock = className?.includes('language-');
-                    if (isBlock) {
-                      return (
-                        <code className={`${className ?? ''} block bg-zinc-900 rounded-lg p-4 text-sm overflow-x-auto border border-zinc-800`} {...props}>
+        {isLanding ? (
+          <DocsLanding language={language} product={product} onNavigate={handleNavigate} />
+        ) : (
+          <article className="max-w-4xl px-4 py-6 lg:px-8 lg:py-4">
+            {doc && contentState.status === 'ready' ? (
+              <div className="prose-docs">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeSlug]}
+                  components={{
+                    h1: ({ children, id }) => (
+                      <h1
+                        id={id}
+                        className="mt-2 border-b border-zinc-800 pb-3 text-3xl font-bold text-white"
+                      >
+                        {children}
+                      </h1>
+                    ),
+                    h2: ({ children, id }) => (
+                      <h2
+                        id={id}
+                        className="mt-10 border-b border-zinc-800/50 pb-2 text-2xl font-bold text-white"
+                      >
+                        {children}
+                      </h2>
+                    ),
+                    h3: ({ children, id }) => (
+                      <h3 id={id} className="mt-8 text-xl font-semibold text-zinc-100">
+                        {children}
+                      </h3>
+                    ),
+                    h4: ({ children, id }) => (
+                      <h4 id={id} className="mt-6 text-lg font-semibold text-zinc-200">
+                        {children}
+                      </h4>
+                    ),
+                    code: ({ className, children, ...props }) => {
+                      const isBlock = className?.includes('language-');
+                      return isBlock ? (
+                        <code
+                          className={`${className ?? ''} block overflow-x-auto rounded-md border border-zinc-800 bg-zinc-900 p-4 text-sm`}
+                          {...props}
+                        >
+                          {children}
+                        </code>
+                      ) : (
+                        <code
+                          className="rounded bg-zinc-800 px-1.5 py-0.5 font-mono text-sm text-emerald-300"
+                          {...props}
+                        >
                           {children}
                         </code>
                       );
-                    }
-                    return (
-                      <code className="bg-zinc-800 text-blue-300 px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
+                    },
+                    pre: ({ children }) => (
+                      <pre className="my-4 overflow-hidden rounded-md">{children}</pre>
+                    ),
+                    a: ({ href, children }) => {
+                      const resolved = resolveMarkdownHref(href, product, language, doc);
+                      const isRoute = resolved.internal && resolved.href.startsWith('/');
+                      return (
+                        <a
+                          href={resolved.href}
+                          className="text-emerald-300 underline decoration-emerald-300/30 underline-offset-2 hover:text-emerald-200 hover:decoration-emerald-200/50"
+                          target={resolved.internal ? undefined : '_blank'}
+                          rel={resolved.internal ? undefined : 'noopener noreferrer'}
+                          onClick={
+                            isRoute
+                              ? (event) => {
+                                  event.preventDefault();
+                                  navigate(resolved.href);
+                                  window.scrollTo(0, 0);
+                                }
+                              : undefined
+                          }
+                        >
+                          {children}
+                        </a>
+                      );
+                    },
+                    img: ({ src, alt }) => (
+                      <img
+                        src={resolveMarkdownAsset(src, product, language, doc)}
+                        alt={alt ?? ''}
+                        loading="lazy"
+                        className="my-5 h-auto max-w-full rounded-md border border-white/10"
+                      />
+                    ),
+                    table: ({ children }) => (
+                      <div className="my-4 overflow-x-auto rounded-md border border-zinc-800">
+                        <table className="w-full text-sm">{children}</table>
+                      </div>
+                    ),
+                    thead: ({ children }) => <thead className="bg-zinc-900">{children}</thead>,
+                    th: ({ children }) => (
+                      <th className="border-b border-zinc-800 px-4 py-2.5 text-left font-semibold text-zinc-200">
                         {children}
-                      </code>
-                    );
-                  },
-                  pre: ({ children }) => (
-                    <pre className="my-4 rounded-lg overflow-hidden">
-                      {children}
-                    </pre>
-                  ),
-                  // Links
-                  a: ({ href, children }) => (
-                    <a
-                      href={href}
-                      className="text-blue-400 hover:text-blue-300 underline underline-offset-2 decoration-blue-400/30 hover:decoration-blue-300/50 transition-colors"
-                      target={href?.startsWith('http') ? '_blank' : undefined}
-                      rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    >
-                      {children}
-                    </a>
-                  ),
-                  // Tables
-                  table: ({ children }) => (
-                    <div className="overflow-x-auto my-4 rounded-lg border border-zinc-800">
-                      <table className="w-full text-sm">{children}</table>
-                    </div>
-                  ),
-                  thead: ({ children }) => (
-                    <thead className="bg-zinc-900">{children}</thead>
-                  ),
-                  th: ({ children }) => (
-                    <th className="px-4 py-2.5 text-left font-semibold text-zinc-200 border-b border-zinc-800">
-                      {children}
-                    </th>
-                  ),
-                  td: ({ children }) => (
-                    <td className="px-4 py-2.5 text-zinc-300 border-b border-zinc-800/50">
-                      {children}
-                    </td>
-                  ),
-                  // Lists
-                  ul: ({ children }) => (
-                    <ul className="list-disc list-inside space-y-1 my-3 text-zinc-300 marker:text-zinc-600">
-                      {children}
-                    </ul>
-                  ),
-                  ol: ({ children }) => (
-                    <ol className="list-decimal list-inside space-y-1 my-3 text-zinc-300 marker:text-zinc-600">
-                      {children}
-                    </ol>
-                  ),
-                  // Blockquotes
-                  blockquote: ({ children }) => (
-                    <blockquote className="border-l-4 border-blue-500/40 bg-blue-500/5 pl-4 py-2 my-4 text-zinc-300 rounded-r-lg">
-                      {children}
-                    </blockquote>
-                  ),
-                  // Paragraphs
-                  p: ({ children }) => (
-                    <p className="text-zinc-300 leading-relaxed my-3">
-                      {children}
-                    </p>
-                  ),
-                  // Horizontal rule
-                  hr: () => (
-                    <hr className="border-zinc-800 my-8" />
-                  ),
-                  // Strong
-                  strong: ({ children }) => (
-                    <strong className="text-white font-semibold">{children}</strong>
-                  ),
-                }}
-              >
-                {content}
-              </ReactMarkdown>
-            </div>
-          ) : (
-            <div className="text-center py-20 text-zinc-500">
-              <p className="text-lg mb-2">
-                {language === 'zh' ? '文档加载中...' : 'Loading document...'}
-              </p>
-              <p className="text-sm">
-                {language === 'zh'
-                  ? `未找到文档: ${activeSlug}`
-                  : `Document not found: ${activeSlug}`}
-              </p>
-            </div>
-          )}
-        </article>
+                      </th>
+                    ),
+                    td: ({ children }) => (
+                      <td className="border-b border-zinc-800/50 px-4 py-2.5 text-zinc-300">
+                        {children}
+                      </td>
+                    ),
+                    ul: ({ children }) => (
+                      <ul className="my-3 list-inside list-disc space-y-1 text-zinc-300 marker:text-zinc-600">
+                        {children}
+                      </ul>
+                    ),
+                    ol: ({ children }) => (
+                      <ol className="my-3 list-inside list-decimal space-y-1 text-zinc-300 marker:text-zinc-600">
+                        {children}
+                      </ol>
+                    ),
+                    blockquote: ({ children }) => (
+                      <blockquote className="my-4 rounded-r-md border-l-4 border-emerald-300/40 bg-emerald-300/5 py-2 pl-4 text-zinc-300">
+                        {children}
+                      </blockquote>
+                    ),
+                    p: ({ children }) => (
+                      <p className="my-3 leading-relaxed text-zinc-300">{children}</p>
+                    ),
+                    hr: () => <hr className="my-8 border-zinc-800" />,
+                    strong: ({ children }) => (
+                      <strong className="font-semibold text-white">{children}</strong>
+                    ),
+                  }}
+                >
+                  {contentState.content}
+                </ReactMarkdown>
+              </div>
+            ) : doc && contentState.status === 'loading' ? (
+              <div className="py-20 text-center text-zinc-400" role="status">
+                {language === 'zh' ? '正在加载文档...' : 'Loading documentation...'}
+              </div>
+            ) : (
+              <div className="py-20 text-center text-zinc-400">
+                <h1 className="mb-3 text-2xl font-semibold text-white">
+                  {language === 'zh' ? '找不到这篇文档' : 'Documentation not found'}
+                </h1>
+                <p className="text-sm">
+                  {language === 'zh'
+                    ? `文档标识“${activeSlug}”不存在或尚未同步。`
+                    : `The document slug “${activeSlug}” does not exist or has not been synced.`}
+                </p>
+                <button
+                  type="button"
+                  className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-md bg-emerald-300 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-emerald-200"
+                  onClick={() => handleNavigate(getDefaultSlug(product))}
+                >
+                  <Undo2 aria-hidden="true" className="size-4" />
+                  {language === 'zh' ? '返回文档首页' : 'Back to documentation'}
+                </button>
+              </div>
+            )}
+          </article>
+        )}
       </div>
     </div>
   );

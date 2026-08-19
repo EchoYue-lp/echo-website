@@ -1,0 +1,16 @@
+server {
+    listen 80;
+    server_name echo-agent.dev;
+
+    root /var/www/echo-website/current;
+    index index.html;
+    error_page 404 /404.html;
+
+    location = /404.html {
+        internal;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}

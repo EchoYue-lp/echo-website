@@ -1,99 +1,687 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
-
-  <!-- 主页 -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://echo-agent.dev/</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/?lang=en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/" />
   </url>
-
-  <!-- EchoCoWork 产品页 -->
-  <url>
-    <loc>https://echo-agent.dev/echocowork</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- 文档入口 -->
   <url>
     <loc>https://echo-agent.dev/docs</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs" />
   </url>
-
-  <!-- 核心文档页 -->
   <url>
     <loc>https://echo-agent.dev/docs/overview</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/overview" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/overview" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/overview" />
   </url>
   <url>
     <loc>https://echo-agent.dev/docs/getting-started</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/getting-started" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/getting-started" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/getting-started" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/how-it-works</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/how-it-works" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/how-it-works" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/how-it-works" />
   </url>
   <url>
     <loc>https://echo-agent.dev/docs/tools</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/tools" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/tools" />
   </url>
   <url>
     <loc>https://echo-agent.dev/docs/memory</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/memory" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/memory" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/memory" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/compression</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/compression" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/compression" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/compression" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/streaming</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/streaming" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/streaming" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/streaming" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/context-system</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/context-system" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/context-system" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/context-system" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/structured-output</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/structured-output" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/structured-output" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/structured-output" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/chat</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/chat" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/chat" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/chat" />
   </url>
   <url>
     <loc>https://echo-agent.dev/docs/subagent</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/subagent" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/subagent" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/subagent" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/multi-agent</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/multi-agent" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/multi-agent" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/multi-agent" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/human-loop</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/human-loop" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/human-loop" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/human-loop" />
   </url>
   <url>
     <loc>https://echo-agent.dev/docs/tasks</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/tasks" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/tasks" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/tasks" />
   </url>
   <url>
-    <loc>https://echo-agent.dev/docs/mcp</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://echo-agent.dev/docs/long-running-tasks</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/long-running-tasks" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/long-running-tasks" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/long-running-tasks" />
   </url>
   <url>
-    <loc>https://echo-agent.dev/docs/graph-workflow</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://echo-agent.dev/docs/skills</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/skills" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/skills" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/skills" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/skill-authoring</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/skill-authoring" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/skill-authoring" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/skill-authoring" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/guard-system</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/guard-system" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/guard-system" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/guard-system" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/eval-system</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/eval-system" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/eval-system" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/eval-system" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/self-improvement</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/self-improvement" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/self-improvement" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/self-improvement" />
   </url>
   <url>
     <loc>https://echo-agent.dev/docs/plugin-system</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/plugin-system" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/plugin-system" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/plugin-system" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/graph-workflow</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/graph-workflow" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/graph-workflow" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/graph-workflow" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/factory-modes</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/factory-modes" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/factory-modes" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/factory-modes" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/mcp</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/mcp" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/mcp" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/mcp" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/lsp</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/lsp" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/lsp" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/lsp" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/web-tools</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/web-tools" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/web-tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/web-tools" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/common-tools</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/common-tools" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/common-tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/common-tools" />
   </url>
   <url>
     <loc>https://echo-agent.dev/docs/research-tools</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/research-tools" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/research-tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/research-tools" />
   </url>
   <url>
-    <loc>https://echo-agent.dev/docs/cli-readme</loc>
-    <lastmod>2026-06-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://echo-agent.dev/docs/code-search</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/code-search" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/code-search" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/code-search" />
   </url>
-
+  <url>
+    <loc>https://echo-agent.dev/docs/semantic-search</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/semantic-search" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/semantic-search" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/semantic-search" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/hooks</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/hooks" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/hooks" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/hooks" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/im-channels</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/im-channels" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/im-channels" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/im-channels" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/shell-text-tools</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/shell-text-tools" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/shell-text-tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/shell-text-tools" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/database-tools</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/database-tools" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/database-tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/database-tools" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/pipelines</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/pipelines" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/pipelines" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/pipelines" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/data-quality</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/data-quality" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/data-quality" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/data-quality" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/data-output-format</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/data-output-format" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/data-output-format" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/data-output-format" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/tracing</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/tracing" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/tracing" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/tracing" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/react-safety</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/react-safety" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/react-safety" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/react-safety" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/config-reference</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/config-reference" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/config-reference" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/config-reference" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/security</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/security" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/security" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/security" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/headless-mode</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/headless-mode" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/headless-mode" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/headless-mode" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/git-isolation</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/git-isolation" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/git-isolation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/git-isolation" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/testing</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/testing" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/testing" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/testing" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/knowledge-overview</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/knowledge-overview" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/knowledge-overview" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/knowledge-overview" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/agent-patterns</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/agent-patterns" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/agent-patterns" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/agent-patterns" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/mcp-protocol-deep-dive</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/mcp-protocol-deep-dive" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/mcp-protocol-deep-dive" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/mcp-protocol-deep-dive" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/skill-system-guide</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/skill-system-guide" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/skill-system-guide" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/skill-system-guide" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/a2a-protocol</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/a2a-protocol" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/a2a-protocol" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/a2a-protocol" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/eko</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/eko" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/eko" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/eko" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/eko/docs</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/eko/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/eko/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/eko/docs" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/eko/docs/overview</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/eko/docs/overview" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/eko/docs/overview" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/eko/docs/overview" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/eko/docs/getting-started</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/eko/docs/getting-started" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/eko/docs/getting-started" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/eko/docs/getting-started" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/eko/docs/capabilities</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/eko/docs/capabilities" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/eko/docs/capabilities" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/eko/docs/capabilities" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/eko/docs/storage</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/eko/docs/storage" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/eko/docs/storage" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/eko/docs/storage" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/overview</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/overview" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/overview" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/overview" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/getting-started</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/getting-started" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/getting-started" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/getting-started" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/how-it-works</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/how-it-works" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/how-it-works" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/how-it-works" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/tools</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/tools" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/tools" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/memory</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/memory" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/memory" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/memory" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/compression</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/compression" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/compression" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/compression" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/streaming</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/streaming" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/streaming" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/streaming" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/context-system</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/context-system" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/context-system" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/context-system" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/structured-output</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/structured-output" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/structured-output" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/structured-output" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/chat</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/chat" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/chat" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/chat" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/subagent</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/subagent" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/subagent" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/subagent" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/multi-agent</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/multi-agent" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/multi-agent" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/multi-agent" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/human-loop</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/human-loop" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/human-loop" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/human-loop" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/tasks</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/tasks" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/tasks" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/tasks" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/long-running-tasks</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/long-running-tasks" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/long-running-tasks" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/long-running-tasks" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/skills</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/skills" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/skills" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/skills" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/skill-authoring</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/skill-authoring" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/skill-authoring" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/skill-authoring" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/guard-system</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/guard-system" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/guard-system" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/guard-system" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/eval-system</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/eval-system" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/eval-system" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/eval-system" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/self-improvement</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/self-improvement" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/self-improvement" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/self-improvement" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/plugin-system</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/plugin-system" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/plugin-system" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/plugin-system" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/graph-workflow</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/graph-workflow" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/graph-workflow" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/graph-workflow" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/factory-modes</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/factory-modes" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/factory-modes" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/factory-modes" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/mcp</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/mcp" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/mcp" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/mcp" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/lsp</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/lsp" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/lsp" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/lsp" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/web-tools</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/web-tools" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/web-tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/web-tools" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/common-tools</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/common-tools" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/common-tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/common-tools" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/research-tools</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/research-tools" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/research-tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/research-tools" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/code-search</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/code-search" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/code-search" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/code-search" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/semantic-search</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/semantic-search" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/semantic-search" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/semantic-search" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/hooks</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/hooks" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/hooks" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/hooks" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/im-channels</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/im-channels" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/im-channels" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/im-channels" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/shell-text-tools</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/shell-text-tools" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/shell-text-tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/shell-text-tools" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/database-tools</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/database-tools" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/database-tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/database-tools" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/pipelines</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/pipelines" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/pipelines" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/pipelines" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/data-quality</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/data-quality" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/data-quality" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/data-quality" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/data-output-format</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/data-output-format" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/data-output-format" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/data-output-format" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/tracing</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/tracing" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/tracing" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/tracing" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/react-safety</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/react-safety" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/react-safety" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/react-safety" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/config-reference</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/config-reference" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/config-reference" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/config-reference" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/security</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/security" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/security" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/security" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/headless-mode</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/headless-mode" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/headless-mode" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/headless-mode" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/git-isolation</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/git-isolation" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/git-isolation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/git-isolation" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/testing</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/testing" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/testing" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/testing" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/knowledge-overview</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/knowledge-overview" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/knowledge-overview" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/knowledge-overview" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/agent-patterns</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/agent-patterns" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/agent-patterns" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/agent-patterns" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/mcp-protocol-deep-dive</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/mcp-protocol-deep-dive" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/mcp-protocol-deep-dive" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/mcp-protocol-deep-dive" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/skill-system-guide</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/skill-system-guide" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/skill-system-guide" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/skill-system-guide" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/a2a-protocol</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/a2a-protocol" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/a2a-protocol" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/a2a-protocol" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/eko</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/eko" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/eko" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/eko" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/eko/docs</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/eko/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/eko/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/eko/docs" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/eko/docs/overview</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/eko/docs/overview" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/eko/docs/overview" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/eko/docs/overview" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/eko/docs/getting-started</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/eko/docs/getting-started" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/eko/docs/getting-started" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/eko/docs/getting-started" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/eko/docs/capabilities</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/eko/docs/capabilities" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/eko/docs/capabilities" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/eko/docs/capabilities" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/eko/docs/storage</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/eko/docs/storage" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/eko/docs/storage" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/eko/docs/storage" />
+  </url>
 </urlset>

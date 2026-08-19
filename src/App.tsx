@@ -1,225 +1,142 @@
-import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, useLocation, useParams } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+import HomePage from './components/HomePage';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import FeatureGrid from './components/FeatureGrid';
-import Architecture from './components/Architecture';
-import ComparisonTable from './components/ComparisonTable';
-import EKOFeatures from './components/EKOFeatures';
-import EKOUseCases from './components/EKOUseCases';
-import DocsPage from './components/DocsPage';
-import Footer from './components/Footer';
-
 import {
-  frameworkHeroZh, productHeroZh,
-  comparisonZh,
-  ekoFeaturesZh, ekoUseCasesZh,
-  footerZh,
-} from './content/features.zh';
+  getDocsBasePath,
+  getHomePath,
+  getRouteContext,
+  languageFromPath,
+  stripLanguagePrefix,
+  withLanguage,
+  type Language,
+  type Product,
+} from './routing';
+import { applyNotFoundMetadata, applyPageMetadata } from './seo';
 
-import {
-  frameworkHeroEn, productHeroEn,
-  comparisonEn,
-  ekoFeaturesEn, ekoUseCasesEn,
-  footerEn,
-} from './content/features.en';
+const DocsPage = lazy(() => import('./components/DocsPage'));
 
-type Language = 'zh' | 'en';
-type Product = 'echo-agent' | 'eko';
+function DocsRoute({ language, product }: { language: Language; product: Product }) {
+  const { slug } = useParams<{ slug?: string }>();
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-[#0b0d0c] pt-28 text-center text-zinc-400" role="status">
+          {language === 'zh' ? '正在加载文档...' : 'Loading documentation...'}
+        </main>
+      }
+    >
+      <DocsPage language={language} product={product} initialSlug={slug} />
+    </Suspense>
+  );
+}
 
-const pageTitles: Record<string, Record<Language, string>> = {
-  'echo-agent-home': {
-    zh: 'echo-agent — 高性能 Rust AI Agent 框架 | 从零到一新手友好',
-    en: 'echo-agent — High-Performance Rust AI Agent Framework | Beginner Friendly',
-  },
-  'eko-home': {
-    zh: 'EKO — 编码·学术研究·数据分析·医学研究 AI Agent',
-    en: 'EKO — Coding · Academic Research · Data Analysis · Medical Research AI Agent',
-  },
-  'docs': {
-    zh: '文档 — echo-agent 高性能 AI Agent 框架',
-    en: 'Docs — echo-agent High-Performance AI Agent Framework',
-  },
-};
-
-const pageDescriptions: Record<string, Record<Language, string>> = {
-  'echo-agent-home': {
-    zh: 'echo-agent 是基于 Rust 的高性能 AI Agent 开发框架，从零到一新手友好。提供 ReAct 引擎、DAG 任务编排、67+ 内置工具（MCP/LSP/Web/Data/Git）、多 Agent 编排和自检改进化循环。性能比 Python 框架快 10-100 倍，内存安全无数据竞争。',
-    en: 'echo-agent is a high-performance Rust AI Agent framework, beginner-friendly from zero to one. Features ReAct engine, DAG task orchestration, 67+ built-in tools (MCP/LSP/Web/Data/Git), multi-agent orchestration, and self-improvement loop. 10-100x faster than Python frameworks with memory safety.',
-  },
-  'eko-home': {
-    zh: 'EKO 是基于 echo-agent 构建的生产级 Agent，简单易用、功能完备。专注于编码（代码生成、审查、重构）、学术研究（文献检索、论文写作）、数据处理与分析（统计、可视化）、医学研究（PubMed、临床试验）四大核心场景。',
-    en: 'EKO is a production-grade agent built on echo-agent, simple and feature-complete. Focused on four core scenarios: coding (generation, review, refactoring), academic research (literature search, paper writing), data analysis (statistics, visualization), and medical research (PubMed, clinical trials).',
-  },
-  'docs': {
-    zh: 'echo-agent 完整文档 — 快速开始、核心概念、ReAct 引擎、工具系统、记忆管理、DAG 任务编排、多 Agent、MCP 协议、LSP 集成、插件系统、安全模型。',
-    en: 'echo-agent complete documentation — quick start, core concepts, ReAct engine, tool system, memory management, DAG task orchestration, multi-agent, MCP protocol, LSP integration, plugin system, security model.',
-  },
-};
-
-// ── Page Components ──────────────────────────────────────────────────────────
-
-function HomePage({ language, product }: {
-  language: Language;
-  product: Product;
-}) {
-  const isZh = language === 'zh';
-  const frameworkHero = isZh ? frameworkHeroZh : frameworkHeroEn;
-  const productHero = isZh ? productHeroZh : productHeroEn;
-
-  // Update meta tags
+function NotFound({ language }: { language: Language }) {
   useEffect(() => {
-    const key = `${product}-home`;
-    document.title = pageTitles[key]?.[language] ?? 'Echo';
-    const descMeta = document.querySelector('meta[name="description"]');
-    if (descMeta) {
-      descMeta.setAttribute('content', pageDescriptions[key]?.[language] ?? '');
-    }
-    document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
-  }, [product, language]);
+    applyNotFoundMetadata(language);
+  }, [language]);
 
   return (
-    <main>
-      <Hero
-        language={language}
-        product={product}
-        frameworkHero={frameworkHero}
-        productHero={productHero}
-      />
-      {product === 'echo-agent' ? (
-        <>
-          <FeatureGrid language={language} />
-          <Architecture language={language} />
-          <ComparisonTable
-            title={isZh ? comparisonZh.title : comparisonEn.title}
-            subtitle={isZh ? comparisonZh.subtitle : comparisonEn.subtitle}
-            headers={isZh ? comparisonZh.headers : comparisonEn.headers}
-            rows={isZh ? comparisonZh.rows : comparisonEn.rows}
-            advantages={isZh ? comparisonZh.advantages : comparisonEn.advantages}
-          />
-        </>
-      ) : (
-        <>
-          <EKOFeatures
-            title={isZh ? ekoFeaturesZh.title : ekoFeaturesEn.title}
-            subtitle={isZh ? ekoFeaturesZh.subtitle : ekoFeaturesEn.subtitle}
-            features={isZh ? ekoFeaturesZh.features : ekoFeaturesEn.features}
-          />
-          <EKOUseCases
-            title={isZh ? ekoUseCasesZh.title : ekoUseCasesEn.title}
-            subtitle={isZh ? ekoUseCasesZh.subtitle : ekoUseCasesEn.subtitle}
-            cases={isZh ? ekoUseCasesZh.cases : ekoUseCasesEn.cases}
-            quickStart={isZh ? ekoUseCasesZh.quickStart : ekoUseCasesEn.quickStart}
-          />
-        </>
-      )}
+    <main className="flex min-h-screen items-center justify-center bg-[#0b0d0c] px-5 pt-20">
+      <div className="max-w-lg text-center">
+        <p className="font-mono text-sm font-semibold text-amber-300">404</p>
+        <h1 className="mt-3 text-3xl font-semibold text-white">
+          {language === 'zh' ? '页面不存在' : 'Page not found'}
+        </h1>
+        <p className="mt-3 text-zinc-400">
+          {language === 'zh' ? '这个地址没有对应的页面。' : 'There is no page at this address.'}
+        </p>
+        <a
+          className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-md bg-emerald-300 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-emerald-200"
+          href={withLanguage('/', language)}
+        >
+          <ArrowLeft aria-hidden="true" className="size-4" />
+          {language === 'zh' ? '返回首页' : 'Back home'}
+        </a>
+      </div>
     </main>
   );
 }
 
-function DocsRoute({ language }: { language: Language }) {
-  const { slug } = useParams<{ slug?: string }>();
-
-  useEffect(() => {
-    document.title = pageTitles['docs']?.[language] ?? 'Docs — Echo';
-    const descMeta = document.querySelector('meta[name="description"]');
-    if (descMeta) {
-      descMeta.setAttribute('content', pageDescriptions['docs']?.[language] ?? '');
-    }
-    document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
-  }, [language]);
-
-  return <DocsPage language={language} initialSlug={slug} />;
-}
-
-// ── App Shell ────────────────────────────────────────────────────────────────
-
 function AppShell() {
-  const [language, setLanguage] = useState<Language>('zh');
-  const [product, setProduct] = useState<Product>('echo-agent');
   const navigate = useNavigate();
   const location = useLocation();
+  const language = languageFromPath(location.pathname);
+  const route = getRouteContext(location.pathname);
+  const localizedPath = stripLanguagePrefix(location.pathname);
+  const knownHome = localizedPath === '/' || localizedPath === '/eko';
 
-  const toggleLanguage = () => setLanguage(l => l === 'zh' ? 'en' : 'zh');
-
-  const isDocsView = location.pathname.startsWith('/docs');
-  const isEKO = location.pathname.startsWith('/eko');
-
-  // Sync product state with URL
   useEffect(() => {
-    if (isEKO) {
-      setProduct('eko');
-    } else if (!isDocsView) {
-      setProduct('echo-agent');
+    const legacyLanguage = new URLSearchParams(location.search).get('lang');
+    if (legacyLanguage === 'en' && language !== 'en') {
+      navigate(withLanguage(`${location.pathname}${location.search}${location.hash}`, 'en'), {
+        replace: true,
+      });
     }
-  }, [isEKO, isDocsView]);
+  }, [language, location.hash, location.pathname, location.search, navigate]);
+
+  useEffect(() => {
+    if (knownHome || route.isDocs) {
+      applyPageMetadata(route.product, route.isDocs ? 'docs' : 'home', language, location.pathname);
+    }
+  }, [knownHome, language, location.pathname, route.isDocs, route.product]);
+
+  const toggleLanguage = () => {
+    const nextLanguage: Language = language === 'zh' ? 'en' : 'zh';
+    navigate(withLanguage(`${location.pathname}${location.search}${location.hash}`, nextLanguage), {
+      replace: true,
+    });
+  };
 
   const handleSwitchView = (view: 'home' | 'docs') => {
-    if (view === 'docs') {
-      navigate('/docs');
-    } else {
-      navigate(product === 'eko' ? '/eko' : '/');
-    }
+    const path = view === 'docs' ? getDocsBasePath(route.product) : getHomePath(route.product);
+    navigate(withLanguage(path, language));
     window.scrollTo(0, 0);
   };
 
-  const handleSwitchProduct = (p: Product) => {
-    setProduct(p);
-    if (isDocsView) {
-      // Stay on docs but could switch to product-specific docs
-    } else {
-      navigate(p === 'eko' ? '/eko' : '/');
-    }
+  const handleSwitchProduct = (product: Product) => {
+    const path = route.isDocs ? getDocsBasePath(product) : getHomePath(product);
+    navigate(withLanguage(path, language));
     window.scrollTo(0, 0);
   };
-
-  const isZh = language === 'zh';
-  const footerProduct = isEKO ? 'eko' : 'echo-agent';
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-[#0b0d0c]">
       <Navbar
         language={language}
-        product={product}
-        view={isDocsView ? 'docs' : 'home'}
+        product={route.product}
+        view={route.isDocs ? 'docs' : 'home'}
         onToggleLanguage={toggleLanguage}
         onSwitchProduct={handleSwitchProduct}
         onSwitchView={handleSwitchView}
       />
-
       <Routes>
-        <Route path="/" element={
-          <HomePage language={language} product={product} />
-        } />
-        <Route path="/eko" element={
-          <HomePage language={language} product="eko" />
-        } />
-        <Route path="/docs" element={<DocsRoute language={language} />} />
-        <Route path="/docs/:slug" element={<DocsRoute language={language} />} />
-        <Route path="/eko/docs" element={<DocsRoute language={language} />} />
-        <Route path="/eko/docs/:slug" element={<DocsRoute language={language} />} />
+        <Route path="/" element={<HomePage language="zh" product="echo-agent" />} />
+        <Route path="/en" element={<HomePage language="en" product="echo-agent" />} />
+        <Route path="/eko" element={<HomePage language="zh" product="eko" />} />
+        <Route path="/en/eko" element={<HomePage language="en" product="eko" />} />
+        <Route path="/docs/:slug?" element={<DocsRoute language="zh" product="echo-agent" />} />
+        <Route path="/en/docs/:slug?" element={<DocsRoute language="en" product="echo-agent" />} />
+        <Route path="/eko/docs/:slug?" element={<DocsRoute language="zh" product="eko" />} />
+        <Route path="/en/eko/docs/:slug?" element={<DocsRoute language="en" product="eko" />} />
+        <Route path="*" element={<NotFound language={language} />} />
       </Routes>
-
-      {!isDocsView && (
-        <Footer
-          product={footerProduct}
-          description={isZh ? footerZh.description : footerEn.description}
-          links={isZh ? footerZh.links : footerEn.links}
-          items={isZh ? footerZh.items : footerEn.items}
-          githubUrl={isZh ? footerZh.githubUrl : footerEn.githubUrl}
-          copyright={isZh ? footerZh.copyright : footerEn.copyright}
-        />
-      )}
     </div>
   );
 }
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
       <AppShell />
     </BrowserRouter>
   );
 }
-
-export default App;

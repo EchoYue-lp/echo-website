@@ -1,3 +1,5 @@
+import { BookOpen, Braces, Home, Languages } from 'lucide-react';
+
 type Language = 'zh' | 'en';
 type Product = 'echo-agent' | 'eko';
 type View = 'home' | 'docs';
@@ -7,126 +9,133 @@ interface NavbarProps {
   product: Product;
   view: View;
   onToggleLanguage: () => void;
-  onSwitchProduct: (p: Product) => void;
-  onSwitchView: (v: View) => void;
+  onSwitchProduct: (product: Product) => void;
+  onSwitchView: (view: View) => void;
 }
 
-const labels: Record<Language, { agent: string; product: string; lang: string; langLabel: string; navLabel: string; switchLabel: string; docs: string }> = {
+const labels = {
   zh: {
-    agent: 'echo-agent',
-    product: 'EKO',
-    lang: 'EN',
-    langLabel: '切换到英文',
-    navLabel: '主导航',
-    switchLabel: '产品切换',
+    language: '切换到英文',
+    navigation: '主导航',
+    product: '产品切换',
+    home: '首页',
     docs: '文档',
+    nextLanguage: 'EN',
   },
   en: {
-    agent: 'echo-agent',
-    product: 'EKO',
-    lang: '中文',
-    langLabel: 'Switch to Chinese',
-    navLabel: 'Main navigation',
-    switchLabel: 'Product switcher',
+    language: 'Switch to Chinese',
+    navigation: 'Main navigation',
+    product: 'Product switcher',
+    home: 'Home',
     docs: 'Docs',
+    nextLanguage: '中文',
   },
-};
+} as const;
 
-export default function Navbar({ language, product, view, onToggleLanguage, onSwitchProduct, onSwitchView }: NavbarProps) {
-  const l = labels[language];
-
-  const tabClass = (active: boolean) =>
-    `px-4 py-1.5 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer ${
-      active
-        ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/25'
-        : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
+export default function Navbar({
+  language,
+  product,
+  view,
+  onToggleLanguage,
+  onSwitchProduct,
+  onSwitchView,
+}: NavbarProps) {
+  const label = labels[language];
+  const productClass = (active: boolean) =>
+    `min-h-9 rounded-sm px-3 py-1.5 text-xs font-semibold ${
+      active ? 'bg-zinc-100 text-zinc-950' : 'text-zinc-400 hover:bg-white/5 hover:text-white'
     }`;
-
   const viewClass = (active: boolean) =>
-    `px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer ${
+    `inline-flex min-h-9 items-center gap-1.5 rounded-sm px-3 py-1.5 text-xs font-semibold ${
       active
-        ? 'text-white bg-zinc-800'
-        : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/50'
+        ? 'bg-emerald-300/15 text-emerald-200'
+        : 'text-zinc-400 hover:bg-white/5 hover:text-white'
     }`;
 
   return (
-    <nav aria-label={l.navLabel} className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-zinc-950/80 border-b border-zinc-800/50">
-      <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => onSwitchView('home')}
-            aria-label="Echo home page"
-            className="text-lg font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent cursor-pointer"
-          >
-            Echo
-          </button>
+    <nav
+      aria-label={label.navigation}
+      className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#0b0d0c]/95 backdrop-blur-sm"
+    >
+      <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4 sm:px-8">
+        <button
+          type="button"
+          onClick={() => onSwitchView('home')}
+          aria-label="Echo home page"
+          className="flex min-h-10 shrink-0 items-center gap-2 rounded-sm px-1 text-sm font-semibold text-white hover:text-emerald-200"
+        >
+          <Braces aria-hidden="true" className="size-5 text-emerald-300" />
+          <span className="hidden min-[360px]:inline">Echo</span>
+        </button>
 
-          {/* Home / Docs toggle */}
-          <div className="hidden sm:flex items-center gap-0.5 ml-3 bg-zinc-900/60 rounded-full p-0.5 border border-zinc-800/50">
-            <button
-              onClick={() => onSwitchView('home')}
-              className={viewClass(view === 'home')}
-            >
-              Home
-            </button>
-            <button
-              onClick={() => onSwitchView('docs')}
-              className={viewClass(view === 'docs')}
-            >
-              {l.docs}
-            </button>
-          </div>
+        <div
+          role="tablist"
+          aria-label={label.product}
+          className="flex shrink-0 items-center gap-0.5 rounded-md border border-white/10 bg-white/5 p-1"
+        >
+          <button
+            type="button"
+            role="tab"
+            aria-selected={product === 'echo-agent'}
+            className={productClass(product === 'echo-agent')}
+            onClick={() => onSwitchProduct('echo-agent')}
+          >
+            echo-agent
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={product === 'eko'}
+            className={productClass(product === 'eko')}
+            onClick={() => onSwitchProduct('eko')}
+          >
+            EKO
+          </button>
         </div>
 
-        {/* Product tabs (only show on home view) */}
-        {view === 'home' && (
-          <div role="tablist" aria-label={l.switchLabel} className="flex items-center gap-1 bg-zinc-900/80 rounded-full p-1 border border-zinc-800">
-            <button
-              role="tab"
-              aria-selected={product === 'echo-agent'}
-              className={tabClass(product === 'echo-agent')}
-              onClick={() => onSwitchProduct('echo-agent')}
-            >
-              {l.agent}
-            </button>
-            <button
-              role="tab"
-              aria-selected={product === 'eko'}
-              className={tabClass(product === 'eko')}
-              onClick={() => onSwitchProduct('eko')}
-            >
-              {l.product}
-            </button>
-          </div>
-        )}
+        <div className="ml-auto hidden items-center gap-0.5 sm:flex">
+          <button
+            type="button"
+            className={viewClass(view === 'home')}
+            onClick={() => onSwitchView('home')}
+          >
+            <Home aria-hidden="true" className="size-4" /> {label.home}
+          </button>
+          <button
+            type="button"
+            className={viewClass(view === 'docs')}
+            onClick={() => onSwitchView('docs')}
+          >
+            <BookOpen aria-hidden="true" className="size-4" /> {label.docs}
+          </button>
+        </div>
 
-        {/* Spacer when no product tabs */}
-        {view !== 'home' && <div className="flex-1" />}
-
-        {/* Language switch */}
         <button
+          type="button"
           onClick={onToggleLanguage}
-          aria-label={l.langLabel}
-          className="px-3 py-1.5 text-xs font-medium text-zinc-400 border border-zinc-700 rounded-full hover:text-white hover:border-zinc-500 transition-all cursor-pointer"
+          aria-label={label.language}
+          title={label.language}
+          className="ml-auto inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-sm border border-white/15 px-2.5 py-1.5 text-xs font-semibold text-zinc-300 hover:border-white/30 hover:text-white sm:ml-0"
         >
-          {l.lang}
+          <Languages aria-hidden="true" className="size-4" />
+          <span className="hidden min-[430px]:inline">{label.nextLanguage}</span>
         </button>
       </div>
 
-      {/* Mobile: Home/Docs toggle below main nav */}
-      <div className="flex sm:hidden items-center gap-0.5 px-4 pb-2 bg-zinc-950/80">
+      <div className="flex h-11 items-center gap-1 border-t border-white/5 px-4 sm:hidden">
         <button
-          onClick={() => onSwitchView('home')}
+          type="button"
           className={viewClass(view === 'home')}
+          onClick={() => onSwitchView('home')}
         >
-          Home
+          <Home aria-hidden="true" className="size-4" /> {label.home}
         </button>
         <button
-          onClick={() => onSwitchView('docs')}
+          type="button"
           className={viewClass(view === 'docs')}
+          onClick={() => onSwitchView('docs')}
         >
-          {l.docs}
+          <BookOpen aria-hidden="true" className="size-4" /> {label.docs}
         </button>
       </div>
     </nav>

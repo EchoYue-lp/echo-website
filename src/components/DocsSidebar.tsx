@@ -1,34 +1,71 @@
-import { useState } from 'react';
-import { docCategories, type DocCategory, type Language } from '../docs/registry';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  BarChart3,
+  BookOpen,
+  BrainCircuit,
+  ChevronRight,
+  ExternalLink,
+  FlaskConical,
+  Library,
+  MonitorCog,
+  Plug,
+  Rocket,
+  Workflow,
+  type LucideIcon,
+} from 'lucide-react';
+import { getDocCategories, type DocCategory, type Language, type Product } from '../docs/registry';
 
 interface DocsSidebarProps {
   language: Language;
+  product: Product;
   activeSlug: string;
   onNavigate: (slug: string) => void;
   isOpen: boolean;
   onClose: () => void;
 }
 
+const categoryIcons: Record<DocCategory['icon'], LucideIcon> = {
+  rocket: Rocket,
+  brain: BrainCircuit,
+  workflow: Workflow,
+  plug: Plug,
+  chart: BarChart3,
+  flask: FlaskConical,
+  library: Library,
+  book: BookOpen,
+  monitor: MonitorCog,
+};
+
 export default function DocsSidebar({
   language,
+  product,
   activeSlug,
   onNavigate,
   isOpen,
   onClose,
 }: DocsSidebarProps) {
+  const docCategories = useMemo(() => getDocCategories(product), [product]);
   const [expandedCats, setExpandedCats] = useState<Set<number>>(() => {
-    // Auto-expand the category containing the active doc
     const initial = new Set<number>();
-    docCategories.forEach((cat, idx) => {
-      if (cat.docs.some(d => d.slug === activeSlug)) {
+    docCategories.forEach((category, idx) => {
+      if (category.docs.some((doc) => doc.slug === activeSlug)) {
         initial.add(idx);
       }
     });
     return initial;
   });
 
+  useEffect(() => {
+    const activeCategory = docCategories.findIndex((category) =>
+      category.docs.some((doc) => doc.slug === activeSlug),
+    );
+    if (activeCategory >= 0) {
+      setExpandedCats((previous) => new Set(previous).add(activeCategory));
+    }
+  }, [activeSlug, docCategories]);
+
   const toggleCategory = (idx: number) => {
-    setExpandedCats(prev => {
+    setExpandedCats((prev) => {
       const next = new Set(prev);
       if (next.has(idx)) next.delete(idx);
       else next.add(idx);
@@ -48,7 +85,9 @@ export default function DocsSidebar({
     <>
       {/* Mobile overlay */}
       {isOpen && (
-        <div
+        <button
+          type="button"
+          aria-label={language === 'zh' ? '关闭文档导航' : 'Close documentation navigation'}
           className="fixed inset-0 bg-black/60 z-30 lg:hidden"
           onClick={onClose}
         />
@@ -56,15 +95,15 @@ export default function DocsSidebar({
 
       <aside
         className={`
-          fixed top-14 left-0 bottom-0 z-40 w-72
-          bg-zinc-950 border-r border-zinc-800
+          fixed top-[108px] sm:top-16 left-0 bottom-0 z-40 w-72
+          bg-[#0b0d0c] border-r border-white/10
           overflow-y-auto overscroll-contain
           transition-transform duration-300 ease-in-out
           lg:translate-x-0
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
-        <nav className="py-4 px-3 space-y-1">
+        <nav className="space-y-1 px-3 py-4">
           {docCategories.map((cat, catIdx) => (
             <CategoryGroup
               key={catIdx}
@@ -100,30 +139,26 @@ function CategoryGroup({
   onNavigate,
 }: CategoryGroupProps) {
   const title = language === 'zh' ? category.title.zh : category.title.en;
+  const CategoryIcon = categoryIcons[category.icon];
 
   return (
     <div className="mb-1">
-      {/* Category header */}
       <button
+        type="button"
         onClick={onToggle}
-        className="w-full flex items-center gap-2 px-3 py-2 text-sm font-semibold text-zinc-300 hover:text-white hover:bg-zinc-800/50 rounded-lg transition-colors cursor-pointer"
+        className="flex min-h-10 w-full items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold text-zinc-300 hover:bg-white/5 hover:text-white"
       >
-        <span className="text-base">{category.icon}</span>
+        <CategoryIcon aria-hidden="true" className="size-4 text-zinc-500" />
         <span className="flex-1 text-left">{title}</span>
-        <svg
-          className={`w-4 h-4 text-zinc-500 transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
+        <ChevronRight
+          aria-hidden="true"
+          className={`size-4 text-zinc-500 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+        />
       </button>
 
-      {/* Doc items */}
       {isExpanded && (
         <div className="ml-4 mt-0.5 space-y-0.5 border-l border-zinc-800 pl-3">
-          {category.docs.map(doc => {
+          {category.docs.map((doc) => {
             const isActive = doc.slug === activeSlug;
             const docTitle = language === 'zh' ? doc.title.zh : doc.title.en;
 
@@ -134,25 +169,25 @@ function CategoryGroup({
                   href={doc.external}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-zinc-400 hover:text-blue-400 transition-colors rounded-md"
+                  className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm text-zinc-400 hover:text-emerald-300"
                 >
                   {docTitle}
-                  <svg className="w-3 h-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
+                  <ExternalLink aria-hidden="true" className="size-3 opacity-60" />
                 </a>
               );
             }
 
             return (
               <button
+                type="button"
                 key={doc.slug}
                 onClick={() => onNavigate(doc.slug)}
                 className={`
-                  w-full text-left px-3 py-1.5 text-sm rounded-md transition-colors cursor-pointer
-                  ${isActive
-                    ? 'bg-blue-500/10 text-blue-400 font-medium border-l-2 border-blue-400 -ml-[13px] pl-[25px]'
-                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
+                  w-full text-left px-3 py-1.5 text-sm rounded-md
+                  ${
+                    isActive
+                      ? 'bg-emerald-300/10 text-emerald-300 font-medium border-l-2 border-emerald-300 -ml-[13px] pl-[25px]'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
                   }
                 `}
               >

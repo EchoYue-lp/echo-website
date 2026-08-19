@@ -1,81 +1,115 @@
 # Echo Website
 
-Showcase website for the Echo Agent ecosystem, built with React + Vite + Tailwind CSS.
+Public website for the echo-agent framework and the EKO local personal assistant.
 
-## Features
+The website is a presentation layer. Framework behavior is authoritative in
+[`echo-agent`](https://github.com/EchoYue-lp/echo-agent), and EKO product behavior is authoritative
+in [`echo-agent-cli`](https://github.com/EchoYue-lp/echo-agent-cli).
 
-- 🌙 Dark theme with gradient backgrounds and subtle animations
-- 🌍 Bilingual support (Chinese/English) with language toggle
-- 📱 Responsive design for all screen sizes
-- 🎨 Modern, clean UI showcasing two products:
-  - **echo-agent**: Rust AI Agent development framework
-  - **EKO**: Production CLI agent built on echo-agent
+## Requirements
 
-## Sections
-
-1. **Hero**: Landing section with two product cards
-2. **Feature Grid**: 6-card grid showing framework features
-3. **Architecture**: Architecture diagram with layered components
-4. **Comparison Table**: Feature comparison vs LangGraph/CrewAI/AutoGen
-5. **Ecosystem**: Shows relationship between framework and product
-6. **Footer**: Links to GitHub repos and documentation
+- Node.js 22.22.0 (`.nvmrc`)
+- npm 10.9.x (`packageManager` and `engines` in `package.json`)
+- ShellCheck (deployment script verification)
 
 ## Development
 
 ```bash
-# Install dependencies
-npm install
-
-# Start development server
+npm ci
 npm run dev
+```
 
-# Build for production
+## Verification
+
+```bash
+npm run format:check
+npm run lint
+npm run shell:check
+npm run site:check
+npm run docs:check
+npm test
 npm run build
-
-# Preview production build
-npm run preview
+npx playwright install chromium
+npm run test:e2e
 ```
 
-## Tech Stack
+`npm run verify` runs the same gate in sequence. CI additionally installs Chromium with its Linux
+system dependencies.
 
-- **React 18** - UI library
-- **TypeScript** - Type safety
-- **Vite** - Build tool and dev server
-- **Tailwind CSS 4** - Utility-first CSS framework
+## Documentation synchronization
 
-## Project Structure
+Framework documentation is vendored from the bilingual source directories in `echo-agent` and is
+loaded on demand. Every copied file, source path, source revision, and SHA-256 digest is recorded in
+`docs-sync-manifest.json`.
 
-```
-echo-website/
-├── src/
-│   ├── components/          # React components
-│   │   ├── Hero.tsx
-│   │   ├── FeatureGrid.tsx
-│   │   ├── Architecture.tsx
-│   │   ├── ComparisonTable.tsx
-│   │   ├── EcosystemSection.tsx
-│   │   ├── Footer.tsx
-│   │   └── LanguageSwitch.tsx
-│   ├── content/             # Bilingual content
-│   │   ├── features.zh.ts   # Chinese content
-│   │   └── features.en.ts   # English content
-│   ├── App.tsx              # Main app component
-│   ├── main.tsx             # Entry point
-│   └── index.css            # Global styles with Tailwind
-├── index.html
-├── vite.config.ts
-├── tsconfig.json
-└── package.json
+CI deliberately checks out both `echo-agent/main` and `echo-agent-cli/main` in separate paths and
+runs the source-aware drift check. A framework documentation change or EKO application change
+therefore fails the website gate until the snapshot or reviewed projection is synchronized.
+
+From the normal sibling-repository layout:
+
+```bash
+npm run docs:sync
+npm run docs:check
+npm run docs:check:source
 ```
 
-## Language Support
+The source-aware commands discover both the normal sibling checkout and the repository's external
+worktree layout. Set `ECHO_AGENT_ROOT` and `ECHO_AGENT_CLI_ROOT` to use other source checkouts
+explicitly.
+Framework synchronization preserves the existing application projection metadata. Pass
+`--application-revision <sha>` only when advancing the independently reviewed EKO projection.
 
-The website supports bilingual content with Chinese as the primary language. Use the language toggle button in the top-right corner to switch between Chinese and English.
+The concise EKO pages are code-audited website projections reviewed against the application
+revision recorded in the manifest. They are marked `reviewed-application-source-projection`;
+the application repository remains authoritative and any later source change requires a new review.
 
-Content is organized in `src/content/`:
-- `features.zh.ts` - Chinese content for all sections
-- `features.en.ts` - English content for all sections
+## Routes
 
-## License
+- `/` - echo-agent
+- `/eko` - EKO
+- `/docs/:slug?` - echo-agent documentation
+- `/eko/docs/:slug?` - EKO documentation
+- `/en/...` - English counterpart of every route; Chinese keeps the unprefixed path
+- `?lang=en` - legacy links redirect to the corresponding `/en/...` path
 
-MIT
+`npm run build` prerenders each registered bilingual route to `dist/<route>/index.html`. Every
+document contains crawlable body text, route-specific metadata, canonical and hreflang links, and
+schema.org data before JavaScript runs. Sitemap, robots, and the auxiliary `llms.txt` files are
+generated from the same route and content authority; `npm run site:check` rejects drift.
+
+## Deployment
+
+`deploy.sh` installs locked dependencies, runs the complete verification gate, copies `dist/` to an
+immutable release directory, validates required assets, and atomically switches the `current`
+symlink. The former target remains available through `previous` for rollback. After a successful
+switch, only `RELEASES_TO_KEEP` validated release directories are retained (five by default,
+including `current` and `previous`).
+
+By default releases are stored under `/var/www/echo-website`:
+
+```text
+/var/www/echo-website/
+  current -> releases/<release-id>
+  previous -> releases/<previous-release-id>
+  releases/
+```
+
+Nginx must serve `/var/www/echo-website/current` and enable directory indexes. Every registered
+route has a physical HTML file; unknown routes must return the generated `404.html` with status 404
+instead of falling back to the homepage:
+
+```nginx
+root /var/www/echo-website/current;
+index index.html;
+error_page 404 /404.html;
+location = /404.html {
+    internal;
+}
+location / {
+    try_files $uri $uri/ =404;
+}
+```
+
+The source checkout defaults to the directory containing `deploy.sh`. Override `PROJECT_DIR` or
+`DEPLOY_ROOT` when the server layout differs.

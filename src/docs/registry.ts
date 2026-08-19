@@ -1,15 +1,13 @@
-// Documentation registry — defines sidebar structure and doc metadata.
-// Doc files are imported as raw strings via Vite's ?raw suffix.
-// All markdown files are stored locally in ./content/ (copied from source repos).
+import type { Language, Product } from '../routing';
 
-export type Language = 'zh' | 'en';
+export type { Language, Product };
 
 export interface DocEntry {
-  /** Unique slug used in URL: /docs/:slug */
+  /** Unique slug within a product's documentation route. */
   slug: string;
   /** Display title (bilingual) */
   title: { zh: string; en: string };
-  /** Path to the markdown file relative to docs/content/ (for ?raw import) */
+  /** Language-neutral path below the product content directory. */
   filePath: string;
   /** Whether this is an external link (GitHub) instead of an embedded doc */
   external?: string;
@@ -18,19 +16,17 @@ export interface DocEntry {
 export interface DocCategory {
   /** Category title (bilingual) */
   title: { zh: string; en: string };
-  /** Icon emoji */
-  icon: string;
+  /** Stable key rendered by the documentation UI. */
+  icon:
+    'rocket' | 'brain' | 'workflow' | 'plug' | 'chart' | 'flask' | 'library' | 'book' | 'monitor';
   /** Doc entries in this category */
   docs: DocEntry[];
 }
 
-// ── Sidebar Structure ──────────────────────────────────────────────
-// Mirrors Claude Code's doc organization, adapted for echo ecosystem.
-
-export const docCategories: DocCategory[] = [
+export const frameworkDocCategories: DocCategory[] = [
   {
     title: { zh: '快速开始', en: 'Quick Start' },
-    icon: '🚀',
+    icon: 'rocket',
     docs: [
       {
         slug: 'overview',
@@ -51,7 +47,7 @@ export const docCategories: DocCategory[] = [
   },
   {
     title: { zh: '核心概念', en: 'Core Concepts' },
-    icon: '🧠',
+    icon: 'brain',
     docs: [
       {
         slug: 'tools',
@@ -62,11 +58,6 @@ export const docCategories: DocCategory[] = [
         slug: 'memory',
         title: { zh: '记忆系统', en: 'Memory' },
         filePath: './content/echo-agent/03-memory.md',
-      },
-      {
-        slug: 'tiered-memory',
-        title: { zh: '分层记忆架构', en: 'Tiered Memory' },
-        filePath: './content/echo-agent/39-tiered-memory.md',
       },
       {
         slug: 'compression',
@@ -97,11 +88,11 @@ export const docCategories: DocCategory[] = [
   },
   {
     title: { zh: '框架功能', en: 'Framework Features' },
-    icon: '⚙️',
+    icon: 'workflow',
     docs: [
       {
         slug: 'subagent',
-        title: { zh: 'SubAgent 多智能体', en: 'SubAgent' },
+        title: { zh: 'Subagent 多智能体', en: 'Subagent' },
         filePath: './content/echo-agent/06-subagent.md',
       },
       {
@@ -168,7 +159,7 @@ export const docCategories: DocCategory[] = [
   },
   {
     title: { zh: '工具与集成', en: 'Tools & Integrations' },
-    icon: '🔌',
+    icon: 'plug',
     docs: [
       {
         slug: 'mcp',
@@ -215,11 +206,21 @@ export const docCategories: DocCategory[] = [
         title: { zh: 'IM 频道', en: 'IM Channels' },
         filePath: './content/echo-agent/15-im-channels.md',
       },
+      {
+        slug: 'shell-text-tools',
+        title: { zh: 'Shell 与文本工具', en: 'Shell & Text Tools' },
+        filePath: './content/echo-agent/41-shell-text-tools.md',
+      },
+      {
+        slug: 'database-tools',
+        title: { zh: '数据库工具', en: 'Database Tools' },
+        filePath: './content/echo-agent/42-database-tools.md',
+      },
     ],
   },
   {
     title: { zh: '数据与分析', en: 'Data & Analytics' },
-    icon: '📊',
+    icon: 'chart',
     docs: [
       {
         slug: 'pipelines',
@@ -231,11 +232,16 @@ export const docCategories: DocCategory[] = [
         title: { zh: '数据质量与统计', en: 'Data Quality & Statistics' },
         filePath: './content/echo-agent/36-data-quality-statistics.md',
       },
+      {
+        slug: 'data-output-format',
+        title: { zh: '数据输出格式', en: 'Data Output Format' },
+        filePath: './content/echo-agent/43-data-output-format.md',
+      },
     ],
   },
   {
     title: { zh: '高级主题', en: 'Advanced Topics' },
-    icon: '🔬',
+    icon: 'flask',
     docs: [
       {
         slug: 'tracing',
@@ -251,7 +257,7 @@ export const docCategories: DocCategory[] = [
   },
   {
     title: { zh: '参考', en: 'Reference' },
-    icon: '📚',
+    icon: 'library',
     docs: [
       {
         slug: 'config-reference',
@@ -282,8 +288,13 @@ export const docCategories: DocCategory[] = [
   },
   {
     title: { zh: '知识库', en: 'Knowledge Base' },
-    icon: '📚',
+    icon: 'book',
     docs: [
+      {
+        slug: 'knowledge-overview',
+        title: { zh: '知识库概述', en: 'Knowledge Base Overview' },
+        filePath: './content/echo-agent/knowledge/README.md',
+      },
       {
         slug: 'agent-patterns',
         title: { zh: 'Agent 设计模式', en: 'Agent Design Patterns' },
@@ -306,49 +317,62 @@ export const docCategories: DocCategory[] = [
       },
     ],
   },
+];
+
+export const ekoDocCategories: DocCategory[] = [
   {
-    title: { zh: 'EKO (CLI)', en: 'EKO (CLI)' },
-    icon: '💻',
+    title: { zh: 'EKO', en: 'EKO' },
+    icon: 'monitor',
     docs: [
       {
-        slug: 'cli-readme',
-        title: { zh: 'CLI 概述', en: 'CLI Overview' },
-        filePath: './content/echo-agent-cli/README.md',
+        slug: 'overview',
+        title: { zh: '产品概述', en: 'Overview' },
+        filePath: './content/eko/overview.md',
       },
       {
-        slug: 'cli-getting-started',
-        title: { zh: 'CLI 快速入门', en: 'CLI Quick Start' },
-        filePath: './content/echo-agent-cli/getting-started.md',
+        slug: 'getting-started',
+        title: { zh: '快速开始', en: 'Getting Started' },
+        filePath: './content/eko/getting-started.md',
       },
       {
-        slug: 'cli-configuration',
-        title: { zh: 'CLI 配置指南', en: 'CLI Configuration' },
-        filePath: './content/echo-agent-cli/configuration.md',
+        slug: 'capabilities',
+        title: { zh: '能力边界', en: 'Capability Scope' },
+        filePath: './content/eko/capabilities.md',
       },
       {
-        slug: 'cli-architecture',
-        title: { zh: 'CLI 架构说明', en: 'CLI Architecture' },
-        filePath: './content/echo-agent-cli/architecture.md',
+        slug: 'storage',
+        title: { zh: '本地数据', en: 'Local Data' },
+        filePath: './content/eko/storage.md',
       },
     ],
   },
 ];
 
-/** Get the first slug as the default doc to show */
-export function getDefaultSlug(): string {
-  return docCategories[0]?.docs[0]?.slug ?? 'overview';
+export function getDocCategories(product: Product): DocCategory[] {
+  return product === 'eko' ? ekoDocCategories : frameworkDocCategories;
 }
 
-/** Find a doc entry by slug */
-export function findDocBySlug(slug: string): DocEntry | undefined {
-  for (const cat of docCategories) {
-    const found = cat.docs.find(d => d.slug === slug);
+export function getDefaultSlug(product: Product): string {
+  const [firstCategory] = getDocCategories(product);
+  const [firstDoc] = firstCategory?.docs ?? [];
+  return firstDoc?.slug ?? 'overview';
+}
+
+export function findDocBySlug(product: Product, slug: string): DocEntry | undefined {
+  for (const category of getDocCategories(product)) {
+    const found = category.docs.find((doc) => doc.slug === slug);
     if (found) return found;
   }
   return undefined;
 }
 
-/** Get all slugs for route generation */
-export function getAllSlugs(): string[] {
-  return docCategories.flatMap(cat => cat.docs.map(d => d.slug));
+export function findDocByFilePath(product: Product, filePath: string): DocEntry | undefined {
+  const normalized = filePath.replace(/\\/g, '/');
+  return getDocCategories(product)
+    .flatMap((category) => category.docs)
+    .find((doc) => doc.filePath.replace(/\\/g, '/') === normalized);
+}
+
+export function getAllSlugs(product: Product): string[] {
+  return getDocCategories(product).flatMap((category) => category.docs.map((doc) => doc.slug));
 }

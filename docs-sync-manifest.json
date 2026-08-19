@@ -1,0 +1,540 @@
+{
+  "schemaVersion": 1,
+  "framework": {
+    "repository": "https://github.com/EchoYue-lp/echo-agent",
+    "revision": "319f0b7a00d5d5af6ecd5a5cdcd5ee81db8acb5d",
+    "authority": "Framework documentation is copied without semantic edits.",
+    "files": [
+      {
+        "sourcePath": "docs/en/01-react-agent.md",
+        "destination": "src/docs/content/echo-agent/en/01-react-agent.md",
+        "sha256": "02f9e10d78c2228b49336f99d068e5b61e4c93afa20a9ac60ebe4e0afda54db0"
+      },
+      {
+        "sourcePath": "docs/en/02-tools.md",
+        "destination": "src/docs/content/echo-agent/en/02-tools.md",
+        "sha256": "25fc1110342e5430764dfc8fd0adee6c464dbaa509fd40e4bde1807df1acb5e1"
+      },
+      {
+        "sourcePath": "docs/en/03-memory.md",
+        "destination": "src/docs/content/echo-agent/en/03-memory.md",
+        "sha256": "a2a4de8f5a7bf325dbeb777e30e435cec636697bea4b366bae5b5aaccd9e6f28"
+      },
+      {
+        "sourcePath": "docs/en/04-compression.md",
+        "destination": "src/docs/content/echo-agent/en/04-compression.md",
+        "sha256": "939de0416e7f0c5b1fee82997fb5ab52229260f79a00ede92905a2b14589fa61"
+      },
+      {
+        "sourcePath": "docs/en/05-human-loop.md",
+        "destination": "src/docs/content/echo-agent/en/05-human-loop.md",
+        "sha256": "62578db553b8d8cc114112a41db26e8609522b8f90fea4a696a5e5092d8e78bd"
+      },
+      {
+        "sourcePath": "docs/en/06-subagent.md",
+        "destination": "src/docs/content/echo-agent/en/06-subagent.md",
+        "sha256": "b033045d6eeb60c43914655f24fef471470e2974c55c3f799384d6c3dd204669"
+      },
+      {
+        "sourcePath": "docs/en/07-skills.md",
+        "destination": "src/docs/content/echo-agent/en/07-skills.md",
+        "sha256": "40d03a774964a70e1d1fa1449a6f4495ea8c8f930a1c1cfe9ef52c648060d6b4"
+      },
+      {
+        "sourcePath": "docs/en/08-mcp.md",
+        "destination": "src/docs/content/echo-agent/en/08-mcp.md",
+        "sha256": "407970e45eb9a2b4ef3123267a976e7ffc11cb474186911e5a9b315de0b933c4"
+      },
+      {
+        "sourcePath": "docs/en/09-tasks.md",
+        "destination": "src/docs/content/echo-agent/en/09-tasks.md",
+        "sha256": "15ce4cb2206fab0c283240be41e06fb3ac0cd7e99c9a87bfe31af5e374312ac4"
+      },
+      {
+        "sourcePath": "docs/en/10-streaming.md",
+        "destination": "src/docs/content/echo-agent/en/10-streaming.md",
+        "sha256": "55706c63180ec3505ca81c39a07783907396594a51099c2d515f169e8440095b"
+      },
+      {
+        "sourcePath": "docs/en/11-structured-output.md",
+        "destination": "src/docs/content/echo-agent/en/11-structured-output.md",
+        "sha256": "d09ec36c98b7bce0e4adfeaeff07e0c15742974dfb717dd264175ee8b8c58e0a"
+      },
+      {
+        "sourcePath": "docs/en/12-mock.md",
+        "destination": "src/docs/content/echo-agent/en/12-mock.md",
+        "sha256": "55c55e4f4bad9be46415e8824504f5ed5ef3d8e6f3bdc2c7b81368a34b42a7fd"
+      },
+      {
+        "sourcePath": "docs/en/13-chat.md",
+        "destination": "src/docs/content/echo-agent/en/13-chat.md",
+        "sha256": "5607ab87b2bf7324ae2e7bc09c4cea51d0921c37b8b850807e907c905d32f2cf"
+      },
+      {
+        "sourcePath": "docs/en/14-semantic-search.md",
+        "destination": "src/docs/content/echo-agent/en/14-semantic-search.md",
+        "sha256": "a2f8d874956e94c7874d71fb032ac9d7041bfb9bb0d292d038f448f66efeb650"
+      },
+      {
+        "sourcePath": "docs/en/15-im-channels.md",
+        "destination": "src/docs/content/echo-agent/en/15-im-channels.md",
+        "sha256": "fa4e07ce573fa0e8791f4e21fef80248ebf48561f4f910e6ab9b0087fd55cfb5"
+      },
+      {
+        "sourcePath": "docs/en/17-graph-workflow.md",
+        "destination": "src/docs/content/echo-agent/en/17-graph-workflow.md",
+        "sha256": "0dcadabe94557a1f27f738fa9c22a290b0734bcdb03826b14714a42d8627d302"
+      },
+      {
+        "sourcePath": "docs/en/18-guard-system.md",
+        "destination": "src/docs/content/echo-agent/en/18-guard-system.md",
+        "sha256": "c07c38d5fad3bc75ba06e676f28b50e051a2e0089b46e4505a3388692c33096d"
+      },
+      {
+        "sourcePath": "docs/en/20-web-tools.md",
+        "destination": "src/docs/content/echo-agent/en/20-web-tools.md",
+        "sha256": "dc0f8e98741170fbfaa544bf0c4ddb1e9acfd6c81aa70cab8616fbe26be74759"
+      },
+      {
+        "sourcePath": "docs/en/21-common-tools.md",
+        "destination": "src/docs/content/echo-agent/en/21-common-tools.md",
+        "sha256": "e8ba542770018aeb2506eac8f370a79db11da86cc071faa965a5c1c269ebc54d"
+      },
+      {
+        "sourcePath": "docs/en/22-research-tools.md",
+        "destination": "src/docs/content/echo-agent/en/22-research-tools.md",
+        "sha256": "061eb60e6fa53c44afd3d96e8bb448c2fc8374a4ef1024d4a954c4c2a60173d6"
+      },
+      {
+        "sourcePath": "docs/en/23-hooks.md",
+        "destination": "src/docs/content/echo-agent/en/23-hooks.md",
+        "sha256": "51eebaae03449eb3683c66c2bec2ec0cd1bf203489b47d5a338103272f1da3cb"
+      },
+      {
+        "sourcePath": "docs/en/24-eval-system.md",
+        "destination": "src/docs/content/echo-agent/en/24-eval-system.md",
+        "sha256": "940b0dc3b6c2e962ba8fae4af1f279d62474b99254130d7f450ae2cef1ed282a"
+      },
+      {
+        "sourcePath": "docs/en/25-self-improvement.md",
+        "destination": "src/docs/content/echo-agent/en/25-self-improvement.md",
+        "sha256": "63d02b127370f43ff1d5daa760943b4e76c08e5e0daf914f2abbf364479adb1c"
+      },
+      {
+        "sourcePath": "docs/en/26-multi-agent.md",
+        "destination": "src/docs/content/echo-agent/en/26-multi-agent.md",
+        "sha256": "cd0a9a2666f08b6400fa78c7cd4a5c48e6e02893a53cb35cfe1e031ed3986cd0"
+      },
+      {
+        "sourcePath": "docs/en/27-tracing.md",
+        "destination": "src/docs/content/echo-agent/en/27-tracing.md",
+        "sha256": "2da3e2b8b783a10855f9cec3a48175a22f11dd4abf8f83cf14b7734946404181"
+      },
+      {
+        "sourcePath": "docs/en/28-config-reference.md",
+        "destination": "src/docs/content/echo-agent/en/28-config-reference.md",
+        "sha256": "a964caf81e4de0657c0c3f4e4fd57ca9dc98520ecfb5ae5b87dda9dbc2765944"
+      },
+      {
+        "sourcePath": "docs/en/29-long-running-tasks.md",
+        "destination": "src/docs/content/echo-agent/en/29-long-running-tasks.md",
+        "sha256": "528ad7fdd46964575f9b9cd74bda61d2f98137bfdf341afa1b53ff55aae76e05"
+      },
+      {
+        "sourcePath": "docs/en/30-react-safety.md",
+        "destination": "src/docs/content/echo-agent/en/30-react-safety.md",
+        "sha256": "bcf5112e493fe7d3ad1b3ffe468f09c2ad2e2e9f785904a3de8d0cacb245588c"
+      },
+      {
+        "sourcePath": "docs/en/31-lsp-integration.md",
+        "destination": "src/docs/content/echo-agent/en/31-lsp-integration.md",
+        "sha256": "2b783530c39ce5a405d40650e114d46c31646a759670e0d9c5ef4ee051ae4976"
+      },
+      {
+        "sourcePath": "docs/en/32-plugin-system.md",
+        "destination": "src/docs/content/echo-agent/en/32-plugin-system.md",
+        "sha256": "e8f76d99a8b242076649cc15d432b1f99b383884ca281f50ec9ee162329a06ea"
+      },
+      {
+        "sourcePath": "docs/en/33-headless-mode.md",
+        "destination": "src/docs/content/echo-agent/en/33-headless-mode.md",
+        "sha256": "7eddd478f5b66c13f2a910e2e7d7ce94e18782d04e048b29a6ace4a24d8f3492"
+      },
+      {
+        "sourcePath": "docs/en/34-git-isolation.md",
+        "destination": "src/docs/content/echo-agent/en/34-git-isolation.md",
+        "sha256": "5c0bbe4cb2133cc237445c3a0afd2a5cc63a7a3bd2338f524503ec45b114c0e3"
+      },
+      {
+        "sourcePath": "docs/en/35-pipelines.md",
+        "destination": "src/docs/content/echo-agent/en/35-pipelines.md",
+        "sha256": "1a6ce719d2584f145e09a062cd2c957d2f64cc19b522c53575909e94d8e0b9b6"
+      },
+      {
+        "sourcePath": "docs/en/36-data-quality-statistics.md",
+        "destination": "src/docs/content/echo-agent/en/36-data-quality-statistics.md",
+        "sha256": "13a04bbfd11a6ad9ada6f38d86b127c5f433f83de90af7a660454b87f9549b6e"
+      },
+      {
+        "sourcePath": "docs/en/37-code-search.md",
+        "destination": "src/docs/content/echo-agent/en/37-code-search.md",
+        "sha256": "3182a9eac0f5dc028dff6263a23bef519f9927a0acf7abc907779ce124f08cff"
+      },
+      {
+        "sourcePath": "docs/en/38-factory-modes.md",
+        "destination": "src/docs/content/echo-agent/en/38-factory-modes.md",
+        "sha256": "29970232fa8ad98c51eea597997d1d080453341f50f1436e09ba4b48d3178c72"
+      },
+      {
+        "sourcePath": "docs/en/40-context-system.md",
+        "destination": "src/docs/content/echo-agent/en/40-context-system.md",
+        "sha256": "7bf1417c61ed71fcd0f182c5ff5d16e092fa79a953456b80525e271a5a5c3707"
+      },
+      {
+        "sourcePath": "docs/en/41-shell-text-tools.md",
+        "destination": "src/docs/content/echo-agent/en/41-shell-text-tools.md",
+        "sha256": "574362c08d41fd207e19133437e21f1a31f7a64b6d1d48289aec0e89350d208a"
+      },
+      {
+        "sourcePath": "docs/en/42-database-tools.md",
+        "destination": "src/docs/content/echo-agent/en/42-database-tools.md",
+        "sha256": "9b270479fc31452f36bdf576f723c18ea435523eec0570d816b36d31b84a9873"
+      },
+      {
+        "sourcePath": "docs/en/43-data-output-format.md",
+        "destination": "src/docs/content/echo-agent/en/43-data-output-format.md",
+        "sha256": "c33495dc811a330599ff2095aa2146490890d8b7bd762a589f4cf708e7c0ed4b"
+      },
+      {
+        "sourcePath": "docs/en/getting-started.md",
+        "destination": "src/docs/content/echo-agent/en/getting-started.md",
+        "sha256": "0f3fa3a1ff6f341adc688a7bfd8f3ea6d0d3472e9c861de631bbdeda67bb5066"
+      },
+      {
+        "sourcePath": "docs/knowledge/en/a2a-protocol.md",
+        "destination": "src/docs/content/echo-agent/en/knowledge/a2a-protocol.md",
+        "sha256": "0f992883bc58f7d75ec36af4ceeaf6535902ed386313ece1dcd8c92dc269b5cc"
+      },
+      {
+        "sourcePath": "docs/knowledge/en/agent-patterns.md",
+        "destination": "src/docs/content/echo-agent/en/knowledge/agent-patterns.md",
+        "sha256": "ccfef92486dfe65dacb3093d8aa41ac05d36b29577c370a98f5078bc5bc36f52"
+      },
+      {
+        "sourcePath": "docs/knowledge/en/mcp-protocol.md",
+        "destination": "src/docs/content/echo-agent/en/knowledge/mcp-protocol.md",
+        "sha256": "142003f94723a0e9a8bdf5ae641986c944e10b12bf353330037cd0246eabf6f7"
+      },
+      {
+        "sourcePath": "docs/knowledge/en/README.md",
+        "destination": "src/docs/content/echo-agent/en/knowledge/README.md",
+        "sha256": "f01af30372b6481bf911e4b78e6780e806562dc8b307d1f56103327226b0ee6a"
+      },
+      {
+        "sourcePath": "docs/knowledge/en/skill-system.md",
+        "destination": "src/docs/content/echo-agent/en/knowledge/skill-system.md",
+        "sha256": "f1035d435bfff556d662103da4ac9ff152fc70b2b13979af5263ef6be44eb78a"
+      },
+      {
+        "sourcePath": "docs/en/README.md",
+        "destination": "src/docs/content/echo-agent/en/README.md",
+        "sha256": "205353896e7c1cc5920729d24524f6517902ab2cd27ba0d57654d36a66c643c7"
+      },
+      {
+        "sourcePath": "docs/en/security.md",
+        "destination": "src/docs/content/echo-agent/en/security.md",
+        "sha256": "76849ae91a00978466ed9bf0eaa9081d2a84ae7f181084e2d8660910ae5de6b4"
+      },
+      {
+        "sourcePath": "docs/en/skill-authoring.md",
+        "destination": "src/docs/content/echo-agent/en/skill-authoring.md",
+        "sha256": "7164443959a76bf8a69debb18a0fbbbef9739f49f36a0a296b4a8b7f58e03e06"
+      },
+      {
+        "sourcePath": "docs/zh/01-react-agent.md",
+        "destination": "src/docs/content/echo-agent/zh/01-react-agent.md",
+        "sha256": "45f31cf0c2821209c616a4dcde8ada36277d626c927e57e2ca300410b5f0ed4e"
+      },
+      {
+        "sourcePath": "docs/zh/02-tools.md",
+        "destination": "src/docs/content/echo-agent/zh/02-tools.md",
+        "sha256": "6f86d30d5fc4511a92acf722c0465b00dbeb46aad2f6e034cdd229701ab23f36"
+      },
+      {
+        "sourcePath": "docs/zh/03-memory.md",
+        "destination": "src/docs/content/echo-agent/zh/03-memory.md",
+        "sha256": "15c6fe58db1016b9247799f516d42ffe6df6a96e118b58b344a21ab77d1419dc"
+      },
+      {
+        "sourcePath": "docs/zh/04-compression.md",
+        "destination": "src/docs/content/echo-agent/zh/04-compression.md",
+        "sha256": "804c585c20ec1a9974ae639ef9508e99dedea23e4d690af97f686d8ebd5e2dbe"
+      },
+      {
+        "sourcePath": "docs/zh/05-human-loop.md",
+        "destination": "src/docs/content/echo-agent/zh/05-human-loop.md",
+        "sha256": "48ebc1555726bb2546574f31813c50c5b7579111322aa216dfc9f7abd6208d0b"
+      },
+      {
+        "sourcePath": "docs/zh/06-subagent.md",
+        "destination": "src/docs/content/echo-agent/zh/06-subagent.md",
+        "sha256": "b54576bd5c7d4b41c55c1fc5e4fa15a3fbadf64c506c599180a96fabf4b1a53a"
+      },
+      {
+        "sourcePath": "docs/zh/07-skills.md",
+        "destination": "src/docs/content/echo-agent/zh/07-skills.md",
+        "sha256": "f8fc5bbe005eec81423296896aef179a09fb1c4a2421868177f4289e371b2e19"
+      },
+      {
+        "sourcePath": "docs/zh/08-mcp.md",
+        "destination": "src/docs/content/echo-agent/zh/08-mcp.md",
+        "sha256": "1eb9f0926e0e5de6e2d802c4777bf367582c1fb8422738fa89421035a3909fca"
+      },
+      {
+        "sourcePath": "docs/zh/09-tasks.md",
+        "destination": "src/docs/content/echo-agent/zh/09-tasks.md",
+        "sha256": "240dcac99a89edd0eb341dc97f28686c9afe9d1964a8ff07bc122c60389302de"
+      },
+      {
+        "sourcePath": "docs/zh/10-streaming.md",
+        "destination": "src/docs/content/echo-agent/zh/10-streaming.md",
+        "sha256": "4d0181bdf258ddaebe95c412834387482a3ee98ed8e90cdf82587569ea5e8427"
+      },
+      {
+        "sourcePath": "docs/zh/11-structured-output.md",
+        "destination": "src/docs/content/echo-agent/zh/11-structured-output.md",
+        "sha256": "af2d68ff0da7c44c3627379c59aaa4a67e6f44392a82eb95152685c037c93e0f"
+      },
+      {
+        "sourcePath": "docs/zh/12-mock.md",
+        "destination": "src/docs/content/echo-agent/zh/12-mock.md",
+        "sha256": "d40b5c93af139d31d7d10fa793ed94bd2f3c01f852e2f6cc3c6ed523375048b3"
+      },
+      {
+        "sourcePath": "docs/zh/13-chat.md",
+        "destination": "src/docs/content/echo-agent/zh/13-chat.md",
+        "sha256": "81769c4a26e745512992f292ee5e5dc7ae37147fc59eaa1dcbf92b152efb3e74"
+      },
+      {
+        "sourcePath": "docs/zh/14-semantic-search.md",
+        "destination": "src/docs/content/echo-agent/zh/14-semantic-search.md",
+        "sha256": "e1b23739bbb777956a72e3d874877fae322c06e2f32db6cd5d567744c9b08dd1"
+      },
+      {
+        "sourcePath": "docs/zh/15-im-channels.md",
+        "destination": "src/docs/content/echo-agent/zh/15-im-channels.md",
+        "sha256": "a7e7ccc7f1a3072aacc41ab21c4e319c2e096bbb64f8bedd370e1611890fd3ee"
+      },
+      {
+        "sourcePath": "docs/zh/17-graph-workflow.md",
+        "destination": "src/docs/content/echo-agent/zh/17-graph-workflow.md",
+        "sha256": "f4c933920bc22b46df78217fc7ec82e7451c1f4535db183fb17e2e38c005af74"
+      },
+      {
+        "sourcePath": "docs/zh/18-guard-system.md",
+        "destination": "src/docs/content/echo-agent/zh/18-guard-system.md",
+        "sha256": "486cf090ab8e3aaf5993e16bddf7e18852a2320b61ebea08a02cd0bb39ffd45a"
+      },
+      {
+        "sourcePath": "docs/zh/20-web-tools.md",
+        "destination": "src/docs/content/echo-agent/zh/20-web-tools.md",
+        "sha256": "16505920afce875c50b379118f47e7eb98217d76e2846e195cd806be74115556"
+      },
+      {
+        "sourcePath": "docs/zh/21-common-tools.md",
+        "destination": "src/docs/content/echo-agent/zh/21-common-tools.md",
+        "sha256": "842a1a225fa9f8d6eb64f04f1756f6b25746f92fa44bda0c277f2cf5952f30f5"
+      },
+      {
+        "sourcePath": "docs/zh/22-research-tools.md",
+        "destination": "src/docs/content/echo-agent/zh/22-research-tools.md",
+        "sha256": "d63d481a83494b0626be0a79d2c1fe788959c256bb4cd096cba24f633577073a"
+      },
+      {
+        "sourcePath": "docs/zh/23-hooks.md",
+        "destination": "src/docs/content/echo-agent/zh/23-hooks.md",
+        "sha256": "f9bcfe3c90c22faa7106b6494fa20a5d318e81e329637f29979fb3fd7dc5db65"
+      },
+      {
+        "sourcePath": "docs/zh/24-eval-system.md",
+        "destination": "src/docs/content/echo-agent/zh/24-eval-system.md",
+        "sha256": "c39df7e09e18983f505eb22136855fd9add5042fe5d2d25f3d4f188f40680ed0"
+      },
+      {
+        "sourcePath": "docs/zh/25-self-improvement.md",
+        "destination": "src/docs/content/echo-agent/zh/25-self-improvement.md",
+        "sha256": "bde2470fc04b4c82b887924ac87859c665433ee1a123b6ea612ce6853184c9d8"
+      },
+      {
+        "sourcePath": "docs/zh/26-multi-agent.md",
+        "destination": "src/docs/content/echo-agent/zh/26-multi-agent.md",
+        "sha256": "cc913d59161d1a9043c771b0ae16b4dbd412b8da696beb1ae718602756781af3"
+      },
+      {
+        "sourcePath": "docs/zh/27-tracing.md",
+        "destination": "src/docs/content/echo-agent/zh/27-tracing.md",
+        "sha256": "18678fe0f4a69aa0d6aecaa73a472d666ec40e641599397d082ce33d2e41a305"
+      },
+      {
+        "sourcePath": "docs/zh/28-config-reference.md",
+        "destination": "src/docs/content/echo-agent/zh/28-config-reference.md",
+        "sha256": "6eccd1ecd827783260577cf02bfb394e653cae638d89da6ec05acba49b110060"
+      },
+      {
+        "sourcePath": "docs/zh/29-long-running-tasks.md",
+        "destination": "src/docs/content/echo-agent/zh/29-long-running-tasks.md",
+        "sha256": "37b4d9a62eba6f7e54d9d3ce05d7727b9e0091e3199fca2822521c17e47a96bd"
+      },
+      {
+        "sourcePath": "docs/zh/30-react-safety.md",
+        "destination": "src/docs/content/echo-agent/zh/30-react-safety.md",
+        "sha256": "ba5d3dda4deb474fbfce3ed1219b93ae5124017154a8dc2ec620640a5ca37923"
+      },
+      {
+        "sourcePath": "docs/zh/31-lsp-integration.md",
+        "destination": "src/docs/content/echo-agent/zh/31-lsp-integration.md",
+        "sha256": "1f918ae26e952bbbaf9414c9930fd33342dc30313a9de34b281b69d5e28bcb5c"
+      },
+      {
+        "sourcePath": "docs/zh/32-plugin-system.md",
+        "destination": "src/docs/content/echo-agent/zh/32-plugin-system.md",
+        "sha256": "ea342d8051fada89cc704a0d6947ce520a16a7636854ebe714d85d897607862b"
+      },
+      {
+        "sourcePath": "docs/zh/33-headless-mode.md",
+        "destination": "src/docs/content/echo-agent/zh/33-headless-mode.md",
+        "sha256": "58b0fb657dca453cb351b72a8e189f88dd1a21b618cc747918a4c47cd7644046"
+      },
+      {
+        "sourcePath": "docs/zh/34-git-isolation.md",
+        "destination": "src/docs/content/echo-agent/zh/34-git-isolation.md",
+        "sha256": "9f1c1548aab4d7ce635faa6548b61d341b14e7dfad5848315e41bf898284e6e7"
+      },
+      {
+        "sourcePath": "docs/zh/35-pipelines.md",
+        "destination": "src/docs/content/echo-agent/zh/35-pipelines.md",
+        "sha256": "98ac082c30e3a5b0881355b51886c7daf84141411466b6f931db0799ba21823d"
+      },
+      {
+        "sourcePath": "docs/zh/36-data-quality-statistics.md",
+        "destination": "src/docs/content/echo-agent/zh/36-data-quality-statistics.md",
+        "sha256": "4a9033754de7635571f1c71a83d9002fd2ed0ffec7cd82a9d867f5d2d6db610b"
+      },
+      {
+        "sourcePath": "docs/zh/37-code-search.md",
+        "destination": "src/docs/content/echo-agent/zh/37-code-search.md",
+        "sha256": "8d0f127653867a549772457d8644bfa3847c21c78f3fc31d000816da959a0d6a"
+      },
+      {
+        "sourcePath": "docs/zh/38-factory-modes.md",
+        "destination": "src/docs/content/echo-agent/zh/38-factory-modes.md",
+        "sha256": "2f2771fd86ff0189a27fcf407d54c65db36e95da4907bd808d325d47a067bac4"
+      },
+      {
+        "sourcePath": "docs/zh/40-context-system.md",
+        "destination": "src/docs/content/echo-agent/zh/40-context-system.md",
+        "sha256": "419dbdb26183c54d1954196290e1e028e1c23363449fae0e50bcde642eed069e"
+      },
+      {
+        "sourcePath": "docs/zh/41-shell-text-tools.md",
+        "destination": "src/docs/content/echo-agent/zh/41-shell-text-tools.md",
+        "sha256": "fd1af073a97e7a897a1e960fac790c5da7baa50c940320a7d434f13cb80bc1fb"
+      },
+      {
+        "sourcePath": "docs/zh/42-database-tools.md",
+        "destination": "src/docs/content/echo-agent/zh/42-database-tools.md",
+        "sha256": "f5442e25a0016231086f358cf339d9114d6985bd6a0b72696b6c76a14a4d6cb6"
+      },
+      {
+        "sourcePath": "docs/zh/43-data-output-format.md",
+        "destination": "src/docs/content/echo-agent/zh/43-data-output-format.md",
+        "sha256": "af60248b57f23ea9eba45277bb728687bbb4f436d56145e85e822f64893e0707"
+      },
+      {
+        "sourcePath": "docs/zh/getting-started.md",
+        "destination": "src/docs/content/echo-agent/zh/getting-started.md",
+        "sha256": "3359cfe601d181d943bb3949c353e38cbb37e438e8f9245dbb784a3ec0d2593a"
+      },
+      {
+        "sourcePath": "docs/knowledge/zh/a2a-protocol.md",
+        "destination": "src/docs/content/echo-agent/zh/knowledge/a2a-protocol.md",
+        "sha256": "fdf10b8bac1834cde6132718f12823b5add6ded4b4e8490b63946d34c92a004d"
+      },
+      {
+        "sourcePath": "docs/knowledge/zh/agent-patterns.md",
+        "destination": "src/docs/content/echo-agent/zh/knowledge/agent-patterns.md",
+        "sha256": "8be1583a9de06b8f540f9603956b7428d8fd0d18c288dc91c06e3c0ce46c009e"
+      },
+      {
+        "sourcePath": "docs/knowledge/zh/mcp-protocol.md",
+        "destination": "src/docs/content/echo-agent/zh/knowledge/mcp-protocol.md",
+        "sha256": "8bb29b20b4d402b6cf00a5f760a01e1eaba42494a186767059df21c5c60c1e8d"
+      },
+      {
+        "sourcePath": "docs/knowledge/zh/README.md",
+        "destination": "src/docs/content/echo-agent/zh/knowledge/README.md",
+        "sha256": "12d04fcf0e8aa5298b1fb231219ee615c999542c8fa8524097f5661168fd0414"
+      },
+      {
+        "sourcePath": "docs/knowledge/zh/skill-system.md",
+        "destination": "src/docs/content/echo-agent/zh/knowledge/skill-system.md",
+        "sha256": "c823d1743a4d82aabe1a84dcd886c24ceb7157bcbc5c280612f6c84da671f616"
+      },
+      {
+        "sourcePath": "docs/zh/README.md",
+        "destination": "src/docs/content/echo-agent/zh/README.md",
+        "sha256": "03f1b8a3638c5368d6448a06f3dc7b2b245c599f7f8e298230aef3d0ef26df58"
+      },
+      {
+        "sourcePath": "docs/zh/security.md",
+        "destination": "src/docs/content/echo-agent/zh/security.md",
+        "sha256": "be0da77281dd705e59f476b1c1a6126ea13df356394de16e3fe3ecce2a72437a"
+      },
+      {
+        "sourcePath": "docs/zh/skill-authoring.md",
+        "destination": "src/docs/content/echo-agent/zh/skill-authoring.md",
+        "sha256": "43fbd0f6511f3726a0589e8497e87bd72e3b00253c4b1df1c7a57385aeb60363"
+      }
+    ]
+  },
+  "applicationProjection": {
+    "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
+    "reviewedRevision": "ac2ef6782d449ea0017820a498992d6d8eb33406",
+    "status": "reviewed-application-source-projection",
+    "authority": "These concise pages are code-audited website projections reviewed against echo-agent-cli at the recorded revision; echo-agent-cli remains authoritative.",
+    "files": [
+      {
+        "destination": "src/docs/content/eko/en/capabilities.md",
+        "sha256": "7063ce34103b4e012d2b9098c4c58b87cddb4a129ca45a2c6ca7088458b97627"
+      },
+      {
+        "destination": "src/docs/content/eko/en/getting-started.md",
+        "sha256": "72d1d6de46b467f67fbef4638c12b9aa8f7b25a865f7bbc722298b3e10d5c563"
+      },
+      {
+        "destination": "src/docs/content/eko/en/overview.md",
+        "sha256": "1af064f54f87de52224e9cd1deb32b80dfbe884239d17b58a27fe4f7aa4dea7d"
+      },
+      {
+        "destination": "src/docs/content/eko/en/storage.md",
+        "sha256": "d6666f8fb0469edee78135f2eb886ab909c5ff0737bbac9cc9ad4e137461d74d"
+      },
+      {
+        "destination": "src/docs/content/eko/zh/capabilities.md",
+        "sha256": "cb6acfc8b1fd8b03a4be90b74ebaa4b7004bb2e3dc6d9148757ee206d342fdf1"
+      },
+      {
+        "destination": "src/docs/content/eko/zh/getting-started.md",
+        "sha256": "9424fdcfbdad79028edb55c6c7b73f45db52f538fc8f6aab4207e8c3de562dfa"
+      },
+      {
+        "destination": "src/docs/content/eko/zh/overview.md",
+        "sha256": "88a15013f51005e4d1244e302bb31815986ac7436cfc5743a2ce73f3857cb085"
+      },
+      {
+        "destination": "src/docs/content/eko/zh/storage.md",
+        "sha256": "bc1915c801ce319a408379f463a7714971d63af2ed343f31e3006bea904ad922"
+      }
+    ]
+  }
+}

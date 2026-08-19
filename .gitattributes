@@ -1,0 +1,3 @@
+# Framework docs are byte-for-byte vendored; llms-full.txt is generated from them.
+src/docs/content/echo-agent/** -whitespace
+public/llms-full.txt -whitespace

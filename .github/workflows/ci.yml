@@ -1,0 +1,47 @@
+name: Website CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      # Track framework main deliberately: an upstream documentation change must
+      # fail this gate until the website snapshot and manifest are synchronized.
+      - uses: actions/checkout@v4
+        with:
+          repository: EchoYue-lp/echo-agent
+          ref: main
+          path: upstream/echo-agent
+          persist-credentials: false
+      # EKO pages are code-audited projections. Tracking application main makes
+      # an application change require an explicit website re-review.
+      - uses: actions/checkout@v4
+        with:
+          repository: EchoYue-lp/echo-agent-cli
+          ref: main
+          path: upstream/echo-agent-cli
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: sudo apt-get update && sudo apt-get install --yes shellcheck
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run shell:check
+      - run: npm run site:check
+      - run: npm run docs:check
+      - run: node scripts/sync-docs.mjs --check --framework-root upstream/echo-agent --application-root upstream/echo-agent-cli
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e

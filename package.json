@@ -3,22 +3,48 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "packageManager": "npm@10.9.4",
+  "engines": {
+    "node": ">=22.13 <23",
+    "npm": ">=10.9 <11"
+  },
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/generate-static.mjs && node scripts/check-static.mjs",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "shell:check": "shellcheck deploy.sh scripts/deploy-releases.sh",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "discovery:sync": "node scripts/generate-discovery.mjs",
+    "discovery:check": "node scripts/generate-discovery.mjs --check",
+    "og:generate": "node scripts/generate-og.mjs",
+    "site:check": "npm run discovery:check && node scripts/check-site.mjs",
+    "docs:check": "node scripts/sync-docs.mjs --check",
+    "docs:check:source": "node scripts/sync-docs.mjs --check --framework-root auto --application-root auto",
+    "docs:sync": "node scripts/sync-docs.mjs --framework-root auto",
+    "verify": "npm run format:check && npm run lint && npm run shell:check && npm run site:check && npm run docs:check && npm test && npm run build && npm run test:e2e",
+    "preview": "node scripts/serve-static.mjs"
   },
   "dependencies": {
+    "lucide-react": "^0.468.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.17.0",
+    "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/vite": "^4.0.0",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.4",
+    "@types/node": "^22.20.1",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
@@ -26,9 +52,12 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.14.0",
+    "jsdom": "^29.1.1",
+    "prettier": "^3.9.6",
     "tailwindcss": "^4.0.0",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",
-    "vite": "^6.0.5"
+    "vite": "^6.0.5",
+    "vitest": "^4.1.10"
   }
 }

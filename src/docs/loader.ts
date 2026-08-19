@@ -1,50 +1,34 @@
-// Dynamic markdown loader using Vite's import.meta.glob
-// Loads all docs from local content/ directory (copied from source repos).
+import type { Language, Product } from '../routing';
 
-// Glob import all echo-agent docs (copied locally)
-const agentDocs = import.meta.glob(
-  './content/echo-agent/**/*.md',
-  { query: '?raw', import: 'default', eager: true }
-) as Record<string, string>;
+type MarkdownLoader = () => Promise<string>;
 
-// Glob import CLI docs (copied locally)
-const cliDocs = import.meta.glob(
-  './content/echo-agent-cli/**/*.md',
-  { query: '?raw', import: 'default', eager: true }
-) as Record<string, string>;
+const docModules = import.meta.glob('./content/**/*.md', {
+  query: '?raw',
+  import: 'default',
+}) as Record<string, MarkdownLoader>;
 
-/**
- * Resolve a doc slug to its markdown content.
- * Maps registry file paths to the glob-imported modules.
- */
-export function loadDocContent(filePath: string): string | null {
-  // Registry paths: './content/echo-agent/01-react-agent.md'
-  // Glob keys: full resolved paths ending with the same relative path
-
-  // Extract the filename from registry path
-  const fileName = filePath.replace(/^\.\/content\//, '');
-
-  // Try agent docs
-  for (const [key, content] of Object.entries(agentDocs)) {
-    if (key.includes(fileName)) {
-      return content;
-    }
+export function localizedDocPath(product: Product, language: Language, filePath: string): string {
+  const productPrefix = `./content/${product}/`;
+  if (!filePath.startsWith(productPrefix)) {
+    return filePath;
   }
 
-  // Try CLI docs
-  for (const [key, content] of Object.entries(cliDocs)) {
-    if (key.includes(fileName)) {
-      return content;
-    }
-  }
-
-  return null;
+  return `${productPrefix}${language}/${filePath.slice(productPrefix.length)}`;
 }
 
-/** Get list of all available doc paths (for debugging) */
+export async function loadDocContent(
+  product: Product,
+  language: Language,
+  filePath: string,
+): Promise<string> {
+  const localizedPath = localizedDocPath(product, language, filePath);
+  const loader = docModules[localizedPath];
+  if (!loader) {
+    throw new Error(`Documentation source is missing: ${localizedPath}`);
+  }
+  return loader();
+}
+
 export function getAvailableDocs(): string[] {
-  return [
-    ...Object.keys(agentDocs),
-    ...Object.keys(cliDocs),
-  ];
+  return Object.keys(docModules).sort();
 }
