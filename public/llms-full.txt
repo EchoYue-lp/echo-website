@@ -1129,7 +1129,7 @@ impl Tool for DeleteFileTool {
 |------|---------|---------|
 | `ReadOnly` | 0 | `read_file`、`grep`、`git_status` |
 | `NetworkCall` | 1 | `web_fetch`、`web_search` |
-| `FileWrite` | 2 | `edit_file`、`write_file` |
+| `FileWrite` | 2 | `apply_patch` |
 | `GitWrite` | 2 | `git_commit`、`git_push` |
 | `DatabaseWrite` | 2 | `db_execute`、`sql` |
 | `ShellExec` | 3 | `shell`、`execute` |
@@ -11323,7 +11323,7 @@ let notice = ToolRiskClassifier::safety_notice("shell", &params);
 | `read_file` | `Read` | `ReadOnly` |
 | `write_file` | `Write` | `Standard` |
 | `delete_file` | `Write` | `Dangerous` |
-| `edit_file` | `Read, Write` | `Standard` |
+| `apply_patch` | `Read, Write` | `Standard` |
 | `shell` | `Execute` | `Dangerous` |
 | `web_fetch` / `web_search` | `Network` | `Standard` |
 | `git_commit` | `Write, Execute` | `Dangerous` |
@@ -15607,7 +15607,7 @@ impl Tool for DeleteFileTool {
 |----------|-----------|---------------|
 | `ReadOnly` | 0 | `read_file`, `grep`, `git_status` |
 | `NetworkCall` | 1 | `web_fetch`, `web_search` |
-| `FileWrite` | 2 | `edit_file`, `write_file` |
+| `FileWrite` | 2 | `apply_patch` |
 | `GitWrite` | 2 | `git_commit`, `git_push` |
 | `DatabaseWrite` | 2 | `db_execute`, `sql` |
 | `ShellExec` | 3 | `shell`, `execute` |
@@ -25734,7 +25734,7 @@ let category = ToolRiskClassifier::classify("read_file");  // ReadOnly, level 0
 | `read_file` | `Read` | `ReadOnly` |
 | `write_file` | `Write` | `Standard` |
 | `delete_file` | `Write` | `Dangerous` |
-| `edit_file` | `Read, Write` | `Standard` |
+| `apply_patch` | `Read, Write` | `Standard` |
 | `shell` | `Execute` | `Dangerous` |
 | `web_fetch` / `web_search` | `Network` | `Standard` |
 | `git_commit` | `Write, Execute` | `Dangerous` |

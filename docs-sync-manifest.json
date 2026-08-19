@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "21da15d096f953170c370fb2188b1fd2ebe806a3",
+    "revision": "e2c3a5c905e32b6a87bc9e37c087b8a6cac618a8",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -13,7 +13,7 @@
       {
         "sourcePath": "docs/en/02-tools.md",
         "destination": "src/docs/content/echo-agent/en/02-tools.md",
-        "sha256": "25fc1110342e5430764dfc8fd0adee6c464dbaa509fd40e4bde1807df1acb5e1"
+        "sha256": "3c348b897235191baa425557aa7d00a11706666300a0364865b0458473d83639"
       },
       {
         "sourcePath": "docs/en/03-memory.md",
@@ -243,7 +243,7 @@
       {
         "sourcePath": "docs/en/security.md",
         "destination": "src/docs/content/echo-agent/en/security.md",
-        "sha256": "76849ae91a00978466ed9bf0eaa9081d2a84ae7f181084e2d8660910ae5de6b4"
+        "sha256": "fe3c72da5d753518e6c05f669812c9a2c11eb38963b5947ce0b363c3cafc5e00"
       },
       {
         "sourcePath": "docs/en/skill-authoring.md",
@@ -258,7 +258,7 @@
       {
         "sourcePath": "docs/zh/02-tools.md",
         "destination": "src/docs/content/echo-agent/zh/02-tools.md",
-        "sha256": "6f86d30d5fc4511a92acf722c0465b00dbeb46aad2f6e034cdd229701ab23f36"
+        "sha256": "b3e508170f65bc4d79365700047e76610ac116c0fd288ce1fe13629a82f4daf6"
       },
       {
         "sourcePath": "docs/zh/03-memory.md",
@@ -488,7 +488,7 @@
       {
         "sourcePath": "docs/zh/security.md",
         "destination": "src/docs/content/echo-agent/zh/security.md",
-        "sha256": "be0da77281dd705e59f476b1c1a6126ea13df356394de16e3fe3ecce2a72437a"
+        "sha256": "0abd59ab06fd3ec79966845e8a202d2ef529659bf820a2b5a7b22be6fc537e79"
       },
       {
         "sourcePath": "docs/zh/skill-authoring.md",
@@ -499,7 +499,7 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "495984f59836d58165d0a093db4591e5d51be9e4",
+    "reviewedRevision": "1a0888290bb34c7ebf0a05beaedb370cf71cce24",
     "status": "reviewed-application-source-projection",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "files": [
