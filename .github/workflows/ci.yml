@@ -33,7 +33,10 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-      - run: sudo apt-get update && sudo apt-get install --yes shellcheck
+      # ShellCheck is part of the GitHub-hosted Ubuntu image. Avoid an
+      # unnecessary apt update so repository verification is not coupled to
+      # transient Ubuntu mirror availability.
+      - run: shellcheck --version
       - run: npm ci
       - run: npm run format:check
       - run: npm run lint
