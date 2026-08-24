@@ -104,10 +104,10 @@ test('framework Markdown links resolve to site slugs and survive refresh', async
   await expect(page.getByRole('heading', { level: 1, name: 'Tool System' })).toBeVisible();
 
   await page.goto('/en/docs/overview');
-  await page.getByRole('link', { name: 'Agent Patterns', exact: true }).click();
-  await expect(page).toHaveURL(/\/en\/docs\/agent-patterns$/);
+  await page.getByRole('link', { name: /41 - Persistence Concepts/ }).click();
+  await expect(page).toHaveURL(/\/en\/docs\/persistence-concepts$/);
   await expect(
-    page.getByRole('heading', { level: 1, name: 'Core AI Agent Patterns' }),
+    page.getByRole('heading', { level: 1, name: 'Store, Journal, Checkpoint, and Trace' }),
   ).toBeVisible();
 });
 

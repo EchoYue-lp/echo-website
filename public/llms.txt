@@ -43,6 +43,7 @@ Each capability below is grounded in a production binding in the current applica
 - echo-agent 如何工作 | echo-agent 文档: https://echo-agent.dev/docs/how-it-works
 - 工具系统 | echo-agent 文档: https://echo-agent.dev/docs/tools
 - 记忆系统 | echo-agent 文档: https://echo-agent.dev/docs/memory
+- 持久化概念 | echo-agent 文档: https://echo-agent.dev/docs/persistence-concepts
 - 上下文压缩 | echo-agent 文档: https://echo-agent.dev/docs/compression
 - 流式输出 | echo-agent 文档: https://echo-agent.dev/docs/streaming
 - 上下文系统 | echo-agent 文档: https://echo-agent.dev/docs/context-system
@@ -98,6 +99,7 @@ Each capability below is grounded in a production binding in the current applica
 - How echo-agent Works | echo-agent Documentation: https://echo-agent.dev/en/docs/how-it-works
 - Tools | echo-agent Documentation: https://echo-agent.dev/en/docs/tools
 - Memory | echo-agent Documentation: https://echo-agent.dev/en/docs/memory
+- Persistence Concepts | echo-agent Documentation: https://echo-agent.dev/en/docs/persistence-concepts
 - Compression | echo-agent Documentation: https://echo-agent.dev/en/docs/compression
 - Streaming | echo-agent Documentation: https://echo-agent.dev/en/docs/streaming
 - Context System | echo-agent Documentation: https://echo-agent.dev/en/docs/context-system

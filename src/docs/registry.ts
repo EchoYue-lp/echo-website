@@ -60,6 +60,11 @@ export const frameworkDocCategories: DocCategory[] = [
         filePath: './content/echo-agent/03-memory.md',
       },
       {
+        slug: 'persistence-concepts',
+        title: { zh: '持久化概念', en: 'Persistence Concepts' },
+        filePath: './content/echo-agent/41-persistence-concepts.md',
+      },
+      {
         slug: 'compression',
         title: { zh: '上下文压缩', en: 'Compression' },
         filePath: './content/echo-agent/04-compression.md',

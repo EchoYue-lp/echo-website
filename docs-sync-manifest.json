@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "e2c3a5c905e32b6a87bc9e37c087b8a6cac618a8",
+    "revision": "e961c46f902fec3aa79e22a50769135978413b23",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -23,7 +23,7 @@
       {
         "sourcePath": "docs/en/04-compression.md",
         "destination": "src/docs/content/echo-agent/en/04-compression.md",
-        "sha256": "939de0416e7f0c5b1fee82997fb5ab52229260f79a00ede92905a2b14589fa61"
+        "sha256": "aef0e4fa6481b3978a0db53e57791e46c2fb6dc82c643e0200831e2e2ee9e02f"
       },
       {
         "sourcePath": "docs/en/05-human-loop.md",
@@ -38,7 +38,7 @@
       {
         "sourcePath": "docs/en/07-skills.md",
         "destination": "src/docs/content/echo-agent/en/07-skills.md",
-        "sha256": "40d03a774964a70e1d1fa1449a6f4495ea8c8f930a1c1cfe9ef52c648060d6b4"
+        "sha256": "e9624a305f33fd9e4238682470bb89291f35c9f2615d7fadc9e8d340f4e5a840"
       },
       {
         "sourcePath": "docs/en/08-mcp.md",
@@ -48,7 +48,7 @@
       {
         "sourcePath": "docs/en/09-tasks.md",
         "destination": "src/docs/content/echo-agent/en/09-tasks.md",
-        "sha256": "15ce4cb2206fab0c283240be41e06fb3ac0cd7e99c9a87bfe31af5e374312ac4"
+        "sha256": "790cb7c8508037386d0659a3395c7644d4b413ab4c434890a9af6e0430416e52"
       },
       {
         "sourcePath": "docs/en/10-streaming.md",
@@ -78,7 +78,7 @@
       {
         "sourcePath": "docs/en/15-im-channels.md",
         "destination": "src/docs/content/echo-agent/en/15-im-channels.md",
-        "sha256": "fa4e07ce573fa0e8791f4e21fef80248ebf48561f4f910e6ab9b0087fd55cfb5"
+        "sha256": "37065eb53380d1776a485d9cf8bffa0fd0264c813bfa6282da94dc7d4314ccdc"
       },
       {
         "sourcePath": "docs/en/17-graph-workflow.md",
@@ -108,7 +108,7 @@
       {
         "sourcePath": "docs/en/23-hooks.md",
         "destination": "src/docs/content/echo-agent/en/23-hooks.md",
-        "sha256": "51eebaae03449eb3683c66c2bec2ec0cd1bf203489b47d5a338103272f1da3cb"
+        "sha256": "505f7a5abe99f464eaf84969de182b623f120adbb0f5c03ef6d6d4df8f155b8a"
       },
       {
         "sourcePath": "docs/en/24-eval-system.md",
@@ -118,12 +118,12 @@
       {
         "sourcePath": "docs/en/25-self-improvement.md",
         "destination": "src/docs/content/echo-agent/en/25-self-improvement.md",
-        "sha256": "63d02b127370f43ff1d5daa760943b4e76c08e5e0daf914f2abbf364479adb1c"
+        "sha256": "f8e408a1ef2a364f2ce4b7c8c593303d9cac5e809cf274a8cb3defbaf978dcda"
       },
       {
         "sourcePath": "docs/en/26-multi-agent.md",
         "destination": "src/docs/content/echo-agent/en/26-multi-agent.md",
-        "sha256": "cd0a9a2666f08b6400fa78c7cd4a5c48e6e02893a53cb35cfe1e031ed3986cd0"
+        "sha256": "557ee0439bcc1befc6b8e3ed8d6b93d256d1617ee5e535d6a6aa8a41c276cedb"
       },
       {
         "sourcePath": "docs/en/27-tracing.md",
@@ -133,12 +133,12 @@
       {
         "sourcePath": "docs/en/28-config-reference.md",
         "destination": "src/docs/content/echo-agent/en/28-config-reference.md",
-        "sha256": "a964caf81e4de0657c0c3f4e4fd57ca9dc98520ecfb5ae5b87dda9dbc2765944"
+        "sha256": "3577b093605088159b4ffa8558f3a9a40fb8157f2a30d05b3ee80cb3954d4c49"
       },
       {
         "sourcePath": "docs/en/29-long-running-tasks.md",
         "destination": "src/docs/content/echo-agent/en/29-long-running-tasks.md",
-        "sha256": "528ad7fdd46964575f9b9cd74bda61d2f98137bfdf341afa1b53ff55aae76e05"
+        "sha256": "a3329d8e52283101a6a0d132212bf4193ba8b9086f24d99e4eb27236f24dc815"
       },
       {
         "sourcePath": "docs/en/30-react-safety.md",
@@ -153,7 +153,7 @@
       {
         "sourcePath": "docs/en/32-plugin-system.md",
         "destination": "src/docs/content/echo-agent/en/32-plugin-system.md",
-        "sha256": "e8f76d99a8b242076649cc15d432b1f99b383884ca281f50ec9ee162329a06ea"
+        "sha256": "bcb472069531fcdf64f2c7a17dde06ad30e199e6400455c7045e9c845e658665"
       },
       {
         "sourcePath": "docs/en/33-headless-mode.md",
@@ -163,7 +163,7 @@
       {
         "sourcePath": "docs/en/34-git-isolation.md",
         "destination": "src/docs/content/echo-agent/en/34-git-isolation.md",
-        "sha256": "5c0bbe4cb2133cc237445c3a0afd2a5cc63a7a3bd2338f524503ec45b114c0e3"
+        "sha256": "9aa4c731c7c9f5f97ebea80c0f6a5a7c8abf31157baac9edc09b081291e8041d"
       },
       {
         "sourcePath": "docs/en/35-pipelines.md",
@@ -173,22 +173,27 @@
       {
         "sourcePath": "docs/en/36-data-quality-statistics.md",
         "destination": "src/docs/content/echo-agent/en/36-data-quality-statistics.md",
-        "sha256": "13a04bbfd11a6ad9ada6f38d86b127c5f433f83de90af7a660454b87f9549b6e"
+        "sha256": "d7e091b97b6513252bdc13d1e662797d04e52cb8f9dca03d9ee5c6e0e09c6180"
       },
       {
         "sourcePath": "docs/en/37-code-search.md",
         "destination": "src/docs/content/echo-agent/en/37-code-search.md",
-        "sha256": "3182a9eac0f5dc028dff6263a23bef519f9927a0acf7abc907779ce124f08cff"
+        "sha256": "64a7ac9abcbfb324deb9568ff9ce1c444ed8b1f12197b5b550bfa799e8f9f343"
       },
       {
         "sourcePath": "docs/en/38-factory-modes.md",
         "destination": "src/docs/content/echo-agent/en/38-factory-modes.md",
-        "sha256": "29970232fa8ad98c51eea597997d1d080453341f50f1436e09ba4b48d3178c72"
+        "sha256": "82a7c0f394b7e8a2a30825e1c5cf69ef983813367d115a0cf945b8d756a1230d"
       },
       {
         "sourcePath": "docs/en/40-context-system.md",
         "destination": "src/docs/content/echo-agent/en/40-context-system.md",
         "sha256": "7bf1417c61ed71fcd0f182c5ff5d16e092fa79a953456b80525e271a5a5c3707"
+      },
+      {
+        "sourcePath": "docs/en/41-persistence-concepts.md",
+        "destination": "src/docs/content/echo-agent/en/41-persistence-concepts.md",
+        "sha256": "917ef2b2375fff0a42ec54b4169ca622d4f9c1bcd696f3dc7d2566d478a6811b"
       },
       {
         "sourcePath": "docs/en/41-shell-text-tools.md",
@@ -208,37 +213,37 @@
       {
         "sourcePath": "docs/en/getting-started.md",
         "destination": "src/docs/content/echo-agent/en/getting-started.md",
-        "sha256": "0f3fa3a1ff6f341adc688a7bfd8f3ea6d0d3472e9c861de631bbdeda67bb5066"
+        "sha256": "6388cd599da3759d8c88ac2200a284ac95a6c745465478733e8dd6b2a16b4155"
       },
       {
-        "sourcePath": "docs/knowledge/en/a2a-protocol.md",
+        "sourcePath": "docs/internal/knowledge/en/a2a-protocol.md",
         "destination": "src/docs/content/echo-agent/en/knowledge/a2a-protocol.md",
         "sha256": "0f992883bc58f7d75ec36af4ceeaf6535902ed386313ece1dcd8c92dc269b5cc"
       },
       {
-        "sourcePath": "docs/knowledge/en/agent-patterns.md",
+        "sourcePath": "docs/internal/knowledge/en/agent-patterns.md",
         "destination": "src/docs/content/echo-agent/en/knowledge/agent-patterns.md",
-        "sha256": "ccfef92486dfe65dacb3093d8aa41ac05d36b29577c370a98f5078bc5bc36f52"
+        "sha256": "fd6d52198bf5bf4d5421837fc487dfc3fe2faa381970c7810914222dffcad229"
       },
       {
-        "sourcePath": "docs/knowledge/en/mcp-protocol.md",
+        "sourcePath": "docs/internal/knowledge/en/mcp-protocol.md",
         "destination": "src/docs/content/echo-agent/en/knowledge/mcp-protocol.md",
-        "sha256": "142003f94723a0e9a8bdf5ae641986c944e10b12bf353330037cd0246eabf6f7"
+        "sha256": "00bc3b88d525b8158b0a98e00f2ee729ac59ff2402abcfbfa4b01376cf7ebbb3"
       },
       {
-        "sourcePath": "docs/knowledge/en/README.md",
+        "sourcePath": "docs/internal/knowledge/en/README.md",
         "destination": "src/docs/content/echo-agent/en/knowledge/README.md",
         "sha256": "f01af30372b6481bf911e4b78e6780e806562dc8b307d1f56103327226b0ee6a"
       },
       {
-        "sourcePath": "docs/knowledge/en/skill-system.md",
+        "sourcePath": "docs/internal/knowledge/en/skill-system.md",
         "destination": "src/docs/content/echo-agent/en/knowledge/skill-system.md",
-        "sha256": "f1035d435bfff556d662103da4ac9ff152fc70b2b13979af5263ef6be44eb78a"
+        "sha256": "04deed6333244fbc5dcaf2914b3886940076ed2895cc30583ec89a094e830f1b"
       },
       {
         "sourcePath": "docs/en/README.md",
         "destination": "src/docs/content/echo-agent/en/README.md",
-        "sha256": "205353896e7c1cc5920729d24524f6517902ab2cd27ba0d57654d36a66c643c7"
+        "sha256": "a37f3d4324c7395c2a4fe970d6a73b8bce81e94de201be7e9e1632b3c5a09440"
       },
       {
         "sourcePath": "docs/en/security.md",
@@ -268,7 +273,7 @@
       {
         "sourcePath": "docs/zh/04-compression.md",
         "destination": "src/docs/content/echo-agent/zh/04-compression.md",
-        "sha256": "804c585c20ec1a9974ae639ef9508e99dedea23e4d690af97f686d8ebd5e2dbe"
+        "sha256": "189e63e07098b8dd301170d40b2c31d1b1376d5696cfaf2e058e5546514db494"
       },
       {
         "sourcePath": "docs/zh/05-human-loop.md",
@@ -283,7 +288,7 @@
       {
         "sourcePath": "docs/zh/07-skills.md",
         "destination": "src/docs/content/echo-agent/zh/07-skills.md",
-        "sha256": "f8fc5bbe005eec81423296896aef179a09fb1c4a2421868177f4289e371b2e19"
+        "sha256": "0ccebd3c74b11bca8311f85901adb5bfe9a7213fc388b0865353a7c70e3144ce"
       },
       {
         "sourcePath": "docs/zh/08-mcp.md",
@@ -293,7 +298,7 @@
       {
         "sourcePath": "docs/zh/09-tasks.md",
         "destination": "src/docs/content/echo-agent/zh/09-tasks.md",
-        "sha256": "240dcac99a89edd0eb341dc97f28686c9afe9d1964a8ff07bc122c60389302de"
+        "sha256": "b695cdc72f2c62d78d328b520aa29c81c9dc01185f7b4baba3be3bb9b5cfed69"
       },
       {
         "sourcePath": "docs/zh/10-streaming.md",
@@ -323,7 +328,7 @@
       {
         "sourcePath": "docs/zh/15-im-channels.md",
         "destination": "src/docs/content/echo-agent/zh/15-im-channels.md",
-        "sha256": "a7e7ccc7f1a3072aacc41ab21c4e319c2e096bbb64f8bedd370e1611890fd3ee"
+        "sha256": "235ae661dd77a30b437ff42802f38dd435b28e70d645ccb43e076bd48af60f1a"
       },
       {
         "sourcePath": "docs/zh/17-graph-workflow.md",
@@ -353,7 +358,7 @@
       {
         "sourcePath": "docs/zh/23-hooks.md",
         "destination": "src/docs/content/echo-agent/zh/23-hooks.md",
-        "sha256": "f9bcfe3c90c22faa7106b6494fa20a5d318e81e329637f29979fb3fd7dc5db65"
+        "sha256": "919f437eed8f24497603f865f8efb68603b53b2b31ff81db95cfd90d6bc86a9b"
       },
       {
         "sourcePath": "docs/zh/24-eval-system.md",
@@ -363,12 +368,12 @@
       {
         "sourcePath": "docs/zh/25-self-improvement.md",
         "destination": "src/docs/content/echo-agent/zh/25-self-improvement.md",
-        "sha256": "bde2470fc04b4c82b887924ac87859c665433ee1a123b6ea612ce6853184c9d8"
+        "sha256": "6aa801911e7da14157b88ef1a1209dac292ec2d2aba36bcb63d10e773754c5e8"
       },
       {
         "sourcePath": "docs/zh/26-multi-agent.md",
         "destination": "src/docs/content/echo-agent/zh/26-multi-agent.md",
-        "sha256": "cc913d59161d1a9043c771b0ae16b4dbd412b8da696beb1ae718602756781af3"
+        "sha256": "37ab27ed7ac2282780d5b6c196dcb98d03e1fafee79bb4f4374223edec2df9f9"
       },
       {
         "sourcePath": "docs/zh/27-tracing.md",
@@ -378,12 +383,12 @@
       {
         "sourcePath": "docs/zh/28-config-reference.md",
         "destination": "src/docs/content/echo-agent/zh/28-config-reference.md",
-        "sha256": "6eccd1ecd827783260577cf02bfb394e653cae638d89da6ec05acba49b110060"
+        "sha256": "2d82d5bf2ba5e196c1e130aeb3564de86bdbfe75b4deef6480ad7640aec8e191"
       },
       {
         "sourcePath": "docs/zh/29-long-running-tasks.md",
         "destination": "src/docs/content/echo-agent/zh/29-long-running-tasks.md",
-        "sha256": "37b4d9a62eba6f7e54d9d3ce05d7727b9e0091e3199fca2822521c17e47a96bd"
+        "sha256": "7c947b165ffb6fbd3e8a5b4fc2f239c98728baf5c45b9d6cd7cfab547d172d74"
       },
       {
         "sourcePath": "docs/zh/30-react-safety.md",
@@ -398,7 +403,7 @@
       {
         "sourcePath": "docs/zh/32-plugin-system.md",
         "destination": "src/docs/content/echo-agent/zh/32-plugin-system.md",
-        "sha256": "ea342d8051fada89cc704a0d6947ce520a16a7636854ebe714d85d897607862b"
+        "sha256": "a8ed4e800e038183ae1d8db023da11c5f584a07625419303a1c1b13afbf5ff08"
       },
       {
         "sourcePath": "docs/zh/33-headless-mode.md",
@@ -408,7 +413,7 @@
       {
         "sourcePath": "docs/zh/34-git-isolation.md",
         "destination": "src/docs/content/echo-agent/zh/34-git-isolation.md",
-        "sha256": "9f1c1548aab4d7ce635faa6548b61d341b14e7dfad5848315e41bf898284e6e7"
+        "sha256": "2df879bdf1d1cd407cc9553e0965e8c8bdbe28f4739bb09c5e1184db088733e0"
       },
       {
         "sourcePath": "docs/zh/35-pipelines.md",
@@ -418,22 +423,27 @@
       {
         "sourcePath": "docs/zh/36-data-quality-statistics.md",
         "destination": "src/docs/content/echo-agent/zh/36-data-quality-statistics.md",
-        "sha256": "4a9033754de7635571f1c71a83d9002fd2ed0ffec7cd82a9d867f5d2d6db610b"
+        "sha256": "43284109ce50d71930fd0524905ba7fd3d80df3834c1efdb8fc3d7840534abd8"
       },
       {
         "sourcePath": "docs/zh/37-code-search.md",
         "destination": "src/docs/content/echo-agent/zh/37-code-search.md",
-        "sha256": "8d0f127653867a549772457d8644bfa3847c21c78f3fc31d000816da959a0d6a"
+        "sha256": "2e91bd21a3ab973501fa4cbda4f5b4ab47fbe8be1c9f0119c563cab411e7b853"
       },
       {
         "sourcePath": "docs/zh/38-factory-modes.md",
         "destination": "src/docs/content/echo-agent/zh/38-factory-modes.md",
-        "sha256": "2f2771fd86ff0189a27fcf407d54c65db36e95da4907bd808d325d47a067bac4"
+        "sha256": "e066c41afc9c9272009c2b7bf3f5e9c428ef7b17925700ff7800e1bf8d37f68a"
       },
       {
         "sourcePath": "docs/zh/40-context-system.md",
         "destination": "src/docs/content/echo-agent/zh/40-context-system.md",
         "sha256": "419dbdb26183c54d1954196290e1e028e1c23363449fae0e50bcde642eed069e"
+      },
+      {
+        "sourcePath": "docs/zh/41-persistence-concepts.md",
+        "destination": "src/docs/content/echo-agent/zh/41-persistence-concepts.md",
+        "sha256": "14ead0fe7a4798e2c93d29c773feb4721afb3b421e5b6c15b9b9a2b56779d83f"
       },
       {
         "sourcePath": "docs/zh/41-shell-text-tools.md",
@@ -453,42 +463,42 @@
       {
         "sourcePath": "docs/zh/getting-started.md",
         "destination": "src/docs/content/echo-agent/zh/getting-started.md",
-        "sha256": "3359cfe601d181d943bb3949c353e38cbb37e438e8f9245dbb784a3ec0d2593a"
+        "sha256": "d6cbb6ca19e384659a9a8f7642917d8388f5d75efef6cc1508f8b969c0d08e3b"
       },
       {
-        "sourcePath": "docs/knowledge/zh/a2a-protocol.md",
+        "sourcePath": "docs/internal/knowledge/zh/a2a-protocol.md",
         "destination": "src/docs/content/echo-agent/zh/knowledge/a2a-protocol.md",
         "sha256": "fdf10b8bac1834cde6132718f12823b5add6ded4b4e8490b63946d34c92a004d"
       },
       {
-        "sourcePath": "docs/knowledge/zh/agent-patterns.md",
+        "sourcePath": "docs/internal/knowledge/zh/agent-patterns.md",
         "destination": "src/docs/content/echo-agent/zh/knowledge/agent-patterns.md",
-        "sha256": "8be1583a9de06b8f540f9603956b7428d8fd0d18c288dc91c06e3c0ce46c009e"
+        "sha256": "bdd9d567e65d916dcab379f8e2d84f5dde3fc7a1b12384a5617bbb45d9719fbf"
       },
       {
-        "sourcePath": "docs/knowledge/zh/mcp-protocol.md",
+        "sourcePath": "docs/internal/knowledge/zh/mcp-protocol.md",
         "destination": "src/docs/content/echo-agent/zh/knowledge/mcp-protocol.md",
-        "sha256": "8bb29b20b4d402b6cf00a5f760a01e1eaba42494a186767059df21c5c60c1e8d"
+        "sha256": "f97c8f9af8bd68d1d1d9aff46710bd7cbbc7b3555c73ce649a6f2e64363058f0"
       },
       {
-        "sourcePath": "docs/knowledge/zh/README.md",
+        "sourcePath": "docs/internal/knowledge/zh/README.md",
         "destination": "src/docs/content/echo-agent/zh/knowledge/README.md",
         "sha256": "12d04fcf0e8aa5298b1fb231219ee615c999542c8fa8524097f5661168fd0414"
       },
       {
-        "sourcePath": "docs/knowledge/zh/skill-system.md",
+        "sourcePath": "docs/internal/knowledge/zh/skill-system.md",
         "destination": "src/docs/content/echo-agent/zh/knowledge/skill-system.md",
-        "sha256": "c823d1743a4d82aabe1a84dcd886c24ceb7157bcbc5c280612f6c84da671f616"
+        "sha256": "a06f28cbd63d08f50884c1572fad920126fced6fbd3b89bc3f35a39807b0f2e7"
       },
       {
         "sourcePath": "docs/zh/README.md",
         "destination": "src/docs/content/echo-agent/zh/README.md",
-        "sha256": "39a20b288cf59d84bdd683a0cc5514d37a84780c45fda7e832eb92db5044faad"
+        "sha256": "9e274e10f1e95d88db6438699fb1ed5452fd206f0869cb7bece2f8040f00ed24"
       },
       {
         "sourcePath": "docs/zh/security.md",
         "destination": "src/docs/content/echo-agent/zh/security.md",
-        "sha256": "0abd59ab06fd3ec79966845e8a202d2ef529659bf820a2b5a7b22be6fc537e79"
+        "sha256": "4cf257fb7cdc77a0c3a04b046f39dd5e3878ba330bcc231e08827cb369cfc72a"
       },
       {
         "sourcePath": "docs/zh/skill-authoring.md",

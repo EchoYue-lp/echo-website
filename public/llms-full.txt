@@ -43,6 +43,7 @@ Each capability below is grounded in a production binding in the current applica
 - echo-agent 如何工作 | echo-agent 文档: https://echo-agent.dev/docs/how-it-works
 - 工具系统 | echo-agent 文档: https://echo-agent.dev/docs/tools
 - 记忆系统 | echo-agent 文档: https://echo-agent.dev/docs/memory
+- 持久化概念 | echo-agent 文档: https://echo-agent.dev/docs/persistence-concepts
 - 上下文压缩 | echo-agent 文档: https://echo-agent.dev/docs/compression
 - 流式输出 | echo-agent 文档: https://echo-agent.dev/docs/streaming
 - 上下文系统 | echo-agent 文档: https://echo-agent.dev/docs/context-system
@@ -98,6 +99,7 @@ Each capability below is grounded in a production binding in the current applica
 - How echo-agent Works | echo-agent Documentation: https://echo-agent.dev/en/docs/how-it-works
 - Tools | echo-agent Documentation: https://echo-agent.dev/en/docs/tools
 - Memory | echo-agent Documentation: https://echo-agent.dev/en/docs/memory
+- Persistence Concepts | echo-agent Documentation: https://echo-agent.dev/en/docs/persistence-concepts
 - Compression | echo-agent Documentation: https://echo-agent.dev/en/docs/compression
 - Streaming | echo-agent Documentation: https://echo-agent.dev/en/docs/streaming
 - Context System | echo-agent Documentation: https://echo-agent.dev/en/docs/context-system
@@ -162,77 +164,76 @@ Source: https://echo-agent.dev/docs/overview
 
 ### 核心功能
 
-| 文档 | 功能模块 | 核心关键词 |
-|------|---------|-----------|
-| [01 - ReAct Agent](01-react-agent.md) | 核心执行引擎 | Thought→Action→Observation、CoT、并行工具调用、回调 |
-| [02 - 工具系统](02-tools.md) | Tools | Tool trait、ToolManager、超时重试、并发限流 |
-| [03 - 记忆系统](03-memory.md) | Memory | Store（长期）、RuntimeStateStore（运行时检查点）、ConversationStore（对话历史） |
-| [04 - 上下文压缩](04-compression.md) | Compression | SlidingWindow、Summary、Hybrid、ContextManager |
-| [05 - 人工介入](05-human-loop.md) | Human-in-the-Loop | 审批 Guard、Console/Webhook/WebSocket Provider |
-| [06 - 多 Agent 编排](06-subagent.md) | Subagent / Orchestration | Orchestrator/Subagent/Planner、上下文隔离 |
-| [07 - Skill 系统](07-skills.md) | Skills | 能力包、系统提示词注入、外部 SKILL.md 加载 |
-| [08 - MCP 协议](08-mcp.md) | MCP | stdio/HTTP 传输、工具适配、多服务端管理 |
-| [09 - 任务规划](09-tasks.md) | Tasks / DAG | 有向无环图、拓扑排序、循环依赖检测、Mermaid 可视化 |
-| [10 - 流式输出](10-streaming.md) | Streaming | execute_stream、AgentEvent、SSE、TTFT |
-| [11 - 结构化输出](11-structured-output.md) | Structured Output | ResponseFormat、JsonSchema、extract()、extract_json() |
-| [12 - Mock 测试工具](12-mock.md) | Testing | MockLlmClient、MockTool、MockAgent、InMemoryStore |
-| [13 - 多轮对话](13-chat.md) | Chat | chat()、chat_stream()、跨轮记忆、reset() |
-| [14 - 语义搜索](14-semantic-search.md) | Semantic Search | EmbeddingStore、Embedder、向量索引、余弦相似度 |
-| [15 - IM Channels](15-im-channels.md) | IM Channels | QQ Bot / 飞书接入、WebSocket / Webhook、ChannelPlugin、消息路由 |
+| 文档                                       | 功能模块                 | 核心关键词                                                                      |
+| ------------------------------------------ | ------------------------ | ------------------------------------------------------------------------------- |
+| [01 - ReAct Agent](01-react-agent.md)      | 核心执行引擎             | Thought→Action→Observation、CoT、并行工具调用、回调                             |
+| [02 - 工具系统](02-tools.md)               | Tools                    | Tool trait、ToolManager、超时重试、并发限流                                     |
+| [03 - 记忆系统](03-memory.md)              | Memory                   | Store（长期）、RuntimeStateStore（运行时检查点）、ConversationStore（对话历史） |
+| [04 - 上下文压缩](04-compression.md)       | Compression              | SlidingWindow、Summary、Hybrid、ContextManager                                  |
+| [05 - 人工介入](05-human-loop.md)          | Human-in-the-Loop        | 审批 Guard、Console/Webhook/WebSocket Provider                                  |
+| [06 - 多 Agent 编排](06-subagent.md)       | Subagent / Orchestration | Orchestrator/Subagent/Planner、上下文隔离                                       |
+| [07 - Skill 系统](07-skills.md)            | Skills                   | 能力包、系统提示词注入、外部 SKILL.md 加载                                      |
+| [08 - MCP 协议](08-mcp.md)                 | MCP                      | stdio/HTTP 传输、工具适配、多服务端管理                                         |
+| [09 - 任务规划](09-tasks.md)               | Tasks / DAG              | 有向无环图、拓扑排序、循环依赖检测、Mermaid 可视化                              |
+| [10 - 流式输出](10-streaming.md)           | Streaming                | execute_stream、AgentEvent、SSE、TTFT                                           |
+| [11 - 结构化输出](11-structured-output.md) | Structured Output        | ResponseFormat、JsonSchema、extract()、extract_json()                           |
+| [12 - Mock 测试工具](12-mock.md)           | Testing                  | MockLlmClient、MockTool、MockAgent、InMemoryStore                               |
+| [13 - 多轮对话](13-chat.md)                | Chat                     | chat()、chat_stream()、跨轮记忆、reset()                                        |
+| [14 - 语义搜索](14-semantic-search.md)     | Semantic Search          | EmbeddingStore、Embedder、向量索引、余弦相似度                                  |
+| [15 - IM Channels](15-im-channels.md)      | IM Channels              | QQ Bot / 飞书接入、WebSocket / Webhook、ChannelPlugin、消息路由                 |
 
 ### 高级功能 (v1.0.0)
 
-| 文档 | 功能模块 | 核心关键词 |
-|------|---------|-----------|
-| [17 - Graph Workflow](17-graph-workflow.md) | 图工作流 | LangGraph 风格、SharedState、条件边、fan-out/fan-in |
-| [18 - Guard 系统](18-guard-system.md) | 护栏系统 | RuleGuard、LlmGuard、输入/输出过滤 |
-| [20 - Web 工具](20-web-tools.md) | Web 搜索 / 网页获取 | DuckDuckGo / Brave / Tavily 搜索、HTML→文本 |
-| [21 - 常用工具速查](21-common-tools.md) | Tool Guide | Web 搜索、网页抓取、浏览器自动化、数据工具 |
-| [22 - 论文检索工具](22-research-tools.md) | Research | ArXiv 搜索、Semantic Scholar、PDF 下载、BibTeX 生成 |
-| [23 - Hooks 系统](23-hooks.md) | Hooks | Skills hooks（31 个事件、7 种动作）、Task hooks、Subagent hooks |
-| [24 - 评估系统](24-eval-system.md) | Eval | EvalCase、SuccessCriteria、LlmGrader、A/B 对比、回归套件、HTML 报告 |
-| [25 - 自进化系统](25-self-improvement.md) | Improve / Evolution | Analyzer、ImprovementLoop、EvalDrivenImprovement、分层记忆、技能自创建、合并/健康/补丁、规则晋升、变更审计 |
-| [26 - 多 Agent 模式](26-multi-agent.md) | Subagent / Team intent | 单次调度模式与 TeamSpec 到 runtime DAG 的协作 |
-| [27 - 追踪系统](27-tracing.md) | Trace | Run、RunEvent（11 种类型）、RunStore、JsonlRunStore、生命周期、密钥脱敏 |
-| [28 - 配置参考](28-config-reference.md) | Config | AgentConfig、ReactAgentBuilder、ToolExecutionConfig、TokenBudgetConfig、YAML 配置、Feature Flags |
-| [29 - 运行时与任务系统](29-long-running-tasks.md) | Runtime & Tasks | 统一运行时、执行序列化、DAG 编排、ProgressBridge、后台任务、定时调度 |
+| 文档                                              | 功能模块               | 核心关键词                                                                                                 |
+| ------------------------------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [17 - Graph Workflow](17-graph-workflow.md)       | 图工作流               | LangGraph 风格、SharedState、条件边、fan-out/fan-in                                                        |
+| [18 - Guard 系统](18-guard-system.md)             | 护栏系统               | RuleGuard、LlmGuard、输入/输出过滤                                                                         |
+| [20 - Web 工具](20-web-tools.md)                  | Web 搜索 / 网页获取    | DuckDuckGo / Brave / Tavily 搜索、HTML→文本                                                                |
+| [21 - 常用工具速查](21-common-tools.md)           | Tool Guide             | Web 搜索、网页抓取、浏览器自动化、数据工具                                                                 |
+| [22 - 论文检索工具](22-research-tools.md)         | Research               | ArXiv 搜索、Semantic Scholar、PDF 下载、BibTeX 生成                                                        |
+| [23 - Hooks 系统](23-hooks.md)                    | Hooks                  | Skills hooks（31 个事件、7 种动作）、Task hooks、Subagent hooks                                            |
+| [24 - 评估系统](24-eval-system.md)                | Eval                   | EvalCase、SuccessCriteria、LlmGrader、A/B 对比、回归套件、HTML 报告                                        |
+| [25 - 自进化系统](25-self-improvement.md)         | Improve / Evolution    | Analyzer、ImprovementLoop、EvalDrivenImprovement、分层记忆、技能自创建、合并/健康/补丁、规则晋升、变更审计 |
+| [26 - 多 Agent 模式](26-multi-agent.md)           | Subagent / Team intent | 单次调度模式与 TeamSpec 到 runtime DAG 的协作                                                              |
+| [27 - 追踪系统](27-tracing.md)                    | Trace                  | Run、RunEvent（11 种类型）、RunStore、JsonlRunStore、生命周期、密钥脱敏                                    |
+| [28 - 配置参考](28-config-reference.md)           | Config                 | AgentConfig、ReactAgentBuilder、ToolExecutionConfig、TokenBudgetConfig、YAML 配置、Feature Flags           |
+| [29 - 运行时与任务系统](29-long-running-tasks.md) | Runtime & Tasks        | 统一运行时、执行序列化、DAG 编排、ProgressBridge、后台任务、定时调度                                       |
 
 ### 新增功能 (v0.2.1)
 
-| 文档 | 功能模块 | 核心关键词 |
-|------|---------|-----------|
-| [30 - ReAct 安全机制](30-react-safety.md) | Loop Detection / Adaptive Compression | 循环检测、5 级自适应压缩、Git Checkpoint |
-| [31 - LSP 集成](31-lsp-integration.md) | LSP | Language Server Protocol、代码导航、诊断、rust-analyzer |
-| [32 - 插件系统](32-plugin-system.md) | Plugin | PluginManifest、PluginRegistry、PluginScope、生命周期管理 |
-| [33 - Headless 模式](33-headless-mode.md) | Headless | 非交互执行、CI/CD 集成、JSON 输出、exit_code |
-| [34 - Git 隔离](34-git-isolation.md) | Git Worktree / Checkpoint | 并行子代理隔离、worktree 管理、文件操作回滚 |
-| [35 - 流水线](35-pipelines.md) | Data Pipeline / Writing Pipeline | 代码优先可复现分析、写作质量循环 |
-| [36 - 数据质量与统计](36-data-quality-statistics.md) | Data Quality / Statistics | 数据画像、异常检测、描述统计、相关性分析 |
-| [37 - 代码搜索](37-code-search.md) | Code Search | Ripgrep、结构化输出、glob/type 过滤、50KB 上限 |
-| [38 - Agent 工厂与模式](38-factory-modes.md) | Agent Factory / Mode Engine / Prompt Templates | 模式切换、本地化、模板渲染 |
-| [40 - Context 系统](40-context-system.md) | Context System | ContextAssembler、ContextBudgeter、ContextSelector、优先级排序、预算感知 |
+| 文档                                                 | 功能模块                                       | 核心关键词                                                               |
+| ---------------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------ |
+| [30 - ReAct 安全机制](30-react-safety.md)            | Loop Detection / Adaptive Compression          | 循环检测、5 级自适应压缩、Git Checkpoint                                 |
+| [31 - LSP 集成](31-lsp-integration.md)               | LSP                                            | Language Server Protocol、代码导航、诊断、rust-analyzer                  |
+| [32 - 插件系统](32-plugin-system.md)                 | Plugin                                         | PluginManifest、PluginRegistry、PluginScope、生命周期管理                |
+| [33 - Headless 模式](33-headless-mode.md)            | Headless                                       | 非交互执行、CI/CD 集成、JSON 输出、exit_code                             |
+| [34 - Git 隔离](34-git-isolation.md)                 | Git Worktree / Checkpoint                      | 并行子代理隔离、worktree 管理、文件操作回滚                              |
+| [35 - 流水线](35-pipelines.md)                       | Data Pipeline / Writing Pipeline               | 代码优先可复现分析、写作质量循环                                         |
+| [36 - 数据质量与统计](36-data-quality-statistics.md) | Data Quality / Statistics                      | 数据画像、异常检测、描述统计、相关性分析                                 |
+| [37 - 代码搜索](37-code-search.md)                   | Code Search                                    | Ripgrep、结构化输出、glob/type 过滤、50KB 上限                           |
+| [38 - Agent 工厂与模式](38-factory-modes.md)         | Agent Factory / Mode Engine / Prompt Templates | 模式切换、本地化、模板渲染                                               |
+| [40 - Context 系统](40-context-system.md)            | Context System                                 | ContextAssembler、ContextBudgeter、ContextSelector、优先级排序、预算感知 |
+| [41 - 持久化概念](41-persistence-concepts.md)        | Store / Journal / Checkpoint / Trace           | 存储边界、事实权威、恢复快照、执行观测                                   |
 
 ### 入门指南
 
-| 文档 | 说明 |
-|------|------|
-| [Rust 学习指南](rust-learning/README.md) | 面向零基础贡献者的多章节教程与可运行教学 crate |
-| [快速入门](getting-started.md) | 从零开始构建你的第一个 Agent |
-| [Skill 创作指南](skill-authoring.md) | 创建自定义 Code-based 和 File-based Skill |
+| 文档                                                        | 说明                                           |
+| ----------------------------------------------------------- | ---------------------------------------------- |
+| [Rust 学习指南](../../echo-rust-learning/docs/zh/README.md) | 面向零基础贡献者的多章节教程与可运行教学 crate |
+| [快速入门](getting-started.md)                              | 从零开始构建你的第一个 Agent                   |
+| [Skill 创作指南](skill-authoring.md)                        | 创建自定义 Code-based 和 File-based Skill      |
 
 ### 安全
 
-| 文档 | 功能模块 | 核心关键词 |
-|------|---------|-----------|
+| 文档                    | 功能模块 | 核心关键词                                 |
+| ----------------------- | -------- | ------------------------------------------ |
 | [安全指南](security.md) | Security | 安全模型、沙箱配置、密钥管理、MCP 信任边界 |
 
-### 知识库
+### 架构决策
 
-参见 [知识库](../knowledge/zh/README.md) 获取深入概念讲解：
-- [Agent 模式](../knowledge/zh/agent-patterns.md) — ReAct、Plan-and-Execute、Self-Reflection、Graph Workflow
-- [MCP 协议](../knowledge/zh/mcp-protocol.md) — Model Context Protocol 规范
-- [Skill 系统设计](../knowledge/zh/skill-system.md) — agentskills.io 规范对齐
-- [A2A 协议](../knowledge/zh/a2a-protocol.md) — Agent-to-Agent 通信
+| ADR                                                                                  | 决策                                                     |
+| ------------------------------------------------------------------------------------ | -------------------------------------------------------- |
+| [0001 - Channel 用户会话隔离](../adr/0001-channel-session-sender-scope.md)            | Channel 会话按通道、会话与发送者三元身份隔离            |
 
 ---
 
@@ -318,19 +319,19 @@ Anthropic Messages 或 Chat Completions，并声明文本、图片、音频、�
 
 ## 功能矩阵
 
-| 功能 | API / 配置字段 | 默认值 |
-|------|---------------|--------|
-| 单次任务执行 | `execute()` / `execute_stream()` | — |
-| **多轮对话** | **`chat()` / `chat_stream()`** | — |
-| 工具调用 | `enable_tool` | `true` |
-| 版本化任务图 | `task_create` / `task_update` / `task_list` | 已注册 |
-| Subagent 编排 | `enable_subagent` | `false` |
-| 长期记忆 (Store) | `enable_memory` | `false` |
-| 人工介入 | `enable_human_in_loop` | `false` |
-| Chain-of-Thought 提示词 | `enable_cot` | `true` |
-| 上下文压缩 | 通过 `set_compressor()` | 无 |
-| 线程持久化 / 恢复 | `conversation_id` + `state_store`（`RuntimeStateStore`） | 无 |
-| transcript/history 投影 | `conversation_id` + `ConversationStore` | 无 |
+| 功能                    | API / 配置字段                                           | 默认值  |
+| ----------------------- | -------------------------------------------------------- | ------- |
+| 单次任务执行            | `execute()` / `execute_stream()`                         | —       |
+| **多轮对话**            | **`chat()` / `chat_stream()`**                           | —       |
+| 工具调用                | `enable_tool`                                            | `true`  |
+| 版本化任务图            | `task_create` / `task_update` / `task_list`              | 已注册  |
+| Subagent 编排           | `enable_subagent`                                        | `false` |
+| 长期记忆 (Store)        | `enable_memory`                                          | `false` |
+| 人工介入                | `enable_human_in_loop`                                   | `false` |
+| Chain-of-Thought 提示词 | `enable_cot`                                             | `true`  |
+| 上下文压缩              | 通过 `set_compressor()`                                  | 无      |
+| 线程持久化 / 恢复       | `conversation_id` + `state_store`（`RuntimeStateStore`） | 无      |
+| transcript/history 投影 | `conversation_id` + `ConversationStore`                  | 无      |
 
 ---
 
@@ -339,55 +340,55 @@ Anthropic Messages 或 Chat Completions，并声明文本、图片、音频、�
 所有示例按 `验收样例`、`条件验收样例`、`教学示例` 三类维护。
 完整分层清单和维护规则见 `examples/README.md`。
 
-| 示例 | 演示功能 |
-|------|---------|
-| `examples/demo01_tools.rs` | 基础工具注册与调用 |
-| `examples/demo02_tasks.rs` | DAG 任务规划 |
-| `examples/demo03_approval.rs` | 人工审批 |
-| `examples/demo04_subagent.rs` | Subagent 编排 |
-| `examples/demo05_compressor.rs` | 上下文压缩 |
-| `examples/demo06_mcp.rs` | MCP 协议集成 |
-| `examples/demo07_skills.rs` | Skill 系统 |
-| `examples/demo08_external_skills.rs` | 外部 SKILL.md 加载 |
-| `examples/demo09_file_shell.rs` | 文件和 Shell 工具 |
-| `examples/demo10_streaming.rs` | 流式输出 |
-| `examples/demo11_callbacks.rs` | 生命周期回调 |
-| `examples/demo12_resilience.rs` | 容错与重试 |
-| `examples/demo13_tool_execution.rs` | 工具执行配置 |
-| `examples/demo15_structured_output.rs` | 结构化输出（extract / JSON Schema） |
-| `examples/demo17_chat.rs` | 多轮对话（chat / chat_stream / reset） |
-| `examples/demo18_semantic_memory.rs` | Store 语义搜索（EmbeddingStore / 向量检索） |
-| `examples/demo19_guard.rs` | Guard 系统（规则 / LLM 内容过滤） |
-| `examples/demo20_audit.rs` | 审计日志 |
-| `examples/demo23_a2a.rs` | A2A 协议 |
-| `examples/demo24_topology.rs` | 多 Agent 拓扑可视化 |
-| `examples/demo25_macros.rs` | 宏系统综合展示 |
-| `examples/demo26_provider_factory.rs` | 动态 LLM 工厂 |
-| `examples/demo27_sqlite_memory.rs` | SQLite 持久化记忆 |
-| `examples/demo28_workflow.rs` | 工作流管道 |
-| `examples/demo29_sandbox.rs` | 沙箱执行 |
-| `examples/demo30_mcp_server.rs` | MCP 服务端模式 |
-| `examples/demo31_memory_tools.rs` | 记忆工具注入 |
-| `examples/demo32_token_budget.rs` | Token 预算控制 |
-| `examples/demo33_retry_policy.rs` | 统一重试策略 |
-| `examples/demo34_workflow_stream.rs` | 工作流流式输出 |
-| `examples/demo35_dynamic_tools.rs` | 动态工具管理 |
-| `examples/demo36_multimodal.rs` | 多模态消息 |
-| `examples/demo37_declarative_workflow.rs` | YAML/JSON 声明式工作流 |
-| `examples/demo38_im_channels.rs` | IM 频道集成 |
-| `examples/demo39_workflow.rs` | 图工作流引擎 |
-| `examples/demo40_snapshot.rs` | 快照与回滚 |
-| `examples/demo41_web_tools.rs` | Web 搜索与页面获取 |
-| `examples/demo42_playwright_mcp.rs` | Playwright MCP 浏览器自动化 |
-| `examples/demo43_data_tools.rs` | 数据工具（Excel / CSV / Word / 文本） |
-| `examples/demo44_code_laboratory.rs` | 代码执行助手 |
-| `examples/demo45_customer_service.rs` | 智能客服 |
-| `examples/demo46_data_analyst.rs` | 数据分析助手 |
-| `examples/demo47_enterprise.rs` | 企业工作流自动化 |
-| `examples/demo48_personal_assistant.rs` | 个人智能助理 |
-| `examples/demo49_research_agent.rs` | 研究与报告助手 |
-| `examples/demo50_eval.rs` | 评估系统：用例、标准、约束、轨迹回放、触发准确率、HTML 报告 |
-| `examples/demo51_self_improvement.rs` | 自进化：Analyzer 失败检测、Curator 技能生命周期、TrajectorySaver 微调数据 |
+| 示例                                      | 演示功能                                                                  |
+| ----------------------------------------- | ------------------------------------------------------------------------- |
+| `examples/demo01_tools.rs`                | 基础工具注册与调用                                                        |
+| `examples/demo02_tasks.rs`                | DAG 任务规划                                                              |
+| `examples/demo03_approval.rs`             | 人工审批                                                                  |
+| `examples/demo04_subagent.rs`             | Subagent 编排                                                             |
+| `examples/demo05_compressor.rs`           | 上下文压缩                                                                |
+| `examples/demo06_mcp.rs`                  | MCP 协议集成                                                              |
+| `examples/demo07_skills.rs`               | Skill 系统                                                                |
+| `examples/demo08_external_skills.rs`      | 外部 SKILL.md 加载                                                        |
+| `examples/demo09_file_shell.rs`           | 文件和 Shell 工具                                                         |
+| `examples/demo10_streaming.rs`            | 流式输出                                                                  |
+| `examples/demo11_callbacks.rs`            | 生命周期回调                                                              |
+| `examples/demo12_resilience.rs`           | 容错与重试                                                                |
+| `examples/demo13_tool_execution.rs`       | 工具执行配置                                                              |
+| `examples/demo15_structured_output.rs`    | 结构化输出（extract / JSON Schema）                                       |
+| `examples/demo17_chat.rs`                 | 多轮对话（chat / chat_stream / reset）                                    |
+| `examples/demo18_semantic_memory.rs`      | Store 语义搜索（EmbeddingStore / 向量检索）                               |
+| `examples/demo19_guard.rs`                | Guard 系统（规则 / LLM 内容过滤）                                         |
+| `examples/demo20_audit.rs`                | 审计日志                                                                  |
+| `examples/demo23_a2a.rs`                  | A2A 协议                                                                  |
+| `examples/demo24_topology.rs`             | 多 Agent 拓扑可视化                                                       |
+| `examples/demo25_macros.rs`               | 宏系统综合展示                                                            |
+| `examples/demo26_provider_factory.rs`     | 动态 LLM 工厂                                                             |
+| `examples/demo27_sqlite_memory.rs`        | SQLite 持久化记忆                                                         |
+| `examples/demo28_workflow.rs`             | 工作流管道                                                                |
+| `examples/demo29_sandbox.rs`              | 沙箱执行                                                                  |
+| `examples/demo30_mcp_server.rs`           | MCP 服务端模式                                                            |
+| `examples/demo31_memory_tools.rs`         | 记忆工具注入                                                              |
+| `examples/demo32_token_budget.rs`         | Token 预算控制                                                            |
+| `examples/demo33_retry_policy.rs`         | 统一重试策略                                                              |
+| `examples/demo34_workflow_stream.rs`      | 工作流流式输出                                                            |
+| `examples/demo35_dynamic_tools.rs`        | 动态工具管理                                                              |
+| `examples/demo36_multimodal.rs`           | 多模态消息                                                                |
+| `examples/demo37_declarative_workflow.rs` | YAML/JSON 声明式工作流                                                    |
+| `examples/demo38_im_channels.rs`          | IM 频道集成                                                               |
+| `examples/demo39_workflow.rs`             | 图工作流引擎                                                              |
+| `examples/demo40_snapshot.rs`             | 快照与回滚                                                                |
+| `examples/demo41_web_tools.rs`            | Web 搜索与页面获取                                                        |
+| `examples/demo42_playwright_mcp.rs`       | Playwright MCP 浏览器自动化                                               |
+| `examples/demo43_data_tools.rs`           | 数据工具（Excel / CSV / Word / 文本）                                     |
+| `examples/demo44_code_laboratory.rs`      | 代码执行助手                                                              |
+| `examples/demo45_customer_service.rs`     | 智能客服                                                                  |
+| `examples/demo46_data_analyst.rs`         | 数据分析助手                                                              |
+| `examples/demo47_enterprise.rs`           | 企业工作流自动化                                                          |
+| `examples/demo48_personal_assistant.rs`   | 个人智能助理                                                              |
+| `examples/demo49_research_agent.rs`       | 研究与报告助手                                                            |
+| `examples/demo50_eval.rs`                 | 评估系统：用例、标准、约束、轨迹回放、触发准确率、HTML 报告               |
+| `examples/demo51_self_improvement.rs`     | 自进化：Analyzer 失败检测、Curator 技能生命周期、TrajectorySaver 微调数据 |
 
 
 ---
@@ -487,8 +488,21 @@ async fn multiply(a: f64, b: f64) -> Result<ToolResult> {
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    let api_key = std::env::var("OPENAI_API_KEY").map_err(|_| {
+        echo_agent::error::ConfigError::MissingConfig(
+            "getting-started".to_string(),
+            "OPENAI_API_KEY".to_string(),
+        )
+    })?;
+    let llm_config = LlmConfig::for_provider(
+        "openai",
+        "https://api.openai.com/v1",
+        api_key,
+        "gpt-5.5",
+        LlmApiProtocol::Responses,
+    )?;
     let agent = agent! {
-        model: "deepseek-v4-flash",
+        llm_config: llm_config,
         system_prompt: "你是一个数学助手，使用工具进行计算。",
         tools: [AddTool, MultiplyTool],
     }?;
@@ -502,7 +516,7 @@ async fn main() -> Result<()> {
 运行后，Agent 会自动推理：先调用 `add(3, 4)` 得到 7，再调用 `multiply(7, 5)` 得到 35。
 
 ```bash
-cargo run
+OPENAI_API_KEY=sk-... cargo run
 ```
 
 ---
@@ -1666,6 +1680,146 @@ Subagent B  conversation_id = "sub-b-conv-001"    namespace = ["sub_b", "memorie
 
 ---
 
+Source: https://echo-agent.dev/docs/persistence-concepts
+
+# Store、Journal、Checkpoint 与 Trace
+
+这四个概念并不处于同一抽象层：`Store` 表示某类数据的读写边界；`Journal`、`Checkpoint` 和 `Trace` 表示数据承担的不同语义角色。
+
+## 核心区别
+
+| 概念         | 回答的问题                         | 典型形态                 | 主要用途               |
+| ------------ | ---------------------------------- | ------------------------ | ---------------------- |
+| `Store`      | 数据存在哪里、如何读写？           | trait、文件或内存后端    | 持久化和查询某类数据   |
+| `Journal`    | 按确定顺序发生了什么？             | append-only event stream | 重放、恢复、生成投影   |
+| `Checkpoint` | 执行到某个边界时状态是什么？       | state + applied sequence | 快速恢复、避免全量重放 |
+| `Trace`      | 一次执行如何运行、为何成功或失败？ | `Run` + `RunEvent`       | 调试、诊断、评估和统计 |
+
+```text
+业务事件
+   │
+   ├─> Journal ─> reduce/fold ─> 当前状态
+   │                               │
+   │                               └─> Checkpoint
+   │
+   └─> Trace
+
+不同 Store 负责持久化上述数据或其它领域数据。
+```
+
+## Store：领域存储接口
+
+框架中不存在一个能表示所有持久化数据的总 `Store` trait。名字中包含 `Store`，只能说明它是某个领域的读写边界，不能据此推断数据模型或权威性。
+
+| 接口                 | 所有的数据                       | 作用域         |
+| -------------------- | -------------------------------- | -------------- |
+| `Store`              | namespace/key/value 长期记忆     | 跨会话知识     |
+| `ConversationStore`  | 用户可见的消息历史投影           | 对话浏览       |
+| `RuntimeStateStore`  | `AgentCheckpoint`                | ReAct 会话恢复 |
+| `CheckpointStore<S>` | reducer state + applied sequence | 事件投影恢复   |
+| `RunStore`           | Trace `Run`/`RunEvent`           | 执行观测       |
+
+长期记忆 `Store` 提供 namespace 隔离、KV 读写、搜索和删除。它只是框架中的一种 Store，不是 `ConversationStore`、`RuntimeStateStore` 或 `RunStore` 的父接口。
+
+## Journal：有序事实历史
+
+`EventJournal<E>` 保存有序事件，而不是反复覆盖当前状态。核心约束是：
+
+- 事件只追加；
+- sequence 从 1 开始连续递增；
+- 可以从指定 sequence 后顺序重放；
+- 事件先提交，再由 reducer 折叠为状态；
+- 文件实现可修复撕裂的尾部记录，但历史中段损坏必须报错；
+- 不确定的 batch commit 结果必须先 reopen/reconcile，不能盲目重试副作用。
+
+Journal 通常适合承担“已经发生的领域事实”。当前状态、列表或 UI DTO 可以从 Journal 投影，但不应反过来覆盖事实历史。
+
+## Checkpoint：稳定边界的状态快照
+
+### Reducer checkpoint
+
+`CheckpointedReducer` 将 Journal 事件 fold 为状态，并通过 `CheckpointStore<S>` 保存：
+
+- 已应用到的 sequence；
+- 该 sequence 对应的 reducer state。
+
+恢复时先加载 checkpoint，再只重放 Journal 尾部：
+
+```text
+Journal:     1 2 3 4 5 6 7 8 9 10
+Checkpoint:             state@7
+恢复:                    load@7 + replay 8..10
+```
+
+`FileCheckpointStore` 使用原子替换、schema version 和 SHA-256 digest，避免把部分写入或被篡改的合法 JSON 当成可信状态。对于 event-sourced projection，这类 checkpoint 是可重建的加速结构，不替代 Journal。
+
+### AgentCheckpoint
+
+`AgentCheckpoint` 是另一种 checkpoint：它保存 ReAct 继续运行所需的消息、当前 plan 文本、激活技能、blocked reason、working directory 和时间戳，并由 `RuntimeStateStore` 持久化。
+
+恢复前会校验 assistant tool call 与 tool result 是否成对，避免恢复出 provider 无法接受的上下文，或重复执行已经完成的副作用。
+
+`AgentCheckpoint` 只拥有 ReAct runtime state，不拥有任务 DAG 或其它应用领域状态。它也不是 `ConversationStore` 中面向用户展示的 transcript。
+
+### 其它同名 checkpoint
+
+框架还有其它作用域不同的 checkpoint：
+
+- compression checkpoint：记录上下文压缩边界；
+- Git checkpoint：文件修改前创建 Git tag，用于工作区回滚；
+- Trace 的 `Checkpoint`/`CheckpointResumed`：记录 checkpoint 行为已经发生，不是 checkpoint 本体。
+
+因此讨论 checkpoint 时必须说明领域和恢复来源。
+
+## Trace：执行观测
+
+Trace 把一次 Agent invocation 保存为 `Run`。它可包含：
+
+- run、parent run、session、turn 和 execution identity；
+- agent、model、provider；
+- input、final output、error 和 status；
+- LLM 调用、token usage、cache 和耗时；
+- tool call/result/error；
+- context compression、phase transition、测试、文件修改和 Subagent 调度；
+- checkpoint 保存与恢复事件。
+
+Trace 通过 `RunStore` 持久化，供 analyzer、eval、replay 和诊断工具消费。
+
+Trace 与 Journal 都可能包含按时间排列的事件，但职责不同：
+
+| 对比                 | Journal        | Trace                          |
+| -------------------- | -------------- | ------------------------------ |
+| 目标                 | 保存领域事实   | 解释执行行为                   |
+| 是否驱动领域投影     | 通常是         | 否                             |
+| 是否适合作为恢复权威 | 按领域设计决定 | 默认不是                       |
+| 常见内容             | 状态变更事件   | LLM、工具、usage、timing、错误 |
+
+如果 Trace 写入失败允许主执行继续，Trace 就不能同时承担该执行的业务提交权威。
+
+## 设计规则
+
+新增或修改相关能力时，先回答：
+
+1. 这是新的持久化后端，还是新的数据语义？只有前者主要是 Store 问题。
+2. 哪份数据是不可丢失的事实？需要顺序恢复时优先扩展现有 Journal。
+3. Checkpoint 是 Journal 派生缓存，还是独立 runtime snapshot？必须写清权威范围和重建来源。
+4. Trace 写入失败是否允许主流程继续？如果允许，就不能用 Trace 判断业务是否已提交。
+5. 是否已存在同作用域的 Journal、Checkpoint、Store 或 projection？不得平行实现同一语义。
+
+## 代码入口
+
+- 长期记忆 `Store`：`echo-core/src/memory/store.rs`
+- `ConversationStore`：`echo-core/src/memory/conversation.rs`
+- Journal 与 checkpointed reducer：`echo-state/src/journal/mod.rs`
+- 文件 Journal/checkpoint：`echo-state/src/journal/file.rs`
+- `AgentCheckpoint` / `RuntimeStateStore`：`src/state/mod.rs`
+- Trace `Run` / `RunEvent` / `RunStore`：`src/trace/mod.rs`
+
+延伸阅读：[记忆系统](03-memory.md)、[上下文压缩](04-compression.md)、[追踪系统](27-tracing.md)、[Git 隔离](34-git-isolation.md)。
+
+
+---
+
 Source: https://echo-agent.dev/docs/compression
 
 # 上下文压缩（Context Compression）
@@ -1675,6 +1829,11 @@ Source: https://echo-agent.dev/docs/compression
 LLM 的上下文窗口（Context Window）是有限的。当对话历史积累到一定长度时，如果直接发送全部消息，会超出 token 限制导致请求失败，或因 token 数量激增导致推理变慢、成本激增。
 
 上下文压缩系统在每次调用 LLM 前自动检查当前消息历史的 token 用量，超限时按照配置的策略压缩，保留最有价值的信息。
+
+压缩只改变发送给模型的活动上下文。配置 `ConversationStore` 后，框架会在任何
+活动历史替换之前持久化用户可见 transcript，并把后续压缩窗口中的新增后缀合并进
+完整记录；`RuntimeStateStore` checkpoint 则继续保存较小的恢复视图。因此摘要不会
+反向覆盖磁盘上的完整会话。
 
 ---
 
@@ -1715,6 +1874,11 @@ SlidingWindowCompressor::new(20) // 保留最新 20 条消息
 
 **缺点**：压缩时需要额外的 LLM 调用（有成本）。
 
+内置提示词生成的是可继续执行的语义检查点，而不是流水账式复述。结构化输出分别
+保存当前目标、工作状态、决策、文件、错误、偏好、不可违反的约束、精确关键事实和
+下一步。摘要与近期原文随后还会经过 token 上限适配，固定的保留条数不会再让最终
+模型输入停留在有效预算之外。
+
 ```rust
 use echo_agent::prelude::*;
 use echo_agent::llm::OpenAiClient;
@@ -1733,6 +1897,30 @@ SummaryCompressor::with_prompt(
     |messages| format!("请用 3 句话总结以下 {} 条对话：", messages.len()),
 )
 ```
+
+### 设计依据
+
+本实现参考了成熟 coding agent 收敛出的共同模式：
+
+- OpenAI Codex 只用摘要、保留的用户材料和重新构造的 initial/world context 替换
+  活动历史，同时持久化独立 compaction item，并明确提示连续压缩是有损的。实现见
+  固定版本的 [Codex `compact.rs`](https://github.com/openai/codex/blob/53eaa297e595fc98df0f33d4c63686a7014d7c9a/codex-rs/core/src/compact.rs)。
+- Claude Code 提供压缩前 hook，压缩后恢复 session/plan 等状态，并持续修复工具结果
+  和 resume 边界。依据见官方 [Claude Code CHANGELOG](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md)。
+- OpenCode 无条件保护最新用户轮次，更旧的原始工具结果共享 40K token 预算，并且
+  只有预计至少释放 20K token 时才清理；其近期压缩尾部同样按 token 而非固定轮数
+  选择。实现见官方 [OpenCode compaction 源码](https://github.com/anomalyco/opencode/blob/dev/packages/opencode/src/session/compaction.ts)。
+- Pi 将单个工具结果限制为 2,000 行或 50 KiB，整体压缩保留约 20K recent token，
+  且绝不在 tool call/result 中间切断。依据见官方 [Pi compaction 文档](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/compaction.md)
+  和 [工具截断源码](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/src/core/tools/truncate.ts)。
+
+Echo Agent 据此保持四个权威边界：`ConversationStore` 保存完整展示/审计 transcript，
+`ContextManager` 保存有界活动上下文，`CanonicalContext` 与 projection 重建权威规则和
+状态，仓库文件等外部知识继续由工具按需取回。
+
+主动折叠工具轨迹时，应使用混合策略而不是固定轮数：至少保护最新用户轮次；更旧
+原始结果使用随模型窗口缩放的总 token 预算；收益太小时不改写历史；tool call/result
+始终成组保留或成组折叠。
 
 ---
 
@@ -3327,13 +3515,13 @@ manager 必须返回 typed JSON 任务计划。未知字段、未知 Subagent、
 TeamSpec 或 TeamAgentBuilder
   -> TeamRuntime（默认内存实现，或调用方持久 adapter）
   -> TaskRevisionService
-  -> RuntimeDagExecutor
+  -> RuntimeTaskService
   -> SubagentExecutor
   -> typed SubagentResult
   -> 在同一 revisioned graph 中精确结算 claim
 ```
 
-`RuntimeDagExecutor` 唯一负责 ready frontier、依赖阻塞、并发 wave、取消和终态
+`RuntimeTaskService` 唯一负责 ready frontier、派生依赖阻塞、并发 wave、取消和终态
 选择。Team 代码只编译意图并提供薄 dispatch adapter。ReAct checkpoint 不再
 重复保存 task node 或任务生命周期状态。
 
@@ -3775,9 +3963,9 @@ echo-agent 将单任务、Todo 风格列表和依赖 DAG 统一表示为一个�
 不存在另一套任务管理状态机。
 
 - `TaskRevisionService` 是唯一的 CRUD、关系、校验和版本权威。
-- `RuntimeDagExecutor` 是唯一的依赖执行内核。
-- `ManagedTask` 是包含丰富字段的序列化与展示 DTO；转换或修改它不会提交任务图。
+- `RuntimeTaskService` 是唯一公开的依赖执行入口。
 - `TaskSpawner` 只追踪进程内后台 Future，不拥有持久任务关系。
+- Plan 是任务图之上的可编辑、版本化 artifact，不进入审批状态机。
 
 ## 任务模型
 
@@ -3790,9 +3978,10 @@ pub struct Task {
 }
 ```
 
-`TaskSpec` 包含任务 ID、标题、描述、类型、Subagent 角色、依赖、文件范围、
-工具约束、验证要求和重试上限。`TaskExecution` 包含状态、重试计数、失败指纹
-以及可选的 attempt 级 claim。
+`TaskSpec` 只包含任务 ID、标题、描述、依赖、重试上限和 opaque 产品 extension。
+`TaskExecution` 包含状态、重试计数、失败指纹以及可选的 attempt 级 claim。
+coding 类型、Subagent 选择、文件、工具、checks、review 和 UI 投影都由应用层
+typed extension 持有。
 
 共享生命周期包含 `Pending`、`Running`、`Blocked`、`Retrying`、`Paused`、
 `Completed`、`Failed`、`TimedOut`、`Skipped` 和 `Cancelled`，所有迁移由
@@ -3831,12 +4020,12 @@ let agent = ReactAgentBuilder::new()
     .build()?;
 ```
 
-策略适配器可以解析 scope 并附加产品 metadata，但通用 patch 语义和 DAG 校验
+策略适配器可以解析 scope 并附加无损产品 extension，但通用 patch 语义和 DAG 校验
 始终由框架负责。
 
 ## 运行时执行
 
-`RuntimeDagExecutor<C>` 通过 `RuntimeDagController` 反复加载已提交的
+`RuntimeTaskService<C>` 通过薄 `RuntimeDagController` adapter 反复加载已提交的
 `RuntimePlanSnapshot`：
 
 1. 校验完整快照并检测环。
@@ -3844,21 +4033,26 @@ let agent = ReactAgentBuilder::new()
 3. 使用版本、attempt、规格 hash 和唯一 claim id 原子领取任务。
 4. 分派有界、无冲突的 Subagent wave。
 5. 以 compare-and-set 语义完成或放弃每个 claim。
-6. 在下一 safe point 重新加载，使新版本生效。
+6. 在 wave 边界结算 typed 取消或可恢复暂停 receipt。
+7. 在下一 safe point 重新加载，使新版本生效。
 
 controller 是持久化、Subagent 调度、review 和产品资源策略的薄应用适配器，
 不得重新实现 ready-frontier 主循环或第二套依赖状态机。
 
-执行器统一处理传递失败阻塞、跳过与暂停、有界重试、取消结算、过时 claim 和
-停滞检测。attempt 级 claim identity 可防止旧 dispatch 覆盖重新领取后的结果。
+服务统一处理传递失败阻塞、跳过与暂停、有界重试、取消结算、过时 claim 和
+停滞检测。依赖失败只形成 typed `DagDependencyState` 投影，不会持久化为
+`TaskStatus::Blocked`；重试失败祖先后，派生阻塞会自动消失。`Blocked` 仍可表达
+review、缺少输入等显式产品策略。暂停会清除 claim，恢复到 Pending 时不消耗 retry。
+Skipped 依赖以 typed waiver 传给 Subagent，不会伪造依赖输出。attempt 级 claim
+identity 可防止旧 dispatch 覆盖重新领取后的结果。
 
 ## 投影与进度
 
-`ManagedTask`、`TaskEvent` 和 `TaskProgress` 是面向消费者的投影，可携带更丰富
-的展示、证据和进度数据；下一步运行时决策始终基于通过单一服务/controller
+`TaskEvent` 和 `TaskProgress` 是面向消费者的投影。应用可从已提交 extension
+派生 Todo、证据和 UI 数据；下一步运行时决策始终基于通过单一 service/controller
 边界加载的已提交版本。
 
-直接服务用法见 `demo48_personal_assistant`，确定性 controller 用法见
+公开 service 构造见 `tests/facade_smoke.rs`，确定性 controller 行为见私有
 `runtime_executor` 测试。
 
 
@@ -3874,7 +4068,7 @@ echo-agent 提供两种互补机制：
 
 | 机制 | 权威范围 | 用途 |
 |------|----------|------|
-| `TaskRevisionService` + `RuntimeDagExecutor` | 持久版本化任务图与依赖生命周期 | 多步骤 Agent 计划 |
+| `TaskRevisionService` + `RuntimeTaskService` | 持久版本化任务图与依赖生命周期 | 多步骤 Agent 计划 |
 | `TaskSpawner` + `BackgroundTask<T>` | 进程内异步句柄 | 轮询、等待或取消单个 Future |
 
 `TaskSpawner` 明确不是持久任务图 store。重启恢复、依赖关系、claim、重试和
@@ -3959,7 +4153,7 @@ Tool:  单一原子操作（"读取文件"）
 Skill: 领域能力包（"文件系统操作" = read_file + write_file + list_dir + 使用说明提示词）
 ```
 
-框架契约（`Skill` trait + `SkillRegistry`）位于 `echo-core` 与 `echo-execution`。产品目录是该 API 的独立消费方。例如，EKO 当前把用户可见的目录放在 `~/.eko/skills/`；这项应用层行为应以 [EKO SkillsHub 源码](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src/skills_hub) 为准，不属于框架 API 契约。
+框架契约（`Skill` trait + `SkillRegistry`）位于 `echo-core` 与 `echo-execution`。产品目录是该 API 的独立消费方。例如，embedding application 当前把用户可见的目录放在 `<application-data>/skills/`；这项应用层行为应以 [embedding application SkillsHub 源码](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src/skills_hub) 为准，不属于框架 API 契约。
 
 ---
 
@@ -4416,7 +4610,7 @@ ctx.replace_projection(
 
 `SkillRegistry` 负责可复用运行时生命周期：发现、激活、依赖排序、资源访问和沙箱策略；它不负责安装或卸载市场包。
 
-应用可以另加产品目录。EKO 当前的 `SkillsHub` 扫描 `~/.eko/skills/`，服务其 UI 与安装流程，但不会取代框架 registry。产品细节可能独立于 echo-agent 演化，应以 [EKO SkillsHub 源码](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src/skills_hub) 为准。
+应用可以另加产品目录。embedding application 当前的 `SkillsHub` 扫描 `<application-data>/skills/`，服务其 UI 与安装流程，但不会取代框架 registry。产品细节可能独立于 echo-agent 演化，应以 [embedding application SkillsHub 源码](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src/skills_hub) 为准。
 
 ---
 
@@ -5653,12 +5847,12 @@ let transitions = curator.apply_transitions()?; // 按闲置时间自动转换
 
    ```rust
    use echo_agent::evolution::SkillDraftGenerator;
-   let gen = SkillDraftGenerator::new(".eko".into(), &change_log);
+   let gen = SkillDraftGenerator::new("<application-data>".into(), &change_log);
    let result = gen.generate_from_candidate(&candidate).await?;
    // result.skill_md_path 指向生成的草稿
    ```
 
-   EKO 当前传入 `.eko`，因此草稿位于 `.eko/skills/_drafts/<name>/SKILL.md`。这一产品路径应以 [EKO app-core 源码](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src) 为准。
+   embedding application 当前传入 `<application-data>`，因此草稿位于 `<application-data>/skills/_drafts/<name>/SKILL.md`。这一产品路径应以 [embedding application app-core 源码](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src) 为准。
 
 3. 人工审查后通过 `/skill-promote <name>` 将 Draft 移至 Active，技能即出现在技能目录中。
 
@@ -5686,7 +5880,7 @@ for report in monitor.analyze_all_skills().await? {
 
 ### 规则晋升（产品层）
 
-`RulePromoter` 是 EKO 的产品策略，不是框架持久化契约。EKO 当前会先审查高置信度记忆提案，再把批准的规则写入 `.eko/learned-rules.md`；权威阈值与工作流应以 [EKO app-core 源码](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src) 为准。
+`RulePromoter` 是 embedding application 的产品策略，不是框架持久化契约。embedding application 当前会先审查高置信度记忆提案，再把批准的规则写入 `<application-data>/learned-rules.md`；权威阈值与工作流应以 [embedding application app-core 源码](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src) 为准。
 
 ### 安全加固 — `EvolutionSecurityGuard`
 
@@ -5704,11 +5898,11 @@ for report in monitor.analyze_all_skills().await? {
 | 系统 | 主要职责 | 不应承担 |
 |------|---------|---------|
 | `TriggerDetector`（运行时） | 在线轻量发现并附带精确来源摘录；框架默认可直接持久化，产品也可安装 `MemoryTriggerSink` 接管 | 会话归档总结、产品审阅策略 |
-| `AutoMemory`（框架+应用） | 会话结束/手动触发时提取观察；框架保留可选 typed-memory writer，EKO 则生成证据候选 | 压缩淘汰、运行时策略调度 |
+| 应用 observation policy | 应用可以提取观察，并通过 typed-memory API 提交已采纳事实 | 压缩淘汰、运行时策略调度 |
 | `memory_promoter`（压缩路径） | 因 token 压力被压缩/淘汰的消息的生命周期管理（长期化、淘汰、降级） | 新偏好发现、UI 触发的提取 |
 | `BackgroundReviewer`（显式/应用调度） | 从已完成 run 生成带证据 JSON 候选，默认只提案 | 自动长期写入或产品调度策略 |
 
-> 关键约束：任何被接受并进入运行时 recall 的 typed memory，**必须**统一走框架的 `MemoryLayerManager::write_memory`。EKO 会先把 TriggerDetector/AutoMemory/BackgroundReviewer 的推断结果放进 workspace JSONL Review Inbox，用户采纳后才写入。
+> 关键约束：任何被接受并进入运行时 recall 的 typed memory，**必须**统一走框架的 `MemoryLayerManager::write_memory`。提取与审阅策略归上层应用。
 
 ---
 
@@ -5731,7 +5925,7 @@ for report in monitor.analyze_all_skills().await? {
   curator_state.json               # Curator 状态
 ```
 
-框架复用方可以选择其它路径。EKO 注入 workspace scope，使用 `.eko/evolution/evidence-candidates.jsonl` 与 `.eko/evolution/curator-state.json`。
+框架复用方可以选择其它路径。embedding application 注入 workspace scope，使用 `<application-data>/evolution/evidence-candidates.jsonl` 与 `<application-data>/evolution/curator-state.json`。
 
 ## Store 命名空间
 
@@ -5894,15 +6088,15 @@ EchoAgent 向 stdio 子进程提供 `PLUGIN_ROOT` 和 `PLUGIN_DATA`。`${PLUGIN_
 | `agents/*.md` | Subagent 适配器 |
 | `hooks/hooks.yaml` | Hook registry |
 | `lsp.yaml` | 宿主应用 LSP manager |
-| `monitors.yaml` | EKO 调度器 |
-| `themes/*.json` | EKO GUI/TUI 主题目录 |
-| `output-styles/*.md` | EKO system context 投影 |
+| `monitors.yaml` | embedding application 调度器 |
+| `themes/*.json` | embedding application GUI/TUI 主题目录 |
+| `output-styles/*.md` | embedding application system context 投影 |
 
 `scripts/` 和 `README.md` 是插件资源，不会自动执行；Skill 或 Hook 可以显式引用脚本。
 
 ## 框架与应用分层
 
-通用框架负责清单解析、Skills、MCP、作用域与生命周期、Hooks、Subagent 定义和 LSP 适配输出。EKO 只发现并转换产品专属的 `monitors.yaml`、`themes/` 和 `output-styles/`；应用 adapter 不重复拥有依赖排序、组件所有权或重载语义。
+通用框架负责清单解析、Skills、MCP、作用域与生命周期、Hooks、Subagent 定义和 LSP 适配输出。embedding application 只发现并转换产品专属的 `monitors.yaml`、`themes/` 和 `output-styles/`；应用 adapter 不重复拥有依赖排序、组件所有权或重载语义。
 
 ## 发现与生命周期
 
@@ -5914,7 +6108,7 @@ EchoAgent 向 stdio 子进程提供 `PLUGIN_ROOT` 和 `PLUGIN_DATA`。`${PLUGIN_
 | Project | `<project>/.echo-agent/plugins/<name>/plugin.json` |
 | Local | `<project>/.echo-agent/plugins.local/<name>/plugin.json` |
 
-应用可以覆盖插件数据根目录，EKO 会将其设为 `~/.eko`。
+应用可以覆盖插件数据根目录，embedding application 会将其设为 `<application-data>`。
 
 插件按依赖顺序加载。清单致命错误会跳过整个包；组件错误按最小可行边界隔离。运行时记录每个插件的组件所有权，因此 disable、uninstall 和 reload 能精确卸载对应组件。
 
@@ -5939,7 +6133,7 @@ registry.enable(&id)?;
 
 ## 设计依据
 
-本设计复用 Agent Plugins 1.0 官方的 [manifest](https://agent-plugins.org/plugin-authors/manifest)、[Skills](https://agent-plugins.org/plugin-authors/skills)、[MCP](https://agent-plugins.org/plugin-authors/mcp-servers) 和 [loading](https://agent-plugins.org/client-implementers/loading-and-discovery) 约定。EKO 作为本地个人助理，额外组件有意采用固定根位置，不引入客户端扩展 namespace。
+本设计复用 Agent Plugins 1.0 官方的 [manifest](https://agent-plugins.org/plugin-authors/manifest)、[Skills](https://agent-plugins.org/plugin-authors/skills)、[MCP](https://agent-plugins.org/plugin-authors/mcp-servers) 和 [loading](https://agent-plugins.org/client-implementers/loading-and-discovery) 约定。embedding application 作为本地个人助理，额外组件有意采用固定根位置，不引入客户端扩展 namespace。
 
 
 ---
@@ -6293,7 +6487,7 @@ echo-agent 只有一套通用执行引擎：`ReactAgent`。应用通过 builder 
 skills 和 invocation policy 组装 agent。框架不存在 `ModeEngine`、`AgentMode`，也不存在内置的
 Coding/Research/Data/Writing 运行时状态机。
 
-EKO Chat/Task/Auto 等产品模式属于应用层。应用可以按模式选择提示词和 invocation 工具面，
+embedding application Chat/Task/Auto 等产品模式属于应用层。应用可以按模式选择提示词和 invocation 工具面，
 但不应把产品模式写成模型能力或框架运行状态。
 
 ## Agent Factory
@@ -8129,7 +8323,7 @@ CodeSearchTool                        ← 实现 Tool trait
 
 ```toml
 [dependencies]
-echo_tools = { version = "0.2", features = ["files"] }
+echo_agent = { version = "0.2", features = ["files"] }
 ```
 
 注册由 `echo_agent::tools::register_all_tools` 自动完成：
@@ -8577,7 +8771,7 @@ Hooks 允许在 Agent 生命周期的关键节点注入自定义行为。框架�
 
 ## Skills Hooks
 
-主 Hook 系统。通过 YAML 配置（`echo-agent.yaml` 或 SKILL.md frontmatter），由 `HookRegistry` 统一分发执行。
+主 Hook 系统。通过 YAML 配置（`application configuration` 或 SKILL.md frontmatter），由 `HookRegistry` 统一分发执行。
 
 ### Hook 事件
 
@@ -8680,7 +8874,7 @@ Task/Subagent 的取消与超时由对应终态事件的结构化 status 表达�
 | `HookSource` | 含义 | 注册入口 |
 |---|---|---|
 | `Skill(name)` | 来自文件型 skill 的 hooks | `HookRegistry::register` |
-| `UserConfig` | 来自用户配置（echo-agent.yaml 内嵌 + hooks.yaml 文件） | `HookRegistry::register_user_hooks` |
+| `UserConfig` | 来自用户配置（application configuration 内嵌 + hooks.yaml 文件） | `HookRegistry::register_user_hooks` |
 | `Plugin(name)` | 来自已安装插件的 hooks | `HookRegistry::register_plugin_hooks` |
 
 执行优先级：`UserConfig` < `Plugin` < `Skill`（见 `HookRegistry::run_hooks` 的 source 排序）。
@@ -8772,7 +8966,7 @@ shell 源码，因此安装路径包含空格或 shell 特殊字符时仍可正�
 退出码 `2` 会阻止操作，并把 stderr 作为面向用户的原因；其它非零退出仍不阻止，
 但会进入 HookResult 消息，不再只留在日志里。
 
-为复用可移植插件，EKO 也接受 Codex 风格的 `systemMessage` 与
+为复用可移植插件，embedding application 也接受 Codex 风格的 `systemMessage` 与
 `hookSpecificOutput` 字段：`additionalContext`、`permissionDecision`、
 `permissionDecisionReason`、`updatedInput`，以及 PermissionRequest 的
 `decision.behavior` 对象。所有进入模型上下文的文本都会先进行 UTF-8 安全的长度限制。
@@ -8788,8 +8982,8 @@ shell 源码，因此安装路径包含空格或 shell 特殊字符时仍可正�
 User、Skill、Plugin 三种来源统一使用同一套注册期 Action 校验：无效 Action
 会被记录并过滤，同一规则中的有效 Action 仍正常注册。
 
-EKO 会合并 `echo-agent.yaml` 内嵌 Hooks、全局 `~/.eko/hooks.yaml` 和项目
-`.eko/hooks.yaml`。监听器同时监控这三个目标；创建、修改、原子替换和删除都会触发重载，
+embedding application 会合并 `application configuration` 内嵌 Hooks、全局 `<application-data>/hooks.yaml` 和项目
+`<application-data>/hooks.yaml`。监听器同时监控这三个目标；创建、修改、原子替换和删除都会触发重载，
 因此删除 `hooks.yaml` 会立即移除其 Hook，无需重启。解析失败时保留 last-known-good
 注册表。CLI、TUI、GUI 的 Hook 测试均调用
 `HookRegistry::dry_run`，真实计算事件、matcher、来源和 Action，但不执行任何副作用。
@@ -8803,7 +8997,7 @@ EKO 会合并 `echo-agent.yaml` 内嵌 Hooks、全局 `~/.eko/hooks.yaml` 和项
 | 最大命令长度 | 32K 字符 | 拒绝明显畸形的 YAML |
 | 沙箱执行 | 可选 | Hook 可在沙箱内运行 |
 
-EKO 是用户本机上的可信个人助理。HTTP Hook 允许 loopback、私网和 link-local IP
+embedding application 是用户本机上的可信个人助理。HTTP Hook 允许 loopback、私网和 link-local IP
 字面量，以及 `localhost`、`nas` 这类单标签主机和以 `.local` / `.lan` 结尾的域名使用
 明文 HTTP；远程地址仍要求 HTTPS。用户配置的 headers 与 payload 会原样发送，命令
 诊断会对已替换的敏感值脱敏。MCP Hook 可调用用户所配置服务器暴露的任意工具，框架
@@ -8925,7 +9119,7 @@ let agent = ReactAgentBuilder::new()
     .build()?;
 ```
 
-Skills Hooks 通过 YAML 配置，从 `echo-agent.yaml` 或 SKILL.md 文件自动加载。
+Skills Hooks 通过 YAML 配置，从 `application configuration` 或 SKILL.md 文件自动加载。
 
 
 ---
@@ -8972,7 +9166,6 @@ echo-agent 支持将 Agent 接入主流 IM 平台（QQ Bot、飞书等），通�
 ```toml
 [dependencies]
 echo_agent = { path = "echo-agent", features = ["channels"] }
-echo_channels = { path = "echo-agent/echo-channels" }
 ```
 
 ### 2. 配置环境变量
@@ -8995,48 +9188,75 @@ export OPENAI_BASE_URL="https://dashscope.aliyuncs.com/compatible-mode/v1"
 ### 3. 启动
 
 ```rust
-use echo_agent::agent::Agent;
-use echo_agent::llm::LlmClient;
-use echo_agent::prelude::*;
-use echo_channels::prelude::*;
-use echo_providers::LlmConfig;
 use std::sync::Arc;
+use echo_agent::channels::{
+    AgentChannelHandler, ChannelManager, FeishuChannel, FeishuConfig, MessageHandler,
+    QqChannel, QqConfig, SessionConfig, SessionHandler,
+};
+use echo_agent::prelude::{AgentConfig, LlmApiProtocol, LlmClient, LlmConfig};
 
 #[tokio::main]
 async fn main() -> echo_agent::error::Result<()> {
-    let llm_client = create_llm_client()?;
+    let api_key = std::env::var("OPENAI_API_KEY").map_err(|_| {
+        echo_agent::error::ReactError::Other(
+            "OPENAI_API_KEY is required for the IM channel provider".to_string(),
+        )
+    })?;
+    let llm_config = LlmConfig::for_provider(
+        "openai",
+        std::env::var("OPENAI_BASE_URL")
+            .unwrap_or_else(|_| "https://api.openai.com/v1".to_string()),
+        api_key,
+        "gpt-5.5",
+        LlmApiProtocol::Responses,
+    )?;
+
+    // 单个通道可直接使用显式 provider 配置构造 handler。
+    let _standalone_handler = AgentChannelHandler::from_config(
+        AgentConfig::standard("gpt-5.5", "im-assistant", "请清晰回答用户。"),
+        llm_config.clone(),
+    )?;
+
+    // Session factory 共享 provider transport，但每个会话中的每位发送者都保留
+    // 独立 Agent 状态，群聊成员之间也不会共享上下文。
+    let llm_client: Arc<dyn LlmClient> = Arc::from(llm_config.build_client()?);
 
     let mut manager = ChannelManager::new();
 
-    // 注册 QQ Bot
-    let qq_config = QqConfig {
-        app_id: std::env::var("QQ_APP_ID")?,
-        client_secret: std::env::var("QQ_CLIENT_SECRET")?,
-    };
-    manager.register(Box::new(QqChannel::new(qq_config)?));
+    if let (Ok(app_id), Ok(secret)) = (
+        std::env::var("QQ_APP_ID"),
+        std::env::var("QQ_CLIENT_SECRET"),
+    ) {
+        manager.register(Box::new(QqChannel::new(QqConfig::new(app_id, secret))?))?;
+    }
+    if let (Ok(app_id), Ok(secret)) = (
+        std::env::var("FEISHU_APP_ID"),
+        std::env::var("FEISHU_APP_SECRET"),
+    ) {
+        manager.register(Box::new(FeishuChannel::new(FeishuConfig::new_long_poll(
+            app_id, secret,
+        ))?))?;
+    }
 
-    // 注册飞书
-    let feishu_config = FeishuConfig {
-        app_id: std::env::var("FEISHU_APP_ID")?,
-        app_secret: std::env::var("FEISHU_APP_SECRET")?,
-        webhook_bind: "0.0.0.0:8080".to_string(),
-        webhook_path: "/webhook".to_string(),
-        verification_token: None,
+    let session_config = SessionConfig::default().with_timeout_minutes(60);
+    let handler_factory = move |_channel_id: &str| -> Arc<dyn MessageHandler> {
+        let llm_client = Arc::clone(&llm_client);
+        Arc::new(SessionHandler::new(
+            session_config.clone(),
+            move || -> Box<dyn MessageHandler> {
+                Box::new(AgentChannelHandler::from_config_with_client(
+                    AgentConfig::standard("gpt-5.5", "im-assistant", "请清晰回答用户。"),
+                    Arc::clone(&llm_client),
+                ))
+            },
+        ))
     };
-    manager.register(Box::new(FeishuChannel::new(feishu_config)?));
+    for started in manager.start_all(handler_factory).await {
+        started.result?;
+    }
 
-    // 启动所有通道
-    let llm_ref = llm_client.clone();
-    let handler_factory = move |_id: &str| -> Arc<dyn MessageHandler> {
-        Arc::new(MyHandler::new(llm_ref.clone()))
-    };
-    manager.start_all(handler_factory).await?;
-
-    // 等待 Ctrl+C
     tokio::signal::ctrl_c().await.ok();
-    manager.stop_all().await?;
-
-    Ok(())
+    manager.stop_all().await
 }
 ```
 
@@ -9069,7 +9289,7 @@ pub trait ChannelPlugin: Send + Sync {
 ```rust
 pub struct InboundMessage {
     pub channel_id: String,   // "qqbot" | "feishu"
-    pub sender_id: String,    // 发送者标识
+    pub sender_id: String,    // 传输层命名空间化后的发送者规范标识
     pub chat_id: String,      // 会话标识
     pub chat_type: ChatType,  // Direct | Group
     pub text: String,
@@ -9077,6 +9297,13 @@ pub struct InboundMessage {
     pub timestamp: u64,
 }
 ```
+
+`SessionHandler` 使用 `channel_id + chat_id + sender_id` 作为 Agent 会话键。同一会话中，
+同一发送者持续复用一个 handler；不同群聊成员则分别拥有独立的对话状态、执行锁、交互状态、
+超时替换和 reset 生命周期。空的 channel、conversation、sender 标识和 `unknown` sender
+哨兵都无法形成稳定的用户会话键，因此会被直接拒绝；带首尾空白的标识同样会被拒绝，而不是
+被静默改写。内置传输不会把这类错误消息交给 Agent。飞书的两个身份命名空间会在查找会话前
+规范为 `open_id:{value}` 或 `user_id:{value}`。
 
 ### OutboundMessage —— 发送的消息
 
@@ -9905,7 +10132,7 @@ Source: https://echo-agent.dev/docs/data-quality
 
 ## 产品模型
 
-EKO 以 coding 为主。内置数据工具负责查看、清洗、转换、汇总和可视化；正式统计推断由 Agent 与用户共同编写可审阅的 Python/R 代码，通过沙箱化 `run_code` 执行，并作为任务 artifact 保存。
+embedding application 以 coding 为主。内置数据工具负责查看、清洗、转换、汇总和可视化；正式统计推断由 Agent 与用户共同编写可审阅的 Python/R 代码，通过沙箱化 `run_code` 执行，并作为任务 artifact 保存。
 
 框架不再自行实现 p 值近似或多元回归引擎。
 
@@ -10676,583 +10903,65 @@ let context = ContextManager::builder(128_000)
 
 Source: https://echo-agent.dev/docs/config-reference
 
-# 配置参考
+# 运行时配置
 
-## 概述
+`echo_agent` 只接收类型化配置，不搜索应用配置文件。文件格式、优先级、密钥、模型
+目录、产品提示词、渠道和 UI/server 设置均由上层应用负责。
 
-echo-agent 提供两种配置方式：
+## FrameworkConfig
 
-1. **Rust API** — `AgentConfig` + `ReactAgentBuilder`，编程式配置
-2. **YAML 文件** — `echo-agent.yaml`，声明式配置
-
-## 动态 Provider 与模型
-
-Provider 是用户定义的连接，只保存名称、Base URL、认证来源和可选的默认 API
-协议。模型作为独立条目关联 Provider；每个模型明确选择 Chat Completions、
-Responses 或 Anthropic Messages，并声明文本、图片、音频、视频输入能力。文本始终启用。
-
-思考 wire 字段不属于用户配置。框架根据 Provider、模型 ID、协议和 endpoint 解析内部
-`ThinkingProfile`；已知模型只暴露其官方 API 明确支持的等级。未知模型仍可正常调用，
-但采用模型自动决策，不发送思考字段。
-
----
-
-## AgentConfig — 运行时配置
-
-核心运行时配置结构体。通过 `AgentConfig::new()` 构造，使用 builder 方法修改。
-
-### 必填参数
+`FrameworkConfig` 是单个 Agent runtime 的可序列化适配器，只包含 provider-neutral
+模型设置和 Agent 行为设置。
 
 ```rust
-let config = AgentConfig::new(model_name, agent_name, system_prompt);
-```
-
-| 参数 | 类型 | 说明 |
-|------|------|------|
-| `model_name` | `&str` | LLM 模型标识符（如 `"qwen3-max"`） |
-| `agent_name` | `&str` | Agent 名称，用于日志和标识 |
-| `system_prompt` | `&str` | 系统提示词，定义 Agent 角色和能力 |
-
-### 预设构造器
-
-| 预设 | 工具 | 记忆 | 任务 | CoT | 使用场景 |
-|------|------|------|------|-----|----------|
-| `AgentConfig::minimal(model, prompt)` | 关 | 关 | 关 | 关 | 简单 LLM 包装 |
-| `AgentConfig::standard(model, name, prompt)` | 开 | 关 | 关 | 开 | 通用 Agent |
-| `AgentConfig::full_featured(model, name, prompt)` | 开 | 开 | 开 | 开 | 全功能 Agent |
-
-### 所有字段
-
-#### 核心设置
-
-| 字段 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `model_name` | `String` | *（必填）* | LLM 模型标识符 |
-| `agent_name` | `String` | *（必填）* | Agent 名称 |
-| `system_prompt` | `String` | *（必填）* | 系统提示词 |
-| `max_iterations` | `usize` | `10` | 每轮最大推理步数 |
-| `temperature` | `Option<f32>` | `None`（模型默认） | LLM 温度（0.0–2.0） |
-| `max_tokens` | `Option<u32>` | `None`（模型默认） | 最大生成 Token 数 |
-
-#### 功能开关
-
-| 字段 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `enable_tool` | `bool` | `false` | 启用工具调用 |
-| `enable_human_in_loop` | `bool` | `false` | 启用人工审批 |
-| `enable_subagent` | `bool` | `false` | 启用子 Agent 调度 |
-| `enable_memory` | `bool` | `false` | 启用长期记忆工具 |
-| `enable_cot` | `bool` | `false` | 启用链式思考提示 |
-
-#### 工具设置
-
-| 字段 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `allowed_tools` | `Vec<String>` | `[]`（全部允许） | 工具白名单 |
-| `tool_error_feedback` | `bool` | `true` | 将工具错误反馈给 LLM |
-| `force_read_before_edit` | `bool` | `false` | 写入/编辑/删除前必须先读取 |
-| `plan_mode` | `bool` | `false` | 仅使用只读工具 |
-| `max_tool_output_tokens` | `Option<usize>` | `None` | 自动截断超过限制的工具输出 |
-| `tool_execution` | `ToolExecutionConfig` | *（见下文）* | 工具执行设置 |
-
-#### 记忆与持久化
-
-| 字段 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `memory_path` | `String` | `"~/.echo-agent/store.json"` | 记忆存储文件路径 |
-| `session_id` | `Option<String>` | `None` | 进程内 run-grouping 标签（不持久化） |
-| `conversation_id` | `Option<String>` | `None` | 对话 ID —— 同时作为 `ConversationStore` 与 `RuntimeStateStore` 的键 |
-
-#### 上下文与压缩
-
-| 字段 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `token_limit` | `usize` | `usize::MAX` | 上下文 Token 限制 |
-| `compress_threshold_ratio` | `f64` | `0.2` | 可用比例低于此值时触发压缩 |
-| `response_format` | `Option<ResponseFormat>` | `None`（文本） | 结构化输出格式 |
-| `auto_project_rules` | `bool` | `true` | 启用 `project-rules` feature 时解析项目指令 |
-| `working_dir` | `Option<PathBuf>` | `None`（当前目录） | 指令发现的叶子目录 |
-| `project_root` | `Option<PathBuf>` | `None` | 显式发现边界；未设置时使用最近 Git/worktree root |
-
-指令发现从 project root 走到 `working_dir`，每层最多选择一个非空 UTF-8 文件。框架原生
-`.echo-agent/AGENT.md`、`RULES.md`、`rules.md` 优先，其次是 `AGENTS.override.md`、
-`AGENTS.md`、`CLAUDE.md`。没有显式 root 或 Git root 时只检查 `working_dir`。解析后指向
-project root 外部的 symlink 会被忽略。`InstructionResolver` 会返回来源路径和优先级，供诊断使用。
-
-#### LLM 容错
-
-| 字段 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `llm_max_retries` | `usize` | `3` | 请求、建流和首个 chunk 前失败的最大重试次数；已收到增量后的错误不会重放 |
-| `llm_retry_delay_ms` | `u64` | `500` | 初始重试延迟（指数退避） |
-
-#### 流式与回调
-
-| 字段 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `stream_buffer_size` | `usize` | `256` | 流式通道缓冲区大小 |
-| `callbacks` | `Vec<Arc<dyn AgentCallback>>` | `[]` | 事件回调 |
-
-#### 高级设置
-
-| 字段 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `_reasoning_effort` | `String` | `"medium"` | 推理强度：low/medium/high |
-| `token_budget_config` | `TokenBudgetConfig` | *（见下文）* | 上下文窗口预算 |
-
-### Builder 方法
-
-所有字段都可通过 builder 链式调用设置：
-
-```rust
-let config = AgentConfig::new("qwen3-max", "assistant", "你是有帮助的助手")
-    .enable_tool()
-    .enable_memory()
-    .enable_cot()
-    .max_iterations(20)
-    .token_limit(100_000)
-    .temperature(0.7)
-    .tool_error_feedback(true)
-    .force_read_before_edit(true)
-    .build();
-```
-
----
-
-## ReactAgentBuilder — 高级构建器
-
-高级构建器，用于构造 `ReactAgent`。处理 LLM 客户端注入、工具注册、记忆设置、护栏、快照等。
-
-### 基本用法
-
-```rust
-let agent = ReactAgentBuilder::new()
-    .model("qwen3-max")
-    .name("my-agent")
-    .system_prompt("你是代码助手")
-    .enable_tools()
-    .enable_memory()
-    .enable_cot()
-    .build()?;
-```
-
-### 预设
-
-| 预设 | 说明 |
-|------|------|
-| `ReactAgentBuilder::simple(model, prompt)` | 无工具，最小配置 |
-| `ReactAgentBuilder::standard(model, name, prompt)` | 启用工具 |
-| `ReactAgentBuilder::full_featured(model, name, prompt)` | 工具 + 记忆 + 规划 |
-
-### LLM 配置
-
-```rust
-// 选项 1：显式 LLM 客户端
-ReactAgentBuilder::new()
-    .llm_client(my_client)
-
-// 选项 2：显式 Provider/模型契约
-let llm_config = LlmConfig::for_provider(
-    "dashscope",
-    "https://dashscope.aliyuncs.com/compatible-mode/v1",
-    api_key,
-    "qwen3-max",
-    LlmApiProtocol::ChatCompletions,
-)?;
-ReactAgentBuilder::new()
-    .llm_config(llm_config)
-```
-
-### 工具配置
-
-```rust
-ReactAgentBuilder::new()
-    .enable_tools()                    // 启用工具调用
-    .tool(Box::new(MyTool::new()))     // 注册单个工具
-    .tools(vec![...])                  // 注册多个工具
-```
-
-### 功能开关
-
-```rust
-ReactAgentBuilder::new()
-    .enable_memory()                   // 长期记忆
-    .enable_human_in_loop()            // 审批守卫（需要 "human-loop" feature）
-    .enable_subagent()                 // 子 Agent 调度（需要 "subagent" feature）
-    .enable_cot()                      // 链式思考
-    .disable_cot()                     // 禁用 CoT
-```
-
-版本化的 `task_create`、`task_update` 和 `task_list` 属于默认 Agent 工具表。
-需要替换默认内存 store 和 policy 时使用 `.task_revision_service(...)`。
-
-### 结构化输出
-
-```rust
-// 从 Rust 类型自动生成 JSON Schema
-ReactAgentBuilder::new()
-    .output_type::<MyResponse>()
-
-// 显式格式
-ReactAgentBuilder::new()
-    .response_format(ResponseFormat::JsonSchema {
-        json_schema: JsonSchemaSpec { name, schema, strict }
-    })
-```
-
-### 护栏与权限
-
-```rust
-ReactAgentBuilder::new()
-    .guard(my_guard)                              // 添加输入/输出护栏
-    .guards(vec![guard1, guard2])                 // 添加多个护栏
-    .with_content_guard(ContentGuardMode::Block)  // PII 检测（需要 "content-guard" feature）
-    .permission_service(my_service)               // 统一权限服务（推荐）
-    .audit_logger(my_logger)                      // 审计日志
-```
-
-### 持久化与追踪
-
-```rust
-ReactAgentBuilder::new()
-    .store(memory_store)                          // 长期记忆存储
-    .with_memory_tools(store)                     // 注册 remember/recall/forget 工具
-    .state_store(state_store)                     // RuntimeStateStore 用于崩溃恢复
-    .session_id("sess_1")                         // 会话标签
-    .conversation_id("conv_1")                    // 对话记录 ID
-    .with_run_store(run_store)                    // 执行追踪
-```
-
-### 快照与熔断器
-
-```rust
-ReactAgentBuilder::new()
-    .snapshot_policy(SnapshotPolicy::EveryN(5))   // 快照频率
-    .max_snapshots(20)                            // 最大保留快照数
-    .with_circuit_breaker(CircuitBreakerConfig {  // LLM 故障保护
-        failure_threshold: 5,
-        success_threshold: 2,
-        timeout: Duration::from_secs(60),
-    })
-```
-
-### 构建
-
-```rust
-// 构建为 ReactAgent
-let agent: ReactAgent = builder.build()?;
-
-// 构建为 boxed trait 对象
-let agent: Box<dyn Agent> = builder.build_boxed()?;
-```
-
-### 验证规则
-
-- `model` 不能为空
-- `max_iterations` 必须 > 0
-- `enable_subagent` 要求 `enable_builtin_tools` 为 true
-
----
-
-## ToolExecutionConfig
-
-控制单个工具的执行行为：
-
-```rust
-pub struct ToolExecutionConfig {
-    pub timeout_ms: u64,             // 默认：30_000（30 秒）
-    pub retry_on_fail: bool,         // 默认：false
-    pub max_retries: u32,            // 默认：2
-    pub retry_delay_ms: u64,         // 默认：200
-    pub max_concurrency: Option<usize>,       // 默认：None
-    pub max_read_concurrency: Option<usize>,  // 默认：Some(32)
-}
-```
-
----
-
-## TokenBudgetConfig
-
-细粒度上下文窗口预算管理：
-
-```rust
-pub struct TokenBudgetConfig {
-    pub total_window: Option<usize>,  // 默认：None（从模型自动检测）
-    pub system_pct: f64,              // 默认：0.10（10%）
-    pub tool_pct: f64,                // 默认：0.05（5%）
-    pub output_pct: f64,              // 默认：0.10（10%）
-    pub safety_pct: f64,              // 默认：0.10（10%）
-    pub enabled: bool,                // 默认：true
-}
-```
-
-使用默认值时，对话历史获得上下文窗口的 **65%**。
-
-自动检测的模型窗口大小：
-- `claude` → 200K
-- `gpt-5.5` → 128K
-- `qwen3` → 128K
-- 默认 → 128K
-
----
-
-## ResponseFormat
-
-```rust
-pub enum ResponseFormat {
-    Text,                                          // 纯文本（默认）
-    JsonObject,                                    // JSON 对象
-    JsonSchema { json_schema: JsonSchemaSpec },    // JSON Schema 约束
-}
-
-pub struct JsonSchemaSpec {
-    pub name: String,
-    pub schema: serde_json::Value,
-    pub strict: bool,  // 默认：true
-}
-```
-
----
-
-## CircuitBreakerConfig
-
-防止 LLM 连续故障：
-
-```rust
-pub struct CircuitBreakerConfig {
-    pub failure_threshold: u32,     // 默认：5（连续失败 → Open）
-    pub success_threshold: u32,     // 默认：2（连续成功 → Closed）
-    pub timeout: Duration,          // 默认：60 秒（Open 持续时间后转 HalfOpen）
-}
-```
-
----
-
-## SnapshotPolicy
-
-控制 Agent 状态快照时机：
-
-```rust
-pub enum SnapshotPolicy {
-    EveryIteration,  // 每次 ReAct 迭代后快照（默认）
-    EveryN(usize),   // 每 N 次迭代快照
-    Manual,          // 仅在显式调用时
-}
-```
-
----
-
-## YAML 配置
-
-echo-agent 支持通过 `echo-agent.yaml` 进行声明式配置。
-
-### 文件搜索顺序
-
-1. `$ECHO_AGENT_CONFIG` 环境变量
-2. `./echo-agent.yaml`（当前目录）
-3. `~/.echo-agent/config.yaml`（用户主目录）
-4. 内置默认值
-
-### 完整示例
-
-```yaml
-model:
-  name: "qwen3.6-plus"
-  temperature: 0.7
-  max_tokens: 4096
-
-agent:
-  name: "echo-assistant"
-  system_prompt: "你是一个智能助手"
-  max_iterations: 10
-  enable_tools: true
-  enable_memory: true
-  enable_human_in_loop: true
-  memory_path: "~/.echo-agent/memory"
-  tool_timeout_ms: 120000
-  token_limit: 0
-  compress_strategy: "sliding"
-  compress_window: 20
-
-mcp:
-  config_path: "~/.echo-agent/mcp.yaml"
-
-channels:
-  feishu:
-    enabled: false
-    app_id: ""
-    app_secret: ""
-    mode: "long_poll"
-
-server:
-  host: "0.0.0.0"
-  port: 3000
-  max_body_bytes: 1048576
-
-logging:
-  level: "info"
-```
-
-### YAML 段落
-
-| 段落 | 结构体 | 说明 |
-|------|--------|------|
-| `model` | `ModelConfig` | LLM 模型名称、温度、最大 Token 数 |
-| `model_providers` | `ModelProviderConfig` 映射 | 用户定义的端点和认证连接 |
-| `configured_models` | `ConfiguredModel` 列表 | 每个模型明确选择 Provider、API 协议及文本/图片/音频/视频能力 |
-| `agent` | `AgentYamlConfig` | Agent 行为开关和路径 |
-| `mcp` | `McpYamlConfig` | MCP 配置文件路径 |
-| `channels` | `ChannelsConfig` | IM 渠道集成（QQ、飞书） |
-| `webhooks` | `WebhooksConfig` | Webhook 端点 |
-| `hooks` | `HooksDefinition` | 生命周期钩子规则 |
-| `server` | `ServerConfig` | HTTP 服务器主机/端口 |
-| `logging` | `LoggingConfig` | 日志级别 |
-
-### 环境变量覆盖
-
-| 环境变量 | 效果 |
-|---------|------|
-| `ECHO_AGENT_CONFIG` | 显式配置文件路径 |
-| `QQ_APP_ID` | 设置 QQ 渠道 app_id，自动启用 QQ |
-| `QQ_CLIENT_SECRET` | 设置 QQ 渠道 client_secret |
-| `FEISHU_APP_ID` | 设置飞书渠道 app_id，自动启用飞书 |
-| `FEISHU_APP_SECRET` | 设置飞书渠道 app_secret |
-| `MCP_CONFIG_PATH` | 设置 MCP 配置文件路径 |
-
----
-
-## Feature Flags
-
-所有功能都是可选启用的。`default` feature 集为**空**。`full` 元功能启用所有功能。
-
-```toml
-[dependencies]
-echo_agent = { version = "0.2", features = ["mcp", "web", "shell"] }
-```
-
-### 核心功能
-
-| Feature | 说明 |
-|---------|------|
-| `subagent` | Subagent 调度与 TeamSpec-to-DAG 执行 |
-| `mcp` | Model Context Protocol 集成 |
-| `tasks` | 任务规划和 DAG 调度 |
-| `self-reflection` | 自我反思/评估循环 |
-| `human-loop` | 基于 WebSocket 的人工审批 |
-| `plan-execute` | 规划执行 Agent 模式 |
-
-### 工具功能
-
-| Feature | 说明 |
-|---------|------|
-| `web` | 网页搜索/获取工具 |
-| `shell` | Shell 命令执行 |
-| `files` | 文件操作工具 |
-| `git` | Git 工具 |
-| `database` | SQL 数据库工具 |
-| `media` | PDF/Excel/Word/图片工具 |
-| `data` | Polars 数据处理工具 |
-| `chart` | 图表生成工具 |
-| `research` | ArXiv、Semantic Scholar、PDF 工具 |
-| `sandbox` | 沙箱脚本执行 |
-
-### 基础设施功能
-
-| Feature | 说明 |
-|---------|------|
-| `sqlite` | SQLite 状态存储 |
-| `telemetry` | OpenTelemetry 追踪 + 指标 |
-| `a2a` | Agent-to-Agent HTTP 服务 |
-| `channels` | IM 渠道集成（QQ、飞书） |
-| `rag` | 检索增强生成 |
-| `semantic-memory` | 基于嵌入的语义记忆 |
-| `workflow` | 工作流 DSL 引擎 |
-| `multimodal` | 多模态输入支持 |
-| `content-guard` | PII 检测/脱敏 |
-| `eval` | 评估框架 |
-| `improve` | 自进化框架 |
-| `testing` | 测试工具 |
-
----
-
-## TelemetryConfig
-
-OpenTelemetry 配置：
-
-```rust
-pub struct TelemetryConfig {
-    pub otlp_endpoint: String,    // 默认："http://localhost:4317"
-    pub service_name: String,     // 默认："echo-agent"
-    pub enable_console: bool,     // 默认：true
-}
-```
-
-需要 `telemetry` feature flag。
-
----
-
-## 快速参考
-
-### 最小 Agent
-
-```rust
-let config = AgentConfig::minimal("qwen3-max", "说你好");
-let agent = ReactAgent::new(config);
-```
-
-### 带工具的标准 Agent
-
-```rust
-let config = AgentConfig::standard("qwen3-max", "assistant", "你是有帮助的助手");
-let mut agent = ReactAgent::new(config);
-agent.add_tool(Box::new(MyTool::new()));
-```
-
-### 通过 Builder 构建全功能 Agent
-
-```rust
-let agent = ReactAgentBuilder::full_featured("qwen3-max", "assistant", "你是有帮助的助手")
-    .tool(Box::new(FileTool::new()))
-    .tool(Box::new(ShellTool::new()))
-    .with_run_store(run_store)
-    .guard(my_guard)
-    .build()?;
-```
-
-### 基于 YAML 的配置
-
-```rust
-let config = AppConfig::load()?;  // 加载 echo-agent.yaml
-```
-
----
-
-## 模型 Profile 覆盖
-
-为 provider 或精确模型定义覆盖项，无需修改 provider adapter：
-
-```rust
-use echo_agent::prelude::*;
-
-let resolver = ModelProfileResolver::new().register_exact(
-    "custom",
-    "my-custom-model",
-    ModelProfileOverride {
-        context_window: Some(128_000),
+use echo_agent::config::{AgentYamlConfig, FrameworkConfig, ModelConfig};
+use echo_agent::llm::LlmApiProtocol;
+
+let config = FrameworkConfig {
+    model: ModelConfig {
+        provider: "compatible".into(),
+        name: "my-model".into(),
+        api_protocol: Some(LlmApiProtocol::ChatCompletions),
         ..Default::default()
     },
-);
-let profile = resolver.resolve(
-    "custom",
-    "my-custom-model",
-    ProviderCapabilities::openai_compatible(),
-);
-assert_eq!(profile.context_window, Some(128_000));
+    agent: AgentYamlConfig {
+        name: "assistant".into(),
+        system_prompt: "帮助用户。".into(),
+        ..Default::default()
+    },
+};
+let agent_config = config.to_agent_config();
 ```
 
-已知模型使用 provider-aware 推断；未知模型使用保守的框架回退值，应用也可以显式提供 profile 覆盖。
+框架默认不启用工具、记忆、持久化或 HITL；这些策略必须由应用显式选择。
 
----
+## 显式路径
+
+把 `DataRoot` 当作普通值，并将具体路径传给 store/service：
+
+```rust
+use echo_agent::paths::DataRoot;
+
+let root = DataRoot::new("/var/lib/my-agent");
+let memory_path = root.path("memory.json");
+```
+
+框架不选择 home 下的目录名，也不提供进程全局 data-root setter。
+
+## PermissionMode
+
+`AgentConfig::permission_mode` 与 `ReactAgent::set_permission_mode` 接收类型化
+`PermissionMode`。字符串别名和产品展示名只存在于应用边界。
+
+## 工具组合
+
+`ReactAgent` 显式安装 `StandardToolPack`。只读 Agent 使用同一工具包按 capability
+推导的只读投影；应用也可以实现其它 `ToolPack` 或注册单独工具。
+
+## 应用配置
+
+embedding application 的 YAML schema、模型目录、渠道、TUI/server 设置和产品提示词位于
+`echo-agent-cli` 仓库文档。
 
 
 ---
@@ -11426,7 +11135,7 @@ let decision = registry.check("read_file", &[ToolPermission::Read]);
 ### YAML 配置
 
 ```yaml
-# echo-agent.yaml
+# application configuration
 permissions:
   mode: "prompt"            # default | prompt | auto_allow | auto_deny
   rules:
@@ -12029,7 +11738,7 @@ echo-agent 利用 git 原语为文件操作提供两层安全保障：
 
 ```toml
 [dependencies]
-echo_tools = { version = "0.2", features = ["git"] }
+echo_agent = { version = "0.2", features = ["git"] }
 ```
 
 ### 用途
@@ -12959,7 +12668,7 @@ Plan-and-Execute 由 Wei et al. 提出 [2]，将复杂任务分解为显式的**
 │   │              │              │                               │   │
 │   │              └──▶ step_3 ──┘                               │   │
 │   │                                                              │   │
-│   │  [RuntimeDagExecutor] 驱动已提交任务版本                    │   │
+│   │  [RuntimeTaskService] 驱动已提交任务版本                   │   │
 │   └─────────────────────────────────────────────────────────────┘   │
 │                                                                      │
 │   Phase 3: Replanning (on failure)                                  │
@@ -13596,7 +13305,7 @@ agent.add_tools(tools);
 ### YAML 配置
 
 ```yaml
-# echo-agent.yaml
+# application configuration
 mcp:
   servers:
     filesystem:
@@ -13620,7 +13329,7 @@ mcp:
 
 ```rust
 // 运行时加载配置
-let config = McpConfigLoader::from_yaml("echo-agent.yaml")?;
+let config = McpConfigLoader::from_yaml("application configuration")?;
 
 for server in config.mcp.servers {
     let tools = mcp.connect(server).await?;
@@ -13817,8 +13526,8 @@ You are an expert code reviewer. When reviewing code, consider:
 
 ## References
 
-- [Review Checklist](../../../examples/demo_skills/code_review/references/checklist.md)
-- [Style Guide](../../../examples/demo_skills/code_review/references/style_guide.md)
+- [Review Checklist](../../../../examples/demo_skills/code_review/references/checklist.md)
+- [Style Guide](../../../../examples/demo_skills/code_review/references/style_guide.md)
 ```
 
 ---
@@ -14637,76 +14346,75 @@ echo-agent is a composable Agent development framework written in Rust, providin
 
 ### Core Features
 
-| Doc | Module | Key Concepts |
-|-----|--------|--------------|
-| [01 - ReAct Agent](./01-react-agent.md) | Core engine | Thought→Action→Observation, CoT, parallel tool calls, callbacks |
-| [02 - Tool System](./02-tools.md) | Tools | Tool trait, ToolManager, timeout/retry, concurrency limiting |
-| [03 - Memory System](./03-memory.md) | Memory | Store (long-term), RuntimeStateStore (runtime checkpoint), ConversationStore (transcript) |
-| [04 - Context Compression](./04-compression.md) | Compression | SlidingWindow, Summary, Hybrid pipeline, ContextManager |
-| [05 - Human-in-the-Loop](./05-human-loop.md) | HIL | Approval gate, Console/Webhook/WebSocket providers |
-| [06 - Multi-Agent Orchestration](./06-subagent.md) | Subagent | Orchestrator/Subagent/Planner, context isolation |
-| [07 - Skill System](./07-skills.md) | Skills | Capability packs, prompt injection, external SKILL.md loading |
-| [08 - MCP Integration](./08-mcp.md) | MCP | stdio/HTTP transport, tool adaptation, multi-server management |
-| [09 - Task Planning](./09-tasks.md) | Tasks / DAG | DAG, topological sort, cycle detection, Mermaid visualization |
-| [10 - Streaming Output](./10-streaming.md) | Streaming | execute_stream, AgentEvent, SSE, TTFT |
-| [11 - Structured Output](./11-structured-output.md) | Structured Output | ResponseFormat, JsonSchema, extract(), extract_json() |
-| [12 - Mock Testing Utilities](./12-mock.md) | Testing | MockLlmClient, MockTool, MockAgent, InMemoryStore |
-| [13 - Multi-Turn Chat](./13-chat.md) | Chat | chat(), chat_stream(), cross-turn memory, reset() |
-| [14 - Semantic Search](./14-semantic-search.md) | Semantic Search | EmbeddingStore, Embedder, vector index, cosine similarity |
-| [15 - IM Channels](./15-im-channels.md) | IM Channels | QQ Bot / Feishu integration, WebSocket / Webhook, ChannelPlugin, message routing |
+| Doc                                                 | Module            | Key Concepts                                                                              |
+| --------------------------------------------------- | ----------------- | ----------------------------------------------------------------------------------------- |
+| [01 - ReAct Agent](./01-react-agent.md)             | Core engine       | Thought→Action→Observation, CoT, parallel tool calls, callbacks                           |
+| [02 - Tool System](./02-tools.md)                   | Tools             | Tool trait, ToolManager, timeout/retry, concurrency limiting                              |
+| [03 - Memory System](./03-memory.md)                | Memory            | Store (long-term), RuntimeStateStore (runtime checkpoint), ConversationStore (transcript) |
+| [04 - Context Compression](./04-compression.md)     | Compression       | SlidingWindow, Summary, Hybrid pipeline, ContextManager                                   |
+| [05 - Human-in-the-Loop](./05-human-loop.md)        | HIL               | Approval gate, Console/Webhook/WebSocket providers                                        |
+| [06 - Multi-Agent Orchestration](./06-subagent.md)  | Subagent          | Orchestrator/Subagent/Planner, context isolation                                          |
+| [07 - Skill System](./07-skills.md)                 | Skills            | Capability packs, prompt injection, external SKILL.md loading                             |
+| [08 - MCP Integration](./08-mcp.md)                 | MCP               | stdio/HTTP transport, tool adaptation, multi-server management                            |
+| [09 - Task Planning](./09-tasks.md)                 | Tasks / DAG       | DAG, topological sort, cycle detection, Mermaid visualization                             |
+| [10 - Streaming Output](./10-streaming.md)          | Streaming         | execute_stream, AgentEvent, SSE, TTFT                                                     |
+| [11 - Structured Output](./11-structured-output.md) | Structured Output | ResponseFormat, JsonSchema, extract(), extract_json()                                     |
+| [12 - Mock Testing Utilities](./12-mock.md)         | Testing           | MockLlmClient, MockTool, MockAgent, InMemoryStore                                         |
+| [13 - Multi-Turn Chat](./13-chat.md)                | Chat              | chat(), chat_stream(), cross-turn memory, reset()                                         |
+| [14 - Semantic Search](./14-semantic-search.md)     | Semantic Search   | EmbeddingStore, Embedder, vector index, cosine similarity                                 |
+| [15 - IM Channels](./15-im-channels.md)             | IM Channels       | QQ Bot / Feishu integration, WebSocket / Webhook, ChannelPlugin, message routing          |
 
 ### Advanced Features (v1.0.0)
 
-| Doc | Module | Key Concepts |
-|-----|--------|--------------|
-| [17 - Graph Workflow](./17-graph-workflow.md) | Workflow | LangGraph-style, SharedState, conditional edges, fan-out/fan-in |
-| [18 - Guard System](./18-guard-system.md) | Guards | RuleGuard, LlmGuard, input/output filtering |
-| [20 - Web Tools](./20-web-tools.md) | Web Search / Fetch | DuckDuckGo / Brave / Tavily search, HTML→text |
-| [21 - Common Tools](./21-common-tools.md) | Tool Guide | Web search, web fetch, browser automation, data tools |
-| [22 - Research Tools](./22-research-tools.md) | Research | ArXiv search, Semantic Scholar, PDF fetch, BibTeX generation |
-| [23 - Hooks System](./23-hooks.md) | Hooks | Skills hooks (31 events, 7 actions), Task hooks, Subagent hooks |
-| [24 - Eval System](./24-eval-system.md) | Eval | EvalCase, SuccessCriteria, LlmGrader, A/B comparison, regression, HTML reports |
-| [25 - Self-Evolution](./25-self-improvement.md) | Improve / Evolution | Analyzer, ImprovementLoop, EvalDrivenImprovement, tiered memory, skill auto-creation, merge/health/patch, rule promotion, change audit |
-| [26 - Multi-Agent Patterns](./26-multi-agent.md) | Subagent / Team intent | Single dispatch modes and TeamSpec-to-runtime-DAG collaboration |
-| [27 - Tracing System](./27-tracing.md) | Trace | Run, RunEvent (11 types), RunStore, JsonlRunStore, lifecycle, secret redaction |
-| [28 - Config Reference](./28-config-reference.md) | Config | AgentConfig, ReactAgentBuilder, ToolExecutionConfig, TokenBudgetConfig, YAML config, feature flags |
-| [29 - Runtime & Task System](./29-long-running-tasks.md) | Runtime & Tasks | Unified runtime, execution serialization, DAG orchestration, ProgressBridge, background tasks, scheduling |
+| Doc                                                      | Module                 | Key Concepts                                                                                                                           |
+| -------------------------------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| [17 - Graph Workflow](./17-graph-workflow.md)            | Workflow               | LangGraph-style, SharedState, conditional edges, fan-out/fan-in                                                                        |
+| [18 - Guard System](./18-guard-system.md)                | Guards                 | RuleGuard, LlmGuard, input/output filtering                                                                                            |
+| [20 - Web Tools](./20-web-tools.md)                      | Web Search / Fetch     | DuckDuckGo / Brave / Tavily search, HTML→text                                                                                          |
+| [21 - Common Tools](./21-common-tools.md)                | Tool Guide             | Web search, web fetch, browser automation, data tools                                                                                  |
+| [22 - Research Tools](./22-research-tools.md)            | Research               | ArXiv search, Semantic Scholar, PDF fetch, BibTeX generation                                                                           |
+| [23 - Hooks System](./23-hooks.md)                       | Hooks                  | Skills hooks (31 events, 7 actions), Task hooks, Subagent hooks                                                                        |
+| [24 - Eval System](./24-eval-system.md)                  | Eval                   | EvalCase, SuccessCriteria, LlmGrader, A/B comparison, regression, HTML reports                                                         |
+| [25 - Self-Evolution](./25-self-improvement.md)          | Improve / Evolution    | Analyzer, ImprovementLoop, EvalDrivenImprovement, tiered memory, skill auto-creation, merge/health/patch, rule promotion, change audit |
+| [26 - Multi-Agent Patterns](./26-multi-agent.md)         | Subagent / Team intent | Single dispatch modes and TeamSpec-to-runtime-DAG collaboration                                                                        |
+| [27 - Tracing System](./27-tracing.md)                   | Trace                  | Run, RunEvent (11 types), RunStore, JsonlRunStore, lifecycle, secret redaction                                                         |
+| [28 - Config Reference](./28-config-reference.md)        | Config                 | AgentConfig, ReactAgentBuilder, ToolExecutionConfig, TokenBudgetConfig, YAML config, feature flags                                     |
+| [29 - Runtime & Task System](./29-long-running-tasks.md) | Runtime & Tasks        | Unified runtime, execution serialization, DAG orchestration, ProgressBridge, background tasks, scheduling                              |
 
 ### New Features (v0.2.1)
 
-| Doc | Module | Key Concepts |
-|-----|--------|--------------|
-| [30 - ReAct Safety](./30-react-safety.md) | Loop Detection / Adaptive Compression | Loop detection, 5-level adaptive compression, Git checkpoint |
-| [31 - LSP Integration](./31-lsp-integration.md) | LSP | Language Server Protocol, code navigation, diagnostics, rust-analyzer |
-| [32 - Plugin System](./32-plugin-system.md) | Plugin | PluginManifest, PluginRegistry, PluginScope, lifecycle management |
-| [33 - Headless Mode](./33-headless-mode.md) | Headless | Non-interactive execution, CI/CD integration, JSON output, exit_code |
-| [34 - Git Isolation](./34-git-isolation.md) | Git Worktree / Checkpoint | Parallel subagent isolation, worktree management, file operation rollback |
-| [35 - Pipelines](./35-pipelines.md) | Data Pipeline / Writing Pipeline | Reproducible code-first analysis, writing quality loop |
-| [36 - Data Quality & Statistics](./36-data-quality-statistics.md) | Data Quality / Statistics | Data profiling, anomaly detection, descriptive stats, correlation analysis |
-| [37 - Code Search](./37-code-search.md) | Code Search | Ripgrep, structured output, glob/type filtering, 50KB cap |
-| [38 - Agent Factory & Modes](./38-factory-modes.md) | Agent Factory / Mode Engine / Prompt Templates | mode switching, localization, template rendering |
-| [40 - Context System](./40-context-system.md) | Context System | ContextAssembler, ContextBudgeter, ContextSelector, priority ordering, budget awareness |
+| Doc                                                               | Module                                         | Key Concepts                                                                            |
+| ----------------------------------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------- |
+| [30 - ReAct Safety](./30-react-safety.md)                         | Loop Detection / Adaptive Compression          | Loop detection, 5-level adaptive compression, Git checkpoint                            |
+| [31 - LSP Integration](./31-lsp-integration.md)                   | LSP                                            | Language Server Protocol, code navigation, diagnostics, rust-analyzer                   |
+| [32 - Plugin System](./32-plugin-system.md)                       | Plugin                                         | PluginManifest, PluginRegistry, PluginScope, lifecycle management                       |
+| [33 - Headless Mode](./33-headless-mode.md)                       | Headless                                       | Non-interactive execution, CI/CD integration, JSON output, exit_code                    |
+| [34 - Git Isolation](./34-git-isolation.md)                       | Git Worktree / Checkpoint                      | Parallel subagent isolation, worktree management, file operation rollback               |
+| [35 - Pipelines](./35-pipelines.md)                               | Data Pipeline / Writing Pipeline               | Reproducible code-first analysis, writing quality loop                                  |
+| [36 - Data Quality & Statistics](./36-data-quality-statistics.md) | Data Quality / Statistics                      | Data profiling, anomaly detection, descriptive stats, correlation analysis              |
+| [37 - Code Search](./37-code-search.md)                           | Code Search                                    | Ripgrep, structured output, glob/type filtering, 50KB cap                               |
+| [38 - Agent Factory & Modes](./38-factory-modes.md)               | Agent Factory / Mode Engine / Prompt Templates | mode switching, localization, template rendering                                        |
+| [40 - Context System](./40-context-system.md)                     | Context System                                 | ContextAssembler, ContextBudgeter, ContextSelector, priority ordering, budget awareness |
+| [41 - Persistence Concepts](./41-persistence-concepts.md)         | Store / Journal / Checkpoint / Trace           | persistence boundaries, fact authority, recovery snapshots, observability               |
 
 ### Getting Started Guides
 
-| Doc | Description |
-|-----|-------------|
-| [Getting Started](./getting-started.md) | Build your first Agent from scratch |
+| Doc                                           | Description                                    |
+| --------------------------------------------- | ---------------------------------------------- |
+| [Getting Started](./getting-started.md)       | Build your first Agent from scratch            |
 | [Skill Authoring Guide](./skill-authoring.md) | Create custom Code-based and File-based Skills |
 
 ### Security
 
-| Doc | Module | Key Concepts |
-|-----|--------|--------------|
+| Doc                             | Module   | Key Concepts                                                            |
+| ------------------------------- | -------- | ----------------------------------------------------------------------- |
 | [Security Guide](./security.md) | Security | Security model, sandbox config, secret management, MCP trust boundaries |
 
-### Knowledge Base
+### Architecture Decisions
 
-See [Knowledge Base](../knowledge/en/README.md) for in-depth concept explanations:
-- [Agent Patterns](../knowledge/en/agent-patterns.md) — ReAct, Plan-and-Execute, Self-Reflection, Graph Workflow
-- [MCP Protocol](../knowledge/en/mcp-protocol.md) — Model Context Protocol specification
-- [Skill System Design](../knowledge/en/skill-system.md) — agentskills.io specification alignment
-- [A2A Protocol](../knowledge/en/a2a-protocol.md) — Agent-to-Agent communication
+| ADR                                                                                  | Decision                                                    |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| [0001 - Sender-Scoped Channel Sessions](../adr/0001-channel-session-sender-scope.md) | Channel sessions are isolated by channel, conversation, and sender |
 
 ---
 
@@ -14795,19 +14503,19 @@ text/image/audio/video input capabilities.
 
 ## Feature Matrix
 
-| Feature | API / Config Field | Default |
-|---------|-------------------|---------|
-| Single-task execution | `execute()` / `execute_stream()` | — |
-| **Multi-turn chat** | **`chat()` / `chat_stream()`** | — |
-| Tool calling | `enable_tool` | `true` |
-| Revisioned task graph | `task_create` / `task_update` / `task_list` | registered |
-| Subagent orchestration | `enable_subagent` | `false` |
-| Long-term memory (Store) | `enable_memory` | `false` |
-| Human-in-the-loop | `enable_human_in_loop` | `false` |
-| Chain-of-Thought prompt | `enable_cot` | `true` |
-| Context compression | via `set_compressor()` | none |
-| Thread persistence / resume | `conversation_id` + `state_store` (`RuntimeStateStore`) | none |
-| Transcript/history projection | `conversation_id` + `ConversationStore` | none |
+| Feature                       | API / Config Field                                      | Default    |
+| ----------------------------- | ------------------------------------------------------- | ---------- |
+| Single-task execution         | `execute()` / `execute_stream()`                        | —          |
+| **Multi-turn chat**           | **`chat()` / `chat_stream()`**                          | —          |
+| Tool calling                  | `enable_tool`                                           | `true`     |
+| Revisioned task graph         | `task_create` / `task_update` / `task_list`             | registered |
+| Subagent orchestration        | `enable_subagent`                                       | `false`    |
+| Long-term memory (Store)      | `enable_memory`                                         | `false`    |
+| Human-in-the-loop             | `enable_human_in_loop`                                  | `false`    |
+| Chain-of-Thought prompt       | `enable_cot`                                            | `true`     |
+| Context compression           | via `set_compressor()`                                  | none       |
+| Thread persistence / resume   | `conversation_id` + `state_store` (`RuntimeStateStore`) | none       |
+| Transcript/history projection | `conversation_id` + `ConversationStore`                 | none       |
 
 ---
 
@@ -14816,55 +14524,55 @@ text/image/audio/video input capabilities.
 Examples are maintained under three contracts: `Acceptance`, `Conditional acceptance`, and `Teaching`.
 See `examples/README.md` for the full classification and upkeep rules.
 
-| Example | Demonstrates |
-|---------|-------------|
-| `examples/demo01_tools.rs` | Basic tool registration and invocation |
-| `examples/demo02_tasks.rs` | DAG task planning |
-| `examples/demo03_approval.rs` | Human-in-the-loop approval |
-| `examples/demo04_subagent.rs` | Subagent orchestration |
-| `examples/demo05_compressor.rs` | Context compression |
-| `examples/demo06_mcp.rs` | MCP protocol integration |
-| `examples/demo07_skills.rs` | Skill system |
-| `examples/demo08_external_skills.rs` | External SKILL.md loading |
-| `examples/demo09_file_shell.rs` | File and shell tools |
-| `examples/demo10_streaming.rs` | Streaming output |
-| `examples/demo11_callbacks.rs` | Lifecycle callbacks |
-| `examples/demo12_resilience.rs` | Fault tolerance and retries |
-| `examples/demo13_tool_execution.rs` | Tool execution configuration |
-| `examples/demo15_structured_output.rs` | Structured output (extract / JSON Schema) |
-| `examples/demo17_chat.rs` | Multi-turn chat (chat / chat_stream / reset) |
-| `examples/demo18_semantic_memory.rs` | Store semantic search (EmbeddingStore / vector retrieval) |
-| `examples/demo19_guard.rs` | Guard system (rule / LLM content filtering) |
-| `examples/demo20_audit.rs` | Audit logging |
-| `examples/demo23_a2a.rs` | A2A protocol |
-| `examples/demo24_topology.rs` | Multi-agent topology visualization |
-| `examples/demo25_macros.rs` | Macro system showcase |
-| `examples/demo26_provider_factory.rs` | Dynamic LLM factory |
-| `examples/demo27_sqlite_memory.rs` | SQLite persistence |
-| `examples/demo28_workflow.rs` | Workflow pipeline |
-| `examples/demo29_sandbox.rs` | Sandbox execution |
-| `examples/demo30_mcp_server.rs` | MCP server mode |
-| `examples/demo31_memory_tools.rs` | Memory tool injection |
-| `examples/demo32_token_budget.rs` | Token budget control |
-| `examples/demo33_retry_policy.rs` | Unified retry |
-| `examples/demo34_workflow_stream.rs` | Workflow streaming |
-| `examples/demo35_dynamic_tools.rs` | Dynamic tool management |
-| `examples/demo36_multimodal.rs` | Multi-modal messages |
-| `examples/demo37_declarative_workflow.rs` | YAML/JSON workflows |
-| `examples/demo38_im_channels.rs` | IM channel integration |
-| `examples/demo39_workflow.rs` | Graph workflow engine |
-| `examples/demo40_snapshot.rs` | Snapshot & rollback |
-| `examples/demo41_web_tools.rs` | Web search + fetch |
-| `examples/demo42_playwright_mcp.rs` | Playwright MCP browser automation |
-| `examples/demo43_data_tools.rs` | Data tools (Excel / CSV / Word / Text) |
-| `examples/demo44_code_laboratory.rs` | Code execution assistant |
-| `examples/demo45_customer_service.rs` | Intelligent customer service |
-| `examples/demo46_data_analyst.rs` | Data analysis assistant |
-| `examples/demo47_enterprise.rs` | Enterprise workflow automation |
-| `examples/demo48_personal_assistant.rs` | Personal smart assistant |
-| `examples/demo49_research_agent.rs` | Research & report assistant |
-| `examples/demo50_eval.rs` | Eval system: cases, criteria, constraints, trajectory replay, trigger accuracy, HTML reports |
-| `examples/demo51_self_improvement.rs` | Self-improvement: Analyzer failure detection, Curator skill lifecycle, TrajectorySaver fine-tune data |
+| Example                                   | Demonstrates                                                                                          |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `examples/demo01_tools.rs`                | Basic tool registration and invocation                                                                |
+| `examples/demo02_tasks.rs`                | DAG task planning                                                                                     |
+| `examples/demo03_approval.rs`             | Human-in-the-loop approval                                                                            |
+| `examples/demo04_subagent.rs`             | Subagent orchestration                                                                                |
+| `examples/demo05_compressor.rs`           | Context compression                                                                                   |
+| `examples/demo06_mcp.rs`                  | MCP protocol integration                                                                              |
+| `examples/demo07_skills.rs`               | Skill system                                                                                          |
+| `examples/demo08_external_skills.rs`      | External SKILL.md loading                                                                             |
+| `examples/demo09_file_shell.rs`           | File and shell tools                                                                                  |
+| `examples/demo10_streaming.rs`            | Streaming output                                                                                      |
+| `examples/demo11_callbacks.rs`            | Lifecycle callbacks                                                                                   |
+| `examples/demo12_resilience.rs`           | Fault tolerance and retries                                                                           |
+| `examples/demo13_tool_execution.rs`       | Tool execution configuration                                                                          |
+| `examples/demo15_structured_output.rs`    | Structured output (extract / JSON Schema)                                                             |
+| `examples/demo17_chat.rs`                 | Multi-turn chat (chat / chat_stream / reset)                                                          |
+| `examples/demo18_semantic_memory.rs`      | Store semantic search (EmbeddingStore / vector retrieval)                                             |
+| `examples/demo19_guard.rs`                | Guard system (rule / LLM content filtering)                                                           |
+| `examples/demo20_audit.rs`                | Audit logging                                                                                         |
+| `examples/demo23_a2a.rs`                  | A2A protocol                                                                                          |
+| `examples/demo24_topology.rs`             | Multi-agent topology visualization                                                                    |
+| `examples/demo25_macros.rs`               | Macro system showcase                                                                                 |
+| `examples/demo26_provider_factory.rs`     | Dynamic LLM factory                                                                                   |
+| `examples/demo27_sqlite_memory.rs`        | SQLite persistence                                                                                    |
+| `examples/demo28_workflow.rs`             | Workflow pipeline                                                                                     |
+| `examples/demo29_sandbox.rs`              | Sandbox execution                                                                                     |
+| `examples/demo30_mcp_server.rs`           | MCP server mode                                                                                       |
+| `examples/demo31_memory_tools.rs`         | Memory tool injection                                                                                 |
+| `examples/demo32_token_budget.rs`         | Token budget control                                                                                  |
+| `examples/demo33_retry_policy.rs`         | Unified retry                                                                                         |
+| `examples/demo34_workflow_stream.rs`      | Workflow streaming                                                                                    |
+| `examples/demo35_dynamic_tools.rs`        | Dynamic tool management                                                                               |
+| `examples/demo36_multimodal.rs`           | Multi-modal messages                                                                                  |
+| `examples/demo37_declarative_workflow.rs` | YAML/JSON workflows                                                                                   |
+| `examples/demo38_im_channels.rs`          | IM channel integration                                                                                |
+| `examples/demo39_workflow.rs`             | Graph workflow engine                                                                                 |
+| `examples/demo40_snapshot.rs`             | Snapshot & rollback                                                                                   |
+| `examples/demo41_web_tools.rs`            | Web search + fetch                                                                                    |
+| `examples/demo42_playwright_mcp.rs`       | Playwright MCP browser automation                                                                     |
+| `examples/demo43_data_tools.rs`           | Data tools (Excel / CSV / Word / Text)                                                                |
+| `examples/demo44_code_laboratory.rs`      | Code execution assistant                                                                              |
+| `examples/demo45_customer_service.rs`     | Intelligent customer service                                                                          |
+| `examples/demo46_data_analyst.rs`         | Data analysis assistant                                                                               |
+| `examples/demo47_enterprise.rs`           | Enterprise workflow automation                                                                        |
+| `examples/demo48_personal_assistant.rs`   | Personal smart assistant                                                                              |
+| `examples/demo49_research_agent.rs`       | Research & report assistant                                                                           |
+| `examples/demo50_eval.rs`                 | Eval system: cases, criteria, constraints, trajectory replay, trigger accuracy, HTML reports          |
+| `examples/demo51_self_improvement.rs`     | Self-improvement: Analyzer failure detection, Curator skill lifecycle, TrajectorySaver fine-tune data |
 
 
 ---
@@ -14964,8 +14672,21 @@ async fn multiply(a: f64, b: f64) -> Result<ToolResult> {
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    let api_key = std::env::var("OPENAI_API_KEY").map_err(|_| {
+        echo_agent::error::ConfigError::MissingConfig(
+            "getting-started".to_string(),
+            "OPENAI_API_KEY".to_string(),
+        )
+    })?;
+    let llm_config = LlmConfig::for_provider(
+        "openai",
+        "https://api.openai.com/v1",
+        api_key,
+        "gpt-5.5",
+        LlmApiProtocol::Responses,
+    )?;
     let agent = agent! {
-        model: "deepseek-v4-flash",
+        llm_config: llm_config,
         system_prompt: "You are a math assistant. Use tools to calculate.",
         tools: [AddTool, MultiplyTool],
     }?;
@@ -14979,7 +14700,7 @@ async fn main() -> Result<()> {
 When you run this, the agent will reason through the problem: first call `add(3, 4)` to get 7, then `multiply(7, 5)` to get 35.
 
 ```bash
-cargo run
+OPENAI_API_KEY=sk-... cargo run
 ```
 
 ---
@@ -16140,6 +15861,131 @@ see [25 - Self-Evolution](./25-self-improvement.md) (the `evolution` module).
 
 ---
 
+Source: https://echo-agent.dev/en/docs/persistence-concepts
+
+# Store, Journal, Checkpoint, and Trace
+
+These concepts are not peers at one abstraction level. A `Store` is a read/write boundary for a data domain, while `Journal`, `Checkpoint`, and `Trace` describe different semantic roles played by persisted data.
+
+## Core distinction
+
+| Concept      | Question answered                                           | Typical shape                 | Primary purpose                    |
+| ------------ | ----------------------------------------------------------- | ----------------------------- | ---------------------------------- |
+| `Store`      | Where is a kind of data kept and how is it accessed?        | trait, file or memory backend | Persistence and queries            |
+| `Journal`    | What happened, in deterministic order?                      | append-only event stream      | Replay, recovery, projections      |
+| `Checkpoint` | What was the state at a stable boundary?                    | state + applied sequence      | Fast recovery without full replay  |
+| `Trace`      | How did an execution behave and why did it succeed or fail? | `Run` + `RunEvent`            | Debugging, diagnostics, evaluation |
+
+```text
+domain event
+   |
+   +-> Journal -> reduce/fold -> current state
+   |                                |
+   |                                +-> Checkpoint
+   |
+   +-> Trace
+
+Different stores persist these artifacts or other domain data.
+```
+
+## Store: a domain persistence boundary
+
+The framework does not define one universal Store trait for every persisted artifact. A type name ending in `Store` only identifies a domain read/write boundary; it does not determine the data model or authority.
+
+| Interface            | Owned data                            | Scope                     |
+| -------------------- | ------------------------------------- | ------------------------- |
+| `Store`              | namespaced key/value long-term memory | Cross-session knowledge   |
+| `ConversationStore`  | user-visible transcript projection    | Conversation browsing     |
+| `RuntimeStateStore`  | `AgentCheckpoint`                     | ReAct session recovery    |
+| `CheckpointStore<S>` | reducer state + applied sequence      | Event projection recovery |
+| `RunStore`           | trace `Run`/`RunEvent`                | Execution observability   |
+
+The long-term-memory `Store` supports namespace isolation, key/value operations, search, and deletion. It is one Store in the framework, not a parent interface for the other stores.
+
+## Journal: ordered facts
+
+`EventJournal<E>` persists ordered events instead of repeatedly overwriting current state. Its key invariants are:
+
+- append-only records;
+- contiguous sequences starting at 1;
+- ordered suffix replay;
+- commit before reducer projection;
+- recovery of a torn trailing record, while mid-history corruption is an error;
+- unknown batch-commit outcomes require reopen/reconciliation rather than blind retry.
+
+A Journal is suitable for facts that have happened. Current state, lists, and UI DTOs may be projected from it, but projections must not silently replace the fact history.
+
+## Checkpoint: state at a stable boundary
+
+### Reducer checkpoints
+
+`CheckpointedReducer` folds Journal events into state and uses `CheckpointStore<S>` to persist the applied sequence and the corresponding reducer state.
+
+```text
+Journal:      1 2 3 4 5 6 7 8 9 10
+Checkpoint:              state@7
+Recovery:                 load@7 + replay 8..10
+```
+
+`FileCheckpointStore` uses atomic replacement, a schema version, and a SHA-256 digest so partial or modified data is not accepted as a trusted replay prefix. For an event-sourced projection, this checkpoint is a rebuildable accelerator and does not replace the Journal.
+
+### AgentCheckpoint
+
+`AgentCheckpoint` is a different checkpoint type. It stores messages, current plan text, active skills, blocked reason, working directory, and capture time for resuming a ReAct execution through `RuntimeStateStore`.
+
+Restoration validates assistant tool calls and tool results as paired messages. This prevents provider-invalid context and avoids replaying already completed side effects.
+
+`AgentCheckpoint` owns only ReAct runtime state. It does not own an application task DAG and is not the user-visible transcript stored by `ConversationStore`.
+
+### Other checkpoint domains
+
+The framework also uses the name for distinct domains:
+
+- compression checkpoints record context-compression boundaries;
+- Git checkpoints are tags created before file mutations for worktree rollback;
+- trace `Checkpoint`/`CheckpointResumed` events observe checkpoint activity but are not the checkpoint itself.
+
+Always qualify which checkpoint and recovery source is being discussed.
+
+## Trace: execution observability
+
+A Trace represents one Agent invocation as a `Run`. It can include identities, agent/model/provider data, input/output/error/status, LLM usage and timing, tool activity, compression, phase transitions, tests, file edits, Subagent dispatches, and checkpoint events.
+
+Traces are persisted through `RunStore` and consumed by analyzers, evals, replay, and diagnostic tools.
+
+| Comparison                     | Journal                         | Trace                                            |
+| ------------------------------ | ------------------------------- | ------------------------------------------------ |
+| Goal                           | Preserve domain facts           | Explain execution behavior                       |
+| Drives domain projections      | Usually                         | No                                               |
+| Suitable as recovery authority | Determined by the domain design | Not by default                                   |
+| Typical content                | State-transition events         | LLM, tool, usage, timing, and error observations |
+
+If trace persistence may fail while the main execution continues, the Trace cannot also be the business commit authority.
+
+## Design rules
+
+Before adding or changing these components, answer:
+
+1. Is this a new persistence backend or a new data semantic? Only the former is primarily a Store problem.
+2. Which data is the non-lossy fact source? Prefer extending an existing Journal when ordered recovery is required.
+3. Is a Checkpoint a derived Journal accelerator or an independent runtime snapshot? Document its authority and rebuild source.
+4. May execution continue after a Trace write failure? If so, Trace cannot decide whether business work committed.
+5. Does the same scope already have a Journal, Checkpoint, Store, or projection? Do not create parallel semantic owners.
+
+## Code map
+
+- Long-term-memory `Store`: `echo-core/src/memory/store.rs`
+- `ConversationStore`: `echo-core/src/memory/conversation.rs`
+- Journal and checkpointed reducer: `echo-state/src/journal/mod.rs`
+- File Journal/checkpoint implementations: `echo-state/src/journal/file.rs`
+- `AgentCheckpoint` / `RuntimeStateStore`: `src/state/mod.rs`
+- Trace `Run` / `RunEvent` / `RunStore`: `src/trace/mod.rs`
+
+See also: [Memory](03-memory.md), [Context Compression](04-compression.md), [Tracing](27-tracing.md), and [Git Isolation](34-git-isolation.md).
+
+
+---
+
 Source: https://echo-agent.dev/en/docs/compression
 
 # Context Compression
@@ -16149,6 +15995,12 @@ Source: https://echo-agent.dev/en/docs/compression
 An LLM's context window is finite. As conversation history accumulates, sending everything verbatim will eventually exceed the token limit (causing request failures) or drive up cost and latency.
 
 The context compression system automatically checks token usage before each LLM call and, when over the configured limit, compresses the message history according to the chosen strategy — while keeping the most valuable information intact.
+
+Compression changes only the active model context. When a `ConversationStore`
+is configured, the framework writes the user-visible transcript before any
+active-history replacement and merges later compacted suffixes into that
+durable record. Runtime checkpoints remain the smaller resume view. A compacted
+summary is therefore not treated as a replacement for the full transcript.
 
 ---
 
@@ -16189,6 +16041,13 @@ Best for: High-volume conversations where history is unimportant, or cost-sensit
 
 **Cons**: Compression requires an additional LLM call (has cost).
 
+The built-in prompt produces a continuation checkpoint rather than a narrative
+recap. Structured output separately records the current goal, work state,
+decisions, files, errors, preferences, non-negotiable constraints, exact key
+facts, and next step. The summary plus recent raw messages is passed through a
+token-bounded tail fit, so a fixed retention count cannot leave the final model
+input above its effective budget.
+
 ```rust
 use echo_agent::prelude::*;
 use echo_agent::llm::OpenAiClient;
@@ -16207,6 +16066,37 @@ SummaryCompressor::with_prompt(
     |messages| format!("Summarize the following {} messages in 3 sentences:", messages.len()),
 )
 ```
+
+### Design rationale
+
+The implementation follows the common shape visible in mature coding agents:
+
+- OpenAI Codex replaces only its live history with a compaction summary,
+  retained user material, and reconstructed initial/world context; it persists
+  a separate compaction item and explicitly warns that repeated compaction is
+  lossy. See the pinned [Codex `compact.rs`](https://github.com/openai/codex/blob/53eaa297e595fc98df0f33d4c63686a7014d7c9a/codex-rs/core/src/compact.rs).
+- Claude Code exposes pre-compaction hooks, preserves session/plan state across
+  compaction, and has repeatedly hardened tool-result and resume behavior. See
+  the official [Claude Code changelog](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md).
+- OpenCode protects the newest user turn, retains older raw tool results under
+  a 40K-token aggregate budget, and only clears them when at least 20K tokens
+  can be reclaimed. Its recent compaction tail is token-budgeted rather than a
+  fixed number of turns. See the official
+  [OpenCode compaction source](https://github.com/anomalyco/opencode/blob/dev/packages/opencode/src/session/compaction.ts).
+- Pi bounds each tool result to 2,000 lines or 50 KiB, keeps roughly 20K recent
+  tokens during compaction, and never cuts between a tool call and its result.
+  See the official [Pi compaction guide](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/compaction.md)
+  and [tool truncation source](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/src/core/tools/truncate.ts).
+
+Echo Agent keeps those concerns separate: `ConversationStore` owns the complete
+display/audit transcript, `ContextManager` owns the bounded active context,
+`CanonicalContext` and projections restore authoritative rules/state, and
+repository files remain external knowledge that tools fetch on demand.
+
+For proactive tool-trace folding, prefer a hybrid policy over a fixed turn
+count: protect at least the latest user turn, give older raw results an
+aggregate token budget scaled to the model window, require meaningful savings
+before rewriting history, and always keep call/result groups atomic.
 
 ---
 
@@ -17810,13 +17700,13 @@ The production flow is:
 TeamSpec or TeamAgentBuilder
   -> TeamRuntime (default in-memory or caller-owned persistent adapter)
   -> TaskRevisionService
-  -> RuntimeDagExecutor
+  -> RuntimeTaskService
   -> SubagentExecutor
   -> typed SubagentResult
   -> exact claim settlement in the same revisioned graph
 ```
 
-`RuntimeDagExecutor` exclusively owns ready-frontier traversal, dependency
+`RuntimeTaskService` exclusively owns ready-frontier traversal, derived dependency
 blocking, bounded waves, cancellation, and terminal outcome selection. Team
 code only compiles intent and supplies a thin dispatch adapter. ReAct
 checkpoints do not duplicate task nodes or task lifecycle state.
@@ -18270,11 +18160,11 @@ one revisioned task graph. There is no separate task-manager state machine.
 
 - `TaskRevisionService` is the only CRUD, relation, validation, and revision
   authority.
-- `RuntimeDagExecutor` is the only dependency execution kernel.
-- `ManagedTask` is a rich serialization and presentation DTO. Converting or
-  mutating it does not commit graph state.
+- `RuntimeTaskService` is the only public dependency execution entry point.
 - `TaskSpawner` tracks process-local background futures only; it does not own
   durable task relationships.
+- A plan is an editable, versioned artifact over the graph. It is not an
+  approval state machine.
 
 ## Task Model
 
@@ -18288,10 +18178,11 @@ pub struct Task {
 }
 ```
 
-`TaskSpec` contains the task id, title, description, kind, Subagent role,
-dependencies, file scope, tool constraints, verification requirements, and
-retry limit. `TaskExecution` contains status, retry count, failure fingerprint,
-and an optional attempt-scoped claim.
+`TaskSpec` contains only the task id, title, description, dependencies, retry
+limit, and an opaque product extension. `TaskExecution` contains status, retry
+count, failure fingerprint, and an optional attempt-scoped claim. Coding kinds,
+Subagent selection, files, tools, checks, review, and UI projections belong in
+an application-owned typed extension.
 
 The shared lifecycle includes `Pending`, `Running`, `Blocked`, `Retrying`,
 `Paused`, `Completed`, `Failed`, `TimedOut`, `Skipped`, and `Cancelled`.
@@ -18331,39 +18222,45 @@ let agent = ReactAgentBuilder::new()
     .build()?;
 ```
 
-The policy adapter may resolve scope and attach product metadata, but generic
-patch semantics and DAG validation stay in the framework.
+The policy adapter may resolve scope and attach a lossless product extension,
+but generic patch semantics and DAG validation stay in the framework.
 
 ## Runtime Execution
 
-`RuntimeDagExecutor<C>` repeatedly loads a committed `RuntimePlanSnapshot`
-from its `RuntimeDagController`:
+`RuntimeTaskService<C>` repeatedly loads a committed `RuntimePlanSnapshot`
+through its thin `RuntimeDagController` adapter:
 
 1. Validate the complete snapshot and detect cycles.
 2. Compute the ready frontier from committed dependencies and statuses.
 3. Atomically claim tasks with revision, attempt, spec hash, and unique claim id.
 4. Dispatch a bounded, conflict-free Subagent wave.
 5. Resolve or abandon every claim with compare-and-set semantics.
-6. Reload at the next safe point so a newer revision can take effect.
+6. Settle typed cancellation or resumable pause receipts at the wave boundary.
+7. Reload at the next safe point so a newer revision can take effect.
 
 The controller is a thin application adapter for persistence, Subagent
 dispatch, review, and product-specific resource policy. It must not implement
 a second ready-frontier loop or dependency state machine.
 
-The executor handles transitive failure blocking, skip and pause states,
-bounded retries, cancellation settlement, superseded claims, and stall
-detection. Attempt-scoped claim identity prevents an old dispatch from
-overwriting a reclaimed attempt.
+The service handles transitive failure blocking, skip and pause states, bounded
+retries, cancellation settlement, superseded claims, and stall detection.
+Dependency failure is a typed `DagDependencyState` projection; it is not
+persisted as `TaskStatus::Blocked`, so retrying an ancestor removes the derived
+block automatically. `Blocked` remains available for explicit product policy,
+such as review or missing input. A paused claim clears ownership and resumes to
+Pending without consuming retry budget. A Skipped dependency is carried to the
+Subagent as a typed waiver rather than a fabricated output. Attempt-scoped
+claim identity prevents an old dispatch from overwriting a reclaimed attempt.
 
 ## Projection and Progress
 
-`ManagedTask`, `TaskEvent`, and `TaskProgress` are consumer-facing projections.
-They can carry richer display, evidence, and progress data, but the next
-runtime decision is always made from a committed revision loaded through the
-canonical service/controller boundary.
+`TaskEvent` and `TaskProgress` are consumer-facing projections. Applications
+may derive richer todo, evidence, and UI data from the committed task extension,
+but the next runtime decision is always made from a committed revision loaded
+through the canonical service/controller boundary.
 
-See `demo48_personal_assistant` for direct service use and the
-`runtime_executor` tests for a deterministic controller implementation.
+See `tests/facade_smoke.rs` for public service construction and the private
+`runtime_executor` tests for deterministic controller behavior.
 
 
 ---
@@ -18378,7 +18275,7 @@ echo-agent exposes two complementary mechanisms:
 
 | Mechanism | Authority | Use |
 |-----------|-----------|-----|
-| `TaskRevisionService` + `RuntimeDagExecutor` | Durable revisioned graph and dependency lifecycle | Multi-step Agent plans |
+| `TaskRevisionService` + `RuntimeTaskService` | Durable revisioned graph and dependency lifecycle | Multi-step Agent plans |
 | `TaskSpawner` + `BackgroundTask<T>` | Process-local async handles | Polling, waiting for, or cancelling one future |
 
 `TaskSpawner` is deliberately not a durable graph store. Restart recovery,
@@ -18469,7 +18366,7 @@ Tool:  a single atomic operation ("read file")
 Skill: a domain capability pack ("filesystem" = read_file + write_file + list_dir + usage guidance)
 ```
 
-The framework contract (`Skill` trait + `SkillRegistry`) lives in `echo-core` and `echo-execution`. Product catalogues are separate consumers of this API. For example, EKO currently stores its user-facing catalogue under `~/.eko/skills/`; that application-owned behavior is documented by the [EKO SkillsHub source](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src/skills_hub), not by this framework API.
+The framework contract (`Skill` trait + `SkillRegistry`) lives in `echo-core` and `echo-execution`. Product catalogues are separate consumers of this API. For example, embedding application currently stores its user-facing catalogue under `<application-data>/skills/`; that application-owned behavior is documented by the [embedding application SkillsHub source](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src/skills_hub), not by this framework API.
 
 ---
 
@@ -18937,7 +18834,7 @@ ctx.replace_projection(
 
 `SkillRegistry` owns the reusable runtime lifecycle: discovery, activation, dependency ordering, resource access, and sandbox policy. It does not install or uninstall marketplace packages.
 
-Applications may add a separate catalogue. EKO's current `SkillsHub` scans `~/.eko/skills/` for its UI and installation workflow; it does not replace the framework registry. Treat the [EKO SkillsHub source](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src/skills_hub) as the authority for those product details because they can evolve independently from echo-agent.
+Applications may add a separate catalogue. embedding application's current `SkillsHub` scans `<application-data>/skills/` for its UI and installation workflow; it does not replace the framework registry. Treat the [embedding application SkillsHub source](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src/skills_hub) as the authority for those product details because they can evolve independently from echo-agent.
 
 ---
 
@@ -20216,12 +20113,12 @@ let transitions = curator.apply_transitions()?; // auto-transition by idle time
 
    ```rust
    use echo_agent::evolution::SkillDraftGenerator;
-   let gen = SkillDraftGenerator::new(".eko".into(), &change_log);
+   let gen = SkillDraftGenerator::new("<application-data>".into(), &change_log);
    let result = gen.generate_from_candidate(&candidate).await?;
    // result.skill_md_path points to the generated draft
    ```
 
-   EKO currently supplies `.eko`, so its drafts live at `.eko/skills/_drafts/<name>/SKILL.md`. That product-owned location should be verified against the [EKO app-core source](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src).
+   embedding application currently supplies `<application-data>`, so its drafts live at `<application-data>/skills/_drafts/<name>/SKILL.md`. That product-owned location should be verified against the [embedding application app-core source](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src).
 
 3. After human review, `/skill-promote <name>` moves Draft → Active and the skill appears in the skill catalog.
 
@@ -20249,7 +20146,7 @@ for report in monitor.analyze_all_skills().await? {
 
 ### Rule Promotion (product layer)
 
-`RulePromoter` is an EKO product policy, not a framework persistence contract. EKO currently reviews high-confidence memory proposals before writing approved rules to `.eko/learned-rules.md`; consult the [EKO app-core source](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src) for the authoritative thresholds and workflow.
+`RulePromoter` is an embedding application product policy, not a framework persistence contract. embedding application currently reviews high-confidence memory proposals before writing approved rules to `<application-data>/learned-rules.md`; consult the [embedding application app-core source](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src) for the authoritative thresholds and workflow.
 
 ### Security Hardening — `EvolutionSecurityGuard`
 
@@ -20267,11 +20164,11 @@ There are three automatic memory paths with strictly divided responsibilities to
 | System | Primary responsibility | Should NOT do |
 |--------|----------------------|---------------|
 | `TriggerDetector` (runtime) | Lightweight online discovery with exact source excerpts; direct persistence remains the framework default, while products may install `MemoryTriggerSink` | Session-archive summarization, product review policy |
-| `AutoMemory` (framework+app) | Session-end/manual-trigger observation extraction; the framework exposes an optional typed-memory writer, while EKO queues evidence candidates | Compression/eviction, runtime policy scheduling |
+| Application observation policy | Applications may extract observations and submit accepted facts through the typed-memory API | Compression/eviction, runtime policy scheduling |
 | `memory_promoter` (compression path) | Lifecycle management of messages compressed/evicted due to token pressure (persist, evict, demote) | New-preference discovery, UI-triggered extraction |
 | `BackgroundReviewer` (explicit/app-scheduled) | Evidence-linked JSON candidate from a finished run; proposal-only by default | Automatic durable writes or product scheduling policy |
 
-> Key constraint: any accepted typed memory that enters runtime recall **must** go through `MemoryLayerManager::write_memory`. EKO keeps inferred TriggerDetector/AutoMemory/BackgroundReviewer output in its workspace JSONL Review Inbox until the user accepts it.
+> Key constraint: any accepted typed memory that enters runtime recall **must** go through `MemoryLayerManager::write_memory`. Extraction and review policy belong to the embedding application.
 
 ---
 
@@ -20294,7 +20191,7 @@ There are three automatic memory paths with strictly divided responsibilities to
   curator_state.json               # Curator state
 ```
 
-Framework consumers may choose another path. EKO injects workspace-scoped files under `.eko/evolution/`, including `evidence-candidates.jsonl` and `curator-state.json`.
+Framework consumers may choose another path. embedding application injects workspace-scoped files under `<application-data>/evolution/`, including `evidence-candidates.jsonl` and `curator-state.json`.
 
 ## Store Namespaces
 
@@ -20459,15 +20356,15 @@ The remaining components are discovered from fixed root locations:
 | `agents/*.md` | Subagent adapter |
 | `hooks/hooks.yaml` | Hook registry |
 | `lsp.yaml` | Embedding application's LSP manager |
-| `monitors.yaml` | EKO scheduler |
-| `themes/*.json` | EKO GUI/TUI theme catalogs |
-| `output-styles/*.md` | EKO system-context projection |
+| `monitors.yaml` | embedding application scheduler |
+| `themes/*.json` | embedding application GUI/TUI theme catalogs |
+| `output-styles/*.md` | embedding application system-context projection |
 
 `scripts/` and `README.md` are package resources rather than automatically executed components. Skills and Hooks may reference scripts explicitly.
 
 ## Framework and application boundary
 
-The reusable framework owns manifest parsing, Skills, MCP, plugin scopes/lifecycle, Hooks, Subagent definitions, and LSP adapter output. EKO discovers and converts only its product-specific `monitors.yaml`, `themes/`, and `output-styles/` files. The application adapter does not duplicate dependency ordering, component ownership, or reload semantics.
+The reusable framework owns manifest parsing, Skills, MCP, plugin scopes/lifecycle, Hooks, Subagent definitions, and LSP adapter output. embedding application discovers and converts only its product-specific `monitors.yaml`, `themes/`, and `output-styles/` files. The application adapter does not duplicate dependency ordering, component ownership, or reload semantics.
 
 ## Discovery and lifecycle
 
@@ -20479,7 +20376,7 @@ The registry scans these scopes:
 | Project | `<project>/.echo-agent/plugins/<name>/plugin.json` |
 | Local | `<project>/.echo-agent/plugins.local/<name>/plugin.json` |
 
-Applications can override the plugin data base directory. EKO sets it to `~/.eko`.
+Applications can override the plugin data base directory. embedding application sets it to `<application-data>`.
 
 Loading proceeds in dependency order. Fatal manifest errors skip the package. Component errors remain isolated at the smallest practical boundary. Runtime replacement records ownership so disable, uninstall, and reload remove exactly the components contributed by each plugin.
 
@@ -20504,7 +20401,7 @@ Use `PluginRegistry::validate_plugin_dir` before installation when a validation 
 
 ## Design references
 
-This design reuses the official Agent Plugins 1.0 [manifest](https://agent-plugins.org/plugin-authors/manifest), [Skills](https://agent-plugins.org/plugin-authors/skills), [MCP](https://agent-plugins.org/plugin-authors/mcp-servers), and [loading](https://agent-plugins.org/client-implementers/loading-and-discovery) contracts. EKO intentionally uses fixed root locations for its additional local-assistant components instead of introducing client-extension namespaces.
+This design reuses the official Agent Plugins 1.0 [manifest](https://agent-plugins.org/plugin-authors/manifest), [Skills](https://agent-plugins.org/plugin-authors/skills), [MCP](https://agent-plugins.org/plugin-authors/mcp-servers), and [loading](https://agent-plugins.org/client-implementers/loading-and-discovery) contracts. embedding application intentionally uses fixed root locations for its additional local-assistant components instead of introducing client-extension namespaces.
 
 
 ---
@@ -20859,7 +20756,7 @@ agent with builder configuration, tools, prompts, skills, and invocation policy.
 The framework does not provide a `ModeEngine`, `AgentMode`, or built-in
 Coding/Research/Data/Writing mode state machine.
 
-Product modes such as EKO Chat/Task/Auto belong in the application layer. They may
+Product modes such as embedding application Chat/Task/Auto belong in the application layer. They may
 choose prompts and invocation-scoped tools, but they should not become model
 capabilities or framework runtime states.
 
@@ -22701,7 +22598,7 @@ Output protection:
 
 ```toml
 [dependencies]
-echo_tools = { version = "0.2", features = ["files"] }
+echo_agent = { version = "0.2", features = ["files"] }
 ```
 
 Registration is handled automatically by `echo_agent::tools::register_all_tools`:
@@ -23148,7 +23045,7 @@ Hooks allow custom behavior to be injected at key points in the agent lifecycle.
 
 ## Skills Hooks
 
-The primary hook system. Hooks are configured in YAML (via `echo-agent.yaml` or SKILL.md frontmatter) and executed by the `HookExecutor`.
+The primary hook system. Hooks are configured in YAML (via `application configuration` or SKILL.md frontmatter) and executed by the `HookExecutor`.
 
 ### Hook Events
 
@@ -23288,7 +23185,7 @@ Exit code `2` blocks the operation and uses stderr as the user-facing reason.
 Other non-zero exits remain non-blocking but are surfaced in HookResult messages
 instead of disappearing into logs.
 
-For portable plugin reuse, EKO also accepts Codex-style `systemMessage` and
+For portable plugin reuse, embedding application also accepts Codex-style `systemMessage` and
 `hookSpecificOutput` fields: `additionalContext`, `permissionDecision`,
 `permissionDecisionReason`, `updatedInput`, and the PermissionRequest
 `decision.behavior` object. Model-visible text is UTF-8-safely bounded before
@@ -23307,8 +23204,8 @@ User, Skill, and Plugin hooks all use the same registration-time action
 validation. Invalid actions are logged and omitted while valid actions in the
 same rule remain active.
 
-EKO merges inline hooks from `echo-agent.yaml`, global
-`~/.eko/hooks.yaml`, and project `.eko/hooks.yaml`. Its watcher monitors all
+embedding application merges inline hooks from `application configuration`, global
+`<application-data>/hooks.yaml`, and project `<application-data>/hooks.yaml`. Its watcher monitors all
 three targets. Create, modify, atomic-replace, and remove events all trigger a
 reload, so deleting a `hooks.yaml` removes its registered hooks without a
 restart. A failed parse keeps the last known good registry. CLI, TUI, and GUI hook tests call
@@ -23324,7 +23221,7 @@ source/action list without executing side effects.
 | Max command length | 32K characters | Rejects obviously malformed YAML |
 | Sandbox execution | Optional | Hooks can run inside sandbox |
 
-EKO is a local, user-controlled application. Hook HTTP actions therefore allow
+embedding application is a local, user-controlled application. Hook HTTP actions therefore allow
 plain HTTP for loopback, private-network, and link-local IP literals, as well as
 `localhost`, single-label hosts such as `nas`, and names ending in `.local` or
 `.lan`. Remote addresses must use HTTPS. Configured headers and payloads are
@@ -23448,7 +23345,7 @@ let agent = ReactAgentBuilder::new()
     .build()?;
 ```
 
-Skills hooks are configured via YAML and loaded automatically from `echo-agent.yaml` or SKILL.md files.
+Skills hooks are configured via YAML and loaded automatically from `application configuration` or SKILL.md files.
 
 
 ---
@@ -23495,7 +23392,6 @@ echo-agent supports connecting your Agent to mainstream IM platforms (QQ Bot, Fe
 ```toml
 [dependencies]
 echo_agent = { path = "echo-agent", features = ["channels"] }
-echo_channels = { path = "echo-agent/echo-channels" }
 ```
 
 ### 2. Configure Environment Variables
@@ -23518,48 +23414,75 @@ export OPENAI_BASE_URL="https://dashscope.aliyuncs.com/compatible-mode/v1"
 ### 3. Launch
 
 ```rust
-use echo_agent::agent::Agent;
-use echo_agent::llm::LlmClient;
-use echo_agent::prelude::*;
-use echo_channels::prelude::*;
-use echo_providers::LlmConfig;
 use std::sync::Arc;
+use echo_agent::channels::{
+    AgentChannelHandler, ChannelManager, FeishuChannel, FeishuConfig, MessageHandler,
+    QqChannel, QqConfig, SessionConfig, SessionHandler,
+};
+use echo_agent::prelude::{AgentConfig, LlmApiProtocol, LlmClient, LlmConfig};
 
 #[tokio::main]
 async fn main() -> echo_agent::error::Result<()> {
-    let llm_client = create_llm_client()?;
+    let api_key = std::env::var("OPENAI_API_KEY").map_err(|_| {
+        echo_agent::error::ReactError::Other(
+            "OPENAI_API_KEY is required for the IM channel provider".to_string(),
+        )
+    })?;
+    let llm_config = LlmConfig::for_provider(
+        "openai",
+        std::env::var("OPENAI_BASE_URL")
+            .unwrap_or_else(|_| "https://api.openai.com/v1".to_string()),
+        api_key,
+        "gpt-5.5",
+        LlmApiProtocol::Responses,
+    )?;
+
+    // For one standalone channel, construct the handler directly.
+    let _standalone_handler = AgentChannelHandler::from_config(
+        AgentConfig::standard("gpt-5.5", "im-assistant", "Answer clearly."),
+        llm_config.clone(),
+    )?;
+
+    // Session factories share one provider transport while each sender in each
+    // conversation keeps independent Agent state, including in group chats.
+    let llm_client: Arc<dyn LlmClient> = Arc::from(llm_config.build_client()?);
 
     let mut manager = ChannelManager::new();
 
-    // Register QQ Bot
-    let qq_config = QqConfig {
-        app_id: std::env::var("QQ_APP_ID")?,
-        client_secret: std::env::var("QQ_CLIENT_SECRET")?,
-    };
-    manager.register(Box::new(QqChannel::new(qq_config)?));
+    if let (Ok(app_id), Ok(secret)) = (
+        std::env::var("QQ_APP_ID"),
+        std::env::var("QQ_CLIENT_SECRET"),
+    ) {
+        manager.register(Box::new(QqChannel::new(QqConfig::new(app_id, secret))?))?;
+    }
+    if let (Ok(app_id), Ok(secret)) = (
+        std::env::var("FEISHU_APP_ID"),
+        std::env::var("FEISHU_APP_SECRET"),
+    ) {
+        manager.register(Box::new(FeishuChannel::new(FeishuConfig::new_long_poll(
+            app_id, secret,
+        ))?))?;
+    }
 
-    // Register Feishu
-    let feishu_config = FeishuConfig {
-        app_id: std::env::var("FEISHU_APP_ID")?,
-        app_secret: std::env::var("FEISHU_APP_SECRET")?,
-        webhook_bind: "0.0.0.0:8080".to_string(),
-        webhook_path: "/webhook".to_string(),
-        verification_token: None,
+    let session_config = SessionConfig::default().with_timeout_minutes(60);
+    let handler_factory = move |_channel_id: &str| -> Arc<dyn MessageHandler> {
+        let llm_client = Arc::clone(&llm_client);
+        Arc::new(SessionHandler::new(
+            session_config.clone(),
+            move || -> Box<dyn MessageHandler> {
+                Box::new(AgentChannelHandler::from_config_with_client(
+                    AgentConfig::standard("gpt-5.5", "im-assistant", "Answer clearly."),
+                    Arc::clone(&llm_client),
+                ))
+            },
+        ))
     };
-    manager.register(Box::new(FeishuChannel::new(feishu_config)?));
+    for started in manager.start_all(handler_factory).await {
+        started.result?;
+    }
 
-    // Start all channels
-    let llm_ref = llm_client.clone();
-    let handler_factory = move |_id: &str| -> Arc<dyn MessageHandler> {
-        Arc::new(MyHandler::new(llm_ref.clone()))
-    };
-    manager.start_all(handler_factory).await?;
-
-    // Wait for Ctrl+C
     tokio::signal::ctrl_c().await.ok();
-    manager.stop_all().await?;
-
-    Ok(())
+    manager.stop_all().await
 }
 ```
 
@@ -23592,7 +23515,7 @@ pub trait ChannelPlugin: Send + Sync {
 ```rust
 pub struct InboundMessage {
     pub channel_id: String,   // "qqbot" | "feishu"
-    pub sender_id: String,    // Sender identifier
+    pub sender_id: String,    // Canonical transport-scoped sender identity
     pub chat_id: String,      // Session identifier
     pub chat_type: ChatType,  // Direct | Group
     pub text: String,
@@ -23600,6 +23523,17 @@ pub struct InboundMessage {
     pub timestamp: u64,
 }
 ```
+
+`SessionHandler` keys an Agent session by `channel_id + chat_id + sender_id`.
+Messages from the same sender in the same conversation reuse one handler, while
+different group members have independent conversation state, execution locks,
+interaction state, timeout replacement, and reset lifecycle. Empty channel,
+conversation, or sender identifiers and the `unknown` sender sentinel are
+rejected because they cannot form a stable per-user session key. Identifiers
+with surrounding whitespace are also rejected instead of being silently
+rewritten. Built-in transports never forward these malformed messages to an
+Agent. Feishu normalizes its two identity namespaces to `open_id:{value}` or
+`user_id:{value}` before session lookup.
 
 ### OutboundMessage —— Sent Messages
 
@@ -24408,7 +24342,7 @@ Source: https://echo-agent.dev/en/docs/data-quality
 
 ## Product Model
 
-EKO is coding-first. Built-in data tools inspect, clean, reshape, summarize, and visualize data. Formal statistical inference is performed by reviewable Python/R code written with the user, executed through the sandboxed `run_code` path, and preserved as task artifacts.
+embedding application is coding-first. Built-in data tools inspect, clean, reshape, summarize, and visualize data. Formal statistical inference is performed by reviewable Python/R code written with the user, executed through the sandboxed `run_code` path, and preserved as task artifacts.
 
 The framework does not implement its own p-value approximations or multivariable regression engine.
 
@@ -25092,588 +25026,70 @@ let context = ContextManager::builder(128_000)
 
 Source: https://echo-agent.dev/en/docs/config-reference
 
-# Configuration Reference
+# Runtime Configuration
 
-## Overview
+`echo_agent` accepts typed values and never searches for an application config
+file. Products own file formats, precedence, secrets, model catalogs, prompts,
+channels, and UI/server settings.
 
-echo-agent provides two configuration approaches:
+## FrameworkConfig
 
-1. **Rust API** — `AgentConfig` + `ReactAgentBuilder` for programmatic configuration
-2. **YAML file** — `echo-agent.yaml` for declarative configuration
-
-## Dynamic Providers and Models
-
-Providers are user-defined connections: a name, base URL, authentication source,
-and optional default API protocol. Models are separate entries linked to a provider;
-each model explicitly selects Chat Completions, Responses, or Anthropic Messages and
-declares its text/image/audio/video input capabilities. Text is always enabled.
-
-Reasoning wire fields are not user configuration. The framework resolves an internal
-`ThinkingProfile` from provider, model ID, protocol, and endpoint. A recognized model
-exposes only the levels that its documented API accepts. Unknown models continue to
-work normally but use model-managed reasoning, so no reasoning field is sent.
-
----
-
-## AgentConfig — Runtime Configuration
-
-The core runtime config struct. Constructed via `AgentConfig::new()` and modified with builder methods.
-
-### Required Parameters
+`FrameworkConfig` is a serializable adapter for one Agent runtime. It contains
+only provider-neutral model settings and Agent behavior settings.
 
 ```rust
-let config = AgentConfig::new(model_name, agent_name, system_prompt);
-```
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `model_name` | `&str` | LLM model identifier (e.g. `"qwen3-max"`) |
-| `agent_name` | `&str` | Agent name for logging/identification |
-| `system_prompt` | `&str` | System prompt defining agent role/capabilities |
-
-### Preset Constructors
-
-| Preset | Tools | Memory | Task | CoT | Use Case |
-|--------|-------|--------|------|-----|----------|
-| `AgentConfig::minimal(model, prompt)` | off | off | off | off | Simple LLM wrapper |
-| `AgentConfig::standard(model, name, prompt)` | on | off | off | on | General-purpose agent |
-| `AgentConfig::full_featured(model, name, prompt)` | on | on | on | on | Full-featured agent |
-
-### All Fields
-
-#### Core Settings
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `model_name` | `String` | *(required)* | LLM model identifier |
-| `agent_name` | `String` | *(required)* | Agent name for logging |
-| `system_prompt` | `String` | *(required)* | System prompt |
-| `max_iterations` | `usize` | `10` | Max reasoning steps per turn |
-| `temperature` | `Option<f32>` | `None` (model default) | LLM temperature (0.0–2.0) |
-| `max_tokens` | `Option<u32>` | `None` (model default) | Max generation tokens |
-
-#### Feature Toggles
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `enable_tool` | `bool` | `false` | Enable calling registered tools |
-| `enable_human_in_loop` | `bool` | `false` | Enable human-in-the-loop approval |
-| `enable_subagent` | `bool` | `false` | Enable subagent dispatch |
-| `enable_memory` | `bool` | `false` | Enable long-term memory tools |
-| `enable_cot` | `bool` | `false` | Enable chain-of-thought prompting |
-
-#### Tool Settings
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `allowed_tools` | `Vec<String>` | `[]` (all allowed) | Tool allowlist |
-| `tool_error_feedback` | `bool` | `true` | Feed tool errors back to LLM |
-| `force_read_before_edit` | `bool` | `false` | Require read before write/edit/delete |
-| `plan_mode` | `bool` | `false` | Read-only tools only |
-| `max_tool_output_tokens` | `Option<usize>` | `None` | Auto-truncate tool output exceeding limit |
-| `tool_execution` | `ToolExecutionConfig` | *(see below)* | Tool execution settings |
-
-#### Memory & Persistence
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `memory_path` | `String` | `"~/.echo-agent/store.json"` | Memory store file path |
-| `session_id` | `Option<String>` | `None` | Logical run-grouping label (in-process; not persisted) |
-| `conversation_id` | `Option<String>` | `None` | Conversation ID — keys both `ConversationStore` and `RuntimeStateStore` |
-
-#### Context & Compression
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `token_limit` | `usize` | `usize::MAX` | Context token limit |
-| `compress_threshold_ratio` | `f64` | `0.2` | Trigger compression when available ratio falls below |
-| `response_format` | `Option<ResponseFormat>` | `None` (text) | Structured output format |
-| `auto_project_rules` | `bool` | `true` | Resolve project instructions when the `project-rules` feature is enabled |
-| `working_dir` | `Option<PathBuf>` | `None` (cwd) | Leaf directory for instruction discovery |
-| `project_root` | `Option<PathBuf>` | `None` | Explicit discovery boundary; otherwise use the nearest Git/worktree root |
-
-Instruction discovery walks from the project root to `working_dir`, selecting at most one
-non-empty UTF-8 file per directory. Native `.echo-agent/AGENT.md`, `RULES.md`, or `rules.md`
-files take priority, followed by `AGENTS.override.md`, `AGENTS.md`, and `CLAUDE.md`. Without
-an explicit or Git root, only `working_dir` is inspected. Symlinks resolving outside the
-project root are ignored. `InstructionResolver` exposes the selected source paths and their
-precedence for diagnostics.
-
-#### LLM Resilience
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `llm_max_retries` | `usize` | `3` | Max retries for request/start and pre-first-chunk failures; errors after streamed deltas are not replayed |
-| `llm_retry_delay_ms` | `u64` | `500` | Initial retry delay (exponential backoff) |
-
-#### Streaming & Callbacks
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `stream_buffer_size` | `usize` | `256` | Streaming channel buffer size |
-| `callbacks` | `Vec<Arc<dyn AgentCallback>>` | `[]` | Event callbacks |
-
-#### Advanced
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `_reasoning_effort` | `String` | `"medium"` | Reasoning effort: low/medium/high |
-| `token_budget_config` | `TokenBudgetConfig` | *(see below)* | Context window budget |
-
-### Builder Methods
-
-All fields can be set via builder-pattern chain calls:
-
-```rust
-let config = AgentConfig::new("qwen3-max", "assistant", "You are helpful")
-    .enable_tool()
-    .enable_memory()
-    .enable_cot()
-    .max_iterations(20)
-    .token_limit(100_000)
-    .temperature(0.7)
-    .tool_error_feedback(true)
-    .force_read_before_edit(true)
-    .build();
-```
-
----
-
-## ReactAgentBuilder — High-Level Builder
-
-Higher-level builder that constructs a `ReactAgent`. Handles LLM client injection, tool registration, memory setup, guards, snapshots, and more.
-
-### Basic Usage
-
-```rust
-let agent = ReactAgentBuilder::new()
-    .model("qwen3-max")
-    .name("my-agent")
-    .system_prompt("You are a code assistant")
-    .enable_tools()
-    .enable_memory()
-    .enable_cot()
-    .build()?;
-```
-
-### Presets
-
-| Preset | Description |
-|--------|-------------|
-| `ReactAgentBuilder::simple(model, prompt)` | No tools, minimal config |
-| `ReactAgentBuilder::standard(model, name, prompt)` | Tools enabled |
-| `ReactAgentBuilder::full_featured(model, name, prompt)` | Tools + memory + planning |
-
-### LLM Configuration
-
-```rust
-// Option 1: Explicit LLM client
-ReactAgentBuilder::new()
-    .llm_client(my_client)
-
-// Option 2: Explicit provider/model contract
-let llm_config = LlmConfig::for_provider(
-    "dashscope",
-    "https://dashscope.aliyuncs.com/compatible-mode/v1",
-    api_key,
-    "qwen3-max",
-    LlmApiProtocol::ChatCompletions,
-)?;
-ReactAgentBuilder::new()
-    .llm_config(llm_config)
-```
-
-### Tool Configuration
-
-```rust
-ReactAgentBuilder::new()
-    .enable_tools()                    // enable tool calling
-    .tool(Box::new(MyTool::new()))     // register single tool
-    .tools(vec![...])                  // register multiple tools
-```
-
-### Feature Flags
-
-```rust
-ReactAgentBuilder::new()
-    .enable_memory()                   // long-term memory
-    .enable_human_in_loop()            // approval gate (requires "human-loop" feature)
-    .enable_subagent()                 // subagent dispatch (requires "subagent" feature)
-    .enable_cot()                      // chain-of-thought
-    .disable_cot()                     // disable CoT
-```
-
-The revisioned `task_create`, `task_update`, and `task_list` tools are part of
-the default Agent tool surface. Use `.task_revision_service(...)` to replace
-the default in-memory store and policy.
-
-### Structured Output
-
-```rust
-// Auto-generate JSON Schema from Rust type
-ReactAgentBuilder::new()
-    .output_type::<MyResponse>()
-
-// Explicit format
-ReactAgentBuilder::new()
-    .response_format(ResponseFormat::JsonSchema {
-        json_schema: JsonSchemaSpec { name, schema, strict }
-    })
-```
-
-### Guards & Permissions
-
-```rust
-ReactAgentBuilder::new()
-    .guard(my_guard)                              // add input/output guard
-    .guards(vec![guard1, guard2])                 // add multiple guards
-    .with_content_guard(ContentGuardMode::Block)  // PII detection (requires "content-guard" feature)
-    .permission_service(my_service)               // unified permission service (recommended)
-    .audit_logger(my_logger)                      // audit logging
-```
-
-### Persistence & Tracing
-
-```rust
-ReactAgentBuilder::new()
-    .store(memory_store)                          // long-term memory store
-    .with_memory_tools(store)                     // register remember/recall/forget tools
-    .state_store(state_store)                     // RuntimeStateStore for crash recovery
-    .session_id("sess_1")                         // session label
-    .conversation_id("conv_1")                    // conversation transcript ID
-    .with_run_store(run_store)                    // execution tracing
-```
-
-### Snapshots & Circuit Breaker
-
-```rust
-ReactAgentBuilder::new()
-    .snapshot_policy(SnapshotPolicy::EveryN(5))   // snapshot frequency
-    .max_snapshots(20)                            // max retained snapshots
-    .with_circuit_breaker(CircuitBreakerConfig {  // LLM failure protection
-        failure_threshold: 5,
-        success_threshold: 2,
-        timeout: Duration::from_secs(60),
-    })
-```
-
-### Build
-
-```rust
-// Build as ReactAgent
-let agent: ReactAgent = builder.build()?;
-
-// Build as boxed trait object
-let agent: Box<dyn Agent> = builder.build_boxed()?;
-```
-
-### Validation Rules
-
-- `model` must be non-empty
-- `max_iterations` must be > 0
-- `enable_subagent` requires `enable_builtin_tools` to be true
-
----
-
-## ToolExecutionConfig
-
-Controls individual tool execution behavior:
-
-```rust
-pub struct ToolExecutionConfig {
-    pub timeout_ms: u64,             // default: 30_000 (30s)
-    pub retry_on_fail: bool,         // default: false
-    pub max_retries: u32,            // default: 2
-    pub retry_delay_ms: u64,         // default: 200
-    pub max_concurrency: Option<usize>,       // default: None
-    pub max_read_concurrency: Option<usize>,  // default: Some(32)
-}
-```
-
----
-
-## TokenBudgetConfig
-
-Fine-grained context window budget management:
-
-```rust
-pub struct TokenBudgetConfig {
-    pub total_window: Option<usize>,  // default: None (auto-detected from model)
-    pub system_pct: f64,              // default: 0.10 (10%)
-    pub tool_pct: f64,                // default: 0.05 (5%)
-    pub output_pct: f64,              // default: 0.10 (10%)
-    pub safety_pct: f64,              // default: 0.10 (10%)
-    pub enabled: bool,                // default: true
-}
-```
-
-With defaults, conversation history gets **65%** of the context window.
-
-Auto-detected model window sizes:
-- `claude` → 200K
-- `gpt-5.5` → 128K
-- `qwen3` → 128K
-- default → 128K
-
----
-
-## ResponseFormat
-
-```rust
-pub enum ResponseFormat {
-    Text,                                          // plain text (default)
-    JsonObject,                                    // JSON object
-    JsonSchema { json_schema: JsonSchemaSpec },    // JSON Schema constrained
-}
-
-pub struct JsonSchemaSpec {
-    pub name: String,
-    pub schema: serde_json::Value,
-    pub strict: bool,  // default: true
-}
-```
-
----
-
-## CircuitBreakerConfig
-
-Protects against repeated LLM failures:
-
-```rust
-pub struct CircuitBreakerConfig {
-    pub failure_threshold: u32,     // default: 5 (consecutive failures → Open)
-    pub success_threshold: u32,     // default: 2 (consecutive successes → Closed)
-    pub timeout: Duration,          // default: 60s (Open duration before HalfOpen)
-}
-```
-
----
-
-## SnapshotPolicy
-
-Controls when agent state snapshots are taken:
-
-```rust
-pub enum SnapshotPolicy {
-    EveryIteration,  // snapshot after each ReAct iteration (default)
-    EveryN(usize),   // snapshot every N iterations
-    Manual,          // only on explicit call
-}
-```
-
----
-
-## YAML Configuration
-
-echo-agent supports declarative configuration via `echo-agent.yaml`.
-
-### File Search Order
-
-1. `$ECHO_AGENT_CONFIG` environment variable
-2. `./echo-agent.yaml` (current directory)
-3. `~/.echo-agent/config.yaml` (user home)
-4. Built-in defaults
-
-### Full Example
-
-```yaml
-model:
-  name: "qwen3.6-plus"
-  temperature: 0.7
-  max_tokens: 4096
-
-agent:
-  name: "echo-assistant"
-  system_prompt: "You are an intelligent assistant"
-  max_iterations: 10
-  enable_tools: true
-  enable_memory: true
-  enable_human_in_loop: true
-  memory_path: "~/.echo-agent/memory"
-  tool_timeout_ms: 120000
-  token_limit: 0
-  compress_strategy: "sliding"
-  compress_window: 20
-
-mcp:
-  config_path: "~/.echo-agent/mcp.yaml"
-
-channels:
-  feishu:
-    enabled: false
-    app_id: ""
-    app_secret: ""
-    mode: "long_poll"
-
-server:
-  host: "0.0.0.0"
-  port: 3000
-  max_body_bytes: 1048576
-
-logging:
-  level: "info"
-```
-
-### YAML Sections
-
-| Section | Struct | Description |
-|---------|--------|-------------|
-| `model` | `ModelConfig` | LLM model name, temperature, max_tokens |
-| `model_providers` | map of `ModelProviderConfig` | User-defined endpoint and authentication connections |
-| `configured_models` | list of `ConfiguredModel` | Explicit provider, API protocol, and text/image/audio/video capabilities per model |
-| `agent` | `AgentYamlConfig` | Agent behavior toggles and paths |
-| `mcp` | `McpYamlConfig` | MCP config file path |
-| `channels` | `ChannelsConfig` | IM channel integrations (QQ, Feishu) |
-| `webhooks` | `WebhooksConfig` | Webhook endpoints |
-| `hooks` | `HooksDefinition` | Lifecycle hook rules |
-| `server` | `ServerConfig` | HTTP server host/port |
-| `logging` | `LoggingConfig` | Log level |
-
-### Environment Variable Overrides
-
-| Env Var | Effect |
-|---------|--------|
-| `ECHO_AGENT_CONFIG` | Explicit config file path |
-| `QQ_APP_ID` | Sets QQ channel app_id, auto-enables QQ |
-| `QQ_CLIENT_SECRET` | Sets QQ channel client_secret |
-| `FEISHU_APP_ID` | Sets Feishu channel app_id, auto-enables Feishu |
-| `FEISHU_APP_SECRET` | Sets Feishu channel app_secret |
-| `MCP_CONFIG_PATH` | Sets MCP config file path |
-
----
-
-## Feature Flags
-
-All features are opt-in. The `default` feature set is **empty**. The `full` meta-feature enables everything.
-
-```toml
-[dependencies]
-echo_agent = { version = "0.2", features = ["mcp", "web", "shell"] }
-```
-
-### Core Features
-
-| Feature | Description |
-|---------|-------------|
-| `subagent` | Subagent dispatch and TeamSpec-to-DAG execution |
-| `mcp` | Model Context Protocol integration |
-| `tasks` | Task planning and DAG scheduling |
-| `self-reflection` | Self-reflection/evaluation loops |
-| `human-loop` | WebSocket-based human-in-the-loop approval |
-| `plan-execute` | Plan-and-execute agent mode |
-
-### Tool Features
-
-| Feature | Description |
-|---------|-------------|
-| `web` | Web search/fetch tools |
-| `shell` | Shell command execution |
-| `files` | File manipulation tools |
-| `git` | Git tools |
-| `database` | SQL database tools |
-| `media` | PDF/Excel/Word/image tools |
-| `data` | Polars data processing tools |
-| `chart` | Chart generation tools |
-| `research` | ArXiv, Semantic Scholar, PDF tools |
-| `sandbox` | Sandboxed script execution |
-
-### Infrastructure Features
-
-| Feature | Description |
-|---------|-------------|
-| `sqlite` | SQLite-backed state storage |
-| `telemetry` | OpenTelemetry tracing + metrics |
-| `a2a` | Agent-to-Agent HTTP service |
-| `channels` | IM channel integrations (QQ, Feishu) |
-| `rag` | Retrieval-augmented generation |
-| `semantic-memory` | Embedding-based semantic memory |
-| `workflow` | Workflow DSL engine |
-| `multimodal` | Multimodal input support |
-| `content-guard` | PII detection/redaction |
-| `eval` | Evaluation framework |
-| `improve` | Self-improvement framework |
-| `testing` | Testing utilities |
-
----
-
-## TelemetryConfig
-
-OpenTelemetry configuration:
-
-```rust
-pub struct TelemetryConfig {
-    pub otlp_endpoint: String,    // default: "http://localhost:4317"
-    pub service_name: String,     // default: "echo-agent"
-    pub enable_console: bool,     // default: true
-}
-```
-
-Requires the `telemetry` feature flag.
-
----
-
-## Quick Reference
-
-### Minimal Agent
-
-```rust
-let config = AgentConfig::minimal("qwen3-max", "Say hello");
-let agent = ReactAgent::new(config);
-```
-
-### Standard Agent with Tools
-
-```rust
-let config = AgentConfig::standard("qwen3-max", "assistant", "You are helpful");
-let mut agent = ReactAgent::new(config);
-agent.add_tool(Box::new(MyTool::new()));
-```
-
-### Full-Featured Agent via Builder
-
-```rust
-let agent = ReactAgentBuilder::full_featured("qwen3-max", "assistant", "You are helpful")
-    .tool(Box::new(FileTool::new()))
-    .tool(Box::new(ShellTool::new()))
-    .with_run_store(run_store)
-    .guard(my_guard)
-    .build()?;
-```
-
-### YAML-Based Configuration
-
-```rust
-let config = AppConfig::load()?;  // loads echo-agent.yaml
-```
-
----
-
-## Model Profile Overrides
-
-Define provider or exact-model overrides without changing provider adapters:
-
-```rust
-use echo_agent::prelude::*;
-
-let resolver = ModelProfileResolver::new().register_exact(
-    "custom",
-    "my-custom-model",
-    ModelProfileOverride {
-        context_window: Some(128_000),
+use echo_agent::config::{AgentYamlConfig, FrameworkConfig, ModelConfig};
+use echo_agent::llm::LlmApiProtocol;
+
+let config = FrameworkConfig {
+    model: ModelConfig {
+        provider: "compatible".into(),
+        name: "my-model".into(),
+        api_protocol: Some(LlmApiProtocol::ChatCompletions),
         ..Default::default()
     },
-);
-let profile = resolver.resolve(
-    "custom",
-    "my-custom-model",
-    ProviderCapabilities::openai_compatible(),
-);
-assert_eq!(profile.context_window, Some(128_000));
+    agent: AgentYamlConfig {
+        name: "assistant".into(),
+        system_prompt: "Help the user.".into(),
+        ..Default::default()
+    },
+};
+let agent_config = config.to_agent_config();
 ```
 
-Known models use provider-aware inference. Unknown models use the conservative framework fallback unless the application supplies an explicit profile override.
+The framework default does not enable tools, memory, persistence, or
+human-in-the-loop behavior. Applications opt into those policies explicitly.
 
----
+## Explicit Paths
+
+Use `DataRoot` as a value and pass concrete paths to stores and services:
+
+```rust
+use echo_agent::paths::DataRoot;
+
+let root = DataRoot::new("/var/lib/my-agent");
+let memory_path = root.path("memory.json");
+```
+
+The framework does not select a home-directory name and has no process-global
+data-root setter.
+
+## PermissionMode
+
+`AgentConfig::permission_mode` and `ReactAgent::set_permission_mode` accept the
+typed `PermissionMode` enum. String aliases and product-specific display names
+belong at the application boundary.
+
+## Tool Composition
+
+`StandardToolPack` is installed explicitly by `ReactAgent`. Read-only Agents
+receive the capability-filtered projection of the same pack; applications may
+provide additional `ToolPack` implementations or register individual tools.
+
+## Application Configuration
+
+The embedding application application's YAML schema, model catalog, channel settings, TUI/server
+settings, and product prompt are documented in the `echo-agent-cli` repository.
 
 
 ---
@@ -26371,7 +25787,7 @@ Both features are built on standard `git` commands, requiring no additional depe
 
 ```toml
 [dependencies]
-echo_tools = { version = "0.2", features = ["git"] }
+echo_agent = { version = "0.2", features = ["git"] }
 ```
 
 ### Purpose
@@ -27296,7 +26712,7 @@ Plan-and-Execute was proposed by Wei et al. [2], decomposing complex tasks into 
 │   │              │              │                               │   │
 │   │              └──▶ step_3 ──┘                               │   │
 │   │                                                              │   │
-│   │  [RuntimeDagExecutor] Drives the committed task revision,   │   │
+│   │  [RuntimeTaskService] Drives the committed task revision,   │   │
 │   │  independent steps execute in parallel                       │   │
 │   └─────────────────────────────────────────────────────────────┘   │
 │                                                                      │
@@ -27937,7 +27353,7 @@ agent.add_tools(tools);
 ### YAML Configuration
 
 ```yaml
-# echo-agent.yaml
+# application configuration
 mcp:
   servers:
     filesystem:
@@ -27961,7 +27377,7 @@ mcp:
 
 ```rust
 // Load configuration at runtime
-let config = McpConfigLoader::from_yaml("echo-agent.yaml")?;
+let config = McpConfigLoader::from_yaml("application configuration")?;
 
 for server in config.mcp.servers {
     let tools = mcp.connect(server).await?;
@@ -28158,8 +27574,8 @@ You are an expert code reviewer. When reviewing code, consider:
 
 ## References
 
-- [Review Checklist](../../../examples/demo_skills/code_review/references/checklist.md)
-- [Style Guide](../../../examples/demo_skills/code_review/references/style_guide.md)
+- [Review Checklist](../../../../examples/demo_skills/code_review/references/checklist.md)
+- [Style Guide](../../../../examples/demo_skills/code_review/references/style_guide.md)
 ```
 
 ---

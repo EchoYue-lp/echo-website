@@ -144,7 +144,12 @@ function syncFramework(
   applicationAuthority,
 ) {
   const resolvedRoot = resolve(frameworkRoot);
-  for (const required of ['docs/en', 'docs/zh', 'docs/knowledge/en', 'docs/knowledge/zh']) {
+  for (const required of [
+    'docs/en',
+    'docs/zh',
+    'docs/internal/knowledge/en',
+    'docs/internal/knowledge/zh',
+  ]) {
     if (!statSync(join(resolvedRoot, required)).isDirectory()) {
       throw new Error(`Framework documentation directory is missing: ${required}`);
     }
@@ -159,8 +164,8 @@ function syncFramework(
     join(resolvedRoot, 'docs/zh'),
   );
   const knowledgePaths = bilingualMarkdownPaths(
-    join(resolvedRoot, 'docs/knowledge/en'),
-    join(resolvedRoot, 'docs/knowledge/zh'),
+    join(resolvedRoot, 'docs/internal/knowledge/en'),
+    join(resolvedRoot, 'docs/internal/knowledge/zh'),
   );
   const files = [];
   for (const language of ['en', 'zh']) {
@@ -172,9 +177,9 @@ function syncFramework(
         standardPaths,
       ),
       ...copyTree(
-        join(resolvedRoot, `docs/knowledge/${language}`),
+        join(resolvedRoot, `docs/internal/knowledge/${language}`),
         join(destinationRoot, language, 'knowledge'),
-        `docs/knowledge/${language}`,
+        `docs/internal/knowledge/${language}`,
         knowledgePaths,
       ),
     );
