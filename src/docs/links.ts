@@ -15,6 +15,7 @@ interface SourceTarget {
 }
 
 const sourceOrigin = 'https://echo-source.invalid';
+const frameworkKnowledgeSourceRoot = 'docs/internal/knowledge';
 
 function relativeDocPath(product: Product, filePath: string): string {
   return filePath
@@ -28,7 +29,7 @@ function sourcePath(product: Product, language: Language, filePath: string): str
   const relative = relativeDocPath(product, filePath);
   if (product === 'eko') return relative;
   return relative.startsWith('knowledge/')
-    ? `docs/knowledge/${language}/${relative.slice('knowledge/'.length)}`
+    ? `${frameworkKnowledgeSourceRoot}/${language}/${relative.slice('knowledge/'.length)}`
     : `docs/${language}/${relative}`;
 }
 
@@ -75,7 +76,10 @@ function registeredTarget(
   }
   if (product !== 'echo-agent' || target.repository !== 'echo-agent') return undefined;
 
-  const knowledge = target.path.match(/^docs\/knowledge\/(en|zh)\/(.+\.md)$/);
+  const knowledgeRelative = target.path.startsWith(`${frameworkKnowledgeSourceRoot}/`)
+    ? target.path.slice(frameworkKnowledgeSourceRoot.length + 1)
+    : undefined;
+  const knowledge = knowledgeRelative?.match(/^(en|zh)\/(.+\.md)$/);
   if (knowledge) {
     const doc = findDocByFilePath(product, `./content/echo-agent/knowledge/${knowledge[2]}`);
     return doc ? { doc, language } : undefined;

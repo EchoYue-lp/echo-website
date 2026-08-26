@@ -29,10 +29,10 @@ describe('resolveMarkdownHref', () => {
     });
   });
 
-  it('maps the framework knowledge source tree to current-language site slugs', () => {
+  it('maps cross-language knowledge sources using the current UI language', () => {
     expect(
       resolveMarkdownHref(
-        '../knowledge/zh/agent-patterns.md',
+        '../internal/knowledge/zh/agent-patterns.md',
         'echo-agent',
         'en',
         frameworkDoc('overview'),
@@ -44,13 +44,13 @@ describe('resolveMarkdownHref', () => {
 
     expect(
       resolveMarkdownHref(
-        '../knowledge/zh/README.md',
+        '../internal/knowledge/en/README.md',
         'echo-agent',
-        'en',
+        'zh',
         frameworkDoc('overview'),
       ),
     ).toEqual({
-      href: '/en/docs/knowledge-overview',
+      href: '/docs/knowledge-overview',
       internal: true,
     });
   });
@@ -90,7 +90,7 @@ describe('resolveMarkdownHref', () => {
     });
   });
 
-  it('does not duplicate language directories in source fallbacks', () => {
+  it('does not duplicate language directories in standard source fallbacks', () => {
     expect(
       resolveMarkdownHref('./missing.md', 'echo-agent', 'en', {
         ...frameworkDoc('overview'),
@@ -100,14 +100,19 @@ describe('resolveMarkdownHref', () => {
       href: 'https://github.com/EchoYue-lp/echo-agent/blob/main/docs/en/missing.md',
       internal: false,
     });
+  });
 
+  it('uses the authoritative bilingual knowledge tree for source fallbacks', () => {
     expect(
-      resolveMarkdownHref('./missing.md', 'echo-agent', 'en', {
-        ...frameworkDoc('knowledge-overview'),
-        filePath: './content/echo-agent/knowledge/en/README.md',
-      }),
+      resolveMarkdownHref('./missing.md', 'echo-agent', 'en', frameworkDoc('knowledge-overview')),
     ).toEqual({
-      href: 'https://github.com/EchoYue-lp/echo-agent/blob/main/docs/knowledge/en/missing.md',
+      href: 'https://github.com/EchoYue-lp/echo-agent/blob/main/docs/internal/knowledge/en/missing.md',
+      internal: false,
+    });
+    expect(
+      resolveMarkdownHref('./missing.md', 'echo-agent', 'zh', frameworkDoc('knowledge-overview')),
+    ).toEqual({
+      href: 'https://github.com/EchoYue-lp/echo-agent/blob/main/docs/internal/knowledge/zh/missing.md',
       internal: false,
     });
   });
@@ -155,6 +160,29 @@ describe('resolveMarkdownHref', () => {
         frameworkDoc('overview'),
       ),
     ).toBe('https://example.com/runtime.png');
+  });
+
+  it('maps bilingual knowledge assets to the authoritative raw source tree', () => {
+    expect(
+      resolveMarkdownAsset(
+        './assets/runtime.png',
+        'echo-agent',
+        'en',
+        frameworkDoc('knowledge-overview'),
+      ),
+    ).toBe(
+      'https://raw.githubusercontent.com/EchoYue-lp/echo-agent/main/docs/internal/knowledge/en/assets/runtime.png',
+    );
+    expect(
+      resolveMarkdownAsset(
+        './assets/runtime.png?raw=1#preview',
+        'echo-agent',
+        'zh',
+        frameworkDoc('knowledge-overview'),
+      ),
+    ).toBe(
+      'https://raw.githubusercontent.com/EchoYue-lp/echo-agent/main/docs/internal/knowledge/zh/assets/runtime.png?raw=1#preview',
+    );
   });
 
   it('resolves every Markdown destination without raw relative URLs or duplicate languages', () => {

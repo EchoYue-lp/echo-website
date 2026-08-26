@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "7e7fc640e0f76d1fbdcf8a5a5ea148d021a2a512",
+    "revision": "9f8d723ecb8e27a67754afe86fd7d285307866d7",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -243,7 +243,7 @@
       {
         "sourcePath": "docs/en/README.md",
         "destination": "src/docs/content/echo-agent/en/README.md",
-        "sha256": "ccab94aaff33588b4a4dfe90984f17463838247047d1612836a2d07378ecb5a8"
+        "sha256": "7a29c110aabeb1f20c5e4e3afbb67de0a19430d0854883a90bb811033b32cd44"
       },
       {
         "sourcePath": "docs/en/security.md",
@@ -493,7 +493,7 @@
       {
         "sourcePath": "docs/zh/README.md",
         "destination": "src/docs/content/echo-agent/zh/README.md",
-        "sha256": "387917afdcf4237c796e190386e4782d327973a373c52770427270c9743906c5"
+        "sha256": "ca040ab5106ba18c7ac76604113fa9887563da9aa216e5d5813f74e7b63c8151"
       },
       {
         "sourcePath": "docs/zh/security.md",
@@ -509,7 +509,7 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "df049e244b7e95a49276628f5ce62c7444e3d127",
+    "reviewedRevision": "e7d9e9082df09058b7542eeb69e4cf1d5d2df387",
     "status": "reviewed-application-source-projection",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "files": [
@@ -519,7 +519,7 @@
       },
       {
         "destination": "src/docs/content/eko/en/getting-started.md",
-        "sha256": "d5ebdede53b2a6006c1cedb3485a1b26ca636c8b55be2def6a9082c17e4c4777"
+        "sha256": "545663511fd8e21aa0d9f3f48db89065681a74c6e0cc1304f3862c3a588fd627"
       },
       {
         "destination": "src/docs/content/eko/en/overview.md",
@@ -535,7 +535,7 @@
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
-        "sha256": "13269fd9ece0e59e4da46741518b9aad56ea1ae18ef8cf7be342eb69aca5969f"
+        "sha256": "3e83a98fe258c6f47fea546c8c124b9b2c7486cfcfebd8a325e77b2d2e5e9de4"
       },
       {
         "destination": "src/docs/content/eko/zh/overview.md",
