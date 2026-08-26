@@ -77,6 +77,26 @@ Checkpoint:             state@7
 
 `AgentCheckpoint` 只拥有 ReAct runtime state，不拥有任务 DAG 或其它应用领域状态。它也不是 `ConversationStore` 中面向用户展示的 transcript。
 
+`AgentInvocationContext` 可以显式拆分这两种身份：`runtime.conversation_id` 继续表示产品事件与
+transcript 身份，`runtime_state_id` 只选择 `RuntimeStateStore` checkpoint key。两者不同时，调用方
+还应把 runtime incarnation 传给 `transcript_generation_id`。framework 会为规范 transcript 记录
+附加 typed generation + ordinal，并在 `AgentCheckpoint` 中只保存 ordinal/digest cursor。即使两轮
+内容完全相同，多次 safe point、checkpoint 与产品 Store 的 crash cut 也保持幂等；压缩只在完整
+pre-compaction transcript 已落盘后重新对齐 cursor。
+同一个共享 Agent 可以处理多个 value-scoped invocation：effective `runtime_state_id` 变化时，
+framework 会在模型准备前精确 reset/restore；只有相同 ID 才复用 warm context。运行时显式记录
+当前 hydrated ID：任何可取消的状态修改前先写 `Hydrating(target)`，restore hook 完整结算后才
+提交 `Hydrated(target)`；非 exact 状态一律重建。identity 切换还会清空 rollback snapshots。
+restore/save 使用相同优先级：显式 invocation runtime ID、invocation 产品 conversation、legacy
+external conversation、configured conversation。因此 A -> B -> A 不会把 A 的消息写入 B。
+
+轮换 `runtime_state_id` 会创建干净的模型上下文，但不会删除稳定产品会话。
+`save_checkpoint_for_scope` 把每个 runtime ID 持久索引到产品 scope。关闭 admission 并完成旧 owner
+结算后，reset 通过 `clear_persisted_runtime_incarnation` 精确回收旧 checkpoint 和可能存在的
+incarnation transcript，同时保留稳定 transcript；产品删除通过 `delete_persisted_conversation`
+先清完整 runtime lineage 与 incarnation transcripts，再删除稳定 transcript。详见
+[ADR 0006](../adr/0006-runtime-state-scope-lineage.md)。
+
 ### 其它同名 checkpoint
 
 框架还有其它作用域不同的 checkpoint：

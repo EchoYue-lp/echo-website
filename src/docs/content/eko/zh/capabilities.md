@@ -25,3 +25,7 @@ EKO 是基于 `echo-agent` 构建的本地个人 AI 助理。本页能力均对�
 ## Local application core
 
 TUI、GUI、CLI 与渠道适配器使用共享应用核心，各界面能力对等是产品契约。会话与运行时状态使用用户机器上的文件或内存存储；EKO 不需要 SQLite。
+
+## Extension 控制
+
+Skills、Plugins、MCP servers、Hooks、LSP 与 Browser 控制从 GUI、TUI、CLI/JSONL 和 channel 进入同一个应用核心权威。Skill 启用状态先提交 durable desired state，再发布到运行时。typed receipt 明确区分 committed、settled 与 degraded；保留的 repair debt 会在重启或 workspace load 后重放，不会被包装成成功。

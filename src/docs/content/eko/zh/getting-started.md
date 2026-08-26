@@ -2,7 +2,7 @@
 
 ## 前置条件
 
-- Rust 1.95 或更高版本
+- Rust 1.98 或更高版本
 - GUI 开发需要 Node.js 22.13+ 与 Tauri CLI；只运行 TUI 时不需要 Node.js
 
 ## 克隆仓库

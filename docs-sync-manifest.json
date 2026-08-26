@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "e961c46f902fec3aa79e22a50769135978413b23",
+    "revision": "7e7fc640e0f76d1fbdcf8a5a5ea148d021a2a512",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -13,12 +13,12 @@
       {
         "sourcePath": "docs/en/02-tools.md",
         "destination": "src/docs/content/echo-agent/en/02-tools.md",
-        "sha256": "3c348b897235191baa425557aa7d00a11706666300a0364865b0458473d83639"
+        "sha256": "f17efcb891619aed4c1dbb138643d4012d32d0ae2d2242bfdc6d2ca8fcda1bfa"
       },
       {
         "sourcePath": "docs/en/03-memory.md",
         "destination": "src/docs/content/echo-agent/en/03-memory.md",
-        "sha256": "a2a4de8f5a7bf325dbeb777e30e435cec636697bea4b366bae5b5aaccd9e6f28"
+        "sha256": "2becaf8bf0f2f2ccdde5aae90bca259885c09c16f5643b09e5ec34282166db11"
       },
       {
         "sourcePath": "docs/en/04-compression.md",
@@ -53,7 +53,7 @@
       {
         "sourcePath": "docs/en/10-streaming.md",
         "destination": "src/docs/content/echo-agent/en/10-streaming.md",
-        "sha256": "55706c63180ec3505ca81c39a07783907396594a51099c2d515f169e8440095b"
+        "sha256": "1f91c5c62222d759556270520d26f1697685c3c463490c6d4a59df8b2fd3a21c"
       },
       {
         "sourcePath": "docs/en/11-structured-output.md",
@@ -78,7 +78,7 @@
       {
         "sourcePath": "docs/en/15-im-channels.md",
         "destination": "src/docs/content/echo-agent/en/15-im-channels.md",
-        "sha256": "37065eb53380d1776a485d9cf8bffa0fd0264c813bfa6282da94dc7d4314ccdc"
+        "sha256": "567354386688576d0b9608cb9100b2e0ca77a53e36990a669990a5e5e66d93d0"
       },
       {
         "sourcePath": "docs/en/17-graph-workflow.md",
@@ -193,7 +193,7 @@
       {
         "sourcePath": "docs/en/41-persistence-concepts.md",
         "destination": "src/docs/content/echo-agent/en/41-persistence-concepts.md",
-        "sha256": "917ef2b2375fff0a42ec54b4169ca622d4f9c1bcd696f3dc7d2566d478a6811b"
+        "sha256": "3a6a1bca68aefe0941c9e5ad0d671704d61d21a1d739c8398f04f4a7243848f4"
       },
       {
         "sourcePath": "docs/en/41-shell-text-tools.md",
@@ -243,12 +243,12 @@
       {
         "sourcePath": "docs/en/README.md",
         "destination": "src/docs/content/echo-agent/en/README.md",
-        "sha256": "a37f3d4324c7395c2a4fe970d6a73b8bce81e94de201be7e9e1632b3c5a09440"
+        "sha256": "ccab94aaff33588b4a4dfe90984f17463838247047d1612836a2d07378ecb5a8"
       },
       {
         "sourcePath": "docs/en/security.md",
         "destination": "src/docs/content/echo-agent/en/security.md",
-        "sha256": "fe3c72da5d753518e6c05f669812c9a2c11eb38963b5947ce0b363c3cafc5e00"
+        "sha256": "201303a1244a8218baa14961d03d89f0db476064e7bf6a00060dd8dbc3ba872e"
       },
       {
         "sourcePath": "docs/en/skill-authoring.md",
@@ -263,12 +263,12 @@
       {
         "sourcePath": "docs/zh/02-tools.md",
         "destination": "src/docs/content/echo-agent/zh/02-tools.md",
-        "sha256": "b3e508170f65bc4d79365700047e76610ac116c0fd288ce1fe13629a82f4daf6"
+        "sha256": "7bf037a992c38d13c74780c3b46e5f3aab122c6c18fc11890b8b1ef9d0cbeccb"
       },
       {
         "sourcePath": "docs/zh/03-memory.md",
         "destination": "src/docs/content/echo-agent/zh/03-memory.md",
-        "sha256": "15c6fe58db1016b9247799f516d42ffe6df6a96e118b58b344a21ab77d1419dc"
+        "sha256": "af85efe051c7e09d4b6c7c7afeb1b1548c1071b0d4d836c0a6e71ddef2e56380"
       },
       {
         "sourcePath": "docs/zh/04-compression.md",
@@ -303,7 +303,7 @@
       {
         "sourcePath": "docs/zh/10-streaming.md",
         "destination": "src/docs/content/echo-agent/zh/10-streaming.md",
-        "sha256": "4d0181bdf258ddaebe95c412834387482a3ee98ed8e90cdf82587569ea5e8427"
+        "sha256": "b80443324f8fd8055d50fcd0fc2dd5ec5511330167255b7d1f75a2800115fcc6"
       },
       {
         "sourcePath": "docs/zh/11-structured-output.md",
@@ -328,7 +328,7 @@
       {
         "sourcePath": "docs/zh/15-im-channels.md",
         "destination": "src/docs/content/echo-agent/zh/15-im-channels.md",
-        "sha256": "235ae661dd77a30b437ff42802f38dd435b28e70d645ccb43e076bd48af60f1a"
+        "sha256": "06518ddf46d540be17c032ececfaf1307c5f36e19dd7f24145505ef10fb51f38"
       },
       {
         "sourcePath": "docs/zh/17-graph-workflow.md",
@@ -443,7 +443,7 @@
       {
         "sourcePath": "docs/zh/41-persistence-concepts.md",
         "destination": "src/docs/content/echo-agent/zh/41-persistence-concepts.md",
-        "sha256": "14ead0fe7a4798e2c93d29c773feb4721afb3b421e5b6c15b9b9a2b56779d83f"
+        "sha256": "d1e533e71fa02c7a5e25564de613e80af0857b716c51ec24aa50969bd5e564c1"
       },
       {
         "sourcePath": "docs/zh/41-shell-text-tools.md",
@@ -493,12 +493,12 @@
       {
         "sourcePath": "docs/zh/README.md",
         "destination": "src/docs/content/echo-agent/zh/README.md",
-        "sha256": "9e274e10f1e95d88db6438699fb1ed5452fd206f0869cb7bece2f8040f00ed24"
+        "sha256": "387917afdcf4237c796e190386e4782d327973a373c52770427270c9743906c5"
       },
       {
         "sourcePath": "docs/zh/security.md",
         "destination": "src/docs/content/echo-agent/zh/security.md",
-        "sha256": "4cf257fb7cdc77a0c3a04b046f39dd5e3878ba330bcc231e08827cb369cfc72a"
+        "sha256": "46deed48de4b57f4d2bb010a10090a8742c26251aa5589e7fadceaa89d3ad223"
       },
       {
         "sourcePath": "docs/zh/skill-authoring.md",
@@ -509,41 +509,41 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "1a0888290bb34c7ebf0a05beaedb370cf71cce24",
+    "reviewedRevision": "b3f8b217544cf94aa8e58f1e7ef3ea14f0070105",
     "status": "reviewed-application-source-projection",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "files": [
       {
         "destination": "src/docs/content/eko/en/capabilities.md",
-        "sha256": "7063ce34103b4e012d2b9098c4c58b87cddb4a129ca45a2c6ca7088458b97627"
+        "sha256": "86a11e9c46093b76eef2831540f6ce4b916212cb317956dee3eff32bf4216cb4"
       },
       {
         "destination": "src/docs/content/eko/en/getting-started.md",
-        "sha256": "72d1d6de46b467f67fbef4638c12b9aa8f7b25a865f7bbc722298b3e10d5c563"
+        "sha256": "d5ebdede53b2a6006c1cedb3485a1b26ca636c8b55be2def6a9082c17e4c4777"
       },
       {
         "destination": "src/docs/content/eko/en/overview.md",
-        "sha256": "1af064f54f87de52224e9cd1deb32b80dfbe884239d17b58a27fe4f7aa4dea7d"
+        "sha256": "c93b80399ebc49710f5464f2d7387168e9390146f00cd7bc20ec805de32cd1a9"
       },
       {
         "destination": "src/docs/content/eko/en/storage.md",
-        "sha256": "d6666f8fb0469edee78135f2eb886ab909c5ff0737bbac9cc9ad4e137461d74d"
+        "sha256": "e36f81038aade0b7f2fb5e66b7d70b72e879eb837a54bb054fdedacc6923796c"
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "cb6acfc8b1fd8b03a4be90b74ebaa4b7004bb2e3dc6d9148757ee206d342fdf1"
+        "sha256": "f080d865ec26a4fbd0dad803669abd92d8477badc631e617069318d890765cf6"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
-        "sha256": "9424fdcfbdad79028edb55c6c7b73f45db52f538fc8f6aab4207e8c3de562dfa"
+        "sha256": "13269fd9ece0e59e4da46741518b9aad56ea1ae18ef8cf7be342eb69aca5969f"
       },
       {
         "destination": "src/docs/content/eko/zh/overview.md",
-        "sha256": "88a15013f51005e4d1244e302bb31815986ac7436cfc5743a2ce73f3857cb085"
+        "sha256": "e6ecd72ec7f6039c08480289100f9aac5ea6e22cf8a40208c7a920a378030cfc"
       },
       {
         "destination": "src/docs/content/eko/zh/storage.md",
-        "sha256": "bc1915c801ce319a408379f463a7714971d63af2ed343f31e3006bea904ad922"
+        "sha256": "18ff026780a34b0d0b4da00c3be05a44165e720416135a08b8fb565b83c6d029"
       }
     ]
   }

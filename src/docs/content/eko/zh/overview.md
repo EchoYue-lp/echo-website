@@ -6,6 +6,7 @@ EKO 是基于 echo-agent 构建的本地个人 AI 助理。TUI、Tauri 桌面界
 
 - 读取项目指令、文件和代码上下文
 - 调用工具、技能、hooks、插件和用户配置的 MCP server
+- 通过一个 scoped Extension 权威控制 Skills、Plugins、MCP、Hooks、LSP 与 Browser
 - 通过统一任务图组织 Todo、依赖任务与 Subagent 执行
 - 要求 TUI、GUI、CLI 和 channel 满足同一套核心 Agent 能力契约
 - 用本地文件或内存保存对话、记忆和产品投影

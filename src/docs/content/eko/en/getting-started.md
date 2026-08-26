@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Rust 1.95 or newer
+- Rust 1.98 or newer
 - GUI development requires Node.js 22.13+ and the Tauri CLI; the TUI does not require Node.js
 
 ## Clone the repository

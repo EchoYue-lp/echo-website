@@ -62,8 +62,8 @@ export OPENAI_BASE_URL="https://dashscope.aliyuncs.com/compatible-mode/v1"
 ```rust
 use std::sync::Arc;
 use echo_agent::channels::{
-    AgentChannelHandler, ChannelManager, FeishuChannel, FeishuConfig, MessageHandler,
-    QqChannel, QqConfig, SessionConfig, SessionHandler,
+    AgentChannelHandler, ChannelManager, ChannelSessionInstance, FeishuChannel, FeishuConfig,
+    MessageHandler, QqChannel, QqConfig, SessionConfig, SessionHandler,
 };
 use echo_agent::prelude::{AgentConfig, LlmApiProtocol, LlmClient, LlmConfig};
 
@@ -115,7 +115,10 @@ async fn main() -> echo_agent::error::Result<()> {
         let llm_client = Arc::clone(&llm_client);
         Arc::new(SessionHandler::new(
             session_config.clone(),
-            move || -> Box<dyn MessageHandler> {
+            move |instance: &ChannelSessionInstance| -> Box<dyn MessageHandler> {
+                // Include this in ephemeral runtime keys when timeout/reset
+                // must not restore the previous model context.
+                let _runtime_incarnation = instance.incarnation_id();
                 Box::new(AgentChannelHandler::from_config_with_client(
                     AgentConfig::standard("gpt-5.5", "im-assistant", "Answer clearly."),
                     Arc::clone(&llm_client),
@@ -180,6 +183,37 @@ with surrounding whitespace are also rejected instead of being silently
 rewritten. Built-in transports never forward these malformed messages to an
 Agent. Feishu normalizes its two identity namespaces to `open_id:{value}` or
 `user_id:{value}` before session lookup.
+
+Each factory call receives a `ChannelSessionInstance`. Its stable channel,
+conversation, and sender coordinates identify the product conversation, while
+`incarnation_id()` identifies only the concrete handler lifetime. The same
+retained handler keeps its incarnation. Framework timeout/reset replacement
+creates a fresh incarnation, and `rotate()` lets an application-owned reset
+move the same framework authority only after its own work has settled. All
+clones and `SessionEndInfo` observe that rotation, so consumers can retire the
+exact old model/runtime context while keeping journals and task history under a
+stable product conversation ID.
+
+A reset reply and its replacement session are available immediately. If an old
+stream is still active (including an admitted stream that has not been polled),
+the old `SessionEndInfo` cleanup callback runs only after that stream settles.
+This ordering lets a consumer retire the exact old checkpoint after its final
+write instead of allowing the old stream to recreate state after cleanup.
+If consumer callback code panics, `SessionHandler` contains that panic at the
+lifecycle boundary; it does not propagate from stream teardown or poison the
+replacement session.
+
+For custom Agent drivers, carry the stable product ID in
+`AgentInvocationContext.runtime.conversation_id`, and use the instance-derived runtime key for
+both `runtime_state_id` and `transcript_generation_id`. This keeps checkpoint load/save symmetric
+within one incarnation and makes stable transcript appends idempotent without injecting older
+product history back into the model.
+The context is value-scoped even when a consumer intentionally shares one
+`ReactAgent`: changing `runtime_state_id` forces exact reset/restore before the
+next model request, and only repeated calls for the same identity reuse warm
+messages. The runtime publishes a `Hydrating` marker before cancellable restore
+work and clears rollback snapshots at that boundary, so an aborted switch cannot
+make partial context or an older snapshot look valid for another identity.
 
 ### OutboundMessage —— Sent Messages
 

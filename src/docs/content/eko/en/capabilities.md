@@ -25,3 +25,7 @@ The biomedical research profile can search PubMed and Europe PMC and organize bi
 ## Local application core
 
 TUI, GUI, CLI, and channel adapters use the shared application core. Capability parity across those interfaces is the product contract. Conversation and runtime state use file or memory stores on the user's machine; EKO does not require SQLite.
+
+## Extension control
+
+Skills, Plugins, MCP servers, Hooks, LSP, and Browser controls enter one application-core authority from the GUI, TUI, CLI/JSONL, and channels. Skill enablement commits durable desired state before runtime publication. Typed receipts distinguish committed, settled, and degraded outcomes, and retained repair debt is replayed after restart or workspace load instead of being hidden as success.

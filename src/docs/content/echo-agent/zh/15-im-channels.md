@@ -62,8 +62,8 @@ export OPENAI_BASE_URL="https://dashscope.aliyuncs.com/compatible-mode/v1"
 ```rust
 use std::sync::Arc;
 use echo_agent::channels::{
-    AgentChannelHandler, ChannelManager, FeishuChannel, FeishuConfig, MessageHandler,
-    QqChannel, QqConfig, SessionConfig, SessionHandler,
+    AgentChannelHandler, ChannelManager, ChannelSessionInstance, FeishuChannel, FeishuConfig,
+    MessageHandler, QqChannel, QqConfig, SessionConfig, SessionHandler,
 };
 use echo_agent::prelude::{AgentConfig, LlmApiProtocol, LlmClient, LlmConfig};
 
@@ -115,7 +115,10 @@ async fn main() -> echo_agent::error::Result<()> {
         let llm_client = Arc::clone(&llm_client);
         Arc::new(SessionHandler::new(
             session_config.clone(),
-            move || -> Box<dyn MessageHandler> {
+            move |instance: &ChannelSessionInstance| -> Box<dyn MessageHandler> {
+                // timeout/reset 后不得恢复旧模型上下文时，可将该值纳入
+                // 临时 runtime identity。
+                let _runtime_incarnation = instance.incarnation_id();
                 Box::new(AgentChannelHandler::from_config_with_client(
                     AgentConfig::standard("gpt-5.5", "im-assistant", "请清晰回答用户。"),
                     Arc::clone(&llm_client),
@@ -176,6 +179,28 @@ pub struct InboundMessage {
 哨兵都无法形成稳定的用户会话键，因此会被直接拒绝；带首尾空白的标识同样会被拒绝，而不是
 被静默改写。内置传输不会把这类错误消息交给 Agent。飞书的两个身份命名空间会在查找会话前
 规范为 `open_id:{value}` 或 `user_id:{value}`。
+
+每次 factory 调用都会收到一个 `ChannelSessionInstance`。其中稳定的 channel、conversation、
+sender 坐标用于标识产品会话，`incarnation_id()` 则只标识当前 handler 生命周期。同一个保留的
+handler 持续复用 incarnation；framework timeout/reset 替换会创建新 incarnation；若 reset 由
+应用自己编排，则可在旧工作完成结算后调用 `rotate()`，原子推进同一个 framework 权威。所有
+clone 与 `SessionEndInfo` 都能看到该变化，因此应用可以精确回收旧模型/runtime context，同时
+继续用稳定产品会话 ID 保存 journal 与 Task 历史。
+
+reset 回复和 replacement session 会立即可用。如果旧 stream 仍在运行（包括已准入但尚未 poll 的
+stream），旧 `SessionEndInfo` 清理回调只会在该 stream 完成结算后触发。这样消费者总是在旧
+stream 最后一次写入之后精确回收 checkpoint，不会发生“先清理、后被旧 stream 重新写回”。
+如果消费者回调自身 panic，`SessionHandler` 会在 lifecycle 边界内隔离该 panic，不会让它从
+stream 析构继续传播，也不会污染 replacement session。
+
+自定义 Agent driver 应把稳定产品 ID 放在
+`AgentInvocationContext.runtime.conversation_id`，并把 instance 派生的 runtime key 同时传给
+`runtime_state_id` 与 `transcript_generation_id`。这样同一 incarnation 的 checkpoint load/save
+保持对称，稳定 transcript 也能幂等追加，同时不会把旧产品历史重新注入模型。
+即使消费者有意共享同一个 `ReactAgent`，context 仍按 value-scoped identity 隔离：
+`runtime_state_id` 变化时，下一次模型请求前必须精确 reset/restore；只有相同 identity 才能复用
+warm messages。运行时会在任何可取消的 restore 之前先发布 `Hydrating` 标记，并在该边界清空
+rollback snapshots，因此被取消的切换不会让 partial context 或旧 snapshot 冒充另一 identity。
 
 ### OutboundMessage —— 发送的消息
 
