@@ -509,7 +509,7 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "b3f8b217544cf94aa8e58f1e7ef3ea14f0070105",
+    "reviewedRevision": "df049e244b7e95a49276628f5ce62c7444e3d127",
     "status": "reviewed-application-source-projection",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "files": [
