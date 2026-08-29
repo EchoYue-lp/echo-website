@@ -80,7 +80,7 @@ test('source and directory links leave the site through authoritative GitHub URL
   await page.goto('/en/docs/getting-started');
   await expect(page.getByRole('link', { name: 'examples/' })).toHaveAttribute(
     'href',
-    'https://github.com/EchoYue-lp/echo-agent/tree/main/examples/',
+    'https://github.com/EchoYue-lp/echo-agent/tree/main/echo-agent-learning/examples/',
   );
 
   await page.goto('/en/docs/chat');
