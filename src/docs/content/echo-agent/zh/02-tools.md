@@ -130,10 +130,11 @@ pub struct ToolResult {
     pub success: bool,               // 是否成功
     pub output: String,              // 文本输出
     pub error: Option<String>,       // 错误信息
-    pub bytes: Option<Vec<u8>>,      // 二进制输出
+    pub failure: Option<ToolFailure>, // 类型化失败与恢复事实
     pub data: Option<Value>,         // 结构化 JSON 数据
     pub truncated: bool,             // 是否被截断
     pub mime_type: Option<String>,   // MIME 类型
+    pub artifact: Option<ToolOutputArtifactRef>, // 完整 spill 输出
     pub metadata: HashMap<String, String>, // 元数据
 }
 ```
@@ -146,7 +147,7 @@ pub struct ToolResult {
 | `ToolResult::success_json(data)` | 成功 JSON 结果 |
 | `ToolResult::success_with_kind(kind, output)` | 带类型分类的成功结果 |
 | `ToolResult::error(msg)` | 失败结果 |
-| `ToolResult::binary(bytes)` | 二进制输出 |
+| `with_artifact(reference)` | 附加完整的类型化输出 artifact |
 
 **链式构造器：**
 
@@ -173,6 +174,8 @@ pub enum ToolResultKind {
 ```
 
 下游消费者（CLI 渲染、trace 分析、eval 打分）可根据 `kind` 做差异化处理，无需解析 `output` 字符串。
+完整 spill 输出只由 `artifact` 承载；消费者不得从 `metadata` 重建路径、摘要、大小或
+retention。应用在暴露引用前，可以按自己的已注册根目录和 retention policy 验证该类型化引用。
 
 ---
 
@@ -519,7 +522,7 @@ agent.add_tools(vec![
 | `generate_chart` | chart | 图表生成（需 `chart` feature） |
 | `db_query` / `db_schema` | database | SQL 数据库工具（需 `database` feature） |
 
-对应示例：`examples/demo01_tools.rs`、`examples/demo09_file_shell.rs`、`examples/demo13_tool_execution.rs`、`examples/demo64_tool_pipeline.rs`
+对应示例：`examples/demo01_tools.rs`、`examples/demo09_file_shell.rs`、`examples/demo13_tool_execution.rs`、`tests/example_contracts/demo64_tool_pipeline.rs`
 
 ---
 
@@ -593,4 +596,4 @@ let agent = ReactAgentBuilder::new()
     .build(config);
 ```
 
-详见 [demo64_tool_pipeline.rs](../../examples/demo64_tool_pipeline.rs)。
+详见 [demo64_tool_pipeline.rs](../../tests/example_contracts/demo64_tool_pipeline.rs)。

@@ -106,6 +106,19 @@ function gitRevision(repositoryRoot) {
   }).trim();
 }
 
+function assertCleanSource(repositoryRoot, label) {
+  const resolvedRoot = resolve(repositoryRoot);
+  const status = execFileSync('git', ['status', '--porcelain=v1', '--untracked-files=all'], {
+    cwd: resolvedRoot,
+    encoding: 'utf8',
+  }).trim();
+  if (status) {
+    throw new Error(
+      `${label} source is dirty; refusing to sync files under a clean HEAD revision:\n${status}`,
+    );
+  }
+}
+
 function projectionFiles() {
   return filesBelow(join(contentRoot, 'eko')).map((path) => ({
     destination: relative(siteRoot, path).replaceAll('\\', '/'),
@@ -279,6 +292,22 @@ if (process.argv.includes('--check')) {
   checkManifest(frameworkRoot, applicationRoot);
 } else {
   if (!frameworkRoot) throw new Error('Pass --framework-root <path> when synchronizing docs.');
+  const requiredApplicationRoot = applicationRoot ?? discoverApplicationRoot();
+  assertCleanSource(frameworkRoot, 'echo-agent');
+  assertCleanSource(requiredApplicationRoot, 'echo-agent-cli');
+  if ((applicationStatus || applicationAuthority) && !applicationRevision) {
+    throw new Error(
+      'Changing application projection status or authority requires --application-revision <reviewed-sha>.',
+    );
+  }
+  if (applicationRevision) {
+    const currentApplicationRevision = gitRevision(resolve(requiredApplicationRoot));
+    if (applicationRevision !== currentApplicationRevision) {
+      throw new Error(
+        `Application revision does not match the clean source: requested=${applicationRevision}, source=${currentApplicationRevision}`,
+      );
+    }
+  }
   syncFramework(frameworkRoot, applicationRevision, applicationStatus, applicationAuthority);
-  checkManifest(frameworkRoot, applicationRoot);
+  checkManifest(frameworkRoot, applicationRevision ? requiredApplicationRoot : undefined);
 }

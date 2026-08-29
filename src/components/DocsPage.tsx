@@ -145,7 +145,7 @@ export default function DocsPage({ language, product, initialSlug }: DocsPagePro
                     h1: ({ children, id }) => (
                       <h1
                         id={id}
-                        className="mt-2 border-b border-zinc-800 pb-3 text-3xl font-bold text-white"
+                        className="mt-2 scroll-mt-[168px] border-b border-zinc-800 pb-3 text-3xl font-bold text-white sm:scroll-mt-32 lg:scroll-mt-20"
                       >
                         {children}
                       </h1>
@@ -153,18 +153,24 @@ export default function DocsPage({ language, product, initialSlug }: DocsPagePro
                     h2: ({ children, id }) => (
                       <h2
                         id={id}
-                        className="mt-10 border-b border-zinc-800/50 pb-2 text-2xl font-bold text-white"
+                        className="mt-10 scroll-mt-[168px] border-b border-zinc-800/50 pb-2 text-2xl font-bold text-white sm:scroll-mt-32 lg:scroll-mt-20"
                       >
                         {children}
                       </h2>
                     ),
                     h3: ({ children, id }) => (
-                      <h3 id={id} className="mt-8 text-xl font-semibold text-zinc-100">
+                      <h3
+                        id={id}
+                        className="mt-8 scroll-mt-[168px] text-xl font-semibold text-zinc-100 sm:scroll-mt-32 lg:scroll-mt-20"
+                      >
                         {children}
                       </h3>
                     ),
                     h4: ({ children, id }) => (
-                      <h4 id={id} className="mt-6 text-lg font-semibold text-zinc-200">
+                      <h4
+                        id={id}
+                        className="mt-6 scroll-mt-[168px] text-lg font-semibold text-zinc-200 sm:scroll-mt-32 lg:scroll-mt-20"
+                      >
                         {children}
                       </h4>
                     ),

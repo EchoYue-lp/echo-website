@@ -38,10 +38,16 @@ typed extension 持有。
 |------|------|
 | `task_create` | 原子创建完整任务图，或携带 `base_revision` 追加任务 |
 | `task_update` | 对规格、关系、顺序、跳过或状态应用一次乐观并发 patch |
-| `task_list` | 读取当前已提交任务图版本 |
+| `task_list` | 读取当前已提交任务图的有界分页；支持 `limit`（1–100）、opaque `cursor` 和 `detail_level`（`summary`/`full`） |
 
 首次 `task_create` 必须在一个 `tasks` 数组中携带所有相关任务。后续修改携带
 当前 `base_revision`；过时写入返回版本冲突，不会覆盖更新的状态。
+
+`task_list` 默认返回 20 个任务的 summary 页。结果 metadata 会在仍有后续任务时
+提供 `page.next_cursor`、`page.returned`、`page.total` 和 `page.truncated`。后续请求
+必须使用相同的已提交任务图和 limit 携带 opaque cursor；查询或快照变化会使 cursor
+失效。`detail_level=full` 只额外返回依赖、重试计数和非空生命周期 detail，不建立
+第二个 store 或 reducer。
 
 需要持久化或产品策略的应用注入自己的 `RevisionedTaskStore` 和
 `TaskToolPolicy`：
@@ -83,7 +89,10 @@ controller 是持久化、Subagent 调度、review 和产品资源策略的薄�
 不得重新实现 ready-frontier 主循环或第二套依赖状态机。
 
 服务统一处理传递失败阻塞、跳过与暂停、有界重试、取消结算、过时 claim 和
-停滞检测。依赖失败只形成 typed `DagDependencyState` 投影，不会持久化为
+停滞检测。dispatch resolution 保留 `Failed` 与 `TimedOut` 两种不同终态；requeue
+request 会声明 retry budget 耗尽时应提交哪一种终态，framework 通过同一 exact-claim
+compare-and-set 路径提交，持久化 adapter 不得在事后重新解释。依赖失败只形成 typed
+`DagDependencyState` 投影，不会持久化为
 `TaskStatus::Blocked`；重试失败祖先后，派生阻塞会自动消失。`Blocked` 仍可表达
 review、缺少输入等显式产品策略。暂停会清除 claim，恢复到 Pending 时不消耗 retry。
 Skipped 依赖以 typed waiver 传给 Subagent，不会伪造依赖输出。attempt 级 claim

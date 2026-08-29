@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "9f8d723ecb8e27a67754afe86fd7d285307866d7",
+    "revision": "1446caedcbb7e3658bddd3707daaafad9bb7384b",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -13,7 +13,7 @@
       {
         "sourcePath": "docs/en/02-tools.md",
         "destination": "src/docs/content/echo-agent/en/02-tools.md",
-        "sha256": "f17efcb891619aed4c1dbb138643d4012d32d0ae2d2242bfdc6d2ca8fcda1bfa"
+        "sha256": "796d5e35ad0b97dfc343ff040a799b609fc0889c9cb8d8dc7d867bc61ae6d8b5"
       },
       {
         "sourcePath": "docs/en/03-memory.md",
@@ -23,7 +23,7 @@
       {
         "sourcePath": "docs/en/04-compression.md",
         "destination": "src/docs/content/echo-agent/en/04-compression.md",
-        "sha256": "aef0e4fa6481b3978a0db53e57791e46c2fb6dc82c643e0200831e2e2ee9e02f"
+        "sha256": "5fbee8688dae16251e7a273b9a5f6f1cd843869fcddc7f43a0be04c31a7014aa"
       },
       {
         "sourcePath": "docs/en/05-human-loop.md",
@@ -33,7 +33,7 @@
       {
         "sourcePath": "docs/en/06-subagent.md",
         "destination": "src/docs/content/echo-agent/en/06-subagent.md",
-        "sha256": "b033045d6eeb60c43914655f24fef471470e2974c55c3f799384d6c3dd204669"
+        "sha256": "9e5f69f6d06581022bdef2717fd189e07e30554efa215412d17ec17dd2c3d225"
       },
       {
         "sourcePath": "docs/en/07-skills.md",
@@ -48,12 +48,12 @@
       {
         "sourcePath": "docs/en/09-tasks.md",
         "destination": "src/docs/content/echo-agent/en/09-tasks.md",
-        "sha256": "790cb7c8508037386d0659a3395c7644d4b413ab4c434890a9af6e0430416e52"
+        "sha256": "c1c824770f5a5ed4eae57b568201831b13337f0548390ae186a2b0223629b5c9"
       },
       {
         "sourcePath": "docs/en/10-streaming.md",
         "destination": "src/docs/content/echo-agent/en/10-streaming.md",
-        "sha256": "1f91c5c62222d759556270520d26f1697685c3c463490c6d4a59df8b2fd3a21c"
+        "sha256": "bd3e646fc38a8aa996119b9302f2ccb90f5df07d4dfa023a8247f545779da8ea"
       },
       {
         "sourcePath": "docs/en/11-structured-output.md",
@@ -83,7 +83,7 @@
       {
         "sourcePath": "docs/en/17-graph-workflow.md",
         "destination": "src/docs/content/echo-agent/en/17-graph-workflow.md",
-        "sha256": "0dcadabe94557a1f27f738fa9c22a290b0734bcdb03826b14714a42d8627d302"
+        "sha256": "734f105610a1f8cd3375dd7230b3be7935c5f68ae97f13f96c8a3f1d32cd130d"
       },
       {
         "sourcePath": "docs/en/18-guard-system.md",
@@ -98,7 +98,7 @@
       {
         "sourcePath": "docs/en/21-common-tools.md",
         "destination": "src/docs/content/echo-agent/en/21-common-tools.md",
-        "sha256": "e8ba542770018aeb2506eac8f370a79db11da86cc071faa965a5c1c269ebc54d"
+        "sha256": "6b77588c5aa8cd8450212b16a5581f51d1499de39ef13df35999ae1f7a545289"
       },
       {
         "sourcePath": "docs/en/22-research-tools.md",
@@ -108,7 +108,7 @@
       {
         "sourcePath": "docs/en/23-hooks.md",
         "destination": "src/docs/content/echo-agent/en/23-hooks.md",
-        "sha256": "505f7a5abe99f464eaf84969de182b623f120adbb0f5c03ef6d6d4df8f155b8a"
+        "sha256": "27f28ca3bf39eb39b9dc93e06ed32407d61a175293fda6438acf7ef27efda22f"
       },
       {
         "sourcePath": "docs/en/24-eval-system.md",
@@ -123,12 +123,12 @@
       {
         "sourcePath": "docs/en/26-multi-agent.md",
         "destination": "src/docs/content/echo-agent/en/26-multi-agent.md",
-        "sha256": "557ee0439bcc1befc6b8e3ed8d6b93d256d1617ee5e535d6a6aa8a41c276cedb"
+        "sha256": "1a0c65d4feff94ff0b65963de04a0284ff5c040da4e029527d60fdb1f76c9f66"
       },
       {
         "sourcePath": "docs/en/27-tracing.md",
         "destination": "src/docs/content/echo-agent/en/27-tracing.md",
-        "sha256": "2da3e2b8b783a10855f9cec3a48175a22f11dd4abf8f83cf14b7734946404181"
+        "sha256": "3729af6824c83ecc0ea610503268bd839d006186bfa35f91b5e896ec9c6d57cc"
       },
       {
         "sourcePath": "docs/en/28-config-reference.md",
@@ -153,7 +153,7 @@
       {
         "sourcePath": "docs/en/32-plugin-system.md",
         "destination": "src/docs/content/echo-agent/en/32-plugin-system.md",
-        "sha256": "bcb472069531fcdf64f2c7a17dde06ad30e199e6400455c7045e9c845e658665"
+        "sha256": "ac82bd3de933de0961676c0a02b740f3b151241d4550dca6de0929133c842a5b"
       },
       {
         "sourcePath": "docs/en/33-headless-mode.md",
@@ -188,7 +188,7 @@
       {
         "sourcePath": "docs/en/40-context-system.md",
         "destination": "src/docs/content/echo-agent/en/40-context-system.md",
-        "sha256": "7bf1417c61ed71fcd0f182c5ff5d16e092fa79a953456b80525e271a5a5c3707"
+        "sha256": "4840cf9f44da195b5ccedb8bbc83a38553d1ca6776f8b376f1e8fd701c8ea735"
       },
       {
         "sourcePath": "docs/en/41-persistence-concepts.md",
@@ -243,7 +243,7 @@
       {
         "sourcePath": "docs/en/README.md",
         "destination": "src/docs/content/echo-agent/en/README.md",
-        "sha256": "7a29c110aabeb1f20c5e4e3afbb67de0a19430d0854883a90bb811033b32cd44"
+        "sha256": "c575cba62a5659f0ea3559ec9b24402971567c49811af6a55207a3ba2b19704d"
       },
       {
         "sourcePath": "docs/en/security.md",
@@ -263,7 +263,7 @@
       {
         "sourcePath": "docs/zh/02-tools.md",
         "destination": "src/docs/content/echo-agent/zh/02-tools.md",
-        "sha256": "7bf037a992c38d13c74780c3b46e5f3aab122c6c18fc11890b8b1ef9d0cbeccb"
+        "sha256": "f2cf26528dfeec60e25ca033ba1b1b6f73b44ce79f7d9366485639f3738e6a1c"
       },
       {
         "sourcePath": "docs/zh/03-memory.md",
@@ -273,7 +273,7 @@
       {
         "sourcePath": "docs/zh/04-compression.md",
         "destination": "src/docs/content/echo-agent/zh/04-compression.md",
-        "sha256": "189e63e07098b8dd301170d40b2c31d1b1376d5696cfaf2e058e5546514db494"
+        "sha256": "63535d8377cf486374af4fa1f13cd57ab29c110a7b1531594750586db49aca66"
       },
       {
         "sourcePath": "docs/zh/05-human-loop.md",
@@ -283,7 +283,7 @@
       {
         "sourcePath": "docs/zh/06-subagent.md",
         "destination": "src/docs/content/echo-agent/zh/06-subagent.md",
-        "sha256": "b54576bd5c7d4b41c55c1fc5e4fa15a3fbadf64c506c599180a96fabf4b1a53a"
+        "sha256": "4c6309b06689fdee5273ec27f02c3457740ed7ce592e52546ff7682e04e15728"
       },
       {
         "sourcePath": "docs/zh/07-skills.md",
@@ -298,12 +298,12 @@
       {
         "sourcePath": "docs/zh/09-tasks.md",
         "destination": "src/docs/content/echo-agent/zh/09-tasks.md",
-        "sha256": "b695cdc72f2c62d78d328b520aa29c81c9dc01185f7b4baba3be3bb9b5cfed69"
+        "sha256": "5643b91c9ae777d7598359553e20083de89f79a69ae6840c9134a89c4200a52a"
       },
       {
         "sourcePath": "docs/zh/10-streaming.md",
         "destination": "src/docs/content/echo-agent/zh/10-streaming.md",
-        "sha256": "b80443324f8fd8055d50fcd0fc2dd5ec5511330167255b7d1f75a2800115fcc6"
+        "sha256": "a7d3a28a58f0d41a852b048b415297a14f7cb6b899a5dca5cd7c89158d4f2bd5"
       },
       {
         "sourcePath": "docs/zh/11-structured-output.md",
@@ -333,7 +333,7 @@
       {
         "sourcePath": "docs/zh/17-graph-workflow.md",
         "destination": "src/docs/content/echo-agent/zh/17-graph-workflow.md",
-        "sha256": "f4c933920bc22b46df78217fc7ec82e7451c1f4535db183fb17e2e38c005af74"
+        "sha256": "3938ca044bfb9acc6b4b42165c7de8e966b7692f45fc6dc27bf712b665fe3a47"
       },
       {
         "sourcePath": "docs/zh/18-guard-system.md",
@@ -348,7 +348,7 @@
       {
         "sourcePath": "docs/zh/21-common-tools.md",
         "destination": "src/docs/content/echo-agent/zh/21-common-tools.md",
-        "sha256": "842a1a225fa9f8d6eb64f04f1756f6b25746f92fa44bda0c277f2cf5952f30f5"
+        "sha256": "1d2769e176edf5c62cec58e553fe96459cb885268cfb4aad51a273dadf6d7e7f"
       },
       {
         "sourcePath": "docs/zh/22-research-tools.md",
@@ -358,7 +358,7 @@
       {
         "sourcePath": "docs/zh/23-hooks.md",
         "destination": "src/docs/content/echo-agent/zh/23-hooks.md",
-        "sha256": "919f437eed8f24497603f865f8efb68603b53b2b31ff81db95cfd90d6bc86a9b"
+        "sha256": "8262a0254b433c88de6825bae9595389befaa9439be999fcfb9e8c30f150643d"
       },
       {
         "sourcePath": "docs/zh/24-eval-system.md",
@@ -373,12 +373,12 @@
       {
         "sourcePath": "docs/zh/26-multi-agent.md",
         "destination": "src/docs/content/echo-agent/zh/26-multi-agent.md",
-        "sha256": "37ab27ed7ac2282780d5b6c196dcb98d03e1fafee79bb4f4374223edec2df9f9"
+        "sha256": "a40ce39ee3b4b9e718d5a8586df3abcb3bc15aeb5c945fc41dace0b0d823b7be"
       },
       {
         "sourcePath": "docs/zh/27-tracing.md",
         "destination": "src/docs/content/echo-agent/zh/27-tracing.md",
-        "sha256": "18678fe0f4a69aa0d6aecaa73a472d666ec40e641599397d082ce33d2e41a305"
+        "sha256": "be611ab8c65cdbfc7f9a936953edeeed5ec5de4bf9079cf0ad775f714bda8289"
       },
       {
         "sourcePath": "docs/zh/28-config-reference.md",
@@ -403,7 +403,7 @@
       {
         "sourcePath": "docs/zh/32-plugin-system.md",
         "destination": "src/docs/content/echo-agent/zh/32-plugin-system.md",
-        "sha256": "a8ed4e800e038183ae1d8db023da11c5f584a07625419303a1c1b13afbf5ff08"
+        "sha256": "6348d88a70c13e05edced5ba7b41374334640f41a3de13aef1481220be2f47db"
       },
       {
         "sourcePath": "docs/zh/33-headless-mode.md",
@@ -438,7 +438,7 @@
       {
         "sourcePath": "docs/zh/40-context-system.md",
         "destination": "src/docs/content/echo-agent/zh/40-context-system.md",
-        "sha256": "419dbdb26183c54d1954196290e1e028e1c23363449fae0e50bcde642eed069e"
+        "sha256": "847ab27d4a05295bd7a25a9da54ae529a6b01cdc93fed5bfc2c099eef3870197"
       },
       {
         "sourcePath": "docs/zh/41-persistence-concepts.md",
@@ -493,7 +493,7 @@
       {
         "sourcePath": "docs/zh/README.md",
         "destination": "src/docs/content/echo-agent/zh/README.md",
-        "sha256": "ca040ab5106ba18c7ac76604113fa9887563da9aa216e5d5813f74e7b63c8151"
+        "sha256": "bc987f59b87c538b07358b74b418034c51e21ae3792fb20e94a47ea6731f3ba5"
       },
       {
         "sourcePath": "docs/zh/security.md",
@@ -509,41 +509,41 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "e7d9e9082df09058b7542eeb69e4cf1d5d2df387",
+    "reviewedRevision": "04174433823f73e953bd75d50c6218990726c079",
     "status": "reviewed-application-source-projection",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "files": [
       {
         "destination": "src/docs/content/eko/en/capabilities.md",
-        "sha256": "86a11e9c46093b76eef2831540f6ce4b916212cb317956dee3eff32bf4216cb4"
+        "sha256": "3c58ebd55710d35b16e77c8f6355e6d78b955f224ac26308e70cba14c769eef7"
       },
       {
         "destination": "src/docs/content/eko/en/getting-started.md",
-        "sha256": "545663511fd8e21aa0d9f3f48db89065681a74c6e0cc1304f3862c3a588fd627"
+        "sha256": "01a7f3af10e49d8989f8f27ac927dea08dfeda33df7508c433c0b35e840691d5"
       },
       {
         "destination": "src/docs/content/eko/en/overview.md",
-        "sha256": "c93b80399ebc49710f5464f2d7387168e9390146f00cd7bc20ec805de32cd1a9"
+        "sha256": "eeb998e81c66819b22d9d08aa3639e262e7e5e30b283c12044eb0653c204e9da"
       },
       {
         "destination": "src/docs/content/eko/en/storage.md",
-        "sha256": "e36f81038aade0b7f2fb5e66b7d70b72e879eb837a54bb054fdedacc6923796c"
+        "sha256": "1cde309402cf539d22bd8540ab5064c4046cac5e5cce7769ac55d1ebe6fd3226"
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "f080d865ec26a4fbd0dad803669abd92d8477badc631e617069318d890765cf6"
+        "sha256": "a70a683868854fcabfc54aa23f83ab3895bd1c931db9282fd88fe0f47c5d036d"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
-        "sha256": "3e83a98fe258c6f47fea546c8c124b9b2c7486cfcfebd8a325e77b2d2e5e9de4"
+        "sha256": "d554398ecb445c89538807e7af17fb66a7ec8bfeb7781b685efc73ce10b2e059"
       },
       {
         "destination": "src/docs/content/eko/zh/overview.md",
-        "sha256": "e6ecd72ec7f6039c08480289100f9aac5ea6e22cf8a40208c7a920a378030cfc"
+        "sha256": "268e55d407e178aae10d2672a0af30c81292f13f7f0c4bb1de5926ec55e5a746"
       },
       {
         "destination": "src/docs/content/eko/zh/storage.md",
-        "sha256": "18ff026780a34b0d0b4da00c3be05a44165e720416135a08b8fb565b83c6d029"
+        "sha256": "98a599da5604776651b1d83840a10c96978529b6bb51b1dc11c841d5fa43b94b"
       }
     ]
   }

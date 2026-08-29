@@ -130,10 +130,11 @@ pub struct ToolResult {
     pub success: bool,               // Whether the tool succeeded
     pub output: String,              // Text output
     pub error: Option<String>,       // Error message
-    pub bytes: Option<Vec<u8>>,      // Binary output
+    pub failure: Option<ToolFailure>, // Typed failure/recovery facts
     pub data: Option<Value>,         // Structured JSON data
     pub truncated: bool,             // Whether output was truncated
     pub mime_type: Option<String>,   // MIME type
+    pub artifact: Option<ToolOutputArtifactRef>, // Complete spilled output
     pub metadata: HashMap<String, String>, // Key-value metadata
 }
 ```
@@ -146,7 +147,7 @@ pub struct ToolResult {
 | `ToolResult::success_json(data)` | Successful JSON result |
 | `ToolResult::success_with_kind(kind, output)` | Typed success result |
 | `ToolResult::error(msg)` | Failed result |
-| `ToolResult::binary(bytes)` | Binary output |
+| `with_artifact(reference)` | Attach a complete typed output artifact |
 
 **Builder pattern:**
 
@@ -173,6 +174,10 @@ pub enum ToolResultKind {
 ```
 
 Downstream consumers (CLI rendering, trace analysis, eval scoring) can use `kind` for type-aware handling without parsing the `output` string.
+Complete spilled output is carried only by `artifact`; consumers must not
+reconstruct its path, digest, size, or retention from `metadata`. Applications
+may validate the typed reference against their own registered roots and
+retention policy before exposing it.
 
 ---
 
@@ -524,7 +529,7 @@ agent.add_tools(vec![
 | `generate_chart` | chart | Chart generation (requires `chart` feature) |
 | `db_query` / `db_schema` | database | SQL database tools (requires `database` feature) |
 
-See: `examples/demo01_tools.rs`, `examples/demo09_file_shell.rs`, `examples/demo13_tool_execution.rs`, `examples/demo64_tool_pipeline.rs`
+See: `examples/demo01_tools.rs`, `examples/demo09_file_shell.rs`, `examples/demo13_tool_execution.rs`, `tests/example_contracts/demo64_tool_pipeline.rs`
 
 ---
 
@@ -598,4 +603,4 @@ let agent = ReactAgentBuilder::new()
     .build(config);
 ```
 
-See [demo64_tool_pipeline.rs](../../examples/demo64_tool_pipeline.rs).
+See [demo64_tool_pipeline.rs](../../tests/example_contracts/demo64_tool_pipeline.rs).

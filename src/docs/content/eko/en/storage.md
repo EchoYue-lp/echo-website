@@ -1,13 +1,17 @@
 # EKO Local Data
 
-EKO runs on the user's own machine. Its product layer stores state in ordinary files or memory and does not require a database service.
+EKO runs on the user's own machine. Its product layer stores state in ordinary files or memory and does not enable SQLite. Framework Store implementations available to other consumers are a separate concern.
 
 ## Data responsibilities
 
-- A file-backed `ConversationStore` projects conversation history
-- A file-backed `RuntimeStateStore` persists Agent runtime state
-- Memory, configuration, and workspace artifacts remain in local directories
-- `enabled-skills.json` is the durable Skill desired-state and repair-debt authority
-- The TUI, GUI, CLI, and channels access these capabilities through the same application core
+- `FileConversationStore` persists user-visible conversation history; `FileRuntimeStateStore` persists framework Agent checkpoints. Neither owns the Task graph.
+- TaskRuntime `events.jsonl` is the formal task fact authority. `checkpoint.json`, `plan.json`, `run-state.json`, and bounded artifact/review history segments are rebuildable projections or indexes.
+- Ordinary chat uses its own `ChatEventLog`; it does not replace the TaskRuntime journal.
+- Each workspace owns its local memory Store, one generation-bound `MemoryLayerManager`, and an immutable hot-memory projection consumed at model safe points.
+- `enabled-skills.json` is the durable Skill desired-state and repair-debt authority. Prepared Plugin generations and their target receipts are runtime publication facts, not another desired-state file.
+- Artifacts and traces remain workspace-scoped. Trace data is diagnostic and does not determine whether a TaskRun or PlanTask committed.
+- TUI, GUI, CLI/JSONL, and channels access these authorities through the same application core.
 
-The framework can still offer other general Store implementations to independent consumers. EKO's product storage choice does not limit the capability menu of echo-agent.
+The default product data root is `~/.eko/`, overridable with `EKO_DATA_DIR`. Workspace-owned conversations, tasks, memory, artifacts, and traces live below the workspace `.eko/` directory.
+
+This page is a website projection, not a storage schema. The EKO persistence documentation and source repository remain authoritative.

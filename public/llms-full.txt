@@ -238,6 +238,8 @@ Source: https://echo-agent.dev/docs/overview
 | [0002 - 沙箱取消清理](../adr/0002-sandbox-cancellation-cleanup.md)               | 持有资源的沙箱后端完成清理后才返回 terminal                |
 | [0007 - Journal 原子批次提交](../adr/0007-atomic-journal-batch-commits.md)       | 相关 journal 事件作为一个持久提交单元整体可见              |
 | [0008 - Runtime Task 单一权威](../adr/0008-canonical-runtime-task-authority.md) | 一个 revisioned graph 统一 Task CRUD、执行与结算           |
+| [0009 - Tracked Input Receipt](../adr/0009-tracked-input-receipts.md) | Active 与初始输入统一暴露 accepted、drained、terminal 边界 |
+| [0010 - 规范化 Turn Receipt 计量](../adr/0010-canonical-turn-receipt-accounting.md) | 通用 terminal、usage、compaction 与 final-message 事实只有一个 framework receipt 权威 |
 
 ---
 
@@ -349,7 +351,7 @@ Anthropic Messages 或 Chat Completions，并声明文本、图片、音频、�
 | `examples/demo01_tools.rs`                | 基础工具注册与调用                                                        |
 | `examples/demo02_tasks.rs`                | DAG 任务规划                                                              |
 | `examples/demo03_approval.rs`             | 人工审批                                                                  |
-| `examples/demo04_subagent.rs`             | Subagent 编排                                                             |
+| `tests/example_contracts/demo04_subagent.rs`             | Subagent 编排                                                             |
 | `examples/demo05_compressor.rs`           | 上下文压缩                                                                |
 | `examples/demo06_mcp.rs`                  | MCP 协议集成                                                              |
 | `examples/demo07_skills.rs`               | Skill 系统                                                                |
@@ -357,7 +359,7 @@ Anthropic Messages 或 Chat Completions，并声明文本、图片、音频、�
 | `examples/demo09_file_shell.rs`           | 文件和 Shell 工具                                                         |
 | `examples/demo10_streaming.rs`            | 流式输出                                                                  |
 | `examples/demo11_callbacks.rs`            | 生命周期回调                                                              |
-| `examples/demo12_resilience.rs`           | 容错与重试                                                                |
+| `tests/example_contracts/demo12_resilience.rs`           | 容错与重试                                                                |
 | `examples/demo13_tool_execution.rs`       | 工具执行配置                                                              |
 | `examples/demo15_structured_output.rs`    | 结构化输出（extract / JSON Schema）                                       |
 | `examples/demo17_chat.rs`                 | 多轮对话（chat / chat_stream / reset）                                    |
@@ -365,34 +367,34 @@ Anthropic Messages 或 Chat Completions，并声明文本、图片、音频、�
 | `examples/demo19_guard.rs`                | Guard 系统（规则 / LLM 内容过滤）                                         |
 | `examples/demo20_audit.rs`                | 审计日志                                                                  |
 | `examples/demo23_a2a.rs`                  | A2A 协议                                                                  |
-| `examples/demo24_topology.rs`             | 多 Agent 拓扑可视化                                                       |
+| `tests/example_contracts/demo24_topology.rs`             | 多 Agent 拓扑可视化                                                       |
 | `examples/demo25_macros.rs`               | 宏系统综合展示                                                            |
 | `examples/demo26_provider_factory.rs`     | 动态 LLM 工厂                                                             |
 | `examples/demo27_sqlite_memory.rs`        | SQLite 持久化记忆                                                         |
 | `examples/demo28_workflow.rs`             | 工作流管道                                                                |
 | `examples/demo29_sandbox.rs`              | 沙箱执行                                                                  |
-| `examples/demo30_mcp_server.rs`           | MCP 服务端模式                                                            |
-| `examples/demo31_memory_tools.rs`         | 记忆工具注入                                                              |
+| `tests/example_contracts/demo30_mcp_server.rs`           | MCP 服务端模式                                                            |
+| `tests/example_contracts/demo31_memory_tools.rs`         | 记忆工具注入                                                              |
 | `examples/demo32_token_budget.rs`         | Token 预算控制                                                            |
 | `examples/demo33_retry_policy.rs`         | 统一重试策略                                                              |
-| `examples/demo34_workflow_stream.rs`      | 工作流流式输出                                                            |
+| `tests/example_contracts/demo34_workflow_stream.rs`      | 工作流流式输出                                                            |
 | `examples/demo35_dynamic_tools.rs`        | 动态工具管理                                                              |
 | `examples/demo36_multimodal.rs`           | 多模态消息                                                                |
-| `examples/demo37_declarative_workflow.rs` | YAML/JSON 声明式工作流                                                    |
+| `tests/example_contracts/demo37_declarative_workflow.rs` | YAML/JSON 声明式工作流                                                    |
 | `examples/demo38_im_channels.rs`          | IM 频道集成                                                               |
-| `examples/demo39_workflow.rs`             | 图工作流引擎                                                              |
+| `tests/example_contracts/demo39_workflow.rs`             | 图工作流引擎                                                              |
 | `examples/demo40_snapshot.rs`             | 快照与回滚                                                                |
 | `examples/demo41_web_tools.rs`            | Web 搜索与页面获取                                                        |
 | `examples/demo42_playwright_mcp.rs`       | Playwright MCP 浏览器自动化                                               |
-| `examples/demo43_data_tools.rs`           | 数据工具（Excel / CSV / Word / 文本）                                     |
+| `tests/example_contracts/demo43_data_tools.rs`           | 数据工具（Excel / CSV / Word / 文本）                                     |
 | `examples/demo44_code_laboratory.rs`      | 代码执行助手                                                              |
 | `examples/demo45_customer_service.rs`     | 智能客服                                                                  |
 | `examples/demo46_data_analyst.rs`         | 数据分析助手                                                              |
 | `examples/demo47_enterprise.rs`           | 企业工作流自动化                                                          |
 | `examples/demo48_personal_assistant.rs`   | 个人智能助理                                                              |
 | `examples/demo49_research_agent.rs`       | 研究与报告助手                                                            |
-| `examples/demo50_eval.rs`                 | 评估系统：用例、标准、约束、轨迹回放、触发准确率、HTML 报告               |
-| `examples/demo51_self_improvement.rs`     | 自进化：Analyzer 失败检测、Curator 技能生命周期、TrajectorySaver 微调数据 |
+| `tests/example_contracts/demo50_eval.rs`                 | 评估系统：用例、标准、约束、轨迹回放、触发准确率、HTML 报告               |
+| `tests/example_contracts/demo51_self_improvement.rs`     | 自进化：Analyzer 失败检测、Curator 技能生命周期、TrajectorySaver 微调数据 |
 
 
 ---
@@ -1016,10 +1018,11 @@ pub struct ToolResult {
     pub success: bool,               // 是否成功
     pub output: String,              // 文本输出
     pub error: Option<String>,       // 错误信息
-    pub bytes: Option<Vec<u8>>,      // 二进制输出
+    pub failure: Option<ToolFailure>, // 类型化失败与恢复事实
     pub data: Option<Value>,         // 结构化 JSON 数据
     pub truncated: bool,             // 是否被截断
     pub mime_type: Option<String>,   // MIME 类型
+    pub artifact: Option<ToolOutputArtifactRef>, // 完整 spill 输出
     pub metadata: HashMap<String, String>, // 元数据
 }
 ```
@@ -1032,7 +1035,7 @@ pub struct ToolResult {
 | `ToolResult::success_json(data)` | 成功 JSON 结果 |
 | `ToolResult::success_with_kind(kind, output)` | 带类型分类的成功结果 |
 | `ToolResult::error(msg)` | 失败结果 |
-| `ToolResult::binary(bytes)` | 二进制输出 |
+| `with_artifact(reference)` | 附加完整的类型化输出 artifact |
 
 **链式构造器：**
 
@@ -1059,6 +1062,8 @@ pub enum ToolResultKind {
 ```
 
 下游消费者（CLI 渲染、trace 分析、eval 打分）可根据 `kind` 做差异化处理，无需解析 `output` 字符串。
+完整 spill 输出只由 `artifact` 承载；消费者不得从 `metadata` 重建路径、摘要、大小或
+retention。应用在暴露引用前，可以按自己的已注册根目录和 retention policy 验证该类型化引用。
 
 ---
 
@@ -1405,7 +1410,7 @@ agent.add_tools(vec![
 | `generate_chart` | chart | 图表生成（需 `chart` feature） |
 | `db_query` / `db_schema` | database | SQL 数据库工具（需 `database` feature） |
 
-对应示例：`examples/demo01_tools.rs`、`examples/demo09_file_shell.rs`、`examples/demo13_tool_execution.rs`、`examples/demo64_tool_pipeline.rs`
+对应示例：`examples/demo01_tools.rs`、`examples/demo09_file_shell.rs`、`examples/demo13_tool_execution.rs`、`tests/example_contracts/demo64_tool_pipeline.rs`
 
 ---
 
@@ -1479,7 +1484,7 @@ let agent = ReactAgentBuilder::new()
     .build(config);
 ```
 
-详见 [demo64_tool_pipeline.rs](../../examples/demo64_tool_pipeline.rs)。
+详见 [demo64_tool_pipeline.rs](../../tests/example_contracts/demo64_tool_pipeline.rs)。
 
 
 ---
@@ -2175,7 +2180,7 @@ let result = compressor.compress_in_place(&mut messages, current_tokens, target_
 println!("应用的级别: {:?}", result.levels_applied);
 ```
 
-详见 [demo53_adaptive_compression.rs](../../examples/demo53_adaptive_compression.rs)。
+详见 [demo53_adaptive_compression.rs](../../tests/example_contracts/demo53_adaptive_compression.rs)。
 
 ---
 
@@ -2360,7 +2365,7 @@ let ctx = ContextManager::builder(4096)
 | 工具密集型工作流 | `AdaptiveCompressor`（自动升级 + L1 工具折叠） |
 | 测试环境 | `SlidingWindowCompressor(5)` + `token_limit: 100` |
 
-对应示例：`examples/demo05_compressor.rs`、`examples/demo53_adaptive_compression.rs`
+对应示例：`examples/demo05_compressor.rs`、`tests/example_contracts/demo53_adaptive_compression.rs`
 
 ---
 
@@ -2670,6 +2675,25 @@ let _terminal = receipt.wait_for_turn_settled().await;
 信号异常关闭时，所有 receipt clone 会收敛为 `Dropped`，同时保留最后确认的 drain
 事实。
 
+### 可跟踪的初始输入
+
+冷启动 turn 应在把请求交给 `AgentTurnDriver` 前调用
+`TurnRequest::with_input_receipt()`。driver 在 request/identity 校验完成、调用
+Agent stream API 之前发布 `Accepted`；`ReactAgent` 只在初始消息成功写入
+`ContextManager`、且 provider 调用之前发布 `Drained`；同一个 driver 负责发布
+typed terminal。没有 input lifecycle publisher 的 Agent 即使产生输出，也保持
+`drained = false`；不能用输出事件或 EOF 替代真实 drain。
+
+### 规范化 turn receipt
+
+`AgentTurnDriver` 返回 framework 对通用 turn 事实的唯一权威
+`TurnReceipt`。除 typed terminal 外，它还携带 final answer 及其 message
+identity、provider 报告的输入/输出 token 合计、报告 usage 的调用次数、显式
+context compaction 次数、最后一个 envelope sequence 和耗时。产品 sink 可以持久化
+或渲染同一批 envelope，但必须从 receipt 投影这些字段，不能再从事件折叠第二份
+turn summary。workspace routing、UI retention pin、webhook delivery 等产品事实仍留在
+应用 adapter。
+
 ---
 
 ## 流式超时机制（规划中）
@@ -2717,8 +2741,8 @@ src/agent/react/run/stream_loop/
 ```
 
 spill 创建失败时，框架使用保守的 fallback token 预算截断，不会把完整超大结果直接
-塞回模型。`ToolResult.truncated` 和 metadata 会记录 spilled、truncated 或
-spill_failed_truncated。
+塞回模型。`ToolResult.truncated` 和 metadata 记录输出处理方式；spill 成功时，完整引用由
+类型化的 `ToolResult.artifact` descriptor 承载。
 
 
 ---
@@ -2785,8 +2809,8 @@ assert_eq!(selected, vec![PathBuf::from("src/auth.rs")]);
 `score_files` 返回评分，`select_relevant` 最多返回 `max_files` 个路径。
 相同分数按路径排序，保证重复运行结果确定。
 
-可运行示例见 `examples/demo65_context_assembler.rs` 和
-`examples/demo66_context_selector.rs`。
+可运行示例见 `tests/example_contracts/demo65_context_assembler.rs` 和
+`tests/example_contracts/demo66_context_selector.rs`。
 
 
 ---
@@ -3561,7 +3585,7 @@ let sub_config = AgentConfig::new("qwen3-max", "sub_a", "...")
 3. **Subagent 不要 `enable_subagent(true)`**（避免递归嵌套导致难以调试）
 4. **复杂任务使用版本化任务图工具**，避免在提示词中维护平行的隐式状态
 
-对应示例：`examples/demo04_subagent.rs`
+对应示例：`tests/example_contracts/demo04_subagent.rs`
 
 
 ---
@@ -3584,6 +3608,11 @@ Subagent 使用 `Sync`、`Fork` 或 `Teammate`；需要声明式协作时使用
 
 所有模式都通过 `SubagentRegistry` 解析目标并由 `SubagentExecutor` 执行。
 因此工具调用与程序化调度共享 hook、取消、prompt 编译、隔离和 typed event。
+
+Active Subagent 消息使用 `SubagentExecutor::send_message_tracked`。返回的
+`SubagentMessageReceipt` 只携带 exact attempt identity 与嵌套的
+`AgentSteerReceipt`；mailbox 接收、上下文 drain 和所属 turn 结算只由嵌套
+receipt 负责。单独的 turn ID 不代表投递完成。
 
 ## Team 意图
 
@@ -4139,10 +4168,16 @@ typed extension 持有。
 |------|------|
 | `task_create` | 原子创建完整任务图，或携带 `base_revision` 追加任务 |
 | `task_update` | 对规格、关系、顺序、跳过或状态应用一次乐观并发 patch |
-| `task_list` | 读取当前已提交任务图版本 |
+| `task_list` | 读取当前已提交任务图的有界分页；支持 `limit`（1–100）、opaque `cursor` 和 `detail_level`（`summary`/`full`） |
 
 首次 `task_create` 必须在一个 `tasks` 数组中携带所有相关任务。后续修改携带
 当前 `base_revision`；过时写入返回版本冲突，不会覆盖更新的状态。
+
+`task_list` 默认返回 20 个任务的 summary 页。结果 metadata 会在仍有后续任务时
+提供 `page.next_cursor`、`page.returned`、`page.total` 和 `page.truncated`。后续请求
+必须使用相同的已提交任务图和 limit 携带 opaque cursor；查询或快照变化会使 cursor
+失效。`detail_level=full` 只额外返回依赖、重试计数和非空生命周期 detail，不建立
+第二个 store 或 reducer。
 
 需要持久化或产品策略的应用注入自己的 `RevisionedTaskStore` 和
 `TaskToolPolicy`：
@@ -4184,7 +4219,10 @@ controller 是持久化、Subagent 调度、review 和产品资源策略的薄�
 不得重新实现 ready-frontier 主循环或第二套依赖状态机。
 
 服务统一处理传递失败阻塞、跳过与暂停、有界重试、取消结算、过时 claim 和
-停滞检测。依赖失败只形成 typed `DagDependencyState` 投影，不会持久化为
+停滞检测。dispatch resolution 保留 `Failed` 与 `TimedOut` 两种不同终态；requeue
+request 会声明 retry budget 耗尽时应提交哪一种终态，framework 通过同一 exact-claim
+compare-and-set 路径提交，持久化 adapter 不得在事后重新解释。依赖失败只形成 typed
+`DagDependencyState` 投影，不会持久化为
 `TaskStatus::Blocked`；重试失败祖先后，派生阻塞会自动消失。`Blocked` 仍可表达
 review、缺少输入等显式产品策略。暂停会清除 claim，恢复到 Pending 时不消耗 retry。
 Skipped 依赖以 typed waiver 传给 Subagent，不会伪造依赖输出。attempt 级 claim
@@ -6256,6 +6294,11 @@ EchoAgent 向 stdio 子进程提供 `PLUGIN_ROOT` 和 `PLUGIN_DATA`。`${PLUGIN_
 
 插件按依赖顺序加载。清单致命错误会跳过整个包；组件错误按最小可行边界隔离。运行时记录每个插件的组件所有权，因此 disable、uninstall 和 reload 能精确卸载对应组件。
 
+`PluginIntegrator::prepare` 捕获唯一不可变的 `PreparedPluginSet`，包括单调 generation、确定性
+内容 identity、结构化诊断、已解析的 Skills/Hooks/MCP，以及保留 owner 的 Subagent/LSP 文档。
+`wire_prepared` 与 rollback 不读取组件文件；磁盘变化只在 registry mutation 或显式 invalidation
+后可见。见 [ADR 0012](../adr/0012-immutable-plugin-preparation.md)。
+
 ## API
 
 ```rust,no_run
@@ -6616,7 +6659,7 @@ let resumed = graph.resume_from_checkpoint(&checkpoint_store, &checkpoint_id).aw
 | 并行处理 | ★★★★★ | Fan-out/fan-in |
 | 简单单 Agent | ★☆☆☆☆ | 过度设计 |
 
-对应示例：`examples/demo39_workflow.rs`、`examples/demo34_workflow_stream.rs`、`examples/demo37_declarative_workflow.rs`
+对应示例：`tests/example_contracts/demo39_workflow.rs`、`tests/example_contracts/demo34_workflow_stream.rs`、`tests/example_contracts/demo37_declarative_workflow.rs`
 
 
 ---
@@ -8124,7 +8167,7 @@ agent.add_tool(Box::new(
 - 筛选满足业务条件的记录
 - 按分类聚合收入或数量
 
-参考示例：`examples/demo43_data_tools.rs`
+参考示例：`tests/example_contracts/demo43_data_tools.rs`
 
 ---
 
@@ -8998,6 +9041,9 @@ Hooks 允许在 Agent 生命周期的关键节点注入自定义行为。框架�
 上述 8 个 Evolution 事件均由对应的记忆写入/层级迁移、候选检测、生命周期转换、
 健康检查、补丁、合并和规则提升主路径真实发射，不是只保留在枚举中的占位事件。
 Task/Subagent 的取消与超时由对应终态事件的结构化 status 表达，不再使用独立事件。
+
+成功删除 hot memory 时也会发出 `MemoryLayerChange`，其中
+`from_layer = "hot"`、`to_layer = "deleted"`。缺失或失败的删除不会发出该事件。
 
 ### Hook 动作类型
 
@@ -10776,7 +10822,7 @@ pub struct RunSummary {
 pub enum RunEvent {
     LlmCall { messages, prompt_tokens, completion_tokens, duration_ms },
     ToolCall { call_id, name, args, risk, duration_ms },
-    ToolResult { call_id, name, success, output_preview, output_truncated, duration_ms },
+    ToolResult { call_id, name, success, output_preview, output_truncated, artifact, duration_ms },
     ToolError { call_id, name, message },
     Error { message },
     Checkpoint { id },
@@ -10794,7 +10840,7 @@ pub enum RunEvent {
 |------|------|------|
 | `LlmCall` | 思考 | 每次 LLM API 调用后——记录 Token 数和延迟 |
 | `ToolCall` | 执行 | 工具执行前——记录名称、参数（已脱敏）、风险等级 |
-| `ToolResult` | 执行 | 工具成功后——记录成功标志、输出预览（前 200 字符） |
+| `ToolResult` | 执行 | 工具结束后——记录成功标志、有界输出预览，以及存在时的类型化完整输出 artifact |
 | `ToolError` | 执行 | 工具失败后——记录错误消息 |
 | `Error` | 任意 | 运行级别错误 |
 | `Checkpoint` | 任意 | 保存检查点时 |
@@ -14414,18 +14460,20 @@ Source: https://echo-agent.dev/eko/docs/overview
 
 # EKO
 
-EKO 是基于 echo-agent 构建的本地个人 AI 助理。TUI、Tauri 桌面界面、CLI 和消息 channel 通过 `echo-agent-app-core` 接入；这些交互表面的能力对等是产品契约。应用 review 进行期间，具体实现仍以应用仓库为准。
+EKO 是基于 echo-agent 构建的本地个人 AI 助理。TUI、Tauri 桌面界面、CLI/JSONL 和消息 channel 使用同一套 `echo-agent-app-core` 服务；这些 surface 的能力对等是产品契约。
 
 ## 能力边界
 
 - 读取项目指令、文件和代码上下文
 - 调用工具、技能、hooks、插件和用户配置的 MCP server
-- 通过一个 scoped Extension 权威控制 Skills、Plugins、MCP、Hooks、LSP 与 Browser
-- 通过统一任务图组织 Todo、依赖任务与 Subagent 执行
-- 要求 TUI、GUI、CLI 和 channel 满足同一套核心 Agent 能力契约
-- 用本地文件或内存保存对话、记忆和产品投影
+- 在一个 revisioned TaskRun graph 中组织有依赖的 `PlanTask` 与 Subagent 执行；framework `TaskStatus` 是执行权威，Todo 只是只读投影
+- 通过六个有界 `agent_*` 工具发现、检查、发送消息、follow up、等待与中断 Conversation Agent 或精确的 Task Subagent attempt
+- 跨重启恢复基于 cursor 的 Agent wait 与 TaskRun；保持 cold workspace identity，并让 GUI、TUI、CLI、JSONL、channel 只消费一个 typed terminal
+- 通过 scoped 应用权威控制 Skills、prepared Plugin generation、MCP、Hooks、LSP、Browser 与用户直接设置的工具可见性
+- 在下一个 model safe point 向 primary、已有 pool Agent 和 future Agent 发布同一个 generation-bound hot memory
+- 用本地文件或内存保存对话、memory、task journal、checkpoint 与产品投影，不要求 SQLite
 
-官网只投影产品事实，不定义 EKO 的运行时模型。实现与配置始终以 [EKO 源码仓库](https://github.com/EchoYue-lp/echo-agent-cli) 为准。
+官网是经过审阅的产品事实投影，不定义 EKO 行为或公共 API。实现与配置以 [EKO 源码仓库](https://github.com/EchoYue-lp/echo-agent-cli)、其中长期维护的文档和 ADR 为准。
 
 
 ---
@@ -14434,23 +14482,31 @@ Source: https://echo-agent.dev/eko/docs/getting-started
 
 # EKO 快速开始
 
+本页是经过审阅的快速开始投影；精确配置、构建与打包行为以 EKO 仓库长期维护的文档为准。
+
 ## 前置条件
 
 - Rust 1.95 或更高版本
-- GUI 开发需要 Node.js `^20.19.0 || ^22.13.0 || >=24.0.0` 与 Tauri CLI；只运行 TUI 时不需要 Node.js
+- 至少一个已配置的 LLM provider 与 model
+- GUI 开发需要 Node.js `^20.19.0 || ^22.13.0 || >=24.0.0`、Tauri 2 系统依赖与 Tauri CLI；TUI 和 JSONL 不需要 Node.js
 
 ## 克隆仓库
 
 ```bash
 git clone https://github.com/EchoYue-lp/echo-agent-cli.git
 cd echo-agent-cli
+cargo fetch
 ```
+
+TUI/CLI 用户可以配置 `./eko.yaml` 或 `~/.eko/config.yaml`；GUI 用户可以在设置中配置 provider 与 model。API key 应放在配置引用的环境变量中，不要把 secret 写进配置文件。
 
 ## 启动 TUI
 
 ```bash
 cargo run --bin echo-agent-cli
 ```
+
+常用 runtime selector 包括 `--project /path/to/project`、`--model <provider:model>`、`--continue` 与 `--resume <conversation-id>`。
 
 ## 启动 GUI
 
@@ -14460,6 +14516,20 @@ cargo gui-dev
 ```
 
 `cargo gui-dev` 是仓库 `.cargo/config.toml` 中的项目 alias，会启动前端开发服务并以 `gui` feature 运行 `echo-agent-tauri`。
+
+桌面生产包使用 `cargo gui-bundle`；裸 Rust binary 不包含完整 Tauri 前端与平台 bundle。
+
+## 运行 JSONL 自动化
+
+```bash
+cargo run --bin echo-agent-cli -- --jsonl "检查当前项目并总结结果"
+```
+
+JSONL 把 canonical chat envelope 逐行写到 stdout，日志保留在 stderr 或日志文件。
+
+## 本地数据
+
+EKO 默认使用 `~/.eko/`，可通过 `EKO_DATA_DIR` 覆盖。workspace conversation、TaskRuntime journal、memory、artifact 和 trace 位于对应 workspace 的 `.eko/` 目录。EKO 不启用 SQLite。
 
 更完整的构建、配置与平台打包命令以 [EKO README](https://github.com/EchoYue-lp/echo-agent-cli#readme) 为准。
 
@@ -14492,13 +14562,29 @@ EKO 是基于 `echo-agent` 构建的本地个人 AI 助理。本页能力均对�
 
 `TaskRuntime`、检查点、暂停与恢复、执行预算和调度支持设计为持续数小时到数十小时的工作。运行时保留可检查的状态和续跑点，但不承诺固定完成时间或成功率。
 
+任务关系只有一个权威：revisioned `TaskRun -> PlanTask -> SubagentRun` graph。framework `TaskStatus` 管执行状态，Plan 是可编辑 artifact，Todo 是只读展示投影。同一 run 内的依赖使用 `PlanRevision.tasks[].depends_on`；EKO 不维护第二套跨 run 依赖图。
+
+## Agent 协作与恢复
+
+六个 model-callable `agent_*` 工具对显式 Conversation 或 Task Subagent target 执行 list、inspect、message、follow-up、wait 与 interrupt。查询在 journal 层有界。cursor identity 可跨 router 或 TaskRuntime reopen 恢复，cold address 会按绑定 workspace 校验，五种 surface 重放同一 typed terminal 事实。
+
 ## Local application core
 
-TUI、GUI、CLI 与渠道适配器使用共享应用核心，各界面能力对等是产品契约。会话与运行时状态使用用户机器上的文件或内存存储；EKO 不需要 SQLite。
+TUI、GUI、CLI/JSONL 与 channel adapter 使用同一个 `ApplicationServices` composition owner。surface 只保留输入、渲染和 host bridge，不各自装配 task、recovery、pool 或 maintenance runtime。会话与运行时状态使用本机文件或内存；EKO 不需要 SQLite。
 
 ## Extension 控制
 
 Skills、Plugins、MCP servers、Hooks、LSP 与 Browser 控制从 GUI、TUI、CLI/JSONL 和 channel 进入同一个应用核心权威。Skill 启用状态先提交 durable desired state，再发布到运行时。typed receipt 明确区分 committed、settled 与 degraded；保留的 repair debt 会在重启或 workspace load 后重放，不会被包装成成功。
+
+portable Plugin component 只解析一次，形成不可变 framework `PreparedPluginSet`。EKO 捕获精确 workspace target，只增加 executable Subagent、LSP process、scoped monitor、theme 与 output style 产品策略。rollback 使用 prepared generation，不重新读取可能已变化的文件。
+
+## Memory 与用户工具控制
+
+每个 workspace memory generation 共享一个 `MemoryLayerManager`。成功 mutation 只读取一次 hot memory，并在下一个 model safe point 向 primary、已有 pool Agent 与 future Agent 发布同一个 immutable snapshot。`/reflect`、remember/forget、evidence review、TaskRuntime、Dreaming 和模型工具使用同一 settlement contract。
+
+用户直接设置的工具可见性是独立应用 policy，通过 framework disabled-tools snapshot 发布；它不是 approval mode，也不受 agent 自动执行 permission mode 限制。
+
+以上内容是经过审阅的源码行为摘要；精确配置、命令与合同仍以 EKO 仓库为准。
 
 
 ---
@@ -14507,17 +14593,21 @@ Source: https://echo-agent.dev/eko/docs/storage
 
 # EKO 本地数据
 
-EKO 面向用户自己的机器，产品层使用普通文件或内存保存状态，不要求数据库服务。
+EKO 面向用户自己的机器，产品层使用普通文件或内存保存状态，不启用 SQLite。framework 为其它消费者提供的 Store 实现是独立问题。
 
 ## 数据职责
 
-- 对话历史由文件型 `ConversationStore` 投影
-- Agent 运行时状态由文件型 `RuntimeStateStore` 保存
-- 记忆、配置和工作区产物保留在本地目录
-- `enabled-skills.json` 是 durable Skill desired state 与 repair debt 的唯一权威
-- TUI、GUI、CLI 与 channel 通过同一应用核心访问这些能力
+- `FileConversationStore` 保存用户可见 conversation history；`FileRuntimeStateStore` 保存 framework Agent checkpoint。两者都不拥有 Task graph。
+- TaskRuntime `events.jsonl` 是正式任务事实权威；`checkpoint.json`、`plan.json`、`run-state.json` 以及有界 artifact/review history segment 都是可重建投影或索引。
+- 普通 chat 使用独立 `ChatEventLog`，不替代 TaskRuntime journal。
+- 每个 workspace 拥有本地 memory Store、一个 generation-bound `MemoryLayerManager` 和一个在 model safe point 消费的 immutable hot-memory projection。
+- `enabled-skills.json` 是 durable Skill desired state 与 repair debt 的权威。prepared Plugin generation 与 target receipt 是 runtime publication 事实，不是第二个 desired-state 文件。
+- artifact 与 trace 保持 workspace scope；trace 只用于诊断，不能判定 TaskRun 或 PlanTask 是否已提交。
+- TUI、GUI、CLI/JSONL 与 channel 通过同一应用核心访问这些权威。
 
-框架仍可以向其他复用方提供不同的通用 Store 实现；EKO 的产品存储选择不限制 echo-agent 框架的能力菜单。
+默认产品数据根目录是 `~/.eko/`，可以用 `EKO_DATA_DIR` 覆盖。workspace 自有的 conversation、task、memory、artifact 与 trace 位于 workspace `.eko/` 下。
+
+本页是官网投影，不是 storage schema。EKO persistence 文档与源码仓库仍是权威。
 
 
 ---
@@ -14609,6 +14699,8 @@ echo-agent is a composable Agent development framework written in Rust, providin
 | [0002 - Sandbox Cancellation Cleanup](../adr/0002-sandbox-cancellation-cleanup.md)   | Resource-owning sandbox backends drain cleanup before terminal return |
 | [0007 - Atomic Journal Batch Commits](../adr/0007-atomic-journal-batch-commits.md)   | Related journal events become visible as one durable commit unit      |
 | [0008 - Canonical Runtime Task Authority](../adr/0008-canonical-runtime-task-authority.md) | One revisioned graph owns task CRUD, execution, and settlement    |
+| [0009 - Tracked Input Receipts](../adr/0009-tracked-input-receipts.md) | Active and initial inputs expose accepted, drained, and terminal boundaries |
+| [0010 - Canonical Turn Receipt Accounting](../adr/0010-canonical-turn-receipt-accounting.md) | One framework receipt owns generic terminal, usage, compaction, and final-message facts |
 
 ---
 
@@ -14723,7 +14815,7 @@ See `examples/README.md` for the full classification and upkeep rules.
 | `examples/demo01_tools.rs`                | Basic tool registration and invocation                                                                |
 | `examples/demo02_tasks.rs`                | DAG task planning                                                                                     |
 | `examples/demo03_approval.rs`             | Human-in-the-loop approval                                                                            |
-| `examples/demo04_subagent.rs`             | Subagent orchestration                                                                                |
+| `tests/example_contracts/demo04_subagent.rs`             | Subagent orchestration                                                                                |
 | `examples/demo05_compressor.rs`           | Context compression                                                                                   |
 | `examples/demo06_mcp.rs`                  | MCP protocol integration                                                                              |
 | `examples/demo07_skills.rs`               | Skill system                                                                                          |
@@ -14731,7 +14823,7 @@ See `examples/README.md` for the full classification and upkeep rules.
 | `examples/demo09_file_shell.rs`           | File and shell tools                                                                                  |
 | `examples/demo10_streaming.rs`            | Streaming output                                                                                      |
 | `examples/demo11_callbacks.rs`            | Lifecycle callbacks                                                                                   |
-| `examples/demo12_resilience.rs`           | Fault tolerance and retries                                                                           |
+| `tests/example_contracts/demo12_resilience.rs`           | Fault tolerance and retries                                                                           |
 | `examples/demo13_tool_execution.rs`       | Tool execution configuration                                                                          |
 | `examples/demo15_structured_output.rs`    | Structured output (extract / JSON Schema)                                                             |
 | `examples/demo17_chat.rs`                 | Multi-turn chat (chat / chat_stream / reset)                                                          |
@@ -14739,34 +14831,34 @@ See `examples/README.md` for the full classification and upkeep rules.
 | `examples/demo19_guard.rs`                | Guard system (rule / LLM content filtering)                                                           |
 | `examples/demo20_audit.rs`                | Audit logging                                                                                         |
 | `examples/demo23_a2a.rs`                  | A2A protocol                                                                                          |
-| `examples/demo24_topology.rs`             | Multi-agent topology visualization                                                                    |
+| `tests/example_contracts/demo24_topology.rs`             | Multi-agent topology visualization                                                                    |
 | `examples/demo25_macros.rs`               | Macro system showcase                                                                                 |
 | `examples/demo26_provider_factory.rs`     | Dynamic LLM factory                                                                                   |
 | `examples/demo27_sqlite_memory.rs`        | SQLite persistence                                                                                    |
 | `examples/demo28_workflow.rs`             | Workflow pipeline                                                                                     |
 | `examples/demo29_sandbox.rs`              | Sandbox execution                                                                                     |
-| `examples/demo30_mcp_server.rs`           | MCP server mode                                                                                       |
-| `examples/demo31_memory_tools.rs`         | Memory tool injection                                                                                 |
+| `tests/example_contracts/demo30_mcp_server.rs`           | MCP server mode                                                                                       |
+| `tests/example_contracts/demo31_memory_tools.rs`         | Memory tool injection                                                                                 |
 | `examples/demo32_token_budget.rs`         | Token budget control                                                                                  |
 | `examples/demo33_retry_policy.rs`         | Unified retry                                                                                         |
-| `examples/demo34_workflow_stream.rs`      | Workflow streaming                                                                                    |
+| `tests/example_contracts/demo34_workflow_stream.rs`      | Workflow streaming                                                                                    |
 | `examples/demo35_dynamic_tools.rs`        | Dynamic tool management                                                                               |
 | `examples/demo36_multimodal.rs`           | Multi-modal messages                                                                                  |
-| `examples/demo37_declarative_workflow.rs` | YAML/JSON workflows                                                                                   |
+| `tests/example_contracts/demo37_declarative_workflow.rs` | YAML/JSON workflows                                                                                   |
 | `examples/demo38_im_channels.rs`          | IM channel integration                                                                                |
-| `examples/demo39_workflow.rs`             | Graph workflow engine                                                                                 |
+| `tests/example_contracts/demo39_workflow.rs`             | Graph workflow engine                                                                                 |
 | `examples/demo40_snapshot.rs`             | Snapshot & rollback                                                                                   |
 | `examples/demo41_web_tools.rs`            | Web search + fetch                                                                                    |
 | `examples/demo42_playwright_mcp.rs`       | Playwright MCP browser automation                                                                     |
-| `examples/demo43_data_tools.rs`           | Data tools (Excel / CSV / Word / Text)                                                                |
+| `tests/example_contracts/demo43_data_tools.rs`           | Data tools (Excel / CSV / Word / Text)                                                                |
 | `examples/demo44_code_laboratory.rs`      | Code execution assistant                                                                              |
 | `examples/demo45_customer_service.rs`     | Intelligent customer service                                                                          |
 | `examples/demo46_data_analyst.rs`         | Data analysis assistant                                                                               |
 | `examples/demo47_enterprise.rs`           | Enterprise workflow automation                                                                        |
 | `examples/demo48_personal_assistant.rs`   | Personal smart assistant                                                                              |
 | `examples/demo49_research_agent.rs`       | Research & report assistant                                                                           |
-| `examples/demo50_eval.rs`                 | Eval system: cases, criteria, constraints, trajectory replay, trigger accuracy, HTML reports          |
-| `examples/demo51_self_improvement.rs`     | Self-improvement: Analyzer failure detection, Curator skill lifecycle, TrajectorySaver fine-tune data |
+| `tests/example_contracts/demo50_eval.rs`                 | Eval system: cases, criteria, constraints, trajectory replay, trigger accuracy, HTML reports          |
+| `tests/example_contracts/demo51_self_improvement.rs`     | Self-improvement: Analyzer failure detection, Curator skill lifecycle, TrajectorySaver fine-tune data |
 
 
 ---
@@ -15391,10 +15483,11 @@ pub struct ToolResult {
     pub success: bool,               // Whether the tool succeeded
     pub output: String,              // Text output
     pub error: Option<String>,       // Error message
-    pub bytes: Option<Vec<u8>>,      // Binary output
+    pub failure: Option<ToolFailure>, // Typed failure/recovery facts
     pub data: Option<Value>,         // Structured JSON data
     pub truncated: bool,             // Whether output was truncated
     pub mime_type: Option<String>,   // MIME type
+    pub artifact: Option<ToolOutputArtifactRef>, // Complete spilled output
     pub metadata: HashMap<String, String>, // Key-value metadata
 }
 ```
@@ -15407,7 +15500,7 @@ pub struct ToolResult {
 | `ToolResult::success_json(data)` | Successful JSON result |
 | `ToolResult::success_with_kind(kind, output)` | Typed success result |
 | `ToolResult::error(msg)` | Failed result |
-| `ToolResult::binary(bytes)` | Binary output |
+| `with_artifact(reference)` | Attach a complete typed output artifact |
 
 **Builder pattern:**
 
@@ -15434,6 +15527,10 @@ pub enum ToolResultKind {
 ```
 
 Downstream consumers (CLI rendering, trace analysis, eval scoring) can use `kind` for type-aware handling without parsing the `output` string.
+Complete spilled output is carried only by `artifact`; consumers must not
+reconstruct its path, digest, size, or retention from `metadata`. Applications
+may validate the typed reference against their own registered roots and
+retention policy before exposing it.
 
 ---
 
@@ -15785,7 +15882,7 @@ agent.add_tools(vec![
 | `generate_chart` | chart | Chart generation (requires `chart` feature) |
 | `db_query` / `db_schema` | database | SQL database tools (requires `database` feature) |
 
-See: `examples/demo01_tools.rs`, `examples/demo09_file_shell.rs`, `examples/demo13_tool_execution.rs`, `examples/demo64_tool_pipeline.rs`
+See: `examples/demo01_tools.rs`, `examples/demo09_file_shell.rs`, `examples/demo13_tool_execution.rs`, `tests/example_contracts/demo64_tool_pipeline.rs`
 
 ---
 
@@ -15859,7 +15956,7 @@ let agent = ReactAgentBuilder::new()
     .build(config);
 ```
 
-See [demo64_tool_pipeline.rs](../../examples/demo64_tool_pipeline.rs).
+See [demo64_tool_pipeline.rs](../../tests/example_contracts/demo64_tool_pipeline.rs).
 
 
 ---
@@ -16554,7 +16651,7 @@ let result = compressor.compress_in_place(&mut messages, current_tokens, target_
 println!("Levels applied: {:?}", result.levels_applied);
 ```
 
-See [demo53_adaptive_compression.rs](../../examples/demo53_adaptive_compression.rs).
+See [demo53_adaptive_compression.rs](../../tests/example_contracts/demo53_adaptive_compression.rs).
 
 ---
 
@@ -16738,7 +16835,7 @@ ctx.prepare() is called:
 | Tool-heavy workflows | `AdaptiveCompressor` (auto-escalation with L1 tool folding) |
 | Test environment | `SlidingWindowCompressor(5)` + `token_limit: 100` |
 
-See: `examples/demo05_compressor.rs`, `examples/demo53_adaptive_compression.rs`
+See: `examples/demo05_compressor.rs`, `tests/example_contracts/demo53_adaptive_compression.rs`
 
 ---
 
@@ -17045,6 +17142,27 @@ tokens or transcript timing. Hook blocks settle as `Failed`. If the lifecycle
 signal closes abnormally, all receipt clones converge on `Dropped` while
 preserving the last known drain fact.
 
+### Tracked initial input
+
+For a cold turn, call `TurnRequest::with_input_receipt()` before passing the
+request to `AgentTurnDriver`. The driver publishes `Accepted` after validating
+the request and immediately before invoking the Agent. `ReactAgent` publishes
+`Drained` only after the initial message has entered `ContextManager`, before
+the provider call. The same driver publishes the typed terminal outcome. Agents
+that do not expose an input lifecycle publisher leave the terminal receipt at
+`drained = false`; output events and EOF are never used as a substitute.
+
+### Canonical turn receipt
+
+`AgentTurnDriver` returns the sole framework-owned `TurnReceipt` for generic
+turn facts. In addition to the typed terminal, it carries the final answer and
+message identity, provider-reported input/output totals, reported-call count,
+explicit context-compaction count, final envelope sequence, and elapsed time.
+Product sinks may persist or render the same envelopes, but must project these
+fields from the receipt instead of folding a second turn summary from events.
+Product-only facts such as workspace routing, UI retention pins, and webhook
+delivery remain in the application adapter.
+
 ---
 
 ## Stream Timeout Mechanism (Planned)
@@ -17095,7 +17213,8 @@ After truncate: [────── head (70%) ──────][── tail (
 
 If spill creation fails, echo-agent applies a conservative fallback token budget instead
 of returning the full oversized result to the model. `ToolResult.truncated` and metadata
-record whether the result was spilled, truncated, or truncated after a spill failure.
+record output handling, while a successful spill is carried by the typed
+`ToolResult.artifact` descriptor.
 
 
 ---
@@ -17164,8 +17283,8 @@ assert_eq!(selected, vec![PathBuf::from("src/auth.rs")]);
 `score_files` exposes scores; `select_relevant` returns at most `max_files`.
 Equal scores are ordered by path so repeated runs are deterministic.
 
-See `examples/demo65_context_assembler.rs` and
-`examples/demo66_context_selector.rs` for runnable examples.
+See `tests/example_contracts/demo65_context_assembler.rs` and
+`tests/example_contracts/demo66_context_selector.rs` for runnable examples.
 
 
 ---
@@ -17944,7 +18063,7 @@ let sub_config = AgentConfig::new("qwen3-max", "sub_a", "...")
 3. **Don't enable `enable_subagent(true)` on Subagents** — avoid recursive nesting that's hard to debug
 4. **Use the revisioned task graph for complex task relationships** instead of prompt-only hidden state
 
-See: `examples/demo04_subagent.rs`
+See: `tests/example_contracts/demo04_subagent.rs`
 
 
 ---
@@ -17968,6 +18087,12 @@ declarative collaboration intent should be compiled into a revisioned task DAG.
 Every mode resolves the target through `SubagentRegistry` and executes through
 `SubagentExecutor`. Direct tool dispatch and programmatic dispatch therefore
 share hooks, cancellation, prompt compilation, isolation, and typed events.
+
+Active Subagent messages use `SubagentExecutor::send_message_tracked`. Its
+`SubagentMessageReceipt` contains the exact attempt identity and the nested
+`AgentSteerReceipt`; the nested receipt is the only authority for mailbox
+acceptance, context drain, and owning-turn settlement. A turn ID alone is not a
+delivery-complete result.
 
 ## Team Intent
 
@@ -18544,11 +18669,18 @@ The default framework Agent registers three task tools:
 |------|----------|
 | `task_create` | Atomically creates one complete graph, or appends with `base_revision` |
 | `task_update` | Applies one optimistic patch to specs, relations, order, skip, or status |
-| `task_list` | Reads the current committed graph revision |
+| `task_list` | Reads a bounded page of the current committed graph revision; accepts `limit` (1–100), an opaque `cursor`, and `detail_level` (`summary` or `full`) |
 
 The first `task_create` call must carry every related task in one `tasks`
 array. Later mutations include the current `base_revision`; stale writers fail
 with a revision conflict instead of overwriting newer state.
+
+`task_list` defaults to a 20-task summary page. The result metadata includes
+`page.next_cursor`, `page.returned`, `page.total`, and `page.truncated` when more
+tasks remain. Reuse the cursor with the same committed graph and limit; a query
+or snapshot change invalidates it. `detail_level=full` adds dependencies, retry
+counts, and non-empty lifecycle detail without creating a second store or
+reducer.
 
 Applications that need durable storage or product policy inject their own
 `RevisionedTaskStore` and `TaskToolPolicy`:
@@ -18592,6 +18724,10 @@ a second ready-frontier loop or dependency state machine.
 
 The service handles transitive failure blocking, skip and pause states, bounded
 retries, cancellation settlement, superseded claims, and stall detection.
+Dispatch resolution preserves `Failed` and `TimedOut` as distinct terminal
+states. A requeue request declares which state applies if its retry budget is
+exhausted, and the framework commits that state through the same exact-claim
+compare-and-set path; persistence adapters must not reinterpret it afterward.
 Dependency failure is a typed `DagDependencyState` projection; it is not
 persisted as `TaskStatus::Blocked`, so retrying an ancestor removes the derived
 block automatically. `Blocked` remains available for explicit product policy,
@@ -20728,6 +20864,11 @@ Applications can override the plugin data base directory. embedding application 
 
 Loading proceeds in dependency order. Fatal manifest errors skip the package. Component errors remain isolated at the smallest practical boundary. Runtime replacement records ownership so disable, uninstall, and reload remove exactly the components contributed by each plugin.
 
+`PluginIntegrator::prepare` captures one immutable `PreparedPluginSet` with a monotonic generation,
+deterministic content identity, structured diagnostics, parsed Skills/Hooks/MCP, and owner-qualified
+Subagent/LSP documents. `wire_prepared` and rollback perform no component file reads. Disk changes
+become visible only after registry mutation or explicit invalidation. See [ADR 0012](../adr/0012-immutable-plugin-preparation.md).
+
 ## API
 
 ```rust,no_run
@@ -21088,7 +21229,7 @@ let resumed = graph.resume_from_checkpoint(&checkpoint_store, &checkpoint_id).aw
 | Parallel processing | ★★★★★ | Fan-out/fan-in |
 | Simple single-agent | ★☆☆☆☆ | Overkill |
 
-See: `examples/demo39_workflow.rs`, `examples/demo34_workflow_stream.rs`, `examples/demo37_declarative_workflow.rs`
+See: `tests/example_contracts/demo39_workflow.rs`, `tests/example_contracts/demo34_workflow_stream.rs`, `tests/example_contracts/demo37_declarative_workflow.rs`
 
 
 ---
@@ -22603,7 +22744,7 @@ Typical use cases:
 - filter rows matching a business rule
 - group data by category and aggregate revenue
 
-See: `examples/demo43_data_tools.rs`
+See: `tests/example_contracts/demo43_data_tools.rs`
 
 ---
 
@@ -23434,6 +23575,10 @@ The primary hook system. Hooks are configured in YAML (via `application configur
 All eight Evolution events above are emitted by their owning write, transition,
 candidate-detection, health-check, patch, merge, and rule-promotion paths. They
 are runtime events rather than reserved enum values.
+
+`MemoryLayerChange` also reports a successful hot-memory deletion as
+`from_layer = "hot"` and `to_layer = "deleted"`. Missing or failed deletes do
+not emit the event.
 
 ### Hook Types
 
@@ -25112,7 +25257,7 @@ pub struct RunSummary {
 pub enum RunEvent {
     LlmCall { messages, prompt_tokens, completion_tokens, duration_ms },
     ToolCall { call_id, name, args, risk, duration_ms },
-    ToolResult { call_id, name, success, output_preview, output_truncated, duration_ms },
+    ToolResult { call_id, name, success, output_preview, output_truncated, artifact, duration_ms },
     ToolError { call_id, name, message },
     Error { message },
     Checkpoint { id },
@@ -25130,7 +25275,7 @@ pub enum RunEvent {
 |-------|-------|-------------|
 | `LlmCall` | Think | After each LLM API call — records token counts and latency |
 | `ToolCall` | Act | Before tool execution — records name, args (secrets redacted), risk level |
-| `ToolResult` | Act | After tool succeeds — records success flag, output preview (first 200 chars) |
+| `ToolResult` | Act | After tool completion — records success, bounded preview, and the typed complete-output artifact when present |
 | `ToolError` | Act | After tool fails — records error message |
 | `Error` | Any | Run-level errors |
 | `Checkpoint` | Any | When a checkpoint is saved |
@@ -28678,18 +28823,20 @@ Source: https://echo-agent.dev/en/eko/docs/overview
 
 # EKO
 
-EKO is a local personal AI assistant built on echo-agent. Its TUI, Tauri desktop interface, CLI, and messaging channels connect through `echo-agent-app-core`; capability parity across those surfaces is the product contract. The application repository remains authoritative while its review is in progress.
+EKO is a local personal AI assistant built on echo-agent. Its TUI, Tauri desktop interface, CLI/JSONL, and messaging channels use the same `echo-agent-app-core` services; capability parity across those surfaces is the product contract.
 
 ## Capability boundary
 
 - Read project instructions, files, and code context
 - Use tools, skills, hooks, plugins, and user-configured MCP servers
-- Control Skills, Plugins, MCP, Hooks, LSP, and Browser through one scoped Extension authority
-- Organize todos, dependent tasks, and Subagent execution in one task graph
-- Require the same core Agent capability contract from the TUI, GUI, CLI, and channels
-- Store conversations, memory, and product projections in local files or memory
+- Organize dependent `PlanTask` work and Subagent execution in one revisioned TaskRun graph, with framework `TaskStatus` as execution authority and Todo as a read-only projection
+- Discover, inspect, message, follow up, wait for, and interrupt Conversation Agents and exact Task Subagent attempts through six bounded `agent_*` tools
+- Resume cursor-based Agent waits and TaskRuns across restart, while preserving cold workspace identity and exactly one typed terminal across GUI, TUI, CLI, JSONL, and channels
+- Control Skills, prepared Plugin generations, MCP, Hooks, LSP, Browser, and direct-user tool visibility through scoped application authorities
+- Publish generation-bound hot memory once for the primary, existing pooled Agents, and future Agents at the next model safe point
+- Store conversations, memory, task journals, checkpoints, and product projections in local files or memory without requiring SQLite
 
-This website projects product facts; it does not define the EKO runtime model. The [EKO source repository](https://github.com/EchoYue-lp/echo-agent-cli) remains authoritative for implementation and configuration.
+This website is a reviewed projection of product facts; it does not define EKO behavior or public APIs. The [EKO source repository](https://github.com/EchoYue-lp/echo-agent-cli), its maintained docs, and its ADRs remain authoritative for implementation and configuration.
 
 
 ---
@@ -28698,23 +28845,31 @@ Source: https://echo-agent.dev/en/eko/docs/getting-started
 
 # EKO Getting Started
 
+This page is a reviewed quick-start projection. Use the maintained EKO repository docs as the authority for exact configuration, build, and packaging behavior.
+
 ## Prerequisites
 
 - Rust 1.95 or newer
-- GUI development requires Node.js `^20.19.0 || ^22.13.0 || >=24.0.0` and the Tauri CLI; the TUI does not require Node.js
+- At least one configured LLM provider and model
+- GUI development requires Node.js `^20.19.0 || ^22.13.0 || >=24.0.0`, Tauri 2 system dependencies, and the Tauri CLI; TUI and JSONL usage do not require Node.js
 
 ## Clone the repository
 
 ```bash
 git clone https://github.com/EchoYue-lp/echo-agent-cli.git
 cd echo-agent-cli
+cargo fetch
 ```
+
+TUI/CLI users can configure `./eko.yaml` or `~/.eko/config.yaml`; GUI users can configure providers and models in Settings. Keep API keys in environment variables referenced by the configuration rather than writing secrets into the file.
 
 ## Launch the TUI
 
 ```bash
 cargo run --bin echo-agent-cli
 ```
+
+Useful runtime selectors include `--project /path/to/project`, `--model <provider:model>`, `--continue`, and `--resume <conversation-id>`.
 
 ## Launch the GUI
 
@@ -28724,6 +28879,20 @@ cargo gui-dev
 ```
 
 `cargo gui-dev` is a project alias in `.cargo/config.toml`. It starts the frontend development server and runs `echo-agent-tauri` with the `gui` feature.
+
+For a packaged desktop application, use `cargo gui-bundle`; a bare Rust binary does not include the complete Tauri frontend and platform bundle.
+
+## Run JSONL automation
+
+```bash
+cargo run --bin echo-agent-cli -- --jsonl "Inspect this project and summarize the result"
+```
+
+JSONL writes canonical chat envelopes to stdout and keeps logs on stderr or in log files.
+
+## Local data
+
+EKO uses `~/.eko/` by default and accepts `EKO_DATA_DIR` as an override. Workspace conversations, TaskRuntime journals, memory, artifacts, and traces live under that workspace's `.eko/` directory. EKO does not enable SQLite.
 
 Use the [EKO README](https://github.com/EchoYue-lp/echo-agent-cli#readme) as the source of truth for complete build, configuration, and platform packaging commands.
 
@@ -28756,13 +28925,29 @@ The biomedical research profile can search PubMed and Europe PMC and organize bi
 
 `TaskRuntime`, checkpoints, pause and resume, execution budgets, and scheduling support work designed to continue for hours or tens of hours. The runtime preserves inspectable state and continuation points; it does not promise a fixed completion time or success rate.
 
+Task relationships have one authority: a revisioned `TaskRun -> PlanTask -> SubagentRun` graph. Framework `TaskStatus` owns execution state, Plan is an editable artifact, and Todo is a read-only display projection. Same-run dependencies use `PlanRevision.tasks[].depends_on`; EKO does not maintain a second cross-run dependency graph.
+
+## Agent collaboration and recovery
+
+Six model-callable `agent_*` tools list, inspect, message, follow up, wait, and interrupt explicit Conversation or Task Subagent targets. Runtime queries are bounded at the journal layer. Cursor identity survives router or TaskRuntime reopen, cold addresses are checked against the bound workspace, and the five interactive/automation surfaces replay the same typed terminal facts.
+
 ## Local application core
 
-TUI, GUI, CLI, and channel adapters use the shared application core. Capability parity across those interfaces is the product contract. Conversation and runtime state use file or memory stores on the user's machine; EKO does not require SQLite.
+TUI, GUI, CLI/JSONL, and channel adapters use one `ApplicationServices` composition owner. Surfaces retain input, rendering, and host bridges rather than assembling separate task, recovery, pool, or maintenance runtimes. Conversation and runtime state use file or memory stores on the user's machine; EKO does not require SQLite.
 
 ## Extension control
 
 Skills, Plugins, MCP servers, Hooks, LSP, and Browser controls enter one application-core authority from the GUI, TUI, CLI/JSONL, and channels. Skill enablement commits durable desired state before runtime publication. Typed receipts distinguish committed, settled, and degraded outcomes, and retained repair debt is replayed after restart or workspace load instead of being hidden as success.
+
+Portable Plugin components are parsed once into an immutable framework `PreparedPluginSet`. EKO captures exact workspace targets and adds only product policy for executable Subagents, LSP processes, scoped monitors, themes, and output styles. Rollback uses the prepared generation rather than rereading changed files.
+
+## Memory and direct-user tool control
+
+Each workspace memory generation shares one `MemoryLayerManager`. A successful mutation reads hot memory once and publishes one immutable snapshot for primary, existing pooled, and future Agents at their next model safe point. `/reflect`, remember/forget, evidence review, TaskRuntime, Dreaming, and model tools use the same settlement contract.
+
+Direct-user tool visibility is a separate application policy projected through the framework's disabled-tools snapshot. It is not an approval mode and is not gated by automated-agent permission settings.
+
+These statements summarize reviewed source behavior. The EKO repository remains the authority for exact configuration, commands, and contracts.
 
 
 ---
@@ -28771,15 +28956,19 @@ Source: https://echo-agent.dev/en/eko/docs/storage
 
 # EKO Local Data
 
-EKO runs on the user's own machine. Its product layer stores state in ordinary files or memory and does not require a database service.
+EKO runs on the user's own machine. Its product layer stores state in ordinary files or memory and does not enable SQLite. Framework Store implementations available to other consumers are a separate concern.
 
 ## Data responsibilities
 
-- A file-backed `ConversationStore` projects conversation history
-- A file-backed `RuntimeStateStore` persists Agent runtime state
-- Memory, configuration, and workspace artifacts remain in local directories
-- `enabled-skills.json` is the durable Skill desired-state and repair-debt authority
-- The TUI, GUI, CLI, and channels access these capabilities through the same application core
+- `FileConversationStore` persists user-visible conversation history; `FileRuntimeStateStore` persists framework Agent checkpoints. Neither owns the Task graph.
+- TaskRuntime `events.jsonl` is the formal task fact authority. `checkpoint.json`, `plan.json`, `run-state.json`, and bounded artifact/review history segments are rebuildable projections or indexes.
+- Ordinary chat uses its own `ChatEventLog`; it does not replace the TaskRuntime journal.
+- Each workspace owns its local memory Store, one generation-bound `MemoryLayerManager`, and an immutable hot-memory projection consumed at model safe points.
+- `enabled-skills.json` is the durable Skill desired-state and repair-debt authority. Prepared Plugin generations and their target receipts are runtime publication facts, not another desired-state file.
+- Artifacts and traces remain workspace-scoped. Trace data is diagnostic and does not determine whether a TaskRun or PlanTask committed.
+- TUI, GUI, CLI/JSONL, and channels access these authorities through the same application core.
 
-The framework can still offer other general Store implementations to independent consumers. EKO's product storage choice does not limit the capability menu of echo-agent.
+The default product data root is `~/.eko/`, overridable with `EKO_DATA_DIR`. Workspace-owned conversations, tasks, memory, artifacts, and traces live below the workspace `.eko/` directory.
+
+This page is a website projection, not a storage schema. The EKO persistence documentation and source repository remain authoritative.
 

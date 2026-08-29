@@ -22,10 +22,26 @@ The biomedical research profile can search PubMed and Europe PMC and organize bi
 
 `TaskRuntime`, checkpoints, pause and resume, execution budgets, and scheduling support work designed to continue for hours or tens of hours. The runtime preserves inspectable state and continuation points; it does not promise a fixed completion time or success rate.
 
+Task relationships have one authority: a revisioned `TaskRun -> PlanTask -> SubagentRun` graph. Framework `TaskStatus` owns execution state, Plan is an editable artifact, and Todo is a read-only display projection. Same-run dependencies use `PlanRevision.tasks[].depends_on`; EKO does not maintain a second cross-run dependency graph.
+
+## Agent collaboration and recovery
+
+Six model-callable `agent_*` tools list, inspect, message, follow up, wait, and interrupt explicit Conversation or Task Subagent targets. Runtime queries are bounded at the journal layer. Cursor identity survives router or TaskRuntime reopen, cold addresses are checked against the bound workspace, and the five interactive/automation surfaces replay the same typed terminal facts.
+
 ## Local application core
 
-TUI, GUI, CLI, and channel adapters use the shared application core. Capability parity across those interfaces is the product contract. Conversation and runtime state use file or memory stores on the user's machine; EKO does not require SQLite.
+TUI, GUI, CLI/JSONL, and channel adapters use one `ApplicationServices` composition owner. Surfaces retain input, rendering, and host bridges rather than assembling separate task, recovery, pool, or maintenance runtimes. Conversation and runtime state use file or memory stores on the user's machine; EKO does not require SQLite.
 
 ## Extension control
 
 Skills, Plugins, MCP servers, Hooks, LSP, and Browser controls enter one application-core authority from the GUI, TUI, CLI/JSONL, and channels. Skill enablement commits durable desired state before runtime publication. Typed receipts distinguish committed, settled, and degraded outcomes, and retained repair debt is replayed after restart or workspace load instead of being hidden as success.
+
+Portable Plugin components are parsed once into an immutable framework `PreparedPluginSet`. EKO captures exact workspace targets and adds only product policy for executable Subagents, LSP processes, scoped monitors, themes, and output styles. Rollback uses the prepared generation rather than rereading changed files.
+
+## Memory and direct-user tool control
+
+Each workspace memory generation shares one `MemoryLayerManager`. A successful mutation reads hot memory once and publishes one immutable snapshot for primary, existing pooled, and future Agents at their next model safe point. `/reflect`, remember/forget, evidence review, TaskRuntime, Dreaming, and model tools use the same settlement contract.
+
+Direct-user tool visibility is a separate application policy projected through the framework's disabled-tools snapshot. It is not an approval mode and is not gated by automated-agent permission settings.
+
+These statements summarize reviewed source behavior. The EKO repository remains the authority for exact configuration, commands, and contracts.
