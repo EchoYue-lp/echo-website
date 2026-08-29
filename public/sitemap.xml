@@ -283,6 +283,78 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/testing" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/docs/adr-0001-channel-session-sender-scope</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0001-channel-session-sender-scope" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0001-channel-session-sender-scope" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0001-channel-session-sender-scope" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0002-sandbox-cancellation-cleanup</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0002-sandbox-cancellation-cleanup" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0002-sandbox-cancellation-cleanup" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0002-sandbox-cancellation-cleanup" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0003-tracked-steer-lifecycle</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0003-tracked-steer-lifecycle" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0003-tracked-steer-lifecycle" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0003-tracked-steer-lifecycle" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0004-async-file-store-ownership</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0004-async-file-store-ownership" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0004-async-file-store-ownership" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0004-async-file-store-ownership" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0005-invocation-resource-lifetime</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0005-invocation-resource-lifetime" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0005-invocation-resource-lifetime" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0005-invocation-resource-lifetime" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0006-runtime-state-scope-lineage</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0006-runtime-state-scope-lineage" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0006-runtime-state-scope-lineage" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0006-runtime-state-scope-lineage" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0007-atomic-journal-batch-commits</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0007-atomic-journal-batch-commits" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0007-atomic-journal-batch-commits" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0007-atomic-journal-batch-commits" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0008-canonical-runtime-task-authority</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0008-canonical-runtime-task-authority" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0008-canonical-runtime-task-authority" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0008-canonical-runtime-task-authority" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0009-tracked-input-receipts</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0009-tracked-input-receipts" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0009-tracked-input-receipts" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0009-tracked-input-receipts" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0010-canonical-turn-receipt-accounting</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0010-canonical-turn-receipt-accounting" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0010-canonical-turn-receipt-accounting" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0010-canonical-turn-receipt-accounting" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0011-typed-tool-output-artifact</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0011-typed-tool-output-artifact" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0011-typed-tool-output-artifact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0011-typed-tool-output-artifact" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0012-immutable-plugin-preparation</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0012-immutable-plugin-preparation" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0012-immutable-plugin-preparation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0012-immutable-plugin-preparation" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/docs/knowledge-overview</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/knowledge-overview" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/knowledge-overview" />
@@ -629,6 +701,78 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/testing" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/testing" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/testing" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0001-channel-session-sender-scope</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0001-channel-session-sender-scope" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0001-channel-session-sender-scope" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0001-channel-session-sender-scope" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0002-sandbox-cancellation-cleanup</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0002-sandbox-cancellation-cleanup" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0002-sandbox-cancellation-cleanup" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0002-sandbox-cancellation-cleanup" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0003-tracked-steer-lifecycle</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0003-tracked-steer-lifecycle" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0003-tracked-steer-lifecycle" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0003-tracked-steer-lifecycle" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0004-async-file-store-ownership</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0004-async-file-store-ownership" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0004-async-file-store-ownership" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0004-async-file-store-ownership" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0005-invocation-resource-lifetime</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0005-invocation-resource-lifetime" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0005-invocation-resource-lifetime" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0005-invocation-resource-lifetime" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0006-runtime-state-scope-lineage</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0006-runtime-state-scope-lineage" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0006-runtime-state-scope-lineage" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0006-runtime-state-scope-lineage" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0007-atomic-journal-batch-commits</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0007-atomic-journal-batch-commits" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0007-atomic-journal-batch-commits" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0007-atomic-journal-batch-commits" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0008-canonical-runtime-task-authority</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0008-canonical-runtime-task-authority" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0008-canonical-runtime-task-authority" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0008-canonical-runtime-task-authority" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0009-tracked-input-receipts</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0009-tracked-input-receipts" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0009-tracked-input-receipts" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0009-tracked-input-receipts" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0010-canonical-turn-receipt-accounting</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0010-canonical-turn-receipt-accounting" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0010-canonical-turn-receipt-accounting" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0010-canonical-turn-receipt-accounting" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0011-typed-tool-output-artifact</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0011-typed-tool-output-artifact" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0011-typed-tool-output-artifact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0011-typed-tool-output-artifact" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0012-immutable-plugin-preparation</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0012-immutable-plugin-preparation" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0012-immutable-plugin-preparation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0012-immutable-plugin-preparation" />
   </url>
   <url>
     <loc>https://echo-agent.dev/en/docs/knowledge-overview</loc>

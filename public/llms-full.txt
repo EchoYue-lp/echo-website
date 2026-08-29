@@ -83,6 +83,18 @@ Each capability below is grounded in a production binding in the current applica
 - 无头模式 | echo-agent 文档: https://echo-agent.dev/docs/headless-mode
 - Git 隔离 | echo-agent 文档: https://echo-agent.dev/docs/git-isolation
 - Mock 与测试 | echo-agent 文档: https://echo-agent.dev/docs/testing
+- ADR 0001: Sender-Scoped Channel Sessions | echo-agent 文档: https://echo-agent.dev/docs/adr-0001-channel-session-sender-scope
+- ADR 0002: Sandbox Cancellation Cleanup | echo-agent 文档: https://echo-agent.dev/docs/adr-0002-sandbox-cancellation-cleanup
+- ADR 0003: Tracked Steering Lifecycle | echo-agent 文档: https://echo-agent.dev/docs/adr-0003-tracked-steer-lifecycle
+- ADR 0004: Async File Store Ownership | echo-agent 文档: https://echo-agent.dev/docs/adr-0004-async-file-store-ownership
+- ADR 0005: Invocation Resource Lifetime Guards | echo-agent 文档: https://echo-agent.dev/docs/adr-0005-invocation-resource-lifetime
+- ADR 0006: Durable Runtime-State Scope Lineage | echo-agent 文档: https://echo-agent.dev/docs/adr-0006-runtime-state-scope-lineage
+- ADR 0007: Atomic Journal Batch Commits | echo-agent 文档: https://echo-agent.dev/docs/adr-0007-atomic-journal-batch-commits
+- ADR 0008: Canonical Runtime Task Authority | echo-agent 文档: https://echo-agent.dev/docs/adr-0008-canonical-runtime-task-authority
+- ADR 0009: Tracked Active and Initial Input Receipts | echo-agent 文档: https://echo-agent.dev/docs/adr-0009-tracked-input-receipts
+- ADR 0010: Canonical Turn Receipt Accounting | echo-agent 文档: https://echo-agent.dev/docs/adr-0010-canonical-turn-receipt-accounting
+- ADR 0011: Typed Tool Output Artifact | echo-agent 文档: https://echo-agent.dev/docs/adr-0011-typed-tool-output-artifact
+- ADR 0012: Immutable plugin preparation generations | echo-agent 文档: https://echo-agent.dev/docs/adr-0012-immutable-plugin-preparation
 - 知识库概述 | echo-agent 文档: https://echo-agent.dev/docs/knowledge-overview
 - Agent 设计模式 | echo-agent 文档: https://echo-agent.dev/docs/agent-patterns
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
@@ -139,6 +151,18 @@ Each capability below is grounded in a production binding in the current applica
 - Headless Mode | echo-agent Documentation: https://echo-agent.dev/en/docs/headless-mode
 - Git Isolation | echo-agent Documentation: https://echo-agent.dev/en/docs/git-isolation
 - Mock & Testing | echo-agent Documentation: https://echo-agent.dev/en/docs/testing
+- ADR 0001: Sender-Scoped Channel Sessions | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0001-channel-session-sender-scope
+- ADR 0002: Sandbox Cancellation Cleanup | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0002-sandbox-cancellation-cleanup
+- ADR 0003: Tracked Steering Lifecycle | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0003-tracked-steer-lifecycle
+- ADR 0004: Async File Store Ownership | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0004-async-file-store-ownership
+- ADR 0005: Invocation Resource Lifetime Guards | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0005-invocation-resource-lifetime
+- ADR 0006: Durable Runtime-State Scope Lineage | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0006-runtime-state-scope-lineage
+- ADR 0007: Atomic Journal Batch Commits | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0007-atomic-journal-batch-commits
+- ADR 0008: Canonical Runtime Task Authority | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0008-canonical-runtime-task-authority
+- ADR 0009: Tracked Active and Initial Input Receipts | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0009-tracked-input-receipts
+- ADR 0010: Canonical Turn Receipt Accounting | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0010-canonical-turn-receipt-accounting
+- ADR 0011: Typed Tool Output Artifact | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0011-typed-tool-output-artifact
+- ADR 0012: Immutable plugin preparation generations | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0012-immutable-plugin-preparation
 - Knowledge Base Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/knowledge-overview
 - Agent Design Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/agent-patterns
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive
@@ -12678,6 +12702,1224 @@ mod tests {
 ## 完整参考
 
 可运行的 doctest 与工具契约见 [testing 模块](../../src/testing/mod.rs)。
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0001-channel-session-sender-scope
+
+# ADR 0001: Sender-Scoped Channel Sessions
+
+- Status: Accepted
+- Date: 2026-08-25
+- Owners: `echo-integration/channels`
+
+## Context
+
+`SessionHandler` originally keyed sessions by `(channel_id, conversation_id)`.
+That made every participant in a group conversation share one handler, async
+mutex, Agent history, mode, human-in-the-loop state, timeout lifecycle, and
+reset command. This contradicted the documented per-user session model and let
+one participant reset or influence another participant's Agent state.
+
+The public `InboundMessage` type also permits callers to construct malformed
+identities. Built-in QQ and Feishu adapters previously replaced a missing
+sender with the shared string `unknown`, which reproduced the collision even
+after adding a sender coordinate.
+
+## Options Considered
+
+1. Keep one session per conversation. This preserves group-wide context but
+   violates the framework's per-user contract and cannot isolate mode, HITL,
+   locking, timeout, or reset state.
+2. Add sender-specific maps in each product or transport. This duplicates
+   session authority outside `SessionHandler` and lets adapters drift.
+3. Use a message-scoped anonymous session when the sender is missing. This
+   avoids cross-message state sharing, but malformed traffic would retain one
+   Agent per message until timeout and grow memory linearly.
+4. Use one typed framework key for identified senders and reject malformed
+   identity coordinates. This keeps one authority and bounds retained sessions
+   to identified channel participants.
+5. Derive runtime identity only from the stable sender key. This cannot
+   distinguish a replacement handler from its predecessor, so a persistent
+   runtime store may silently restore model messages after timeout or reset.
+6. Give every concrete handler a framework-owned opaque incarnation while
+   leaving the stable sender key unchanged. This separates ephemeral runtime
+   continuity from product conversation history without imposing an EKO data
+   model on the framework.
+
+## Decision
+
+`SessionHandler` uses one private typed key containing `channel_id`,
+`conversation_id`, and `sender_id`.
+
+- The same sender in the same channel conversation reuses one handler.
+- Different senders, conversations, or channels use different handlers and
+  mutexes.
+- Reset and timeout replacement affect only the exact sender-scoped key.
+- `active_sessions()` counts retained sender-scoped sessions, not conversations.
+- All three identity coordinates must be non-empty, must not contain
+  surrounding whitespace, and `sender_id` must not be the sentinel `unknown`.
+- Invalid identity returns the existing typed `ChannelError` before a session
+  or Agent is created.
+- QQ and Feishu ingress validate the same contract and do not forward malformed
+  messages to a handler. Feishu emits `open_id:{value}` or, when `open_id` is
+  absent, `user_id:{value}` so the two identity namespaces cannot collide.
+- Session-end callbacks report the same validated identity used by the key.
+- Every factory call receives a `ChannelSessionInstance`: its three validated
+  coordinates are stable and its opaque incarnation is unique to that concrete
+  handler lifetime.
+- Framework timeout/reset replacement creates a new incarnation. Applications
+  that own a richer reset barrier can call `ChannelSessionInstance::rotate()`
+  after settlement; all clones and the eventual end callback share that one
+  authority.
+- `SessionEndInfo.incarnation_id` always reports the incarnation that actually
+  ended, including an application rotation, so exact runtime cleanup does not
+  depend on reconstructing identities from strings.
+- Reset publishes its reply and installs the replacement immediately, but the
+  old generation retains its end callback until every admitted stream settles.
+  This prevents cleanup from racing a final checkpoint written by an older
+  stream. Timeout replacement remains restricted to idle generations. External
+  callback panics are contained so stream teardown cannot double-panic during
+  another unwind or poison the replacement session.
+- `AgentInvocationContext.runtime_state_id` separates ReAct checkpoint identity
+  from the stable product conversation carried by `ExternalRunContext`.
+  `transcript_generation_id` enables typed append projection for that runtime
+  incarnation. A shared `ReactAgent` records the identity currently represented
+  by its warm context; a value-scoped identity change forces exact reset/restore
+  before preparing model input, while only the same identity may reuse warmth.
+  Hydration is a three-state protocol: `Hydrating(target)` is published before
+  cancellable mutations and changes to `Hydrated(target)` only after hooks and
+  restore complete. A cancelled switch therefore forces the next turn to
+  rebuild rather than treating partial context as the predecessor. Runtime
+  switches also clear rollback snapshots, and restore-key precedence matches
+  save-key precedence: explicit invocation ID, invocation product conversation,
+  legacy external conversation, then configured conversation.
+- Canonical transcript records carry an internal `(generation, ordinal)` in
+  their existing projection metadata. `AgentCheckpoint` persists the committed
+  ordinal/digest cursor in its existing payload, so duplicate content, pool
+  eviction, crash cuts, and post-compaction suffixes do not require content
+  boundary guesses.
+
+No anonymous per-message fallback is retained, and anonymous messages do not
+reuse state across deliveries.
+
+## Consequences
+
+Group participants now have independent Agent history, mode, HITL state,
+locking, reset, and timeout lifecycles. Direct-message routing and state reuse
+remain the same for valid transport identities, but handlers and session-end
+callbacks now observe Feishu sender identities in the canonical
+`open_id:{value}` or `user_id:{value}` form instead of a raw provider value. A
+malformed transport event is rejected instead of receiving an Agent response;
+transport owners must provide a stable sender identity before entering the
+framework.
+
+The key remains private and no parallel session store or serialized contract is
+introduced. `ChannelSessionInstance` is a lifecycle capability supplied by the
+existing `SessionFactory`, not a second lookup authority. Consumers may include
+its incarnation in model/checkpoint keys while retaining the three stable
+coordinates for journals, TaskRuns, and UI routing. Timeout pruning continues
+to reclaim identified sessions under the existing `SessionConfig`.
+
+An incarnation rotation is a model-context boundary, not product-history or
+disk deletion. A new runtime key cannot load the predecessor checkpoint, while
+the stable `ConversationStore` transcript remains append-only and queryable.
+After old foreground/resource settlement, callers use the durable scope lineage
+from [ADR 0006](0006-runtime-state-scope-lineage.md) to delete the exact retired
+runtime checkpoint. Product deletion clears every indexed incarnation and then
+the stable transcript.
+
+This decision changes the public `SessionFactory` callback shape and adds
+`ChannelSessionInstance`, `ChannelSessionRotation`,
+`AgentInvocationContext.runtime_state_id`, and
+`AgentInvocationContext.transcript_generation_id`. Callers that do not split
+identities keep the prior behavior through `None` defaults.
+
+## Verification
+
+Regression coverage exercises same-group multi-sender isolation, independent
+mutexes, mode and HITL isolation, sender-local reset, same-sender reuse,
+channel/conversation separation, timeout callback identity, invalid identity
+fail-closed behavior, and QQ/Feishu ingress rejection.
+Incarnation coverage additionally exercises same-handler reuse, application
+rotation, timeout callback accuracy after rotation, fresh replacement IDs,
+deferred cleanup for both parked and admitted-but-unpolled streams, and callback
+panic containment during another unwind.
+Persistence coverage exercises same-incarnation checkpoint recovery, rotated
+checkpoint isolation, identical-tail transcript append, repeated safe-point
+idempotency, crash-cut catch-up, corrupt cursor rejection, and post-compaction
+ordinal continuation. It also drives one warm Agent through A -> B -> A and
+checks both model requests and saved checkpoints for cross-identity leakage;
+parks B at a post-restore hook, cancels it, and verifies the next A rebuild;
+checks legacy read/save key symmetry; and proves A snapshots cannot roll back
+into B.
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0002-sandbox-cancellation-cleanup
+
+# ADR 0002: Sandbox Cancellation Cleanup
+
+- Status: Accepted
+- Date: 2026-08-25
+- Owners: `echo-core/sandbox`, `echo-execution/sandbox`
+
+## Context
+
+`SandboxExecutor::execute_with_limits_and_cancel` provides a default cancellation
+race for lightweight implementations. `LocalSandbox` previously inherited that
+default even though its actual child process is owned by a detached streaming
+task. The default returned `SandboxError::Cancelled` as soon as the caller's
+future was dropped, while the detached task was still observing receiver close,
+killing the process group, and waiting for the child. A terminal result therefore
+did not prove that local execution had reached a cleanup safe point.
+
+Two additional drop windows existed. Local stdin was written before the child
+was transferred to the detached stream task, so aborting a blocked write only
+dropped the process handle. Docker lifecycle state remained inside the caller's
+future, so aborting after `docker create` detached neither a cleanup owner nor an
+RAII receipt and could leak the container. Docker also trusted create stdout as
+its only cleanup identity, even when that output was empty or malformed.
+
+`DockerSandbox` did own its cancellation branch, but every terminal path ignored
+the spawn result and exit status of `docker rm -f`. Normal completion, timeout,
+cancellation, or an execution error could be returned while the container still
+existed, with no typed indication that cleanup failed.
+
+## Options Considered
+
+1. Keep best-effort cleanup after returning the primary terminal. This minimizes
+   latency but makes terminal state unreliable and can leak processes or
+   containers into later runs.
+2. Add a second application-level cleanup supervisor. This duplicates sandbox
+   ownership in each embedding product and cannot reliably identify the exact
+   process or container created by the backend.
+3. Transfer each spawned resource immediately to one detached backend owner and
+   make that owner await cleanup before choosing a terminal. This keeps lifecycle
+   authority beside resource creation and survives caller task abort.
+
+## Decision
+
+Resource cleanup is part of controlled sandbox execution's terminal contract.
+
+- `LocalSandbox` overrides `execute_with_limits_and_cancel`. Immediately after
+  spawn it captures the process-group ID and transfers the child, stdin payload,
+  output pipes, deadline, and cancellation token to one detached owner. The
+  owner signals the captured group, awaits the leader, and verifies that signal
+  zero returns `ESRCH` before it chooses a terminal. Cancellation during blocked
+  stdin delivery uses the same owner and cleanup order.
+- Buffered local execution retains the owner task join handle and awaits it.
+  Live streaming remains receiver-owned: dropping the stream closes the channel
+  and wakes the detached owner task to perform kill and wait.
+- Local cleanup debt never becomes a successful-looking `Complete`. An active
+  stream receives `SandboxStreamEvent::Failed` with a typed
+  `SandboxStreamFailure`; a dropped stream has no receiver, so the owner retains
+  the typed debt and logs cleanup failure before exiting.
+- `DockerSandbox` rejects pre-cancel before probing or creating. It preallocates
+  a unique `--name`, then transfers create, start, stdin, client process, output,
+  timeout, cancellation, and `rm` to one detached lifecycle owner. Caller abort
+  drops an armed guard that signals a separate abandonment token; the owner
+  enters the same cancel cleanup path instead of waiting for the user timeout.
+  Empty or malformed create stdout still cleans by the preallocated name.
+- Docker normal completion, non-zero exit, timeout, cancellation, start failure,
+  stdin failure, and Docker I/O failure all attempt `docker rm -f` before return.
+- Docker cleanup checks command spawn and exit status. Cleanup failure becomes a
+  typed `SandboxError::IoError`; when execution also failed, the bounded terminal
+  message preserves exit, timeout/cancel, output-count, and cleanup facts.
+- Docker `info`, `create`, and `rm` use owned CLI children with fixed control
+  deadlines and kill/wait cleanup. Named removal retries are bounded to cover a
+  daemon commit racing an interrupted `create`. Availability hits a clone-shared
+  30-second cache; only a cache miss launches the owned `info` probe. Global
+  cleanup attempts every fully parsed container and returns one bounded aggregate
+  after all attempts; a truncated listing is always a typed incomplete failure.
+- Docker output readers drain incrementally into one shared retained-byte budget
+  while saturating logical byte counts. Normal, timeout, and cancellation paths
+  cannot allocate retained output beyond `max_output_bytes`.
+- `DockerConfig::extra_args` uses a narrow allowlist (`user`, `hostname`,
+  `platform`, `entrypoint`). Owner and isolation flags such as name, label,
+  restart, network, namespace, mount, security, and capability settings are
+  rejected in both split and `=` forms.
+- Unix Local cancellation owns process groups. The current Windows backend has
+  no Job Object implementation, so every Local execution entry point reports
+  unavailable before spawn instead of claiming that killing `cmd.exe` cleaned
+  its process tree. Windows consumers must use Docker/K8s.
+- The default trait implementation remains available only for executors whose
+  resources are fully released by dropping their execution future.
+
+No EKO policy, UI field, or application lifecycle state is introduced. This is a
+framework execution invariant shared by every embedding application.
+
+## Consequences
+
+Cancellation and timeout may take slightly longer because return now includes
+cleanup latency. In exchange, callers can treat the returned terminal as a safe
+point for subsequent execution, shutdown, or workspace reuse. Cleanup failures
+are observable and retryable rather than silently converted into apparent
+success.
+
+`SandboxStreamEvent` gains a terminal `Failed` variant and the public
+`SandboxStreamFailure` type. Exhaustive stream consumers must handle it separately
+from `Complete`. Local execution is unavailable on Windows until a Job Object
+owner is implemented.
+
+The Docker executable indirection is private and exists so backend command
+status can be tested deterministically without requiring a live Docker daemon or
+mutating process-global `PATH`.
+
+## Verification
+
+Regression coverage starts a real local leader and descendant, waits until the
+leader exits, cancels execution, and verifies that the captured group and
+descendant are absent at terminal return. A blocked-stdin test aborts the caller
+and verifies that the detached owner still cleans the group. Typed failure tests
+prove cleanup debt cannot emit a fake completion.
+
+A fake Docker executable verifies pre-cancel performs no Docker operation;
+normal, non-zero, timeout, cancellation, blocked stdin, and caller-abort paths
+converge through `info -> create -> start -> rm`; empty/bad create output still
+uses named cleanup; and non-zero/timeout/cancel facts survive a simultaneous
+non-zero cleanup failure. Additional faults cover hung info/create/rm stages,
+cleanup retry, first-failure global cleanup continuation, reserved extra args,
+and bounded high-volume output for normal/timeout/cancel terminals.
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0003-tracked-steer-lifecycle
+
+# ADR 0003: Tracked Steering Lifecycle
+
+- Status: Accepted
+- Date: 2026-08-25
+- Owners: `echo-core/agent`, `echo-agent/agent/react`
+
+## Context
+
+`Agent::steer_input` historically returned the active turn ID immediately after
+placing a message in the ReAct mailbox. Callers could prove acceptance, but not
+whether the single ReAct loop had moved that message into model context or
+whether the owning root turn later completed, failed, was cancelled, or was
+aborted. A durable application therefore had to choose between retaining an
+already-consumed input forever and acknowledging it before consumption.
+
+The framework already has one turn mailbox, one ReAct core loop, and one
+`ActiveTurnLease`. Adding an application-side queue or inferring consumption
+from product rendering would create a second lifecycle authority. The design is
+based on these verified repository boundaries and the existing lifecycle ADRs;
+external documentation was unavailable during this review, so no external
+runtime behavior is assumed.
+
+## Options Considered
+
+1. Keep returning only a turn ID and let each application infer consumption
+   from its transcript or foreground state. This cannot distinguish mailbox
+   acceptance from model-context drain and fails across cancellation or crash.
+2. Replace `steer_input` with a new mandatory return type. This is precise but
+   unnecessarily breaks existing `Agent` implementations and callers.
+3. Preserve `steer_input` and add an optional tracked method whose receipt is
+   driven by the existing mailbox, core-loop drain, and turn lease. This keeps
+   compatibility while giving durable consumers authoritative boundaries.
+
+## Decision
+
+The framework adds `Agent::steer_input_tracked` and the public
+`AgentSteerReceipt`, `AgentSteerState`, `AgentSteerPhase`, and
+`AgentSteerTurnOutcome` types.
+
+- `Accepted` is published only after the exact active turn mailbox owns the
+  input.
+- The core loop acquires its context lock, takes a batch from the mailbox,
+  inserts every message into `ContextManager`, and only then publishes
+  `Drained`. Waiting for the context lock cannot produce a false drain receipt.
+- The active turn lease publishes `TurnSettled` from the real root-turn
+  terminal. Completed, cancelled, and failed paths are explicit. Dropping or
+  aborting the owner publishes `Dropped`.
+- Terminal state records whether drain occurred. If cancellation or drop wins
+  before context insertion, the receipt settles with `drained: false`.
+- Each active lease carries a private, non-reusable incarnation. External turn
+  IDs remain stable correlation keys, but a stale lease cannot change
+  steerability or settle/drop a newer incarnation that reused the same ID. The
+  exact token is cloned into `AgentRunSnapshot`; mailbox drain requires both the
+  external ID and pointer-identical incarnation, so an old core cannot consume
+  a newer same-ID generation.
+- A `UserPromptSubmit` hook block is a failed root turn, never a completed one.
+  Steering accepted while that hook runs settles as failed and undrained.
+- If an implementation drops the watch sender without publishing a terminal,
+  every receipt clone shares one synthesized `Dropped` terminal that preserves
+  whether the last observed state was drained. Waiters never return a stranded
+  `Accepted` or `Drained` state after channel closure.
+- State transitions are monotonic. A late drain cannot overwrite an already
+  settled turn, and replacing an unexpected active lease settles the previous
+  one as dropped.
+- Mailbox and receipt locks are synchronous and are never held across an await.
+  The async context lock is acquired before the short mailbox transfer.
+- The legacy `steer_input` remains available and uses the same mailbox. Third
+  party `Agent` implementations remain source compatible; tracked steering
+  returns `Unsupported` until they provide real lifecycle signals.
+
+No application journal, retry policy, UI state, or delivery-specific concept is
+added to the framework. Applications decide which receipt boundary is durable
+enough for their product.
+
+## Consequences
+
+Durable consumers can retain input through `Accepted`, acknowledge it after
+`Drained`, and separately wait for root-turn settlement. `Drained` does not mean
+the turn succeeded, and `TurnSettled { drained: false, .. }` explicitly tells a
+caller that replay remains necessary.
+
+One small watch channel is retained per accepted steering input until the turn
+settles. Legacy callers may discard the receiver; the same bounded turn owner
+still releases the sender at terminal.
+
+Tracked steering is an additive public API. Implementations that only override
+the legacy method continue compiling but do not receive inferred or fabricated
+tracking.
+
+## Verification
+
+Mailbox tests cover accepted-before-drain, terminal-before-drain, owner drop,
+same-ID stale-lease ABA, unique concurrent receipts, and FIFO batch drain. A
+same-ID stale-snapshot test proves that only the current incarnation can drain.
+A context barrier test proves
+that a receipt remains accepted while the context lock is held, then changes to
+drained only after insertion. A competing terminal test proves that settlement
+before context access yields `drained: false`. ReAct integration tests cover
+completed, provider-failed, and cancelled terminals after a real drain, plus a
+non-streaming hook block accepted before terminal. Closed-sender tests cover
+accepted/drained inputs and cloned waiters. A façade test keeps all public
+receipt types reachable through `echo_agent`.
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0004-async-file-store-ownership
+
+# ADR 0004: Async File Store Ownership
+
+- Status: Accepted
+- Date: 2026-08-25
+- Owners: `echo-core/utils`, `echo-state/memory`, `echo-agent/state`
+
+## Context
+
+`RuntimeStateStore` and `ConversationStore` are asynchronous framework traits,
+but their file-backed implementations previously executed `std::fs` work from
+the polling task. `FileConversationStore` moved each call to
+`spawn_blocking`, but every caller created an unbounded independent operation.
+Dropping the caller could also drop the only observable owner before a durable
+write had settled. A store-wide synchronous mutex serialized unrelated
+conversations and made the ownership boundary difficult to verify.
+
+The framework must keep file durability and error behavior unchanged: atomic
+temporary-file writes, data and directory synchronization, generation manifests,
+UTF-8 parsing errors, corrupt-record failures, and cross-process lease rejection
+remain authoritative. EKO policy and UI state do not belong in this mechanism.
+
+## Options Considered
+
+1. Keep synchronous file calls inside async trait futures. This is simple, but a
+   slow filesystem blocks unrelated Tokio tasks.
+2. Call `spawn_blocking` independently in every method. Tokio documents that
+   started blocking tasks cannot be aborted and that its default blocking limit
+   is large, so this has no process resource bound or shared ordering authority.
+3. Admit owned operations through one process-wide bounded service, then order
+   operations by canonical store path and conversation key. This keeps the
+   trait API stable while making ownership and concurrency explicit.
+
+## Decision
+
+File-backed async traits submit owned closures through
+`echo_core::utils::blocking::run_keyed_file_operation`.
+
+- Process admission is bounded at 64 unsettled operations and blocking execution
+  is bounded at 8 concurrent closures. Tokio semaphore admission is fair.
+- Admission happens before the detached owner is created. After admission, a
+  process-lifetime Tokio runtime owns the admission/execution permits, key
+  completion receipt, closure, and result sender until settlement. Dropping the
+  calling future or shutting down its Tokio runtime cannot cancel an accepted
+  durable operation or release the next same-key operation early.
+- The helper uses `Handle::try_current` and returns a typed error outside a Tokio
+  runtime rather than invoking an API that can panic.
+- Keys hash namespace, canonical root path, and typed entity/collection scope as
+  separate fields; delimiters and a real conversation named `__list__` cannot
+  alias a collection scan. Entity scope and persisted filename are both derived
+  from the exact UTF-8 bytes encoded as lowercase hexadecimal ASCII. Case folding
+  and Unicode normalization on APFS or another filesystem cannot make distinct
+  logical IDs share a file while using different queues. Each key has a checked
+  monotonic generation and a shared completion tail.
+  Generation exhaustion fails closed; same-key operations execute in submission
+  order without holding a synchronous mutex across an `.await`.
+- `FileRuntimeStateStore` keys operations by canonical base plus
+  `conversation_id`.
+- `FileConversationStore` shares metadata/cache/file authority between handles
+  on the same canonical base. Per-conversation operations use the same keyed
+  queue. Brief synchronous metadata and cache locks are acquired only inside a
+  blocking closure. A scan barrier gives collection scans a stable
+  manifest/message-generation snapshot while allowing unrelated conversation
+  operations to overlap.
+- SQLite implementations remain independent optional framework backends and are
+  unchanged.
+
+The Tokio contracts used by this decision are documented in
+[`spawn_blocking`](https://docs.rs/tokio/1.53.1/tokio/task/fn.spawn_blocking.html),
+[`Handle::try_current`](https://docs.rs/tokio/1.53.1/tokio/runtime/struct.Handle.html#method.try_current),
+and [`Semaphore`](https://docs.rs/tokio/1.53.1/tokio/sync/struct.Semaphore.html).
+
+## Consequences
+
+File-backed runtime and conversation operations no longer block a Tokio runtime
+thread. Same-conversation updates retain atomic ordering. Independent
+conversations can progress concurrently, but a process cannot create an
+unbounded number of blocking filesystem operations.
+
+Once accepted, a write may finish after its caller is cancelled. This is
+intentional: durable file mutation is non-abortable, and later same-key reads
+wait for that mutation's settlement. Callers still receive the original
+serialization, I/O, corruption, and missing-record semantics when they remain
+attached.
+
+## Verification
+
+Regression tests cover a current-thread runtime heartbeat, operation completion
+after caller abort, caller-runtime shutdown while a same-key operation is
+parked, owner panic settlement, same-key ordering, structured-key collision
+resistance, bounded different-key concurrency, typed no-runtime and
+generation-exhaustion failures, save/clear/save ABA ordering, corrupt checkpoint
+read followed by clear, corrupt conversation read racing delete, and a search
+holding an old manifest generation while replacement waits. Concurrent
+case-distinct and Unicode-normalization-distinct IDs prove that logical entities
+do not alias even on case-insensitive filesystems. Existing append, replacement,
+fsync boundary, Unicode, restart, lease, and recovery tests remain the durability
+conformance suite.
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0005-invocation-resource-lifetime
+
+# ADR 0005: Invocation Resource Lifetime Guards
+
+- Status: Accepted
+- Date: 2026-08-25
+
+## Context
+
+An Agent invocation can start work that outlives the future currently observed
+by its caller. The ReAct loop, streaming driver, Subagent executor, and tools
+also cross `tokio::spawn` boundaries. Cancellation and trace metadata already
+flow by value through `AgentInvocationContext`, but neither field owns an
+application resource such as a concurrency permit, temporary workspace, or
+external lease.
+
+Releasing such a resource when the caller or event stream is dropped can admit
+conflicting work while an already-started tool or blocking operation is still
+running. The framework must preserve ownership without learning EKO-specific
+pool, workspace, or scheduling policy.
+
+## Considered Options
+
+1. Keep resources in application task-local state. Tokio tasks created with
+   `spawn` do not inherit task-local ownership, so Subagent and tool boundaries
+   lose the resource.
+2. Add typed application permits to framework contexts. This couples the
+   reusable framework to one product's resource model.
+3. Add an opaque cloneable ownership token to the existing invocation context
+   chain. Shared ownership follows the spawned work while the wrapped value
+   remains inaccessible.
+
+## Decision
+
+Adopt option 3. `InvocationResourceGuard` stores the value behind
+`Arc<dyn Any + Send + Sync>` but exposes no getter or downcast operation. Its
+public surface supports construction, cloning, dropping, and redacted Debug
+only. The read-only `retains::<T>()` predicate checks the exact wrapped type so
+consumers can select their own guard among several resources, but exposes no
+reference, owned handle, or downcast operation. A free-form marker key was
+rejected because it introduces collision, spoofing, and naming-governance
+problems that the Rust type already solves.
+
+When several resources have the same concrete type, callers may use
+`new_identified(resource, identity)` to attach one immutable typed descriptor.
+`matches_identity::<I>(&I)` performs an exact type-and-value comparison and
+returns only a boolean. The descriptor remains behind `Any`: there is no
+getter, public downcast, or Debug value. A string marker was rejected because
+it recreates collision and naming-governance problems; a getter/downcast was
+rejected because it would turn an ownership token into an application-data
+transport.
+
+`resource_guards` propagate through:
+
+```text
+AgentInvocationContext
+  -> AgentRunSnapshot
+  -> ToolContext
+  -> ExternalRunContext for Subagent dispatch
+  -> child AgentInvocationContext
+```
+
+Default value-scoped methods on the public `Agent` trait wrap a third-party
+Agent's returned event stream with the complete invocation value. Implementors
+that have not overridden these methods therefore retain guards until that
+stream ends or is dropped instead of releasing them when the factory future
+returns.
+
+Invocation and runtime guard lists are both retained. Tools that create owned
+asynchronous or blocking work clone the guard list into that work. Destruction
+of the wrapped resource therefore occurs only after the final clone settles.
+Run and turn identifiers are optional correlation metadata: a non-empty guard
+list creates and propagates `ExternalRunContext` even when both identifiers are
+absent, including detached background Subagent dispatch.
+
+Legacy mutable Agent setters are captured as one value before an invocation
+waits for the execution mutex. Queued calls therefore retain the run,
+cancellation, trace, delegation, and guard values that belonged to their
+caller. A private context epoch serializes `set`, `clear`, and every composite
+capture so conversation, run, turn, execution, isolation, message,
+cancellation, trace, delegation, and guard fields cannot come from different
+callers. Every non-empty combination is a valid context; identifiers are not a
+gate for cancellation, trace, delegation, or ownership. Replacing or clearing
+the shared context swaps all fields inside the epoch and drops the previous
+snapshot only after unlocking, because an application-owned destructor may
+block or re-enter framework code.
+
+This follows Rust's `Arc` shared-ownership contract and Tokio's owned-value
+spawn model. It is also compatible with owned permits such as Tokio's
+`OwnedSemaphorePermit`, without making the framework understand semaphore
+policy.
+
+## Consequences
+
+- Stream and caller cancellation no longer imply premature release of a
+  correctly retained application resource.
+- Main Agent, Subagent, streaming, and non-streaming tool paths share one
+  ownership channel rather than parallel product-specific mechanisms.
+- Anonymous and background work retains the same ownership guarantees; runtime
+  identity is not an ownership precondition.
+- Slow or re-entrant application destructors do not run while the framework's
+  context epoch or guard-container mutex is held.
+- Tools remain responsible for cloning guards into work they detach from their
+  own future. The framework cannot retain a resource for work it does not own
+  or observe.
+- Debug output includes Rust type names and guard counts, but never formats the
+  wrapped resource or identity values.
+- Identified guards can be selected among same-typed resources without giving
+  tools access to the identity descriptor itself. Clones share the same
+  immutable resource and identity allocations.
+- The new public struct fields are intentionally source-breaking for explicit
+  context literals; the project is pre-release and updates all workspace
+  consumers together.
+
+## References
+
+- Rust `Arc`: <https://doc.rust-lang.org/std/sync/struct.Arc.html>
+- Tokio `spawn`: <https://docs.rs/tokio/latest/tokio/task/fn.spawn.html>
+- Tokio `OwnedSemaphorePermit`:
+  <https://docs.rs/tokio/latest/tokio/sync/struct.OwnedSemaphorePermit.html>
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0006-runtime-state-scope-lineage
+
+# ADR 0006: Durable Runtime-State Scope Lineage
+
+- Status: Accepted
+- Date: 2026-08-25
+- Owners: `state`, `agent/snapshot`
+
+## Context
+
+A stable product conversation can intentionally rotate through multiple model
+contexts. Channel timeout/reset is one example: the user-visible transcript and
+Task history remain under one stable conversation, while each handler
+incarnation receives a different `RuntimeStateStore` checkpoint identity.
+
+Separating those identities prevents a new model context from restoring the old
+checkpoint, but identity separation alone leaves old checkpoints on disk. A
+later product delete also cannot enumerate hashed/opaque runtime IDs after a
+process restart.
+
+This is a general checkpoint-retention problem, not an EKO policy. LangGraph
+similarly distinguishes thread-scoped checkpointers from cross-thread stores,
+provides `delete_thread` for all checkpoints/writes under a thread, and
+recommends pruning or retention because checkpoints grow without bound:
+
+- <https://docs.langchain.com/oss/python/langgraph/persistence>
+- <https://github.com/langchain-ai/langgraph/blob/main/libs/checkpoint/langgraph/checkpoint/base/__init__.py>
+
+## Options Considered
+
+1. Leave retired checkpoints unreadable but never delete them. Runtime behavior
+   is correct, but disk use grows indefinitely and product deletion is partial.
+2. Scan backend paths/tables during deletion. This leaks concrete backend
+   layouts into callers and cannot reliably recover opaque ownership.
+3. Keep a product-specific index in each application. This duplicates
+   persistence authority and makes framework backends incomplete.
+4. Add a stable scope-to-runtime lineage to `RuntimeStateStore`, with exact and
+   whole-scope deletion. This keeps checkpoint ownership in its existing store
+   and remains reusable outside channels.
+
+## Decision
+
+`RuntimeStateStore` owns a durable mapping from one stable `scope_id` to every
+globally unique `runtime_state_id` saved for that scope.
+
+- `save_checkpoint_for_scope` binds the runtime ID and saves its checkpoint.
+- `runtime_state_ids` returns the sorted durable lineage.
+- `clear_runtime_state` deletes one exact incarnation and its binding. A reset
+  calls this after old foreground/resource settlement and before admitting the
+  replacement model context.
+- `clear_runtime_state_scope` deletes all indexed incarnations. It is
+  idempotent and also reclaims a legacy checkpoint whose ID equals the scope.
+- `clear_persisted_runtime_incarnation` also deletes any transcript written
+  under the incarnation ID, while preserving the stable scope transcript.
+- `delete_persisted_conversation` enumerates and deletes incarnation-keyed
+  transcripts, clears the runtime scope, then deletes the stable transcript.
+
+The framework does not derive product IDs, decide when a product reset is
+allowed, or delete Task/application journals. Callers supply the stable scope
+and exact runtime identity already carried by their invocation lifecycle.
+Callers must close admission and settle foreground/resource owners before reset
+or product deletion; that product admission barrier prevents a new incarnation
+from being created between cross-store cleanup steps.
+
+File storage has one authoritative record per runtime ID. `Active` records own
+the scope binding and checkpoint in the same atomic JSON replacement;
+`Deleting` records retain the exact cleanup obligation without checkpoint
+payload. A retry can therefore finish every crash cut without choosing between
+separate owner/index/checkpoint files. Scope-index files are rebuildable
+projections and never decide ownership or whether an operation succeeded;
+projection write/delete/fsync failure cannot block authoritative enumeration or
+deletion.
+Writes use temp-file fsync + rename + parent-directory fsync, deletions fsync the
+parent even on an idempotent retry, and first directory creation publishes every
+ancestor durably. One store-root lease plus a fixed set of in-process shards
+replaces per-incarnation lock files, so lock metadata cannot grow with runtime
+IDs. SQLite performs binding/checkpoint mutations in one transaction; all async
+trait methods submit their complete connection/transaction closure to the
+bounded keyed blocking owner. A foreign scope owning a runtime ID that equals
+another scope's name disables only the legacy same-ID fallback; it cannot block
+cleanup of rows genuinely owned by that other scope.
+
+## Consequences
+
+Reset remains a new empty model context, not a product-history wipe. It reclaims
+the retired runtime checkpoint and any incarnation-keyed transcript while
+preserving the stable transcript. Product delete removes the stable transcript,
+incarnation transcripts, and every indexed runtime checkpoint.
+
+The `RuntimeStateStore` public contract grows by four scope operations. Built-in
+File and SQLite backends implement the same semantics; custom implementations
+must provide durable indexing rather than an in-memory approximation.
+
+Scope operations require runtime IDs to be globally unique. This matches UUID
+and stable-hash invocation IDs and avoids ambiguous cross-scope ownership.
+
+## Verification
+
+Coverage includes multiple senders and incarnations, restart persistence,
+sender-local exact reset, reset transcript retention, full product deletion,
+every File `Active`/`Deleting`/unlink crash cut, competing scope claims, corrupt
+projection repair, durable unlink retry, SQLite transactional lineage and Tokio
+heartbeat, cross-backend same-name scope parity, invocation-aware checkpoint
+restore/save symmetry, and snapshot checkpoint registration under distinct
+product/runtime identities.
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0007-atomic-journal-batch-commits
+
+# ADR 0007: Atomic Journal Batch Commits
+
+- Status: Accepted
+- Date: 2026-08-26
+- Owners: `echo-state/journal`
+
+## Context
+
+An event journal is the fact authority for consumers that rebuild a projection
+after restart. Several related events may describe one logical transition. If a
+writer loops over single-event appends, concurrent writers can interleave those
+events and a crash can expose only a prefix. The projection then observes a
+state that no caller committed.
+
+The journal must also distinguish visibility from durability. A complete frame
+may be visible and recoverable even when its requested `sync_data` barrier
+reports an error. Retrying that committed payload as new work would duplicate
+effects, while treating every write error as committed would lose absent work.
+
+Mature storage systems converge on an explicit commit unit. RocksDB
+`WriteBatch` applies a group atomically, and KurrentDB/EventStoreDB appends an
+ordered event batch under an expected stream revision. Kafka likewise separates
+the immutable log from the boundary consumers are allowed to observe. The
+shared pattern is that a batch has one identity and one visibility decision;
+it is not a convenience loop around independent writes.
+
+References:
+
+- <https://github.com/facebook/rocksdb/wiki/Basic-Operations#atomic-updates>
+- <https://docs.kurrent.io/clients/grpc/appending-events.html>
+- <https://kafka.apache.org/documentation/#design_transactional_semantics>
+- <https://doc.rust-lang.org/std/fs/struct.File.html#method.sync_data>
+
+## Options Considered
+
+1. Keep `append(event)` as the only primitive and let callers loop. This cannot
+   prevent interleaving or partial visibility.
+2. Add a product-specific transaction around each EKO journal. This duplicates
+   sequence, integrity, retry, and recovery rules outside the framework.
+3. Make one prepared batch frame the framework journal commit boundary, with a
+   typed receipt for committed, absent, conflicting, and unknown outcomes.
+
+## Decision
+
+`EventJournal::append_batch` is the canonical multi-event commit primitive.
+`append` remains a one-event adapter over the same mechanism.
+
+- `PreparedJournalBatch` serializes and hashes the payload before I/O, assigns a
+  stable batch identity, rejects empty or oversized inputs, and validates that
+  an interiorly mutable payload has not changed before append or lookup.
+- A physical JSONL line contains the complete digest-protected batch frame.
+  Records receive one contiguous global sequence range while the journal's
+  append authority is held. A reader never observes a record prefix.
+- Memory, file, and segmented journals share the same identity and receipt
+  contract. Segmentation is physical layout only; a batch never crosses a
+  segment boundary.
+- A complete frame whose durability barrier fails returns a committed receipt
+  with degraded durability. A proven zero/short write returns the prepared
+  payload for a safe retry. An ambiguous result returns `OutcomeUnknown` and
+  requires reopen plus `lookup_batch` reconciliation before retry.
+- Reusing an identity with the same digest is idempotent. Reusing it with a
+  different payload is a conflict and poisons the live authority until reopen.
+- Complete corruption fails closed. Only a torn trailing frame is truncated on
+  reopen, which keeps the incomplete batch invisible.
+
+Sequencing, frame integrity, durability classification, and reconciliation are
+generic persistence mechanisms, so they remain in `echo-state`. Applications
+choose stream roots, retention, UI projections, and which domain events belong
+in a logical batch. They must not add a second sequence or commit authority.
+
+## Consequences
+
+Consumers can project every committed transition without seeing an interleaved
+or partial batch. Unknown write outcomes require an explicit reopen/lookup step,
+which is more work than blind retry but prevents duplicate effects. File formats
+now use batch frames rather than one independently committed record per line.
+
+Checkpoint compounding continues after the complete batch is folded. A
+checkpoint failure degrades the receipt but does not roll back authoritative
+journal records; recovery can rebuild from the journal.
+
+## Verification
+
+The conformance suite covers contiguous concurrent batches, non-interleaving,
+idempotent identity reuse, identity conflicts, interior payload mutation,
+serialization and sequence overflow, complete/short/zero/ambiguous write fault
+matrices, reopen reconciliation, torn-tail repair, complete corruption
+rejection, segment rollover, checkpoint degradation, and non-`Clone` events.
+The journal benchmark compares batch sizes across memory, file, and segmented
+implementations and measures checkpoint-compounded recovery.
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0008-canonical-runtime-task-authority
+
+# ADR 0008: Canonical Runtime Task Authority
+
+- Status: Accepted
+- Date: 2026-08-26
+- Owners: `echo-orchestration/tasks`, `agent/subagent`
+
+## Context
+
+The framework historically had overlapping task models and execution loops:
+revisioned task relations, manager plans, team-specific nodes, and legacy task
+executors could each decide status, readiness, retry, or settlement. Parallel
+authorities make dynamic graph edits and restart recovery ambiguous. A stale
+executor can overwrite a newer revision, and UI/todo projections can drift into
+runtime inputs.
+
+Industry agent systems keep plans as inspectable artifacts and keep execution
+lifecycle separate. Cursor Plan Mode produces an editable plan before Agent
+execution. OpenAI Codex exposes thread, turn, and item lifecycle events rather
+than encoding plan approval as additional task-run states. Both patterns favor
+one executable graph/lifecycle authority with projections around it, not a
+second state machine per surface or collaboration role.
+
+References:
+
+- <https://cursor.com/docs/agent/plan-mode>
+- <https://cursor.com/docs/subagents>
+- <https://github.com/openai/codex/blob/main/codex-rs/app-server/README.md>
+
+## Options Considered
+
+1. Preserve each legacy executor and synchronize them through adapters. This
+   keeps multiple ready frontiers and cannot make settlement atomic.
+2. Move EKO worktree, reviewer, approval, and UI fields into a large framework
+   task runtime. This would bind the reusable framework to one product.
+3. Keep one revisioned framework graph and one runtime service, while making
+   application adapters provide persistence, dispatch, and product policy.
+
+## Decision
+
+The framework has one revisioned TaskRun graph and two non-overlapping service
+boundaries over that same authority.
+
+- `TaskRevisionService` is the only CRUD, relation, validation, ordering, and
+  revision commit authority. `task_create`, `task_update`, and `task_list` use
+  it directly.
+- `RuntimeTaskService` is the only public dependency execution entry point. Its
+  internal `RuntimeDagExecutor` owns validation, ready-frontier computation,
+  bounded waves, retry bookkeeping, cancellation/pause safe points, stall
+  detection, and terminal settlement.
+- `TaskSpec` contains portable specification fields and an opaque `extension`.
+  `TaskExecution` contains framework lifecycle, retry, failure, and exact claim
+  state. Application fields must round-trip losslessly through the extension.
+- Claims bind revision, attempt, stable spec hash, and unique identity.
+  Compare-and-set settlement rejects stale or superseded Subagent results.
+- A controller adapter may atomically persist snapshots, dispatch Subagents,
+  and apply product review/resource policy. It must not own another DAG loop,
+  validator, ready frontier, retry state machine, or task store.
+- `TaskSpawner` remains a process-local future tracker, not a durable relation
+  authority. Team APIs compile into the canonical graph and dispatch through
+  the same Subagent registry/executor.
+- A plan remains an editable, versioned artifact. Todo and surface progress are
+  read-only projections and cannot become execution inputs or separate stores.
+
+Dependency DAGs, revision safe points, claims, retry, cancellation, and generic
+Subagent dispatch are reusable framework mechanisms. EKO worktrees, reviewer
+policy, DomainProfile, file authority, approvals, and GUI/TUI/CLI projection
+remain application concerns. The adapter boundary is intentionally thin.
+
+## Consequences
+
+Dynamic patches take effect at a reload safe point, and stale attempts cannot
+overwrite a reclaimed task. Retry, pause, skip, cancellation, and dependency
+failure have one semantic source across Team and direct Task APIs.
+
+Legacy `TaskManager`, `TaskStore`, `TaskExecutor`, `TaskScheduler`, manager-owned
+ready loops, and Team-specific checkpoint nodes were removed. Applications
+must adapt product data through `TaskSpec::extension` and the controller rather
+than restoring compatibility fields or parallel task CRUD.
+
+## Verification
+
+Tests cover create/update revision conflicts, complete graph validation,
+dynamic revision reload, exact claim identity, stale and superseded settlement,
+bounded/conflict-aware waves, retry exhaustion, explicit retry, resumable pause,
+cancellation settlement, skip waivers, transitive dependency blocking, stall
+detection, Team adaptation, extension round trips, and public facade
+construction. Documentation and facade smoke tests assert that the canonical
+services are the exported framework entry points.
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0009-tracked-input-receipts
+
+# ADR 0009: Tracked Active and Initial Input Receipts
+
+- Status: Accepted
+- Date: 2026-08-27
+- Owners: `echo-core::agent`, `agent/subagent`, `echo-orchestration::runtime`
+
+## Context
+
+Active Subagent messages were routed through the legacy `steer_input` API. That
+API returns only a turn identity, so a caller could mistake mailbox admission
+for context consumption or turn completion. Initial inputs driven by
+`AgentTurnDriver` had the inverse problem: the driver returned a terminal
+`TurnReceipt`, but exposed no lossless way to observe acceptance or context
+drain before that terminal.
+
+The framework already has one authoritative tracked lifecycle for active-turn
+steering: `AgentSteerReceipt` reports `Accepted`, `Drained`, and
+`TurnSettled(completed|failed|cancelled|dropped)`. The framework must reuse that
+authority instead of adding another mailbox, reducer, or supervisor.
+
+## Decision
+
+1. `SubagentControlRegistry::send_message_tracked` calls
+   `Agent::steer_input_tracked` directly. `SubagentMessageReceipt` contains only
+   the exact attempt envelope (`execution_id`, `attempt`) and the nested
+   `AgentSteerReceipt`; its turn identity is read from that nested receipt.
+   The legacy `send_message` route and independent `Delivered` projection are
+   removed from the framework.
+2. `TurnRequest::with_input_receipt` creates one `TurnInputReceipt` and places
+   only its publisher in the request. The caller keeps the receiver before
+   invoking the same `AgentTurnDriver`.
+3. `AgentTurnDriver` validates the request identity, publishes `Accepted`
+   immediately before calling an Agent stream API, and settles the same receipt
+   with the real `TurnOutcome`. Publisher drop is an RAII `Dropped` terminal.
+4. A concrete Agent publishes `Drained` through the optional
+   `AgentInvocationContext::input_lifecycle` publisher only after the initial
+   input has been successfully inserted into its model context and before
+   provider execution. `ReactAgent` owns that producer point. Generic Agent
+   implementations without the publisher retain `drained = false`, even when
+   they emit output.
+5. `TurnInputReceipt` and its publisher share one watch controller and one
+   terminal guard. Receipt reads never create a second cached terminal
+   authority; a closed publisher is interpreted as `Dropped` only as a
+   defensive fallback.
+
+## Route-specific phases
+
+| Route | Accepted producer | Drained producer | Terminal producer |
+| --- | --- | --- | --- |
+| Active Agent/Subagent message | `TurnSteerMailbox::steer_tracked` | ReAct loop `SteerDrainBatch::mark_drained` | active-turn lease settlement |
+| Cold initial input | `AgentTurnDriver` after identity validation, before Agent stream call | `ReactAgent` after `ContextManager` input preparation, before provider call | the same `AgentTurnDriver` |
+| Generic Agent without lifecycle publisher | `AgentTurnDriver` | none; remains `false` | the same `AgentTurnDriver` |
+
+Terminal-before-drain, cancellation, sink failure, missing terminal, shutdown,
+ABA/stale attempt, and publisher/future drop are typed outcomes. No output EOF,
+rendered event, or terminal event is used to infer `Drained`.
+
+## Alternatives rejected
+
+- Keeping `turn_id` as a `Delivered`-looking Subagent receipt: conflates
+  identity with consumption and creates a second authority in application
+  adapters.
+- Marking cold input drained on the first output envelope or at stream EOF:
+  neither proves that `ContextManager` accepted the input.
+- Adding an application mailbox, store, supervisor, or a second lifecycle
+  reducer: violates the framework/application boundary and duplicates the
+  existing tracked mailbox.
+
+## Consequences
+
+Framework consumers can wait for active-message drain and terminal settlement,
+and can observe initial-input admission without changing the driver or owning a
+second tracker. Existing legacy `steer_input` callers remain source-compatible
+as a thin turn-ID adapter, but framework production control paths use the
+tracked APIs. Product-specific durable persistence and admission policy remain
+outside this crate.
+
+## Verification
+
+Focused tests cover active accepted-before-drain, all four terminal outcomes,
+terminal-before-drain, exact-attempt stale/settled rejection, cold accepted /
+drained / failed / cancelled / dropped outcomes, generic no-publisher
+no-drain, immediate Agent construction drain, and monotonic single settlement.
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0010-canonical-turn-receipt-accounting
+
+# ADR 0010: Canonical Turn Receipt Accounting
+
+- Status: Accepted
+- Date: 2026-08-28
+- Owners: `echo-orchestration::runtime`
+
+## Context
+
+`AgentTurnDriver` already owned envelope sequencing, typed terminal mapping,
+provider usage totals, the final answer, and elapsed time. A downstream product
+adapter still folded the same stream a second time to recover token totals,
+elapsed time, context-compaction count, final answer, and final message identity.
+That left two summaries derived from the same invocation and allowed sink or
+application behavior to make them diverge.
+
+This decision concerns only generic invocation facts. Durable runtime history
+and recovery checkpoints already belong to the framework `RuntimeStateStore`;
+the user-visible transcript remains a `ConversationStore` projection. Product
+workspace identity, retention pins, Task policy, and webhook delivery are not
+framework turn facts.
+
+## Industry evidence
+
+- OpenAI Codex exposes `TurnCompletedNotification` as a complete turn object
+  with stable turn identity, status, and duration. Token usage is an explicit
+  notification keyed by `threadId` and `turnId`, and context compaction is an
+  explicit notification rather than a UI inference:
+  <https://github.com/openai/codex/tree/main/codex-rs/app-server-protocol/schema/json/v2>
+- Claude Agent SDK streams progress messages but reports the final result in a
+  `ResultMessage`; context compaction is a distinct compact-boundary message:
+  <https://platform.claude.com/docs/en/agent-sdk/streaming-output>
+
+Both systems keep progress projection separate from a bounded, authoritative
+completion result.
+
+## Decision
+
+1. `TurnReceipt` is the single framework summary for one driven invocation.
+   It includes typed terminal, final answer, final message identity, reported
+   prompt/completion tokens, usage call count, explicit compaction count, last
+   event sequence, and elapsed time.
+2. `AgentTurnDriver` records those fields before handing each envelope to the
+   sink. If delivery fails, terminal-only result fields are cleared with the
+   failed receipt rather than being retained as a successful completion.
+3. Product adapters consume the receipt for generic facts. Their event
+   observers retain only product behavior such as tool webhooks, persistence,
+   rendering, and product-specific policy.
+4. Runtime checkpoint and transcript authorities do not move. No new history
+   store, reducer, or checkpoint is introduced.
+
+## Alternatives rejected
+
+- Keep a product-side summary reducer: duplicates the framework driver and can
+  diverge on sink failure, cancellation, missing terminal, or future events.
+- Move product journals and webhooks into the framework: those depend on EKO
+  workspace and surface policy and are not reusable turn mechanics.
+- Infer completion from EOF or the final rendered item: EOF is not a typed
+  terminal and renderer acceptance is not Agent completion.
+
+## Consequences
+
+Framework consumers receive one bounded completion receipt without replaying
+the stream. EKO keeps its durable product journal and webhook adapter, but no
+longer recalculates generic turn accounting. New generic receipt fields are a
+public API addition: ordinary receipt readers remain source-compatible, while
+downstream code that directly constructs a `TurnReceipt` literal must provide
+the new fields.
+
+## Verification
+
+Framework tests cover multiple usage events, explicit compaction boundaries,
+final message identity, sink failure, cancellation, missing terminal, and
+sequence continuation. The application adapter test verifies that its product
+outcome uses the framework receipt while event observation remains limited to
+product projection.
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0011-typed-tool-output-artifact
+
+# ADR 0011: Typed Tool Output Artifact
+
+- Status: Accepted
+- Date: 2026-08-29
+
+## Context
+
+`ToolResult` already carried typed success, failure, truncation, MIME, and JSON
+facts. Complete output that exceeded the inline budget was also represented by
+`ToolOutputArtifactRef`, but producers encoded that descriptor into fixed keys
+inside the open-ended `metadata` map. Trace, Subagent, application, CLI, and TUI
+consumers then independently reconstructed path, byte count, digest, and
+retention. Some consumers also called `Path::is_file` and created a new local
+availability fact.
+
+This made a generic framework fact look like application metadata. A missing or
+partially copied key silently changed behavior, and every surface could disagree
+about the same terminal tool result.
+
+Established implementations keep tool output and resource references typed:
+
+- MCP `CallToolResult` returns typed `ContentBlock` values, including
+  `ResourceLink` and `EmbeddedResource`, instead of requiring clients to decode
+  resource identity from text metadata.
+- OpenAI Agents Python represents `ToolCallOutputItem.output` separately from
+  its raw provider item, so downstream processing receives an explicit tool
+  output contract rather than parsing the raw record.
+- Codex protocol events use typed dynamic-tool content and file-change events,
+  keeping structured output facts distinct from display text.
+
+The common pattern is not a product-specific artifact store. It is a typed
+terminal result whose referenced content can be validated by the owning host.
+
+## Considered Options
+
+1. Keep artifact keys in `ToolResult.metadata` and centralize a decoder. This
+   still makes an open-ended string map the artifact authority and permits
+   partially formed descriptors.
+2. Add an application-only descriptor. Framework trace, Subagent, and other
+   consumers would still need a parallel interpretation.
+3. Put `Option<ToolOutputArtifactRef>` on canonical `ToolResult` and reuse the
+   same descriptor in output processing, trace, Subagent, and applications.
+
+## Decision
+
+Adopt option 3.
+
+`ToolResult.artifact` is the only complete-output artifact fact. Producers set
+it directly, `ProcessedToolOutput` carries it through the spill stage, and
+`RunEvent::ToolResult` stores the same typed descriptor. `metadata` remains for
+open-ended measurements and tool-specific annotations, but it must not contain
+a second artifact descriptor.
+
+`ToolOutputArtifactRef::extend_metadata` and `from_metadata` are removed. There
+is no compatibility decoder because the project is pre-release and all
+workspace consumers migrate in the same iteration.
+
+The descriptor means that artifact creation completed and records its path,
+stored bytes, original payload bytes, SHA-256, and retention label. Consumers
+must not replace this producer fact with a local path-existence check. A host
+that exposes or reads the artifact may additionally validate the registered
+root, retention, file identity, size, and digest; that validation is host
+policy, not another descriptor authority.
+
+## Consequences
+
+- Tool events, trace, Subagent observation, replay, and every surface preserve
+  one lossless descriptor.
+- Missing descriptors are explicit `None`; partially copied metadata cannot be
+  mistaken for an artifact.
+- Applications retain ownership of storage roots, retention, access policy,
+  and verified readers.
+- Adding the public field is intentionally source-breaking for explicit
+  `ToolResult` literals; workspace consumers are updated together.
+
+## References
+
+- MCP schema 2025-06-18, `CallToolResult` and typed content/resource blocks:
+  <https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/2025-06-18/schema.ts>
+- OpenAI Agents Python, `ToolCallOutputItem`:
+  <https://github.com/openai/openai-agents-python/blob/main/src/agents/items.py>
+- OpenAI Codex protocol typed dynamic-tool and file-change events:
+  <https://github.com/openai/codex/blob/main/codex-rs/protocol/src/protocol.rs>
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0012-immutable-plugin-preparation
+
+# ADR 0012: Immutable plugin preparation generations
+
+## Context
+
+Plugin wiring previously reread package files while mutating live Agents and during rollback. One
+reload could therefore expose different filesystem states to different targets.
+
+OpenAI Codex shares cached plugin and Skill managers and keeps disk changes invisible until explicit
+force reload at commit `cdde711fac008cd4e1115603ead713cf23b1a580`. Claude Code plugins similarly
+load a bundle and expose explicit reload rather than making every consumer rescan it.
+
+## Decision
+
+`PluginIntegrator` owns preparation and its bounded cache. `prepare` returns an immutable,
+dependency-ordered `PreparedPluginSet` with a monotonic generation, deterministic content identity,
+structured diagnostics, parsed Skills/Hooks/MCP, and owner-qualified frozen Subagent/LSP documents.
+`wire_prepared` and rollback consume only this set and perform no component filesystem reads.
+`PluginWiringResult` remains only an apply/unwire receipt. EKO monitors, themes, output styles,
+workspace fanout, and UI receipts remain application policy.
+
+## Alternatives
+
+- Per-target live scans: rejected because targets can observe different bytes.
+- EKO fields in the framework snapshot: rejected as product coupling.
+- Unbounded revision cache: rejected; only the latest set per registry remains cached while existing
+  `Arc` snapshots remain usable by active consumers.
+
+## Consequences
+
+Explicit registry mutation or invalidation advances generation. Equivalent bytes retain the same
+identity. Invalid dependency or parse errors make a set non-applicable, and wiring is deterministic.
+
+## References
+
+- [Codex PluginsManager](https://github.com/openai/codex/blob/cdde711fac008cd4e1115603ead713cf23b1a580/codex-rs/core-plugins/src/manager.rs#L398-L506)
+- [Codex shared managers](https://github.com/openai/codex/blob/cdde711fac008cd4e1115603ead713cf23b1a580/codex-rs/core/src/thread_manager.rs#L258-L276)
+- [Codex SkillsManager](https://github.com/openai/codex/blob/cdde711fac008cd4e1115603ead713cf23b1a580/codex-rs/core-skills/src/manager.rs#L51-L121)
+- [Claude Code plugins](https://code.claude.com/docs/en/plugins)
 
 
 ---
@@ -27037,6 +28279,1224 @@ mod tests {
 ## Complete Reference
 
 See the runnable doctests and utility contracts in the [testing module](../../src/testing/mod.rs).
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0001-channel-session-sender-scope
+
+# ADR 0001: Sender-Scoped Channel Sessions
+
+- Status: Accepted
+- Date: 2026-08-25
+- Owners: `echo-integration/channels`
+
+## Context
+
+`SessionHandler` originally keyed sessions by `(channel_id, conversation_id)`.
+That made every participant in a group conversation share one handler, async
+mutex, Agent history, mode, human-in-the-loop state, timeout lifecycle, and
+reset command. This contradicted the documented per-user session model and let
+one participant reset or influence another participant's Agent state.
+
+The public `InboundMessage` type also permits callers to construct malformed
+identities. Built-in QQ and Feishu adapters previously replaced a missing
+sender with the shared string `unknown`, which reproduced the collision even
+after adding a sender coordinate.
+
+## Options Considered
+
+1. Keep one session per conversation. This preserves group-wide context but
+   violates the framework's per-user contract and cannot isolate mode, HITL,
+   locking, timeout, or reset state.
+2. Add sender-specific maps in each product or transport. This duplicates
+   session authority outside `SessionHandler` and lets adapters drift.
+3. Use a message-scoped anonymous session when the sender is missing. This
+   avoids cross-message state sharing, but malformed traffic would retain one
+   Agent per message until timeout and grow memory linearly.
+4. Use one typed framework key for identified senders and reject malformed
+   identity coordinates. This keeps one authority and bounds retained sessions
+   to identified channel participants.
+5. Derive runtime identity only from the stable sender key. This cannot
+   distinguish a replacement handler from its predecessor, so a persistent
+   runtime store may silently restore model messages after timeout or reset.
+6. Give every concrete handler a framework-owned opaque incarnation while
+   leaving the stable sender key unchanged. This separates ephemeral runtime
+   continuity from product conversation history without imposing an EKO data
+   model on the framework.
+
+## Decision
+
+`SessionHandler` uses one private typed key containing `channel_id`,
+`conversation_id`, and `sender_id`.
+
+- The same sender in the same channel conversation reuses one handler.
+- Different senders, conversations, or channels use different handlers and
+  mutexes.
+- Reset and timeout replacement affect only the exact sender-scoped key.
+- `active_sessions()` counts retained sender-scoped sessions, not conversations.
+- All three identity coordinates must be non-empty, must not contain
+  surrounding whitespace, and `sender_id` must not be the sentinel `unknown`.
+- Invalid identity returns the existing typed `ChannelError` before a session
+  or Agent is created.
+- QQ and Feishu ingress validate the same contract and do not forward malformed
+  messages to a handler. Feishu emits `open_id:{value}` or, when `open_id` is
+  absent, `user_id:{value}` so the two identity namespaces cannot collide.
+- Session-end callbacks report the same validated identity used by the key.
+- Every factory call receives a `ChannelSessionInstance`: its three validated
+  coordinates are stable and its opaque incarnation is unique to that concrete
+  handler lifetime.
+- Framework timeout/reset replacement creates a new incarnation. Applications
+  that own a richer reset barrier can call `ChannelSessionInstance::rotate()`
+  after settlement; all clones and the eventual end callback share that one
+  authority.
+- `SessionEndInfo.incarnation_id` always reports the incarnation that actually
+  ended, including an application rotation, so exact runtime cleanup does not
+  depend on reconstructing identities from strings.
+- Reset publishes its reply and installs the replacement immediately, but the
+  old generation retains its end callback until every admitted stream settles.
+  This prevents cleanup from racing a final checkpoint written by an older
+  stream. Timeout replacement remains restricted to idle generations. External
+  callback panics are contained so stream teardown cannot double-panic during
+  another unwind or poison the replacement session.
+- `AgentInvocationContext.runtime_state_id` separates ReAct checkpoint identity
+  from the stable product conversation carried by `ExternalRunContext`.
+  `transcript_generation_id` enables typed append projection for that runtime
+  incarnation. A shared `ReactAgent` records the identity currently represented
+  by its warm context; a value-scoped identity change forces exact reset/restore
+  before preparing model input, while only the same identity may reuse warmth.
+  Hydration is a three-state protocol: `Hydrating(target)` is published before
+  cancellable mutations and changes to `Hydrated(target)` only after hooks and
+  restore complete. A cancelled switch therefore forces the next turn to
+  rebuild rather than treating partial context as the predecessor. Runtime
+  switches also clear rollback snapshots, and restore-key precedence matches
+  save-key precedence: explicit invocation ID, invocation product conversation,
+  legacy external conversation, then configured conversation.
+- Canonical transcript records carry an internal `(generation, ordinal)` in
+  their existing projection metadata. `AgentCheckpoint` persists the committed
+  ordinal/digest cursor in its existing payload, so duplicate content, pool
+  eviction, crash cuts, and post-compaction suffixes do not require content
+  boundary guesses.
+
+No anonymous per-message fallback is retained, and anonymous messages do not
+reuse state across deliveries.
+
+## Consequences
+
+Group participants now have independent Agent history, mode, HITL state,
+locking, reset, and timeout lifecycles. Direct-message routing and state reuse
+remain the same for valid transport identities, but handlers and session-end
+callbacks now observe Feishu sender identities in the canonical
+`open_id:{value}` or `user_id:{value}` form instead of a raw provider value. A
+malformed transport event is rejected instead of receiving an Agent response;
+transport owners must provide a stable sender identity before entering the
+framework.
+
+The key remains private and no parallel session store or serialized contract is
+introduced. `ChannelSessionInstance` is a lifecycle capability supplied by the
+existing `SessionFactory`, not a second lookup authority. Consumers may include
+its incarnation in model/checkpoint keys while retaining the three stable
+coordinates for journals, TaskRuns, and UI routing. Timeout pruning continues
+to reclaim identified sessions under the existing `SessionConfig`.
+
+An incarnation rotation is a model-context boundary, not product-history or
+disk deletion. A new runtime key cannot load the predecessor checkpoint, while
+the stable `ConversationStore` transcript remains append-only and queryable.
+After old foreground/resource settlement, callers use the durable scope lineage
+from [ADR 0006](0006-runtime-state-scope-lineage.md) to delete the exact retired
+runtime checkpoint. Product deletion clears every indexed incarnation and then
+the stable transcript.
+
+This decision changes the public `SessionFactory` callback shape and adds
+`ChannelSessionInstance`, `ChannelSessionRotation`,
+`AgentInvocationContext.runtime_state_id`, and
+`AgentInvocationContext.transcript_generation_id`. Callers that do not split
+identities keep the prior behavior through `None` defaults.
+
+## Verification
+
+Regression coverage exercises same-group multi-sender isolation, independent
+mutexes, mode and HITL isolation, sender-local reset, same-sender reuse,
+channel/conversation separation, timeout callback identity, invalid identity
+fail-closed behavior, and QQ/Feishu ingress rejection.
+Incarnation coverage additionally exercises same-handler reuse, application
+rotation, timeout callback accuracy after rotation, fresh replacement IDs,
+deferred cleanup for both parked and admitted-but-unpolled streams, and callback
+panic containment during another unwind.
+Persistence coverage exercises same-incarnation checkpoint recovery, rotated
+checkpoint isolation, identical-tail transcript append, repeated safe-point
+idempotency, crash-cut catch-up, corrupt cursor rejection, and post-compaction
+ordinal continuation. It also drives one warm Agent through A -> B -> A and
+checks both model requests and saved checkpoints for cross-identity leakage;
+parks B at a post-restore hook, cancels it, and verifies the next A rebuild;
+checks legacy read/save key symmetry; and proves A snapshots cannot roll back
+into B.
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0002-sandbox-cancellation-cleanup
+
+# ADR 0002: Sandbox Cancellation Cleanup
+
+- Status: Accepted
+- Date: 2026-08-25
+- Owners: `echo-core/sandbox`, `echo-execution/sandbox`
+
+## Context
+
+`SandboxExecutor::execute_with_limits_and_cancel` provides a default cancellation
+race for lightweight implementations. `LocalSandbox` previously inherited that
+default even though its actual child process is owned by a detached streaming
+task. The default returned `SandboxError::Cancelled` as soon as the caller's
+future was dropped, while the detached task was still observing receiver close,
+killing the process group, and waiting for the child. A terminal result therefore
+did not prove that local execution had reached a cleanup safe point.
+
+Two additional drop windows existed. Local stdin was written before the child
+was transferred to the detached stream task, so aborting a blocked write only
+dropped the process handle. Docker lifecycle state remained inside the caller's
+future, so aborting after `docker create` detached neither a cleanup owner nor an
+RAII receipt and could leak the container. Docker also trusted create stdout as
+its only cleanup identity, even when that output was empty or malformed.
+
+`DockerSandbox` did own its cancellation branch, but every terminal path ignored
+the spawn result and exit status of `docker rm -f`. Normal completion, timeout,
+cancellation, or an execution error could be returned while the container still
+existed, with no typed indication that cleanup failed.
+
+## Options Considered
+
+1. Keep best-effort cleanup after returning the primary terminal. This minimizes
+   latency but makes terminal state unreliable and can leak processes or
+   containers into later runs.
+2. Add a second application-level cleanup supervisor. This duplicates sandbox
+   ownership in each embedding product and cannot reliably identify the exact
+   process or container created by the backend.
+3. Transfer each spawned resource immediately to one detached backend owner and
+   make that owner await cleanup before choosing a terminal. This keeps lifecycle
+   authority beside resource creation and survives caller task abort.
+
+## Decision
+
+Resource cleanup is part of controlled sandbox execution's terminal contract.
+
+- `LocalSandbox` overrides `execute_with_limits_and_cancel`. Immediately after
+  spawn it captures the process-group ID and transfers the child, stdin payload,
+  output pipes, deadline, and cancellation token to one detached owner. The
+  owner signals the captured group, awaits the leader, and verifies that signal
+  zero returns `ESRCH` before it chooses a terminal. Cancellation during blocked
+  stdin delivery uses the same owner and cleanup order.
+- Buffered local execution retains the owner task join handle and awaits it.
+  Live streaming remains receiver-owned: dropping the stream closes the channel
+  and wakes the detached owner task to perform kill and wait.
+- Local cleanup debt never becomes a successful-looking `Complete`. An active
+  stream receives `SandboxStreamEvent::Failed` with a typed
+  `SandboxStreamFailure`; a dropped stream has no receiver, so the owner retains
+  the typed debt and logs cleanup failure before exiting.
+- `DockerSandbox` rejects pre-cancel before probing or creating. It preallocates
+  a unique `--name`, then transfers create, start, stdin, client process, output,
+  timeout, cancellation, and `rm` to one detached lifecycle owner. Caller abort
+  drops an armed guard that signals a separate abandonment token; the owner
+  enters the same cancel cleanup path instead of waiting for the user timeout.
+  Empty or malformed create stdout still cleans by the preallocated name.
+- Docker normal completion, non-zero exit, timeout, cancellation, start failure,
+  stdin failure, and Docker I/O failure all attempt `docker rm -f` before return.
+- Docker cleanup checks command spawn and exit status. Cleanup failure becomes a
+  typed `SandboxError::IoError`; when execution also failed, the bounded terminal
+  message preserves exit, timeout/cancel, output-count, and cleanup facts.
+- Docker `info`, `create`, and `rm` use owned CLI children with fixed control
+  deadlines and kill/wait cleanup. Named removal retries are bounded to cover a
+  daemon commit racing an interrupted `create`. Availability hits a clone-shared
+  30-second cache; only a cache miss launches the owned `info` probe. Global
+  cleanup attempts every fully parsed container and returns one bounded aggregate
+  after all attempts; a truncated listing is always a typed incomplete failure.
+- Docker output readers drain incrementally into one shared retained-byte budget
+  while saturating logical byte counts. Normal, timeout, and cancellation paths
+  cannot allocate retained output beyond `max_output_bytes`.
+- `DockerConfig::extra_args` uses a narrow allowlist (`user`, `hostname`,
+  `platform`, `entrypoint`). Owner and isolation flags such as name, label,
+  restart, network, namespace, mount, security, and capability settings are
+  rejected in both split and `=` forms.
+- Unix Local cancellation owns process groups. The current Windows backend has
+  no Job Object implementation, so every Local execution entry point reports
+  unavailable before spawn instead of claiming that killing `cmd.exe` cleaned
+  its process tree. Windows consumers must use Docker/K8s.
+- The default trait implementation remains available only for executors whose
+  resources are fully released by dropping their execution future.
+
+No EKO policy, UI field, or application lifecycle state is introduced. This is a
+framework execution invariant shared by every embedding application.
+
+## Consequences
+
+Cancellation and timeout may take slightly longer because return now includes
+cleanup latency. In exchange, callers can treat the returned terminal as a safe
+point for subsequent execution, shutdown, or workspace reuse. Cleanup failures
+are observable and retryable rather than silently converted into apparent
+success.
+
+`SandboxStreamEvent` gains a terminal `Failed` variant and the public
+`SandboxStreamFailure` type. Exhaustive stream consumers must handle it separately
+from `Complete`. Local execution is unavailable on Windows until a Job Object
+owner is implemented.
+
+The Docker executable indirection is private and exists so backend command
+status can be tested deterministically without requiring a live Docker daemon or
+mutating process-global `PATH`.
+
+## Verification
+
+Regression coverage starts a real local leader and descendant, waits until the
+leader exits, cancels execution, and verifies that the captured group and
+descendant are absent at terminal return. A blocked-stdin test aborts the caller
+and verifies that the detached owner still cleans the group. Typed failure tests
+prove cleanup debt cannot emit a fake completion.
+
+A fake Docker executable verifies pre-cancel performs no Docker operation;
+normal, non-zero, timeout, cancellation, blocked stdin, and caller-abort paths
+converge through `info -> create -> start -> rm`; empty/bad create output still
+uses named cleanup; and non-zero/timeout/cancel facts survive a simultaneous
+non-zero cleanup failure. Additional faults cover hung info/create/rm stages,
+cleanup retry, first-failure global cleanup continuation, reserved extra args,
+and bounded high-volume output for normal/timeout/cancel terminals.
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0003-tracked-steer-lifecycle
+
+# ADR 0003: Tracked Steering Lifecycle
+
+- Status: Accepted
+- Date: 2026-08-25
+- Owners: `echo-core/agent`, `echo-agent/agent/react`
+
+## Context
+
+`Agent::steer_input` historically returned the active turn ID immediately after
+placing a message in the ReAct mailbox. Callers could prove acceptance, but not
+whether the single ReAct loop had moved that message into model context or
+whether the owning root turn later completed, failed, was cancelled, or was
+aborted. A durable application therefore had to choose between retaining an
+already-consumed input forever and acknowledging it before consumption.
+
+The framework already has one turn mailbox, one ReAct core loop, and one
+`ActiveTurnLease`. Adding an application-side queue or inferring consumption
+from product rendering would create a second lifecycle authority. The design is
+based on these verified repository boundaries and the existing lifecycle ADRs;
+external documentation was unavailable during this review, so no external
+runtime behavior is assumed.
+
+## Options Considered
+
+1. Keep returning only a turn ID and let each application infer consumption
+   from its transcript or foreground state. This cannot distinguish mailbox
+   acceptance from model-context drain and fails across cancellation or crash.
+2. Replace `steer_input` with a new mandatory return type. This is precise but
+   unnecessarily breaks existing `Agent` implementations and callers.
+3. Preserve `steer_input` and add an optional tracked method whose receipt is
+   driven by the existing mailbox, core-loop drain, and turn lease. This keeps
+   compatibility while giving durable consumers authoritative boundaries.
+
+## Decision
+
+The framework adds `Agent::steer_input_tracked` and the public
+`AgentSteerReceipt`, `AgentSteerState`, `AgentSteerPhase`, and
+`AgentSteerTurnOutcome` types.
+
+- `Accepted` is published only after the exact active turn mailbox owns the
+  input.
+- The core loop acquires its context lock, takes a batch from the mailbox,
+  inserts every message into `ContextManager`, and only then publishes
+  `Drained`. Waiting for the context lock cannot produce a false drain receipt.
+- The active turn lease publishes `TurnSettled` from the real root-turn
+  terminal. Completed, cancelled, and failed paths are explicit. Dropping or
+  aborting the owner publishes `Dropped`.
+- Terminal state records whether drain occurred. If cancellation or drop wins
+  before context insertion, the receipt settles with `drained: false`.
+- Each active lease carries a private, non-reusable incarnation. External turn
+  IDs remain stable correlation keys, but a stale lease cannot change
+  steerability or settle/drop a newer incarnation that reused the same ID. The
+  exact token is cloned into `AgentRunSnapshot`; mailbox drain requires both the
+  external ID and pointer-identical incarnation, so an old core cannot consume
+  a newer same-ID generation.
+- A `UserPromptSubmit` hook block is a failed root turn, never a completed one.
+  Steering accepted while that hook runs settles as failed and undrained.
+- If an implementation drops the watch sender without publishing a terminal,
+  every receipt clone shares one synthesized `Dropped` terminal that preserves
+  whether the last observed state was drained. Waiters never return a stranded
+  `Accepted` or `Drained` state after channel closure.
+- State transitions are monotonic. A late drain cannot overwrite an already
+  settled turn, and replacing an unexpected active lease settles the previous
+  one as dropped.
+- Mailbox and receipt locks are synchronous and are never held across an await.
+  The async context lock is acquired before the short mailbox transfer.
+- The legacy `steer_input` remains available and uses the same mailbox. Third
+  party `Agent` implementations remain source compatible; tracked steering
+  returns `Unsupported` until they provide real lifecycle signals.
+
+No application journal, retry policy, UI state, or delivery-specific concept is
+added to the framework. Applications decide which receipt boundary is durable
+enough for their product.
+
+## Consequences
+
+Durable consumers can retain input through `Accepted`, acknowledge it after
+`Drained`, and separately wait for root-turn settlement. `Drained` does not mean
+the turn succeeded, and `TurnSettled { drained: false, .. }` explicitly tells a
+caller that replay remains necessary.
+
+One small watch channel is retained per accepted steering input until the turn
+settles. Legacy callers may discard the receiver; the same bounded turn owner
+still releases the sender at terminal.
+
+Tracked steering is an additive public API. Implementations that only override
+the legacy method continue compiling but do not receive inferred or fabricated
+tracking.
+
+## Verification
+
+Mailbox tests cover accepted-before-drain, terminal-before-drain, owner drop,
+same-ID stale-lease ABA, unique concurrent receipts, and FIFO batch drain. A
+same-ID stale-snapshot test proves that only the current incarnation can drain.
+A context barrier test proves
+that a receipt remains accepted while the context lock is held, then changes to
+drained only after insertion. A competing terminal test proves that settlement
+before context access yields `drained: false`. ReAct integration tests cover
+completed, provider-failed, and cancelled terminals after a real drain, plus a
+non-streaming hook block accepted before terminal. Closed-sender tests cover
+accepted/drained inputs and cloned waiters. A façade test keeps all public
+receipt types reachable through `echo_agent`.
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0004-async-file-store-ownership
+
+# ADR 0004: Async File Store Ownership
+
+- Status: Accepted
+- Date: 2026-08-25
+- Owners: `echo-core/utils`, `echo-state/memory`, `echo-agent/state`
+
+## Context
+
+`RuntimeStateStore` and `ConversationStore` are asynchronous framework traits,
+but their file-backed implementations previously executed `std::fs` work from
+the polling task. `FileConversationStore` moved each call to
+`spawn_blocking`, but every caller created an unbounded independent operation.
+Dropping the caller could also drop the only observable owner before a durable
+write had settled. A store-wide synchronous mutex serialized unrelated
+conversations and made the ownership boundary difficult to verify.
+
+The framework must keep file durability and error behavior unchanged: atomic
+temporary-file writes, data and directory synchronization, generation manifests,
+UTF-8 parsing errors, corrupt-record failures, and cross-process lease rejection
+remain authoritative. EKO policy and UI state do not belong in this mechanism.
+
+## Options Considered
+
+1. Keep synchronous file calls inside async trait futures. This is simple, but a
+   slow filesystem blocks unrelated Tokio tasks.
+2. Call `spawn_blocking` independently in every method. Tokio documents that
+   started blocking tasks cannot be aborted and that its default blocking limit
+   is large, so this has no process resource bound or shared ordering authority.
+3. Admit owned operations through one process-wide bounded service, then order
+   operations by canonical store path and conversation key. This keeps the
+   trait API stable while making ownership and concurrency explicit.
+
+## Decision
+
+File-backed async traits submit owned closures through
+`echo_core::utils::blocking::run_keyed_file_operation`.
+
+- Process admission is bounded at 64 unsettled operations and blocking execution
+  is bounded at 8 concurrent closures. Tokio semaphore admission is fair.
+- Admission happens before the detached owner is created. After admission, a
+  process-lifetime Tokio runtime owns the admission/execution permits, key
+  completion receipt, closure, and result sender until settlement. Dropping the
+  calling future or shutting down its Tokio runtime cannot cancel an accepted
+  durable operation or release the next same-key operation early.
+- The helper uses `Handle::try_current` and returns a typed error outside a Tokio
+  runtime rather than invoking an API that can panic.
+- Keys hash namespace, canonical root path, and typed entity/collection scope as
+  separate fields; delimiters and a real conversation named `__list__` cannot
+  alias a collection scan. Entity scope and persisted filename are both derived
+  from the exact UTF-8 bytes encoded as lowercase hexadecimal ASCII. Case folding
+  and Unicode normalization on APFS or another filesystem cannot make distinct
+  logical IDs share a file while using different queues. Each key has a checked
+  monotonic generation and a shared completion tail.
+  Generation exhaustion fails closed; same-key operations execute in submission
+  order without holding a synchronous mutex across an `.await`.
+- `FileRuntimeStateStore` keys operations by canonical base plus
+  `conversation_id`.
+- `FileConversationStore` shares metadata/cache/file authority between handles
+  on the same canonical base. Per-conversation operations use the same keyed
+  queue. Brief synchronous metadata and cache locks are acquired only inside a
+  blocking closure. A scan barrier gives collection scans a stable
+  manifest/message-generation snapshot while allowing unrelated conversation
+  operations to overlap.
+- SQLite implementations remain independent optional framework backends and are
+  unchanged.
+
+The Tokio contracts used by this decision are documented in
+[`spawn_blocking`](https://docs.rs/tokio/1.53.1/tokio/task/fn.spawn_blocking.html),
+[`Handle::try_current`](https://docs.rs/tokio/1.53.1/tokio/runtime/struct.Handle.html#method.try_current),
+and [`Semaphore`](https://docs.rs/tokio/1.53.1/tokio/sync/struct.Semaphore.html).
+
+## Consequences
+
+File-backed runtime and conversation operations no longer block a Tokio runtime
+thread. Same-conversation updates retain atomic ordering. Independent
+conversations can progress concurrently, but a process cannot create an
+unbounded number of blocking filesystem operations.
+
+Once accepted, a write may finish after its caller is cancelled. This is
+intentional: durable file mutation is non-abortable, and later same-key reads
+wait for that mutation's settlement. Callers still receive the original
+serialization, I/O, corruption, and missing-record semantics when they remain
+attached.
+
+## Verification
+
+Regression tests cover a current-thread runtime heartbeat, operation completion
+after caller abort, caller-runtime shutdown while a same-key operation is
+parked, owner panic settlement, same-key ordering, structured-key collision
+resistance, bounded different-key concurrency, typed no-runtime and
+generation-exhaustion failures, save/clear/save ABA ordering, corrupt checkpoint
+read followed by clear, corrupt conversation read racing delete, and a search
+holding an old manifest generation while replacement waits. Concurrent
+case-distinct and Unicode-normalization-distinct IDs prove that logical entities
+do not alias even on case-insensitive filesystems. Existing append, replacement,
+fsync boundary, Unicode, restart, lease, and recovery tests remain the durability
+conformance suite.
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0005-invocation-resource-lifetime
+
+# ADR 0005: Invocation Resource Lifetime Guards
+
+- Status: Accepted
+- Date: 2026-08-25
+
+## Context
+
+An Agent invocation can start work that outlives the future currently observed
+by its caller. The ReAct loop, streaming driver, Subagent executor, and tools
+also cross `tokio::spawn` boundaries. Cancellation and trace metadata already
+flow by value through `AgentInvocationContext`, but neither field owns an
+application resource such as a concurrency permit, temporary workspace, or
+external lease.
+
+Releasing such a resource when the caller or event stream is dropped can admit
+conflicting work while an already-started tool or blocking operation is still
+running. The framework must preserve ownership without learning EKO-specific
+pool, workspace, or scheduling policy.
+
+## Considered Options
+
+1. Keep resources in application task-local state. Tokio tasks created with
+   `spawn` do not inherit task-local ownership, so Subagent and tool boundaries
+   lose the resource.
+2. Add typed application permits to framework contexts. This couples the
+   reusable framework to one product's resource model.
+3. Add an opaque cloneable ownership token to the existing invocation context
+   chain. Shared ownership follows the spawned work while the wrapped value
+   remains inaccessible.
+
+## Decision
+
+Adopt option 3. `InvocationResourceGuard` stores the value behind
+`Arc<dyn Any + Send + Sync>` but exposes no getter or downcast operation. Its
+public surface supports construction, cloning, dropping, and redacted Debug
+only. The read-only `retains::<T>()` predicate checks the exact wrapped type so
+consumers can select their own guard among several resources, but exposes no
+reference, owned handle, or downcast operation. A free-form marker key was
+rejected because it introduces collision, spoofing, and naming-governance
+problems that the Rust type already solves.
+
+When several resources have the same concrete type, callers may use
+`new_identified(resource, identity)` to attach one immutable typed descriptor.
+`matches_identity::<I>(&I)` performs an exact type-and-value comparison and
+returns only a boolean. The descriptor remains behind `Any`: there is no
+getter, public downcast, or Debug value. A string marker was rejected because
+it recreates collision and naming-governance problems; a getter/downcast was
+rejected because it would turn an ownership token into an application-data
+transport.
+
+`resource_guards` propagate through:
+
+```text
+AgentInvocationContext
+  -> AgentRunSnapshot
+  -> ToolContext
+  -> ExternalRunContext for Subagent dispatch
+  -> child AgentInvocationContext
+```
+
+Default value-scoped methods on the public `Agent` trait wrap a third-party
+Agent's returned event stream with the complete invocation value. Implementors
+that have not overridden these methods therefore retain guards until that
+stream ends or is dropped instead of releasing them when the factory future
+returns.
+
+Invocation and runtime guard lists are both retained. Tools that create owned
+asynchronous or blocking work clone the guard list into that work. Destruction
+of the wrapped resource therefore occurs only after the final clone settles.
+Run and turn identifiers are optional correlation metadata: a non-empty guard
+list creates and propagates `ExternalRunContext` even when both identifiers are
+absent, including detached background Subagent dispatch.
+
+Legacy mutable Agent setters are captured as one value before an invocation
+waits for the execution mutex. Queued calls therefore retain the run,
+cancellation, trace, delegation, and guard values that belonged to their
+caller. A private context epoch serializes `set`, `clear`, and every composite
+capture so conversation, run, turn, execution, isolation, message,
+cancellation, trace, delegation, and guard fields cannot come from different
+callers. Every non-empty combination is a valid context; identifiers are not a
+gate for cancellation, trace, delegation, or ownership. Replacing or clearing
+the shared context swaps all fields inside the epoch and drops the previous
+snapshot only after unlocking, because an application-owned destructor may
+block or re-enter framework code.
+
+This follows Rust's `Arc` shared-ownership contract and Tokio's owned-value
+spawn model. It is also compatible with owned permits such as Tokio's
+`OwnedSemaphorePermit`, without making the framework understand semaphore
+policy.
+
+## Consequences
+
+- Stream and caller cancellation no longer imply premature release of a
+  correctly retained application resource.
+- Main Agent, Subagent, streaming, and non-streaming tool paths share one
+  ownership channel rather than parallel product-specific mechanisms.
+- Anonymous and background work retains the same ownership guarantees; runtime
+  identity is not an ownership precondition.
+- Slow or re-entrant application destructors do not run while the framework's
+  context epoch or guard-container mutex is held.
+- Tools remain responsible for cloning guards into work they detach from their
+  own future. The framework cannot retain a resource for work it does not own
+  or observe.
+- Debug output includes Rust type names and guard counts, but never formats the
+  wrapped resource or identity values.
+- Identified guards can be selected among same-typed resources without giving
+  tools access to the identity descriptor itself. Clones share the same
+  immutable resource and identity allocations.
+- The new public struct fields are intentionally source-breaking for explicit
+  context literals; the project is pre-release and updates all workspace
+  consumers together.
+
+## References
+
+- Rust `Arc`: <https://doc.rust-lang.org/std/sync/struct.Arc.html>
+- Tokio `spawn`: <https://docs.rs/tokio/latest/tokio/task/fn.spawn.html>
+- Tokio `OwnedSemaphorePermit`:
+  <https://docs.rs/tokio/latest/tokio/sync/struct.OwnedSemaphorePermit.html>
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0006-runtime-state-scope-lineage
+
+# ADR 0006: Durable Runtime-State Scope Lineage
+
+- Status: Accepted
+- Date: 2026-08-25
+- Owners: `state`, `agent/snapshot`
+
+## Context
+
+A stable product conversation can intentionally rotate through multiple model
+contexts. Channel timeout/reset is one example: the user-visible transcript and
+Task history remain under one stable conversation, while each handler
+incarnation receives a different `RuntimeStateStore` checkpoint identity.
+
+Separating those identities prevents a new model context from restoring the old
+checkpoint, but identity separation alone leaves old checkpoints on disk. A
+later product delete also cannot enumerate hashed/opaque runtime IDs after a
+process restart.
+
+This is a general checkpoint-retention problem, not an EKO policy. LangGraph
+similarly distinguishes thread-scoped checkpointers from cross-thread stores,
+provides `delete_thread` for all checkpoints/writes under a thread, and
+recommends pruning or retention because checkpoints grow without bound:
+
+- <https://docs.langchain.com/oss/python/langgraph/persistence>
+- <https://github.com/langchain-ai/langgraph/blob/main/libs/checkpoint/langgraph/checkpoint/base/__init__.py>
+
+## Options Considered
+
+1. Leave retired checkpoints unreadable but never delete them. Runtime behavior
+   is correct, but disk use grows indefinitely and product deletion is partial.
+2. Scan backend paths/tables during deletion. This leaks concrete backend
+   layouts into callers and cannot reliably recover opaque ownership.
+3. Keep a product-specific index in each application. This duplicates
+   persistence authority and makes framework backends incomplete.
+4. Add a stable scope-to-runtime lineage to `RuntimeStateStore`, with exact and
+   whole-scope deletion. This keeps checkpoint ownership in its existing store
+   and remains reusable outside channels.
+
+## Decision
+
+`RuntimeStateStore` owns a durable mapping from one stable `scope_id` to every
+globally unique `runtime_state_id` saved for that scope.
+
+- `save_checkpoint_for_scope` binds the runtime ID and saves its checkpoint.
+- `runtime_state_ids` returns the sorted durable lineage.
+- `clear_runtime_state` deletes one exact incarnation and its binding. A reset
+  calls this after old foreground/resource settlement and before admitting the
+  replacement model context.
+- `clear_runtime_state_scope` deletes all indexed incarnations. It is
+  idempotent and also reclaims a legacy checkpoint whose ID equals the scope.
+- `clear_persisted_runtime_incarnation` also deletes any transcript written
+  under the incarnation ID, while preserving the stable scope transcript.
+- `delete_persisted_conversation` enumerates and deletes incarnation-keyed
+  transcripts, clears the runtime scope, then deletes the stable transcript.
+
+The framework does not derive product IDs, decide when a product reset is
+allowed, or delete Task/application journals. Callers supply the stable scope
+and exact runtime identity already carried by their invocation lifecycle.
+Callers must close admission and settle foreground/resource owners before reset
+or product deletion; that product admission barrier prevents a new incarnation
+from being created between cross-store cleanup steps.
+
+File storage has one authoritative record per runtime ID. `Active` records own
+the scope binding and checkpoint in the same atomic JSON replacement;
+`Deleting` records retain the exact cleanup obligation without checkpoint
+payload. A retry can therefore finish every crash cut without choosing between
+separate owner/index/checkpoint files. Scope-index files are rebuildable
+projections and never decide ownership or whether an operation succeeded;
+projection write/delete/fsync failure cannot block authoritative enumeration or
+deletion.
+Writes use temp-file fsync + rename + parent-directory fsync, deletions fsync the
+parent even on an idempotent retry, and first directory creation publishes every
+ancestor durably. One store-root lease plus a fixed set of in-process shards
+replaces per-incarnation lock files, so lock metadata cannot grow with runtime
+IDs. SQLite performs binding/checkpoint mutations in one transaction; all async
+trait methods submit their complete connection/transaction closure to the
+bounded keyed blocking owner. A foreign scope owning a runtime ID that equals
+another scope's name disables only the legacy same-ID fallback; it cannot block
+cleanup of rows genuinely owned by that other scope.
+
+## Consequences
+
+Reset remains a new empty model context, not a product-history wipe. It reclaims
+the retired runtime checkpoint and any incarnation-keyed transcript while
+preserving the stable transcript. Product delete removes the stable transcript,
+incarnation transcripts, and every indexed runtime checkpoint.
+
+The `RuntimeStateStore` public contract grows by four scope operations. Built-in
+File and SQLite backends implement the same semantics; custom implementations
+must provide durable indexing rather than an in-memory approximation.
+
+Scope operations require runtime IDs to be globally unique. This matches UUID
+and stable-hash invocation IDs and avoids ambiguous cross-scope ownership.
+
+## Verification
+
+Coverage includes multiple senders and incarnations, restart persistence,
+sender-local exact reset, reset transcript retention, full product deletion,
+every File `Active`/`Deleting`/unlink crash cut, competing scope claims, corrupt
+projection repair, durable unlink retry, SQLite transactional lineage and Tokio
+heartbeat, cross-backend same-name scope parity, invocation-aware checkpoint
+restore/save symmetry, and snapshot checkpoint registration under distinct
+product/runtime identities.
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0007-atomic-journal-batch-commits
+
+# ADR 0007: Atomic Journal Batch Commits
+
+- Status: Accepted
+- Date: 2026-08-26
+- Owners: `echo-state/journal`
+
+## Context
+
+An event journal is the fact authority for consumers that rebuild a projection
+after restart. Several related events may describe one logical transition. If a
+writer loops over single-event appends, concurrent writers can interleave those
+events and a crash can expose only a prefix. The projection then observes a
+state that no caller committed.
+
+The journal must also distinguish visibility from durability. A complete frame
+may be visible and recoverable even when its requested `sync_data` barrier
+reports an error. Retrying that committed payload as new work would duplicate
+effects, while treating every write error as committed would lose absent work.
+
+Mature storage systems converge on an explicit commit unit. RocksDB
+`WriteBatch` applies a group atomically, and KurrentDB/EventStoreDB appends an
+ordered event batch under an expected stream revision. Kafka likewise separates
+the immutable log from the boundary consumers are allowed to observe. The
+shared pattern is that a batch has one identity and one visibility decision;
+it is not a convenience loop around independent writes.
+
+References:
+
+- <https://github.com/facebook/rocksdb/wiki/Basic-Operations#atomic-updates>
+- <https://docs.kurrent.io/clients/grpc/appending-events.html>
+- <https://kafka.apache.org/documentation/#design_transactional_semantics>
+- <https://doc.rust-lang.org/std/fs/struct.File.html#method.sync_data>
+
+## Options Considered
+
+1. Keep `append(event)` as the only primitive and let callers loop. This cannot
+   prevent interleaving or partial visibility.
+2. Add a product-specific transaction around each EKO journal. This duplicates
+   sequence, integrity, retry, and recovery rules outside the framework.
+3. Make one prepared batch frame the framework journal commit boundary, with a
+   typed receipt for committed, absent, conflicting, and unknown outcomes.
+
+## Decision
+
+`EventJournal::append_batch` is the canonical multi-event commit primitive.
+`append` remains a one-event adapter over the same mechanism.
+
+- `PreparedJournalBatch` serializes and hashes the payload before I/O, assigns a
+  stable batch identity, rejects empty or oversized inputs, and validates that
+  an interiorly mutable payload has not changed before append or lookup.
+- A physical JSONL line contains the complete digest-protected batch frame.
+  Records receive one contiguous global sequence range while the journal's
+  append authority is held. A reader never observes a record prefix.
+- Memory, file, and segmented journals share the same identity and receipt
+  contract. Segmentation is physical layout only; a batch never crosses a
+  segment boundary.
+- A complete frame whose durability barrier fails returns a committed receipt
+  with degraded durability. A proven zero/short write returns the prepared
+  payload for a safe retry. An ambiguous result returns `OutcomeUnknown` and
+  requires reopen plus `lookup_batch` reconciliation before retry.
+- Reusing an identity with the same digest is idempotent. Reusing it with a
+  different payload is a conflict and poisons the live authority until reopen.
+- Complete corruption fails closed. Only a torn trailing frame is truncated on
+  reopen, which keeps the incomplete batch invisible.
+
+Sequencing, frame integrity, durability classification, and reconciliation are
+generic persistence mechanisms, so they remain in `echo-state`. Applications
+choose stream roots, retention, UI projections, and which domain events belong
+in a logical batch. They must not add a second sequence or commit authority.
+
+## Consequences
+
+Consumers can project every committed transition without seeing an interleaved
+or partial batch. Unknown write outcomes require an explicit reopen/lookup step,
+which is more work than blind retry but prevents duplicate effects. File formats
+now use batch frames rather than one independently committed record per line.
+
+Checkpoint compounding continues after the complete batch is folded. A
+checkpoint failure degrades the receipt but does not roll back authoritative
+journal records; recovery can rebuild from the journal.
+
+## Verification
+
+The conformance suite covers contiguous concurrent batches, non-interleaving,
+idempotent identity reuse, identity conflicts, interior payload mutation,
+serialization and sequence overflow, complete/short/zero/ambiguous write fault
+matrices, reopen reconciliation, torn-tail repair, complete corruption
+rejection, segment rollover, checkpoint degradation, and non-`Clone` events.
+The journal benchmark compares batch sizes across memory, file, and segmented
+implementations and measures checkpoint-compounded recovery.
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0008-canonical-runtime-task-authority
+
+# ADR 0008: Canonical Runtime Task Authority
+
+- Status: Accepted
+- Date: 2026-08-26
+- Owners: `echo-orchestration/tasks`, `agent/subagent`
+
+## Context
+
+The framework historically had overlapping task models and execution loops:
+revisioned task relations, manager plans, team-specific nodes, and legacy task
+executors could each decide status, readiness, retry, or settlement. Parallel
+authorities make dynamic graph edits and restart recovery ambiguous. A stale
+executor can overwrite a newer revision, and UI/todo projections can drift into
+runtime inputs.
+
+Industry agent systems keep plans as inspectable artifacts and keep execution
+lifecycle separate. Cursor Plan Mode produces an editable plan before Agent
+execution. OpenAI Codex exposes thread, turn, and item lifecycle events rather
+than encoding plan approval as additional task-run states. Both patterns favor
+one executable graph/lifecycle authority with projections around it, not a
+second state machine per surface or collaboration role.
+
+References:
+
+- <https://cursor.com/docs/agent/plan-mode>
+- <https://cursor.com/docs/subagents>
+- <https://github.com/openai/codex/blob/main/codex-rs/app-server/README.md>
+
+## Options Considered
+
+1. Preserve each legacy executor and synchronize them through adapters. This
+   keeps multiple ready frontiers and cannot make settlement atomic.
+2. Move EKO worktree, reviewer, approval, and UI fields into a large framework
+   task runtime. This would bind the reusable framework to one product.
+3. Keep one revisioned framework graph and one runtime service, while making
+   application adapters provide persistence, dispatch, and product policy.
+
+## Decision
+
+The framework has one revisioned TaskRun graph and two non-overlapping service
+boundaries over that same authority.
+
+- `TaskRevisionService` is the only CRUD, relation, validation, ordering, and
+  revision commit authority. `task_create`, `task_update`, and `task_list` use
+  it directly.
+- `RuntimeTaskService` is the only public dependency execution entry point. Its
+  internal `RuntimeDagExecutor` owns validation, ready-frontier computation,
+  bounded waves, retry bookkeeping, cancellation/pause safe points, stall
+  detection, and terminal settlement.
+- `TaskSpec` contains portable specification fields and an opaque `extension`.
+  `TaskExecution` contains framework lifecycle, retry, failure, and exact claim
+  state. Application fields must round-trip losslessly through the extension.
+- Claims bind revision, attempt, stable spec hash, and unique identity.
+  Compare-and-set settlement rejects stale or superseded Subagent results.
+- A controller adapter may atomically persist snapshots, dispatch Subagents,
+  and apply product review/resource policy. It must not own another DAG loop,
+  validator, ready frontier, retry state machine, or task store.
+- `TaskSpawner` remains a process-local future tracker, not a durable relation
+  authority. Team APIs compile into the canonical graph and dispatch through
+  the same Subagent registry/executor.
+- A plan remains an editable, versioned artifact. Todo and surface progress are
+  read-only projections and cannot become execution inputs or separate stores.
+
+Dependency DAGs, revision safe points, claims, retry, cancellation, and generic
+Subagent dispatch are reusable framework mechanisms. EKO worktrees, reviewer
+policy, DomainProfile, file authority, approvals, and GUI/TUI/CLI projection
+remain application concerns. The adapter boundary is intentionally thin.
+
+## Consequences
+
+Dynamic patches take effect at a reload safe point, and stale attempts cannot
+overwrite a reclaimed task. Retry, pause, skip, cancellation, and dependency
+failure have one semantic source across Team and direct Task APIs.
+
+Legacy `TaskManager`, `TaskStore`, `TaskExecutor`, `TaskScheduler`, manager-owned
+ready loops, and Team-specific checkpoint nodes were removed. Applications
+must adapt product data through `TaskSpec::extension` and the controller rather
+than restoring compatibility fields or parallel task CRUD.
+
+## Verification
+
+Tests cover create/update revision conflicts, complete graph validation,
+dynamic revision reload, exact claim identity, stale and superseded settlement,
+bounded/conflict-aware waves, retry exhaustion, explicit retry, resumable pause,
+cancellation settlement, skip waivers, transitive dependency blocking, stall
+detection, Team adaptation, extension round trips, and public facade
+construction. Documentation and facade smoke tests assert that the canonical
+services are the exported framework entry points.
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0009-tracked-input-receipts
+
+# ADR 0009: Tracked Active and Initial Input Receipts
+
+- Status: Accepted
+- Date: 2026-08-27
+- Owners: `echo-core::agent`, `agent/subagent`, `echo-orchestration::runtime`
+
+## Context
+
+Active Subagent messages were routed through the legacy `steer_input` API. That
+API returns only a turn identity, so a caller could mistake mailbox admission
+for context consumption or turn completion. Initial inputs driven by
+`AgentTurnDriver` had the inverse problem: the driver returned a terminal
+`TurnReceipt`, but exposed no lossless way to observe acceptance or context
+drain before that terminal.
+
+The framework already has one authoritative tracked lifecycle for active-turn
+steering: `AgentSteerReceipt` reports `Accepted`, `Drained`, and
+`TurnSettled(completed|failed|cancelled|dropped)`. The framework must reuse that
+authority instead of adding another mailbox, reducer, or supervisor.
+
+## Decision
+
+1. `SubagentControlRegistry::send_message_tracked` calls
+   `Agent::steer_input_tracked` directly. `SubagentMessageReceipt` contains only
+   the exact attempt envelope (`execution_id`, `attempt`) and the nested
+   `AgentSteerReceipt`; its turn identity is read from that nested receipt.
+   The legacy `send_message` route and independent `Delivered` projection are
+   removed from the framework.
+2. `TurnRequest::with_input_receipt` creates one `TurnInputReceipt` and places
+   only its publisher in the request. The caller keeps the receiver before
+   invoking the same `AgentTurnDriver`.
+3. `AgentTurnDriver` validates the request identity, publishes `Accepted`
+   immediately before calling an Agent stream API, and settles the same receipt
+   with the real `TurnOutcome`. Publisher drop is an RAII `Dropped` terminal.
+4. A concrete Agent publishes `Drained` through the optional
+   `AgentInvocationContext::input_lifecycle` publisher only after the initial
+   input has been successfully inserted into its model context and before
+   provider execution. `ReactAgent` owns that producer point. Generic Agent
+   implementations without the publisher retain `drained = false`, even when
+   they emit output.
+5. `TurnInputReceipt` and its publisher share one watch controller and one
+   terminal guard. Receipt reads never create a second cached terminal
+   authority; a closed publisher is interpreted as `Dropped` only as a
+   defensive fallback.
+
+## Route-specific phases
+
+| Route | Accepted producer | Drained producer | Terminal producer |
+| --- | --- | --- | --- |
+| Active Agent/Subagent message | `TurnSteerMailbox::steer_tracked` | ReAct loop `SteerDrainBatch::mark_drained` | active-turn lease settlement |
+| Cold initial input | `AgentTurnDriver` after identity validation, before Agent stream call | `ReactAgent` after `ContextManager` input preparation, before provider call | the same `AgentTurnDriver` |
+| Generic Agent without lifecycle publisher | `AgentTurnDriver` | none; remains `false` | the same `AgentTurnDriver` |
+
+Terminal-before-drain, cancellation, sink failure, missing terminal, shutdown,
+ABA/stale attempt, and publisher/future drop are typed outcomes. No output EOF,
+rendered event, or terminal event is used to infer `Drained`.
+
+## Alternatives rejected
+
+- Keeping `turn_id` as a `Delivered`-looking Subagent receipt: conflates
+  identity with consumption and creates a second authority in application
+  adapters.
+- Marking cold input drained on the first output envelope or at stream EOF:
+  neither proves that `ContextManager` accepted the input.
+- Adding an application mailbox, store, supervisor, or a second lifecycle
+  reducer: violates the framework/application boundary and duplicates the
+  existing tracked mailbox.
+
+## Consequences
+
+Framework consumers can wait for active-message drain and terminal settlement,
+and can observe initial-input admission without changing the driver or owning a
+second tracker. Existing legacy `steer_input` callers remain source-compatible
+as a thin turn-ID adapter, but framework production control paths use the
+tracked APIs. Product-specific durable persistence and admission policy remain
+outside this crate.
+
+## Verification
+
+Focused tests cover active accepted-before-drain, all four terminal outcomes,
+terminal-before-drain, exact-attempt stale/settled rejection, cold accepted /
+drained / failed / cancelled / dropped outcomes, generic no-publisher
+no-drain, immediate Agent construction drain, and monotonic single settlement.
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0010-canonical-turn-receipt-accounting
+
+# ADR 0010: Canonical Turn Receipt Accounting
+
+- Status: Accepted
+- Date: 2026-08-28
+- Owners: `echo-orchestration::runtime`
+
+## Context
+
+`AgentTurnDriver` already owned envelope sequencing, typed terminal mapping,
+provider usage totals, the final answer, and elapsed time. A downstream product
+adapter still folded the same stream a second time to recover token totals,
+elapsed time, context-compaction count, final answer, and final message identity.
+That left two summaries derived from the same invocation and allowed sink or
+application behavior to make them diverge.
+
+This decision concerns only generic invocation facts. Durable runtime history
+and recovery checkpoints already belong to the framework `RuntimeStateStore`;
+the user-visible transcript remains a `ConversationStore` projection. Product
+workspace identity, retention pins, Task policy, and webhook delivery are not
+framework turn facts.
+
+## Industry evidence
+
+- OpenAI Codex exposes `TurnCompletedNotification` as a complete turn object
+  with stable turn identity, status, and duration. Token usage is an explicit
+  notification keyed by `threadId` and `turnId`, and context compaction is an
+  explicit notification rather than a UI inference:
+  <https://github.com/openai/codex/tree/main/codex-rs/app-server-protocol/schema/json/v2>
+- Claude Agent SDK streams progress messages but reports the final result in a
+  `ResultMessage`; context compaction is a distinct compact-boundary message:
+  <https://platform.claude.com/docs/en/agent-sdk/streaming-output>
+
+Both systems keep progress projection separate from a bounded, authoritative
+completion result.
+
+## Decision
+
+1. `TurnReceipt` is the single framework summary for one driven invocation.
+   It includes typed terminal, final answer, final message identity, reported
+   prompt/completion tokens, usage call count, explicit compaction count, last
+   event sequence, and elapsed time.
+2. `AgentTurnDriver` records those fields before handing each envelope to the
+   sink. If delivery fails, terminal-only result fields are cleared with the
+   failed receipt rather than being retained as a successful completion.
+3. Product adapters consume the receipt for generic facts. Their event
+   observers retain only product behavior such as tool webhooks, persistence,
+   rendering, and product-specific policy.
+4. Runtime checkpoint and transcript authorities do not move. No new history
+   store, reducer, or checkpoint is introduced.
+
+## Alternatives rejected
+
+- Keep a product-side summary reducer: duplicates the framework driver and can
+  diverge on sink failure, cancellation, missing terminal, or future events.
+- Move product journals and webhooks into the framework: those depend on EKO
+  workspace and surface policy and are not reusable turn mechanics.
+- Infer completion from EOF or the final rendered item: EOF is not a typed
+  terminal and renderer acceptance is not Agent completion.
+
+## Consequences
+
+Framework consumers receive one bounded completion receipt without replaying
+the stream. EKO keeps its durable product journal and webhook adapter, but no
+longer recalculates generic turn accounting. New generic receipt fields are a
+public API addition: ordinary receipt readers remain source-compatible, while
+downstream code that directly constructs a `TurnReceipt` literal must provide
+the new fields.
+
+## Verification
+
+Framework tests cover multiple usage events, explicit compaction boundaries,
+final message identity, sink failure, cancellation, missing terminal, and
+sequence continuation. The application adapter test verifies that its product
+outcome uses the framework receipt while event observation remains limited to
+product projection.
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0011-typed-tool-output-artifact
+
+# ADR 0011: Typed Tool Output Artifact
+
+- Status: Accepted
+- Date: 2026-08-29
+
+## Context
+
+`ToolResult` already carried typed success, failure, truncation, MIME, and JSON
+facts. Complete output that exceeded the inline budget was also represented by
+`ToolOutputArtifactRef`, but producers encoded that descriptor into fixed keys
+inside the open-ended `metadata` map. Trace, Subagent, application, CLI, and TUI
+consumers then independently reconstructed path, byte count, digest, and
+retention. Some consumers also called `Path::is_file` and created a new local
+availability fact.
+
+This made a generic framework fact look like application metadata. A missing or
+partially copied key silently changed behavior, and every surface could disagree
+about the same terminal tool result.
+
+Established implementations keep tool output and resource references typed:
+
+- MCP `CallToolResult` returns typed `ContentBlock` values, including
+  `ResourceLink` and `EmbeddedResource`, instead of requiring clients to decode
+  resource identity from text metadata.
+- OpenAI Agents Python represents `ToolCallOutputItem.output` separately from
+  its raw provider item, so downstream processing receives an explicit tool
+  output contract rather than parsing the raw record.
+- Codex protocol events use typed dynamic-tool content and file-change events,
+  keeping structured output facts distinct from display text.
+
+The common pattern is not a product-specific artifact store. It is a typed
+terminal result whose referenced content can be validated by the owning host.
+
+## Considered Options
+
+1. Keep artifact keys in `ToolResult.metadata` and centralize a decoder. This
+   still makes an open-ended string map the artifact authority and permits
+   partially formed descriptors.
+2. Add an application-only descriptor. Framework trace, Subagent, and other
+   consumers would still need a parallel interpretation.
+3. Put `Option<ToolOutputArtifactRef>` on canonical `ToolResult` and reuse the
+   same descriptor in output processing, trace, Subagent, and applications.
+
+## Decision
+
+Adopt option 3.
+
+`ToolResult.artifact` is the only complete-output artifact fact. Producers set
+it directly, `ProcessedToolOutput` carries it through the spill stage, and
+`RunEvent::ToolResult` stores the same typed descriptor. `metadata` remains for
+open-ended measurements and tool-specific annotations, but it must not contain
+a second artifact descriptor.
+
+`ToolOutputArtifactRef::extend_metadata` and `from_metadata` are removed. There
+is no compatibility decoder because the project is pre-release and all
+workspace consumers migrate in the same iteration.
+
+The descriptor means that artifact creation completed and records its path,
+stored bytes, original payload bytes, SHA-256, and retention label. Consumers
+must not replace this producer fact with a local path-existence check. A host
+that exposes or reads the artifact may additionally validate the registered
+root, retention, file identity, size, and digest; that validation is host
+policy, not another descriptor authority.
+
+## Consequences
+
+- Tool events, trace, Subagent observation, replay, and every surface preserve
+  one lossless descriptor.
+- Missing descriptors are explicit `None`; partially copied metadata cannot be
+  mistaken for an artifact.
+- Applications retain ownership of storage roots, retention, access policy,
+  and verified readers.
+- Adding the public field is intentionally source-breaking for explicit
+  `ToolResult` literals; workspace consumers are updated together.
+
+## References
+
+- MCP schema 2025-06-18, `CallToolResult` and typed content/resource blocks:
+  <https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/2025-06-18/schema.ts>
+- OpenAI Agents Python, `ToolCallOutputItem`:
+  <https://github.com/openai/openai-agents-python/blob/main/src/agents/items.py>
+- OpenAI Codex protocol typed dynamic-tool and file-change events:
+  <https://github.com/openai/codex/blob/main/codex-rs/protocol/src/protocol.rs>
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0012-immutable-plugin-preparation
+
+# ADR 0012: Immutable plugin preparation generations
+
+## Context
+
+Plugin wiring previously reread package files while mutating live Agents and during rollback. One
+reload could therefore expose different filesystem states to different targets.
+
+OpenAI Codex shares cached plugin and Skill managers and keeps disk changes invisible until explicit
+force reload at commit `cdde711fac008cd4e1115603ead713cf23b1a580`. Claude Code plugins similarly
+load a bundle and expose explicit reload rather than making every consumer rescan it.
+
+## Decision
+
+`PluginIntegrator` owns preparation and its bounded cache. `prepare` returns an immutable,
+dependency-ordered `PreparedPluginSet` with a monotonic generation, deterministic content identity,
+structured diagnostics, parsed Skills/Hooks/MCP, and owner-qualified frozen Subagent/LSP documents.
+`wire_prepared` and rollback consume only this set and perform no component filesystem reads.
+`PluginWiringResult` remains only an apply/unwire receipt. EKO monitors, themes, output styles,
+workspace fanout, and UI receipts remain application policy.
+
+## Alternatives
+
+- Per-target live scans: rejected because targets can observe different bytes.
+- EKO fields in the framework snapshot: rejected as product coupling.
+- Unbounded revision cache: rejected; only the latest set per registry remains cached while existing
+  `Arc` snapshots remain usable by active consumers.
+
+## Consequences
+
+Explicit registry mutation or invalidation advances generation. Equivalent bytes retain the same
+identity. Invalid dependency or parse errors make a set non-applicable, and wiring is deterministic.
+
+## References
+
+- [Codex PluginsManager](https://github.com/openai/codex/blob/cdde711fac008cd4e1115603ead713cf23b1a580/codex-rs/core-plugins/src/manager.rs#L398-L506)
+- [Codex shared managers](https://github.com/openai/codex/blob/cdde711fac008cd4e1115603ead713cf23b1a580/codex-rs/core/src/thread_manager.rs#L258-L276)
+- [Codex SkillsManager](https://github.com/openai/codex/blob/cdde711fac008cd4e1115603ead713cf23b1a580/codex-rs/core-skills/src/manager.rs#L51-L121)
+- [Claude Code plugins](https://code.claude.com/docs/en/plugins)
 
 
 ---

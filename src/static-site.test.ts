@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getAllSlugs } from './docs/registry';
+import { frameworkAdrDocs } from './docs/framework-adrs.generated';
 import { getStaticRoutes } from './static-site';
 
 describe('static route registry', () => {
@@ -32,5 +33,14 @@ describe('static route registry', () => {
         .every((route) => route.path.startsWith('/en')),
     ).toBe(true);
     expect(routes.every((route) => !route.path.includes('?lang='))).toBe(true);
+  });
+
+  it('publishes every framework ADR in bilingual discovery routes', () => {
+    const paths = getStaticRoutes().map((route) => route.path);
+    expect(frameworkAdrDocs.length).toBeGreaterThanOrEqual(12);
+    for (const doc of frameworkAdrDocs) {
+      expect(paths).toContain(`/docs/${doc.slug}`);
+      expect(paths).toContain(`/en/docs/${doc.slug}`);
+    }
   });
 });

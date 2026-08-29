@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { loadDocContent } from './loader';
+import { getAvailableDocs, loadDocContent, localizedDocPath } from './loader';
+import { frameworkAdrDocs } from './framework-adrs.generated';
 import { getDocCategories, getAllSlugs } from './registry';
 
 describe('documentation registry', () => {
@@ -27,5 +28,20 @@ describe('documentation registry', () => {
     expect(english).toContain('# Tool System');
     expect(chinese).toContain('# 工具系统');
     expect(english).not.toBe(chinese);
+  });
+
+  it('publishes every vendored framework ADR in both language route trees', () => {
+    const availableAdrs = getAvailableDocs()
+      .filter((path) => path.includes('/echo-agent/') && path.includes('/adr/'))
+      .sort();
+    const registeredAdrs = frameworkAdrDocs
+      .flatMap((doc) =>
+        (['en', 'zh'] as const).map((language) =>
+          localizedDocPath('echo-agent', language, doc.filePath),
+        ),
+      )
+      .sort();
+    expect(frameworkAdrDocs.length).toBeGreaterThanOrEqual(12);
+    expect(availableAdrs).toEqual(registeredAdrs);
   });
 });

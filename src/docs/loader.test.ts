@@ -16,4 +16,21 @@ describe('localizedDocPath', () => {
       './content/eko/en/overview.md',
     );
   });
+
+  it('localizes language-neutral framework ADR routes', () => {
+    expect(
+      localizedDocPath(
+        'echo-agent',
+        'en',
+        './content/echo-agent/adr/0001-channel-session-sender-scope.md',
+      ),
+    ).toBe('./content/echo-agent/en/adr/0001-channel-session-sender-scope.md');
+    expect(
+      localizedDocPath(
+        'echo-agent',
+        'zh',
+        './content/echo-agent/adr/0001-channel-session-sender-scope.md',
+      ),
+    ).toBe('./content/echo-agent/zh/adr/0001-channel-session-sender-scope.md');
+  });
 });

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "1446caedcbb7e3658bddd3707daaafad9bb7384b",
+    "revision": "f6d81fe809a9661b58e7a9aaa71b753696defbc2",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -209,6 +209,66 @@
         "sourcePath": "docs/en/43-data-output-format.md",
         "destination": "src/docs/content/echo-agent/en/43-data-output-format.md",
         "sha256": "c33495dc811a330599ff2095aa2146490890d8b7bd762a589f4cf708e7c0ed4b"
+      },
+      {
+        "sourcePath": "docs/adr/0001-channel-session-sender-scope.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0001-channel-session-sender-scope.md",
+        "sha256": "6349132b5274f6e6dc3697c56ef48d2cd98dadd315773f913ca84811369f78cf"
+      },
+      {
+        "sourcePath": "docs/adr/0002-sandbox-cancellation-cleanup.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0002-sandbox-cancellation-cleanup.md",
+        "sha256": "003d242545055e71157c2f4f4775c7e627d0b220b4f10dadd85c9b73ab871904"
+      },
+      {
+        "sourcePath": "docs/adr/0003-tracked-steer-lifecycle.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0003-tracked-steer-lifecycle.md",
+        "sha256": "6446632f4792360b0411400ca82f15f5a4aa385129a655524e7d976e3984da4e"
+      },
+      {
+        "sourcePath": "docs/adr/0004-async-file-store-ownership.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0004-async-file-store-ownership.md",
+        "sha256": "a4974b5e675c1da0f0ae7e03f1c8610ecdfdfe95c83bf05137bcab371542468d"
+      },
+      {
+        "sourcePath": "docs/adr/0005-invocation-resource-lifetime.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0005-invocation-resource-lifetime.md",
+        "sha256": "c66021876f2c972727929f15fc4a08c811a5cfa833190d4c06a6d4f5bd511783"
+      },
+      {
+        "sourcePath": "docs/adr/0006-runtime-state-scope-lineage.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0006-runtime-state-scope-lineage.md",
+        "sha256": "c2c83e490ed5606ef563daf32bccef775049dc9e770bdb7dc8a7ebdb40e57785"
+      },
+      {
+        "sourcePath": "docs/adr/0007-atomic-journal-batch-commits.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0007-atomic-journal-batch-commits.md",
+        "sha256": "0b17450cf5bcb6c4950d87e345cb9d227eea27169c424b6f794544bf05f6e2ae"
+      },
+      {
+        "sourcePath": "docs/adr/0008-canonical-runtime-task-authority.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0008-canonical-runtime-task-authority.md",
+        "sha256": "355be73539238da84b5c9a33309ba91a86dd7492c292ec4d57da790406b950d1"
+      },
+      {
+        "sourcePath": "docs/adr/0009-tracked-input-receipts.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0009-tracked-input-receipts.md",
+        "sha256": "25469dca56bd56b4149c856b74620f00b1ac60e41810d2e450d2b59b4a899a43"
+      },
+      {
+        "sourcePath": "docs/adr/0010-canonical-turn-receipt-accounting.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0010-canonical-turn-receipt-accounting.md",
+        "sha256": "410bc2f6a5e465398d7919dfd6a50296f647b3d50bd688b511054b80c0d55608"
+      },
+      {
+        "sourcePath": "docs/adr/0011-typed-tool-output-artifact.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0011-typed-tool-output-artifact.md",
+        "sha256": "8c35f7ae9ca7ce602e8cd88fd32c74474da5360230d4df181617aae784e20b89"
+      },
+      {
+        "sourcePath": "docs/adr/0012-immutable-plugin-preparation.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0012-immutable-plugin-preparation.md",
+        "sha256": "d70621dd5a6cef1e4765ee14461756281c4ac5dc0f88ce1b095d09f5a234189c"
       },
       {
         "sourcePath": "docs/en/getting-started.md",
@@ -461,6 +521,66 @@
         "sha256": "af60248b57f23ea9eba45277bb728687bbb4f436d56145e85e822f64893e0707"
       },
       {
+        "sourcePath": "docs/adr/0001-channel-session-sender-scope.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0001-channel-session-sender-scope.md",
+        "sha256": "6349132b5274f6e6dc3697c56ef48d2cd98dadd315773f913ca84811369f78cf"
+      },
+      {
+        "sourcePath": "docs/adr/0002-sandbox-cancellation-cleanup.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0002-sandbox-cancellation-cleanup.md",
+        "sha256": "003d242545055e71157c2f4f4775c7e627d0b220b4f10dadd85c9b73ab871904"
+      },
+      {
+        "sourcePath": "docs/adr/0003-tracked-steer-lifecycle.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0003-tracked-steer-lifecycle.md",
+        "sha256": "6446632f4792360b0411400ca82f15f5a4aa385129a655524e7d976e3984da4e"
+      },
+      {
+        "sourcePath": "docs/adr/0004-async-file-store-ownership.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0004-async-file-store-ownership.md",
+        "sha256": "a4974b5e675c1da0f0ae7e03f1c8610ecdfdfe95c83bf05137bcab371542468d"
+      },
+      {
+        "sourcePath": "docs/adr/0005-invocation-resource-lifetime.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0005-invocation-resource-lifetime.md",
+        "sha256": "c66021876f2c972727929f15fc4a08c811a5cfa833190d4c06a6d4f5bd511783"
+      },
+      {
+        "sourcePath": "docs/adr/0006-runtime-state-scope-lineage.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0006-runtime-state-scope-lineage.md",
+        "sha256": "c2c83e490ed5606ef563daf32bccef775049dc9e770bdb7dc8a7ebdb40e57785"
+      },
+      {
+        "sourcePath": "docs/adr/0007-atomic-journal-batch-commits.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0007-atomic-journal-batch-commits.md",
+        "sha256": "0b17450cf5bcb6c4950d87e345cb9d227eea27169c424b6f794544bf05f6e2ae"
+      },
+      {
+        "sourcePath": "docs/adr/0008-canonical-runtime-task-authority.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0008-canonical-runtime-task-authority.md",
+        "sha256": "355be73539238da84b5c9a33309ba91a86dd7492c292ec4d57da790406b950d1"
+      },
+      {
+        "sourcePath": "docs/adr/0009-tracked-input-receipts.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0009-tracked-input-receipts.md",
+        "sha256": "25469dca56bd56b4149c856b74620f00b1ac60e41810d2e450d2b59b4a899a43"
+      },
+      {
+        "sourcePath": "docs/adr/0010-canonical-turn-receipt-accounting.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0010-canonical-turn-receipt-accounting.md",
+        "sha256": "410bc2f6a5e465398d7919dfd6a50296f647b3d50bd688b511054b80c0d55608"
+      },
+      {
+        "sourcePath": "docs/adr/0011-typed-tool-output-artifact.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0011-typed-tool-output-artifact.md",
+        "sha256": "8c35f7ae9ca7ce602e8cd88fd32c74474da5360230d4df181617aae784e20b89"
+      },
+      {
+        "sourcePath": "docs/adr/0012-immutable-plugin-preparation.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0012-immutable-plugin-preparation.md",
+        "sha256": "d70621dd5a6cef1e4765ee14461756281c4ac5dc0f88ce1b095d09f5a234189c"
+      },
+      {
         "sourcePath": "docs/zh/getting-started.md",
         "destination": "src/docs/content/echo-agent/zh/getting-started.md",
         "sha256": "d6cbb6ca19e384659a9a8f7642917d8388f5d75efef6cc1508f8b969c0d08e3b"
@@ -509,7 +629,7 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "04174433823f73e953bd75d50c6218990726c079",
+    "reviewedRevision": "eaeb39dba211276ca39dc110edfb4d5f062edae0",
     "status": "reviewed-application-source-projection",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "files": [

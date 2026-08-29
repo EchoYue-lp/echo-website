@@ -28,6 +28,7 @@ function relativeDocPath(product: Product, filePath: string): string {
 function sourcePath(product: Product, language: Language, filePath: string): string {
   const relative = relativeDocPath(product, filePath);
   if (product === 'eko') return relative;
+  if (relative.startsWith('adr/')) return `docs/${relative}`;
   return relative.startsWith('knowledge/')
     ? `${frameworkKnowledgeSourceRoot}/${language}/${relative.slice('knowledge/'.length)}`
     : `docs/${language}/${relative}`;
@@ -86,9 +87,15 @@ function registeredTarget(
   }
 
   const standard = target.path.match(/^docs\/(en|zh)\/(.+\.md)$/);
-  if (!standard) return undefined;
-  const doc = findDocByFilePath(product, `./content/echo-agent/${standard[2]}`);
-  return doc ? { doc, language: standard[1] as Language } : undefined;
+  if (standard) {
+    const doc = findDocByFilePath(product, `./content/echo-agent/${standard[2]}`);
+    return doc ? { doc, language: standard[1] as Language } : undefined;
+  }
+
+  const adr = target.path.match(/^docs\/adr\/(.+\.md)$/);
+  if (!adr) return undefined;
+  const doc = findDocByFilePath(product, `./content/echo-agent/adr/${adr[1]}`);
+  return doc ? { doc, language } : undefined;
 }
 
 function internalUrl(path: string, language: Language, target: SourceTarget): string {

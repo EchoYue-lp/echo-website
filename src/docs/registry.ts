@@ -1,4 +1,5 @@
 import type { Language, Product } from '../routing';
+import { frameworkAdrDocs } from './framework-adrs.generated.ts';
 
 export type { Language, Product };
 
@@ -290,6 +291,11 @@ export const frameworkDocCategories: DocCategory[] = [
         filePath: './content/echo-agent/12-mock.md',
       },
     ],
+  },
+  {
+    title: { zh: '架构决策', en: 'Architecture Decisions' },
+    icon: 'library',
+    docs: frameworkAdrDocs,
   },
   {
     title: { zh: '知识库', en: 'Knowledge Base' },

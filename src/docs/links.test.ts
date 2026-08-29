@@ -117,6 +117,31 @@ describe('resolveMarkdownHref', () => {
     });
   });
 
+  it('maps framework ADR links and fallbacks through the language-neutral source tree', () => {
+    expect(
+      resolveMarkdownHref(
+        '../adr/0012-immutable-plugin-preparation.md#decision',
+        'echo-agent',
+        'en',
+        frameworkDoc('plugin-system'),
+      ),
+    ).toEqual({
+      href: '/en/docs/adr-0012-immutable-plugin-preparation#decision',
+      internal: true,
+    });
+    expect(
+      resolveMarkdownHref(
+        './missing.md',
+        'echo-agent',
+        'zh',
+        frameworkDoc('adr-0001-channel-session-sender-scope'),
+      ),
+    ).toEqual({
+      href: 'https://github.com/EchoYue-lp/echo-agent/blob/main/docs/adr/missing.md',
+      internal: false,
+    });
+  });
+
   it('keeps anchors and external URLs intact', () => {
     expect(resolveMarkdownHref('#usage', 'echo-agent', 'en', frameworkDoc('tools'))).toEqual({
       href: '#usage',
