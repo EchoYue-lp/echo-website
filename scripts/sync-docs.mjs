@@ -206,6 +206,30 @@ function assertCleanSource(repositoryRoot, label) {
   }
 }
 
+function assertApplicationParity(applicationRoot) {
+  execFileSync('node', ['scripts/check-docs-parity.mjs'], {
+    cwd: resolve(applicationRoot),
+    encoding: 'utf8',
+    stdio: 'pipe',
+  });
+}
+
+function applicationSourceFiles(applicationRoot) {
+  const sourceRoot = resolve(applicationRoot);
+  const records = [];
+  for (const language of ['zh', 'en']) {
+    const languageRoot = join(sourceRoot, 'docs', language);
+    for (const relativePath of relativeMarkdownPaths(languageRoot)) {
+      const source = join(languageRoot, relativePath);
+      records.push({
+        sourcePath: `docs/${language}/${relativePath}`,
+        sha256: sha256(source),
+      });
+    }
+  }
+  return records.sort((left, right) => left.sourcePath.localeCompare(right.sourcePath));
+}
+
 function projectionFiles() {
   return filesBelow(join(contentRoot, 'eko')).map((path) => ({
     destination: relative(siteRoot, path).replaceAll('\\', '/'),
@@ -213,7 +237,12 @@ function projectionFiles() {
   }));
 }
 
-function applicationProjection(applicationRevision, applicationStatus, applicationAuthority) {
+function applicationProjection(
+  applicationRoot,
+  applicationRevision,
+  applicationStatus,
+  applicationAuthority,
+) {
   const existingManifest = existsSync(manifestPath)
     ? JSON.parse(readFileSync(manifestPath, 'utf8'))
     : undefined;
@@ -232,13 +261,15 @@ function applicationProjection(applicationRevision, applicationStatus, applicati
     authority:
       applicationAuthority ??
       existingProjection?.authority ??
-      'These short pages are code-audited website projections. Replace them with reviewed application source docs after the parallel application review lands.',
+      'Website pages are reviewed product projections. The complete bilingual EKO source tree remains authoritative in echo-agent-cli/docs/{zh,en}.',
+    sourceFiles: applicationSourceFiles(applicationRoot),
     files: projectionFiles(),
   };
 }
 
 function syncFramework(
   frameworkRoot,
+  applicationRoot,
   applicationRevision,
   applicationStatus,
   applicationAuthority,
@@ -306,6 +337,7 @@ function syncFramework(
       files: files.sort((left, right) => left.destination.localeCompare(right.destination)),
     },
     applicationProjection: applicationProjection(
+      applicationRoot,
       applicationRevision,
       applicationStatus,
       applicationAuthority,
@@ -360,7 +392,15 @@ function checkManifest(frameworkRoot, applicationRoot) {
   }
 
   if (applicationRoot) {
-    const currentRevision = gitRevision(resolve(applicationRoot));
+    const resolvedRoot = resolve(applicationRoot);
+    assertApplicationParity(resolvedRoot);
+    for (const record of manifest.applicationProjection.sourceFiles ?? []) {
+      const source = join(resolvedRoot, record.sourcePath);
+      if (!existsSync(source) || sha256(source) !== record.sha256) {
+        throw new Error(`EKO bilingual source docs drifted: ${record.sourcePath}`);
+      }
+    }
+    const currentRevision = gitRevision(resolvedRoot);
     if (currentRevision !== manifest.applicationProjection.reviewedRevision) {
       throw new Error(
         `EKO projections need review: manifest=${manifest.applicationProjection.reviewedRevision}, source=${currentRevision}`,
@@ -394,6 +434,7 @@ if (process.argv.includes('--check')) {
   const requiredApplicationRoot = applicationRoot ?? discoverApplicationRoot();
   assertCleanSource(frameworkRoot, 'echo-agent');
   assertCleanSource(requiredApplicationRoot, 'echo-agent-cli');
+  assertApplicationParity(requiredApplicationRoot);
   if ((applicationStatus || applicationAuthority) && !applicationRevision) {
     throw new Error(
       'Changing application projection status or authority requires --application-revision <reviewed-sha>.',
@@ -407,6 +448,12 @@ if (process.argv.includes('--check')) {
       );
     }
   }
-  syncFramework(frameworkRoot, applicationRevision, applicationStatus, applicationAuthority);
+  syncFramework(
+    frameworkRoot,
+    requiredApplicationRoot,
+    applicationRevision,
+    applicationStatus,
+    applicationAuthority,
+  );
   checkManifest(frameworkRoot, applicationRevision ? requiredApplicationRoot : undefined);
 }

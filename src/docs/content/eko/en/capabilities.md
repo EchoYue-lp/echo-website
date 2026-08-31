@@ -28,6 +28,14 @@ Task relationships have one authority: a revisioned `TaskRun -> PlanTask -> Suba
 
 Six model-callable `agent_*` tools list, inspect, message, follow up, wait, and interrupt explicit Conversation or Task Subagent targets. Runtime queries are bounded at the journal layer. Cursor identity survives router or TaskRuntime reopen, cold addresses are checked against the bound workspace, and the five interactive/automation surfaces replay the same typed terminal facts.
 
+## Subagent prompt compilation
+
+Built-in, plugin, direct, planned, fork, teammate, team-member, and primary TaskRuntime invocations use one prompt compiler. Stable system prompts contain role knowledge, the concrete registered tool surface, typed access and isolation boundaries, delegation, language policy, and the framework result contract. Task goals, workspace, file scope, checks, acceptance criteria, artifacts, constraints, filtered user/final-assistant history, and typed attachments stay in dynamic invocation messages. Tool visibility and MCP topology changes republish the stable capability profile; invocation allowlists emit only a narrowing override.
+
+## Deterministic command-cell watch
+
+`watch_cell` uses the framework `CommandCellWatcher` to retain one background command, drain its byte cursor, and publish typed terminal truth without dispatching a model or Subagent. EKO adds exact workspace/conversation/root identity, generation idempotency, durable Ready/delivery/ack facts, recovery, and shared surface projection. Interrupting a watch does not stop the underlying command.
+
 ## Local application core
 
 TUI, GUI, CLI/JSONL, and channel adapters use one `ApplicationServices` composition owner. Surfaces retain input, rendering, and host bridges rather than assembling separate task, recovery, pool, or maintenance runtimes. Conversation and runtime state use file or memory stores on the user's machine; EKO does not require SQLite.

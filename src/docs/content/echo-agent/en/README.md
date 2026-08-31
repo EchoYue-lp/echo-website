@@ -8,6 +8,12 @@ echo-agent is a composable Agent development framework written in Rust, providin
 
 ## Documentation Index
 
+### Framework Boundaries
+
+| Doc | Module | Key Concepts |
+| --- | --- | --- |
+| [39 - Framework and Application Boundary](./39-framework-application-boundary.md) | Architecture | Product-neutral framework capability, EKO policy, and one authority |
+
 ### Core Features
 
 | Doc                                                 | Module            | Key Concepts                                                                              |
@@ -21,7 +27,7 @@ echo-agent is a composable Agent development framework written in Rust, providin
 | [07 - Skill System](./07-skills.md)                 | Skills            | Capability packs, prompt injection, external SKILL.md loading                             |
 | [08 - MCP Integration](./08-mcp.md)                 | MCP               | stdio/HTTP transport, tool adaptation, multi-server management                            |
 | [09 - Task Planning](./09-tasks.md)                 | Tasks / DAG       | DAG, topological sort, cycle detection, Mermaid visualization                             |
-| [10 - Streaming Output](./10-streaming.md)          | Streaming         | execute_stream, AgentEvent, SSE, TTFT                                                     |
+| [10 - Streaming Output](./10-streaming.md)          | Streaming         | execute_stream, AgentEvent, SSE, LlmTimeouts, TTFT                                        |
 | [11 - Structured Output](./11-structured-output.md) | Structured Output | ResponseFormat, JsonSchema, extract(), extract_json()                                     |
 | [12 - Mock Testing Utilities](./12-mock.md)         | Testing           | MockLlmClient, MockTool, MockAgent, InMemoryStore                                         |
 | [13 - Multi-Turn Chat](./13-chat.md)                | Chat              | chat(), chat_stream(), cross-turn memory, reset()                                         |
@@ -60,6 +66,7 @@ echo-agent is a composable Agent development framework written in Rust, providin
 | [38 - Agent Factory & Modes](./38-factory-modes.md)               | Agent Factory / Mode Engine / Prompt Templates | mode switching, localization, template rendering                                        |
 | [40 - Context System](./40-context-system.md)                     | Context System                                 | ContextAssembler, ContextBudgeter, ContextSelector, priority ordering, budget awareness |
 | [41 - Persistence Concepts](./41-persistence-concepts.md)         | Store / Journal / Checkpoint / Trace           | persistence boundaries, fact authority, recovery snapshots, observability               |
+| [41 - Delivery Ledger](./41-delivery-ledger.md)                    | Delivery lifecycle                             | Typed route/payload envelope, FIFO, attempts, settlement, and bounded terminal retention  |
 
 ### Getting Started Guides
 
@@ -85,6 +92,14 @@ echo-agent is a composable Agent development framework written in Rust, providin
 | [0008 - Canonical Runtime Task Authority](../adr/0008-canonical-runtime-task-authority.md) | One revisioned graph owns task CRUD, execution, and settlement    |
 | [0009 - Tracked Input Receipts](../adr/0009-tracked-input-receipts.md) | Active and initial inputs expose accepted, drained, and terminal boundaries |
 | [0010 - Canonical Turn Receipt Accounting](../adr/0010-canonical-turn-receipt-accounting.md) | One framework receipt owns generic terminal, usage, compaction, and final-message facts |
+| [0015 - Keyed Execution Admission](../adr/0015-keyed-execution-admission.md) | Reusable opaque-key leases, retirement fences, and shutdown waiting |
+| [0019 - Typed Delivery Ledger API](../adr/0019-typed-delivery-ledger-api.md) | Typed route/payload delivery with one framework record and reducer |
+| [0020 - Structured Subagent Outcome Views](../adr/0020-structured-subagent-outcome-views.md) | Generic verification and file-access views remain in the framework outcome |
+| [0021 - Framework-Native Domain Values](../adr/0021-framework-native-domain-values.md) | Applications consume reusable framework values without source-named conversions |
+| [0022 - Typed LLM Timeouts](../adr/0022-typed-llm-timeouts.md) | Client defaults and per-request stream boundaries share one typed contract |
+| [0023 - Current Skill Frontmatter](../adr/0023-current-skill-frontmatter.md) | Markdown body and directory resources replace legacy frontmatter content fields |
+| [0024 - Unified Subagent Prompt Compilation](../adr/0024-unified-subagent-prompt-compilation.md) | One injected compiler owns registration and dispatch prompt framing |
+| [0025 - Deterministic Command-Cell Watcher](../adr/0025-deterministic-command-cell-watcher.md) | A retained typed watcher replaces model-driven command polling |
 
 ---
 
@@ -192,54 +207,54 @@ text/image/audio/video input capabilities.
 ## Example Files
 
 Examples are maintained under three contracts: `Acceptance`, `Conditional acceptance`, and `Teaching`.
-See `examples/README.md` for the full classification and upkeep rules.
+See `echo-agent-learning/examples/README.md` for the full classification and upkeep rules.
 
 | Example                                   | Demonstrates                                                                                          |
 | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `examples/demo01_tools.rs`                | Basic tool registration and invocation                                                                |
-| `examples/demo02_tasks.rs`                | DAG task planning                                                                                     |
-| `examples/demo03_approval.rs`             | Human-in-the-loop approval                                                                            |
-| `tests/example_contracts/demo04_subagent.rs`             | Subagent orchestration                                                                                |
-| `examples/demo05_compressor.rs`           | Context compression                                                                                   |
-| `examples/demo06_mcp.rs`                  | MCP protocol integration                                                                              |
-| `examples/demo07_skills.rs`               | Skill system                                                                                          |
-| `examples/demo08_external_skills.rs`      | External SKILL.md loading                                                                             |
-| `examples/demo09_file_shell.rs`           | File and shell tools                                                                                  |
-| `examples/demo10_streaming.rs`            | Streaming output                                                                                      |
-| `examples/demo11_callbacks.rs`            | Lifecycle callbacks                                                                                   |
-| `tests/example_contracts/demo12_resilience.rs`           | Fault tolerance and retries                                                                           |
-| `examples/demo13_tool_execution.rs`       | Tool execution configuration                                                                          |
-| `examples/demo15_structured_output.rs`    | Structured output (extract / JSON Schema)                                                             |
-| `examples/demo17_chat.rs`                 | Multi-turn chat (chat / chat_stream / reset)                                                          |
-| `examples/demo18_semantic_memory.rs`      | Store semantic search (EmbeddingStore / vector retrieval)                                             |
-| `examples/demo19_guard.rs`                | Guard system (rule / LLM content filtering)                                                           |
-| `examples/demo20_audit.rs`                | Audit logging                                                                                         |
-| `examples/demo23_a2a.rs`                  | A2A protocol                                                                                          |
-| `tests/example_contracts/demo24_topology.rs`             | Multi-agent topology visualization                                                                    |
-| `examples/demo25_macros.rs`               | Macro system showcase                                                                                 |
-| `examples/demo26_provider_factory.rs`     | Dynamic LLM factory                                                                                   |
-| `examples/demo27_sqlite_memory.rs`        | SQLite persistence                                                                                    |
-| `examples/demo28_workflow.rs`             | Workflow pipeline                                                                                     |
-| `examples/demo29_sandbox.rs`              | Sandbox execution                                                                                     |
-| `tests/example_contracts/demo30_mcp_server.rs`           | MCP server mode                                                                                       |
-| `tests/example_contracts/demo31_memory_tools.rs`         | Memory tool injection                                                                                 |
-| `examples/demo32_token_budget.rs`         | Token budget control                                                                                  |
-| `examples/demo33_retry_policy.rs`         | Unified retry                                                                                         |
-| `tests/example_contracts/demo34_workflow_stream.rs`      | Workflow streaming                                                                                    |
-| `examples/demo35_dynamic_tools.rs`        | Dynamic tool management                                                                               |
-| `examples/demo36_multimodal.rs`           | Multi-modal messages                                                                                  |
-| `tests/example_contracts/demo37_declarative_workflow.rs` | YAML/JSON workflows                                                                                   |
-| `examples/demo38_im_channels.rs`          | IM channel integration                                                                                |
-| `tests/example_contracts/demo39_workflow.rs`             | Graph workflow engine                                                                                 |
-| `examples/demo40_snapshot.rs`             | Snapshot & rollback                                                                                   |
-| `examples/demo41_web_tools.rs`            | Web search + fetch                                                                                    |
-| `examples/demo42_playwright_mcp.rs`       | Playwright MCP browser automation                                                                     |
-| `tests/example_contracts/demo43_data_tools.rs`           | Data tools (Excel / CSV / Word / Text)                                                                |
-| `examples/demo44_code_laboratory.rs`      | Code execution assistant                                                                              |
-| `examples/demo45_customer_service.rs`     | Intelligent customer service                                                                          |
-| `examples/demo46_data_analyst.rs`         | Data analysis assistant                                                                               |
-| `examples/demo47_enterprise.rs`           | Enterprise workflow automation                                                                        |
-| `examples/demo48_personal_assistant.rs`   | Personal smart assistant                                                                              |
-| `examples/demo49_research_agent.rs`       | Research & report assistant                                                                           |
-| `tests/example_contracts/demo50_eval.rs`                 | Eval system: cases, criteria, constraints, trajectory replay, trigger accuracy, HTML reports          |
-| `tests/example_contracts/demo51_self_improvement.rs`     | Self-improvement: Analyzer failure detection, Curator skill lifecycle, TrajectorySaver fine-tune data |
+| `echo-agent-learning/examples/demo01_tools.rs`                | Basic tool registration and invocation                                                                |
+| `echo-agent-learning/examples/demo02_tasks.rs`                | DAG task planning                                                                                     |
+| `echo-agent-learning/examples/demo03_approval.rs`             | Human-in-the-loop approval                                                                            |
+| `echo-agent-learning/tests/example_contracts/demo04_subagent.rs`             | Subagent orchestration                                                                                |
+| `echo-agent-learning/examples/demo05_compressor.rs`           | Context compression                                                                                   |
+| `echo-agent-learning/examples/demo06_mcp.rs`                  | MCP protocol integration                                                                              |
+| `echo-agent-learning/examples/demo07_skills.rs`               | Skill system                                                                                          |
+| `echo-agent-learning/examples/demo08_external_skills.rs`      | External SKILL.md loading                                                                             |
+| `echo-agent-learning/examples/demo09_file_shell.rs`           | File and shell tools                                                                                  |
+| `echo-agent-learning/examples/demo10_streaming.rs`            | Streaming output                                                                                      |
+| `echo-agent-learning/examples/demo11_callbacks.rs`            | Lifecycle callbacks                                                                                   |
+| `echo-agent-learning/tests/example_contracts/demo12_resilience.rs`           | Fault tolerance and retries                                                                           |
+| `echo-agent-learning/examples/demo13_tool_execution.rs`       | Tool execution configuration                                                                          |
+| `echo-agent-learning/examples/demo15_structured_output.rs`    | Structured output (extract / JSON Schema)                                                             |
+| `echo-agent-learning/examples/demo17_chat.rs`                 | Multi-turn chat (chat / chat_stream / reset)                                                          |
+| `echo-agent-learning/examples/demo18_semantic_memory.rs`      | Store semantic search (EmbeddingStore / vector retrieval)                                             |
+| `echo-agent-learning/examples/demo19_guard.rs`                | Guard system (rule / LLM content filtering)                                                           |
+| `echo-agent-learning/examples/demo20_audit.rs`                | Audit logging                                                                                         |
+| `echo-agent-learning/examples/demo23_a2a.rs`                  | A2A protocol                                                                                          |
+| `echo-agent-learning/tests/example_contracts/demo24_topology.rs`             | Multi-agent topology visualization                                                                    |
+| `echo-agent-learning/examples/demo25_macros.rs`               | Macro system showcase                                                                                 |
+| `echo-agent-learning/examples/demo26_provider_factory.rs`     | Dynamic LLM factory                                                                                   |
+| `echo-agent-learning/examples/demo27_sqlite_memory.rs`        | SQLite persistence                                                                                    |
+| `echo-agent-learning/examples/demo28_workflow.rs`             | Workflow pipeline                                                                                     |
+| `echo-agent-learning/examples/demo29_sandbox.rs`              | Sandbox execution                                                                                     |
+| `echo-agent-learning/tests/example_contracts/demo30_mcp_server.rs`           | MCP server mode                                                                                       |
+| `echo-agent-learning/tests/example_contracts/demo31_memory_tools.rs`         | Memory tool injection                                                                                 |
+| `echo-agent-learning/examples/demo32_token_budget.rs`         | Token budget control                                                                                  |
+| `echo-agent-learning/examples/demo33_retry_policy.rs`         | Unified retry                                                                                         |
+| `echo-agent-learning/tests/example_contracts/demo34_workflow_stream.rs`      | Workflow streaming                                                                                    |
+| `echo-agent-learning/examples/demo35_dynamic_tools.rs`        | Dynamic tool management                                                                               |
+| `echo-agent-learning/examples/demo36_multimodal.rs`           | Multi-modal messages                                                                                  |
+| `echo-agent-learning/tests/example_contracts/demo37_declarative_workflow.rs` | YAML/JSON workflows                                                                                   |
+| `echo-agent-learning/examples/demo38_im_channels.rs`          | IM channel integration                                                                                |
+| `echo-agent-learning/tests/example_contracts/demo39_workflow.rs`             | Graph workflow engine                                                                                 |
+| `echo-agent-learning/examples/demo40_snapshot.rs`             | Snapshot & rollback                                                                                   |
+| `echo-agent-learning/examples/demo41_web_tools.rs`            | Web search + fetch                                                                                    |
+| `echo-agent-learning/examples/demo42_playwright_mcp.rs`       | Playwright MCP browser automation                                                                     |
+| `echo-agent-learning/tests/example_contracts/demo43_data_tools.rs`           | Data tools (Excel / CSV / Word / Text)                                                                |
+| `echo-agent-learning/examples/demo44_code_laboratory.rs`      | Code execution assistant                                                                              |
+| `echo-agent-learning/examples/demo45_customer_service.rs`     | Intelligent customer service                                                                          |
+| `echo-agent-learning/examples/demo46_data_analyst.rs`         | Data analysis assistant                                                                               |
+| `echo-agent-learning/examples/demo47_enterprise.rs`           | Enterprise workflow automation                                                                        |
+| `echo-agent-learning/examples/demo48_personal_assistant.rs`   | Personal smart assistant                                                                              |
+| `echo-agent-learning/examples/demo49_research_agent.rs`       | Research & report assistant                                                                           |
+| `echo-agent-learning/tests/example_contracts/demo50_eval.rs`                 | Eval system: cases, criteria, constraints, trajectory replay, trigger accuracy, HTML reports          |
+| `echo-agent-learning/tests/example_contracts/demo51_self_improvement.rs`     | Self-improvement: Analyzer failure detection, Curator skill lifecycle, TrajectorySaver fine-tune data |

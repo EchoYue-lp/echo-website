@@ -69,7 +69,7 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
       tagline: 'Build agents from explicit, composable runtime parts.',
       description:
         'A Rust workspace for ReAct execution, tools, context, tasks, subagents, integrations, and observable event streams. Product policy stays in the application that embeds it.',
-      command: 'cargo run --example demo01_tools',
+      command: 'cargo run -p echo-agent-learning --example demo01_tools',
       repository: 'https://github.com/EchoYue-lp/echo-agent',
       docsLabel: 'Read framework docs',
       repositoryLabel: 'Open repository',
@@ -165,7 +165,7 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
       quickStart: [
         'git clone https://github.com/EchoYue-lp/echo-agent.git',
         'cd echo-agent',
-        'cargo run --example demo01_tools',
+        'cargo run -p echo-agent-learning --example demo01_tools',
       ],
       quickStartNote: 'The repository documentation covers provider setup and additional examples.',
       docsCta: 'Browse all framework documentation',
@@ -177,7 +177,7 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
       tagline: '用明确、可组合的运行时部件构建 Agent。',
       description:
         '一个覆盖 ReAct 执行、工具、上下文、任务、Subagent、集成与可观测事件流的 Rust workspace。具体产品策略由接入框架的应用负责。',
-      command: 'cargo run --example demo01_tools',
+      command: 'cargo run -p echo-agent-learning --example demo01_tools',
       repository: 'https://github.com/EchoYue-lp/echo-agent',
       docsLabel: '阅读框架文档',
       repositoryLabel: '打开代码仓库',
@@ -265,7 +265,7 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
       quickStart: [
         'git clone https://github.com/EchoYue-lp/echo-agent.git',
         'cd echo-agent',
-        'cargo run --example demo01_tools',
+        'cargo run -p echo-agent-learning --example demo01_tools',
       ],
       quickStartNote: '代码仓库文档包含模型提供方配置和更多示例。',
       docsCta: '浏览全部框架文档',

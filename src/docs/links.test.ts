@@ -66,9 +66,14 @@ describe('resolveMarkdownHref', () => {
 
   it('maps source files, directories, and cross-repository links to GitHub', () => {
     expect(
-      resolveMarkdownHref('../examples/', 'echo-agent', 'en', frameworkDoc('getting-started')),
+      resolveMarkdownHref(
+        '../../echo-agent-learning/examples/',
+        'echo-agent',
+        'en',
+        frameworkDoc('getting-started'),
+      ),
     ).toEqual({
-      href: 'https://github.com/EchoYue-lp/echo-agent/tree/main/examples/',
+      href: 'https://github.com/EchoYue-lp/echo-agent/tree/main/echo-agent-learning/examples/',
       internal: false,
     });
     expect(

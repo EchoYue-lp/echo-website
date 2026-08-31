@@ -28,6 +28,14 @@ EKO 是基于 `echo-agent` 构建的本地个人 AI 助理。本页能力均对�
 
 六个 model-callable `agent_*` 工具对显式 Conversation 或 Task Subagent target 执行 list、inspect、message、follow-up、wait 与 interrupt。查询在 journal 层有界。cursor identity 可跨 router 或 TaskRuntime reopen 恢复，cold address 会按绑定 workspace 校验，五种 surface 重放同一 typed terminal 事实。
 
+## Subagent prompt 编译
+
+builtin、plugin、direct、planned、fork、teammate、team member 与 primary TaskRuntime invocation 共用唯一 prompt compiler。稳定 system prompt 只包含角色知识、实际注册工具面、typed access/isolation 边界、delegation、语言 policy 与 framework result contract。任务目标、workspace、文件范围、execution checks、acceptance criteria、artifacts、constraints、过滤后的 user/final-assistant 历史和 typed 附件只进入动态 invocation messages。工具可见性与 MCP topology 变化会重新发布稳定 capability profile；invocation allowlist 只输出缩窄 override。
+
+## 确定性 CommandCell watch
+
+`watch_cell` 使用 framework `CommandCellWatcher` retained 一个后台 command、drain byte cursor，并在不派发 model 或 Subagent 的前提下发布 typed terminal truth。EKO 只增加 exact workspace/conversation/root identity、generation 幂等、durable Ready/delivery/ack fact、恢复与共享 surface projection。interrupt watch 不会停止底层 command。
+
 ## Local application core
 
 TUI、GUI、CLI/JSONL 与 channel adapter 使用同一个 `ApplicationServices` composition owner。surface 只保留输入、渲染和 host bridge，不各自装配 task、recovery、pool 或 maintenance runtime。会话与运行时状态使用本机文件或内存；EKO 不需要 SQLite。

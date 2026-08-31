@@ -66,6 +66,11 @@ export const frameworkDocCategories: DocCategory[] = [
         filePath: './content/echo-agent/41-persistence-concepts.md',
       },
       {
+        slug: 'delivery-ledger',
+        title: { zh: 'Delivery Ledger', en: 'Delivery Ledger' },
+        filePath: './content/echo-agent/41-delivery-ledger.md',
+      },
+      {
         slug: 'compression',
         title: { zh: '上下文压缩', en: 'Compression' },
         filePath: './content/echo-agent/04-compression.md',
@@ -289,6 +294,11 @@ export const frameworkDocCategories: DocCategory[] = [
         slug: 'testing',
         title: { zh: 'Mock 与测试', en: 'Mock & Testing' },
         filePath: './content/echo-agent/12-mock.md',
+      },
+      {
+        slug: 'framework-application-boundary',
+        title: { zh: 'Framework 与应用边界', en: 'Framework and Application Boundary' },
+        filePath: './content/echo-agent/39-framework-application-boundary.md',
       },
     ],
   },

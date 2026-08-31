@@ -97,4 +97,116 @@ export const frameworkAdrDocs = [
     },
     filePath: './content/echo-agent/adr/0012-immutable-plugin-preparation.md',
   },
+  {
+    slug: 'adr-0013-learning-examples-and-documentation-boundary',
+    title: {
+      zh: 'ADR 0013: Learning Examples and Documentation Boundary',
+      en: 'ADR 0013: Learning Examples and Documentation Boundary',
+    },
+    filePath: './content/echo-agent/adr/0013-learning-examples-and-documentation-boundary.md',
+  },
+  {
+    slug: 'adr-0014-framework-capability-placement',
+    title: {
+      zh: 'ADR 0014: Framework Capability Placement',
+      en: 'ADR 0014: Framework Capability Placement',
+    },
+    filePath: './content/echo-agent/adr/0014-framework-capability-placement.md',
+  },
+  {
+    slug: 'adr-0015-keyed-execution-admission',
+    title: {
+      zh: 'ADR 0015: Keyed Execution Admission',
+      en: 'ADR 0015: Keyed Execution Admission',
+    },
+    filePath: './content/echo-agent/adr/0015-keyed-execution-admission.md',
+  },
+  {
+    slug: 'adr-0016-delivery-ledger-contract',
+    title: {
+      zh: 'ADR 0016: Product-Neutral Delivery Ledger Contract',
+      en: 'ADR 0016: Product-Neutral Delivery Ledger Contract',
+    },
+    filePath: './content/echo-agent/adr/0016-delivery-ledger-contract.md',
+  },
+  {
+    slug: 'adr-0017-delivery-ledger-reconciliation',
+    title: {
+      zh: 'ADR 0017: Delivery Ledger Prepared Reconciliation',
+      en: 'ADR 0017: Delivery Ledger Prepared Reconciliation',
+    },
+    filePath: './content/echo-agent/adr/0017-delivery-ledger-reconciliation.md',
+  },
+  {
+    slug: 'adr-0018-agent-router-legacy-wire-boundary',
+    title: {
+      zh: 'ADR 0018: AgentRouter Legacy Wire Boundary',
+      en: 'ADR 0018: AgentRouter Legacy Wire Boundary',
+    },
+    filePath: './content/echo-agent/adr/0018-agent-router-legacy-wire-boundary.md',
+  },
+  {
+    slug: 'adr-0019-typed-delivery-ledger-api',
+    title: {
+      zh: 'ADR 0019: Typed Delivery Ledger API',
+      en: 'ADR 0019: Typed Delivery Ledger API',
+    },
+    filePath: './content/echo-agent/adr/0019-typed-delivery-ledger-api.md',
+  },
+  {
+    slug: 'adr-0020-structured-subagent-outcome-views',
+    title: {
+      zh: 'ADR 0020: Structured Subagent Outcome Views',
+      en: 'ADR 0020: Structured Subagent Outcome Views',
+    },
+    filePath: './content/echo-agent/adr/0020-structured-subagent-outcome-views.md',
+  },
+  {
+    slug: 'adr-0021-framework-native-domain-values',
+    title: {
+      zh: 'ADR 0021: Framework-Native Domain Values',
+      en: 'ADR 0021: Framework-Native Domain Values',
+    },
+    filePath: './content/echo-agent/adr/0021-framework-native-domain-values.md',
+  },
+  {
+    slug: 'adr-0022-typed-llm-timeouts',
+    title: {
+      zh: 'ADR 0022: Typed LLM Timeout Contract',
+      en: 'ADR 0022: Typed LLM Timeout Contract',
+    },
+    filePath: './content/echo-agent/adr/0022-typed-llm-timeouts.md',
+  },
+  {
+    slug: 'adr-0023-current-skill-frontmatter',
+    title: {
+      zh: 'ADR 0023: Current Skill Frontmatter Is the Only Skill Format',
+      en: 'ADR 0023: Current Skill Frontmatter Is the Only Skill Format',
+    },
+    filePath: './content/echo-agent/adr/0023-current-skill-frontmatter.md',
+  },
+  {
+    slug: 'adr-0024-unified-subagent-prompt-compilation',
+    title: {
+      zh: 'ADR 0024: Unified Subagent Prompt Compilation',
+      en: 'ADR 0024: Unified Subagent Prompt Compilation',
+    },
+    filePath: './content/echo-agent/adr/0024-unified-subagent-prompt-compilation.md',
+  },
+  {
+    slug: 'adr-0025-deterministic-command-cell-watcher',
+    title: {
+      zh: 'ADR 0025: Deterministic Command-Cell Watcher',
+      en: 'ADR 0025: Deterministic Command-Cell Watcher',
+    },
+    filePath: './content/echo-agent/adr/0025-deterministic-command-cell-watcher.md',
+  },
+  {
+    slug: 'adr-0026-official-skill-frontmatter-only',
+    title: {
+      zh: 'ADR 0026: SKILL.md Uses Official agentskills.io Fields Only',
+      en: 'ADR 0026: SKILL.md Uses Official agentskills.io Fields Only',
+    },
+    filePath: './content/echo-agent/adr/0026-official-skill-frontmatter-only.md',
+  },
 ];

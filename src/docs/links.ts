@@ -51,8 +51,7 @@ function resolveSourceTarget(
     targetPath = targetPath.slice('echo-agent-cli/'.length);
   }
 
-  // The upstream guides historically use ../examples from docs/<lang> even
-  // though examples is a repository-root directory.
+  // Keep legacy links working while older vendored pages are still cached.
   if (repository === 'echo-agent' && targetPath.startsWith('docs/examples/')) {
     targetPath = targetPath.slice('docs/'.length);
   }

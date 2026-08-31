@@ -6,6 +6,12 @@
 
 ## 文档索引
 
+### Framework 边界
+
+| 文档 | 模块 | 关键概念 |
+| --- | --- | --- |
+| [39 - Framework 与应用边界](./39-framework-application-boundary.md) | 架构 | 产品无关 framework 能力、EKO policy 和单一 authority |
+
 ### 核心功能
 
 | 文档                                       | 功能模块                 | 核心关键词                                                                      |
@@ -19,7 +25,7 @@
 | [07 - Skill 系统](07-skills.md)            | Skills                   | 能力包、系统提示词注入、外部 SKILL.md 加载                                      |
 | [08 - MCP 协议](08-mcp.md)                 | MCP                      | stdio/HTTP 传输、工具适配、多服务端管理                                         |
 | [09 - 任务规划](09-tasks.md)               | Tasks / DAG              | 有向无环图、拓扑排序、循环依赖检测、Mermaid 可视化                              |
-| [10 - 流式输出](10-streaming.md)           | Streaming                | execute_stream、AgentEvent、SSE、TTFT                                           |
+| [10 - 流式输出](10-streaming.md)           | Streaming                | execute_stream、AgentEvent、SSE、LlmTimeouts、TTFT                              |
 | [11 - 结构化输出](11-structured-output.md) | Structured Output        | ResponseFormat、JsonSchema、extract()、extract_json()                           |
 | [12 - Mock 测试工具](12-mock.md)           | Testing                  | MockLlmClient、MockTool、MockAgent、InMemoryStore                               |
 | [13 - 多轮对话](13-chat.md)                | Chat                     | chat()、chat_stream()、跨轮记忆、reset()                                        |
@@ -58,12 +64,13 @@
 | [38 - Agent 工厂与模式](38-factory-modes.md)         | Agent Factory / Mode Engine / Prompt Templates | 模式切换、本地化、模板渲染                                               |
 | [40 - Context 系统](40-context-system.md)            | Context System                                 | ContextAssembler、ContextBudgeter、ContextSelector、优先级排序、预算感知 |
 | [41 - 持久化概念](41-persistence-concepts.md)        | Store / Journal / Checkpoint / Trace           | 存储边界、事实权威、恢复快照、执行观测                                   |
+| [41 - Delivery Ledger](41-delivery-ledger.md)        | Delivery 生命周期                              | typed route/payload envelope、FIFO、attempt、settlement 与 terminal retention |
 
 ### 入门指南
 
 | 文档                                                        | 说明                                           |
 | ----------------------------------------------------------- | ---------------------------------------------- |
-| [Rust 学习指南](../../echo-rust-learning/docs/zh/README.md) | 面向零基础贡献者的多章节教程与可运行教学 crate |
+| [Rust 学习指南](../../echo-agent-learning/docs/zh/README.md) | 面向零基础贡献者的多章节教程与可运行教学 crate |
 | [快速入门](getting-started.md)                              | 从零开始构建你的第一个 Agent                   |
 | [Skill 创作指南](skill-authoring.md)                        | 创建自定义 Code-based 和 File-based Skill      |
 
@@ -84,6 +91,14 @@
 | [0008 - Runtime Task 单一权威](../adr/0008-canonical-runtime-task-authority.md) | 一个 revisioned graph 统一 Task CRUD、执行与结算           |
 | [0009 - Tracked Input Receipt](../adr/0009-tracked-input-receipts.md) | Active 与初始输入统一暴露 accepted、drained、terminal 边界 |
 | [0010 - 规范化 Turn Receipt 计量](../adr/0010-canonical-turn-receipt-accounting.md) | 通用 terminal、usage、compaction 与 final-message 事实只有一个 framework receipt 权威 |
+| [0015 - Keyed Execution Admission](../adr/0015-keyed-execution-admission.md) | 可复用 opaque-key lease、retirement fence 和 shutdown wait |
+| [0019 - Typed Delivery Ledger API](../adr/0019-typed-delivery-ledger-api.md) | typed route/payload delivery 与单一 framework record/reducer |
+| [0020 - Structured Subagent Outcome Views](../adr/0020-structured-subagent-outcome-views.md) | 通用 verification 与文件访问视图保留在 framework outcome |
+| [0021 - Framework-Native Domain Values](../adr/0021-framework-native-domain-values.md) | 应用直接消费可复用 framework 值，不使用来源命名转换 |
+| [0022 - Typed LLM Timeout](../adr/0022-typed-llm-timeouts.md) | client 默认值与单次请求 stream 边界共用一个 typed 合同 |
+| [0023 - 当前 Skill Frontmatter](../adr/0023-current-skill-frontmatter.md) | Markdown 正文与目录资源取代旧 frontmatter 内容字段 |
+| [0024 - Subagent 提示词统一编译](../adr/0024-unified-subagent-prompt-compilation.md) | 一个注入式 compiler 统一拥有注册与派发 prompt framing |
+| [0025 - 确定性 CommandCell watcher](../adr/0025-deterministic-command-cell-watcher.md) | retained typed watcher 取代模型驱动的命令轮询 |
 
 ---
 
@@ -188,54 +203,54 @@ Anthropic Messages 或 Chat Completions，并声明文本、图片、音频、�
 ## 示例文件
 
 所有示例按 `验收样例`、`条件验收样例`、`教学示例` 三类维护。
-完整分层清单和维护规则见 `examples/README.md`。
+完整分层清单和维护规则见 `echo-agent-learning/examples/README.md`。
 
 | 示例                                      | 演示功能                                                                  |
 | ----------------------------------------- | ------------------------------------------------------------------------- |
-| `examples/demo01_tools.rs`                | 基础工具注册与调用                                                        |
-| `examples/demo02_tasks.rs`                | DAG 任务规划                                                              |
-| `examples/demo03_approval.rs`             | 人工审批                                                                  |
-| `tests/example_contracts/demo04_subagent.rs`             | Subagent 编排                                                             |
-| `examples/demo05_compressor.rs`           | 上下文压缩                                                                |
-| `examples/demo06_mcp.rs`                  | MCP 协议集成                                                              |
-| `examples/demo07_skills.rs`               | Skill 系统                                                                |
-| `examples/demo08_external_skills.rs`      | 外部 SKILL.md 加载                                                        |
-| `examples/demo09_file_shell.rs`           | 文件和 Shell 工具                                                         |
-| `examples/demo10_streaming.rs`            | 流式输出                                                                  |
-| `examples/demo11_callbacks.rs`            | 生命周期回调                                                              |
-| `tests/example_contracts/demo12_resilience.rs`           | 容错与重试                                                                |
-| `examples/demo13_tool_execution.rs`       | 工具执行配置                                                              |
-| `examples/demo15_structured_output.rs`    | 结构化输出（extract / JSON Schema）                                       |
-| `examples/demo17_chat.rs`                 | 多轮对话（chat / chat_stream / reset）                                    |
-| `examples/demo18_semantic_memory.rs`      | Store 语义搜索（EmbeddingStore / 向量检索）                               |
-| `examples/demo19_guard.rs`                | Guard 系统（规则 / LLM 内容过滤）                                         |
-| `examples/demo20_audit.rs`                | 审计日志                                                                  |
-| `examples/demo23_a2a.rs`                  | A2A 协议                                                                  |
-| `tests/example_contracts/demo24_topology.rs`             | 多 Agent 拓扑可视化                                                       |
-| `examples/demo25_macros.rs`               | 宏系统综合展示                                                            |
-| `examples/demo26_provider_factory.rs`     | 动态 LLM 工厂                                                             |
-| `examples/demo27_sqlite_memory.rs`        | SQLite 持久化记忆                                                         |
-| `examples/demo28_workflow.rs`             | 工作流管道                                                                |
-| `examples/demo29_sandbox.rs`              | 沙箱执行                                                                  |
-| `tests/example_contracts/demo30_mcp_server.rs`           | MCP 服务端模式                                                            |
-| `tests/example_contracts/demo31_memory_tools.rs`         | 记忆工具注入                                                              |
-| `examples/demo32_token_budget.rs`         | Token 预算控制                                                            |
-| `examples/demo33_retry_policy.rs`         | 统一重试策略                                                              |
-| `tests/example_contracts/demo34_workflow_stream.rs`      | 工作流流式输出                                                            |
-| `examples/demo35_dynamic_tools.rs`        | 动态工具管理                                                              |
-| `examples/demo36_multimodal.rs`           | 多模态消息                                                                |
-| `tests/example_contracts/demo37_declarative_workflow.rs` | YAML/JSON 声明式工作流                                                    |
-| `examples/demo38_im_channels.rs`          | IM 频道集成                                                               |
-| `tests/example_contracts/demo39_workflow.rs`             | 图工作流引擎                                                              |
-| `examples/demo40_snapshot.rs`             | 快照与回滚                                                                |
-| `examples/demo41_web_tools.rs`            | Web 搜索与页面获取                                                        |
-| `examples/demo42_playwright_mcp.rs`       | Playwright MCP 浏览器自动化                                               |
-| `tests/example_contracts/demo43_data_tools.rs`           | 数据工具（Excel / CSV / Word / 文本）                                     |
-| `examples/demo44_code_laboratory.rs`      | 代码执行助手                                                              |
-| `examples/demo45_customer_service.rs`     | 智能客服                                                                  |
-| `examples/demo46_data_analyst.rs`         | 数据分析助手                                                              |
-| `examples/demo47_enterprise.rs`           | 企业工作流自动化                                                          |
-| `examples/demo48_personal_assistant.rs`   | 个人智能助理                                                              |
-| `examples/demo49_research_agent.rs`       | 研究与报告助手                                                            |
-| `tests/example_contracts/demo50_eval.rs`                 | 评估系统：用例、标准、约束、轨迹回放、触发准确率、HTML 报告               |
-| `tests/example_contracts/demo51_self_improvement.rs`     | 自进化：Analyzer 失败检测、Curator 技能生命周期、TrajectorySaver 微调数据 |
+| `echo-agent-learning/examples/demo01_tools.rs`                | 基础工具注册与调用                                                        |
+| `echo-agent-learning/examples/demo02_tasks.rs`                | DAG 任务规划                                                              |
+| `echo-agent-learning/examples/demo03_approval.rs`             | 人工审批                                                                  |
+| `echo-agent-learning/tests/example_contracts/demo04_subagent.rs`             | Subagent 编排                                                             |
+| `echo-agent-learning/examples/demo05_compressor.rs`           | 上下文压缩                                                                |
+| `echo-agent-learning/examples/demo06_mcp.rs`                  | MCP 协议集成                                                              |
+| `echo-agent-learning/examples/demo07_skills.rs`               | Skill 系统                                                                |
+| `echo-agent-learning/examples/demo08_external_skills.rs`      | 外部 SKILL.md 加载                                                        |
+| `echo-agent-learning/examples/demo09_file_shell.rs`           | 文件和 Shell 工具                                                         |
+| `echo-agent-learning/examples/demo10_streaming.rs`            | 流式输出                                                                  |
+| `echo-agent-learning/examples/demo11_callbacks.rs`            | 生命周期回调                                                              |
+| `echo-agent-learning/tests/example_contracts/demo12_resilience.rs`           | 容错与重试                                                                |
+| `echo-agent-learning/examples/demo13_tool_execution.rs`       | 工具执行配置                                                              |
+| `echo-agent-learning/examples/demo15_structured_output.rs`    | 结构化输出（extract / JSON Schema）                                       |
+| `echo-agent-learning/examples/demo17_chat.rs`                 | 多轮对话（chat / chat_stream / reset）                                    |
+| `echo-agent-learning/examples/demo18_semantic_memory.rs`      | Store 语义搜索（EmbeddingStore / 向量检索）                               |
+| `echo-agent-learning/examples/demo19_guard.rs`                | Guard 系统（规则 / LLM 内容过滤）                                         |
+| `echo-agent-learning/examples/demo20_audit.rs`                | 审计日志                                                                  |
+| `echo-agent-learning/examples/demo23_a2a.rs`                  | A2A 协议                                                                  |
+| `echo-agent-learning/tests/example_contracts/demo24_topology.rs`             | 多 Agent 拓扑可视化                                                       |
+| `echo-agent-learning/examples/demo25_macros.rs`               | 宏系统综合展示                                                            |
+| `echo-agent-learning/examples/demo26_provider_factory.rs`     | 动态 LLM 工厂                                                             |
+| `echo-agent-learning/examples/demo27_sqlite_memory.rs`        | SQLite 持久化记忆                                                         |
+| `echo-agent-learning/examples/demo28_workflow.rs`             | 工作流管道                                                                |
+| `echo-agent-learning/examples/demo29_sandbox.rs`              | 沙箱执行                                                                  |
+| `echo-agent-learning/tests/example_contracts/demo30_mcp_server.rs`           | MCP 服务端模式                                                            |
+| `echo-agent-learning/tests/example_contracts/demo31_memory_tools.rs`         | 记忆工具注入                                                              |
+| `echo-agent-learning/examples/demo32_token_budget.rs`         | Token 预算控制                                                            |
+| `echo-agent-learning/examples/demo33_retry_policy.rs`         | 统一重试策略                                                              |
+| `echo-agent-learning/tests/example_contracts/demo34_workflow_stream.rs`      | 工作流流式输出                                                            |
+| `echo-agent-learning/examples/demo35_dynamic_tools.rs`        | 动态工具管理                                                              |
+| `echo-agent-learning/examples/demo36_multimodal.rs`           | 多模态消息                                                                |
+| `echo-agent-learning/tests/example_contracts/demo37_declarative_workflow.rs` | YAML/JSON 声明式工作流                                                    |
+| `echo-agent-learning/examples/demo38_im_channels.rs`          | IM 频道集成                                                               |
+| `echo-agent-learning/tests/example_contracts/demo39_workflow.rs`             | 图工作流引擎                                                              |
+| `echo-agent-learning/examples/demo40_snapshot.rs`             | 快照与回滚                                                                |
+| `echo-agent-learning/examples/demo41_web_tools.rs`            | Web 搜索与页面获取                                                        |
+| `echo-agent-learning/examples/demo42_playwright_mcp.rs`       | Playwright MCP 浏览器自动化                                               |
+| `echo-agent-learning/tests/example_contracts/demo43_data_tools.rs`           | 数据工具（Excel / CSV / Word / 文本）                                     |
+| `echo-agent-learning/examples/demo44_code_laboratory.rs`      | 代码执行助手                                                              |
+| `echo-agent-learning/examples/demo45_customer_service.rs`     | 智能客服                                                                  |
+| `echo-agent-learning/examples/demo46_data_analyst.rs`         | 数据分析助手                                                              |
+| `echo-agent-learning/examples/demo47_enterprise.rs`           | 企业工作流自动化                                                          |
+| `echo-agent-learning/examples/demo48_personal_assistant.rs`   | 个人智能助理                                                              |
+| `echo-agent-learning/examples/demo49_research_agent.rs`       | 研究与报告助手                                                            |
+| `echo-agent-learning/tests/example_contracts/demo50_eval.rs`                 | 评估系统：用例、标准、约束、轨迹回放、触发准确率、HTML 报告               |
+| `echo-agent-learning/tests/example_contracts/demo51_self_improvement.rs`     | 自进化：Analyzer 失败检测、Curator 技能生命周期、TrajectorySaver 微调数据 |

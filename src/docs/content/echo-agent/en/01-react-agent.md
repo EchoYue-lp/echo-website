@@ -107,6 +107,12 @@ the execution pipeline if a provider still returns such a call.
 `ReactAgent::set_disabled_tools` now sets defaults for subsequent runs; it does not
 change snapshots that are already running.
 
+For a shared revisioned policy across pooled Agents, use the framework
+`ToolControlService`. It owns the explicit disabled-tool set and monotonic
+mutation revision; apply its `ToolControlSnapshot::disabled_option()` to each
+Agent or invocation. Product code may add registry checks and effective
+visibility projections without creating a second policy authority.
+
 ### Run Budgets
 
 `RunBudgetPolicy` adds opt-in convergence controls without changing the existing
@@ -221,7 +227,7 @@ async fn main() -> Result<()> {
 }
 ```
 
-See: `examples/demo01_tools.rs`, `examples/demo11_callbacks.rs`
+See: `echo-agent-learning/examples/demo01_tools.rs`, `echo-agent-learning/examples/demo11_callbacks.rs`
 
 ---
 

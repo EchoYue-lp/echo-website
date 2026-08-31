@@ -49,6 +49,12 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/persistence-concepts" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/docs/delivery-ledger</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/delivery-ledger" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/delivery-ledger" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/delivery-ledger" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/docs/compression</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/compression" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/compression" />
@@ -283,6 +289,12 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/testing" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/docs/framework-application-boundary</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/framework-application-boundary" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/framework-application-boundary" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/framework-application-boundary" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/docs/adr-0001-channel-session-sender-scope</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0001-channel-session-sender-scope" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0001-channel-session-sender-scope" />
@@ -353,6 +365,90 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0012-immutable-plugin-preparation" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0012-immutable-plugin-preparation" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0012-immutable-plugin-preparation" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0013-learning-examples-and-documentation-boundary</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0013-learning-examples-and-documentation-boundary" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0013-learning-examples-and-documentation-boundary" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0013-learning-examples-and-documentation-boundary" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0014-framework-capability-placement</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0014-framework-capability-placement" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0014-framework-capability-placement" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0014-framework-capability-placement" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0015-keyed-execution-admission</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0015-keyed-execution-admission" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0015-keyed-execution-admission" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0015-keyed-execution-admission" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0016-delivery-ledger-contract</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0016-delivery-ledger-contract" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0016-delivery-ledger-contract" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0016-delivery-ledger-contract" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0017-delivery-ledger-reconciliation</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0017-delivery-ledger-reconciliation" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0017-delivery-ledger-reconciliation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0017-delivery-ledger-reconciliation" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0018-agent-router-legacy-wire-boundary</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0018-agent-router-legacy-wire-boundary" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0018-agent-router-legacy-wire-boundary" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0018-agent-router-legacy-wire-boundary" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0019-typed-delivery-ledger-api</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0019-typed-delivery-ledger-api" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0019-typed-delivery-ledger-api" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0019-typed-delivery-ledger-api" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0020-structured-subagent-outcome-views</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0020-structured-subagent-outcome-views" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0020-structured-subagent-outcome-views" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0020-structured-subagent-outcome-views" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0021-framework-native-domain-values</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0021-framework-native-domain-values" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0021-framework-native-domain-values" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0021-framework-native-domain-values" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0022-typed-llm-timeouts</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0022-typed-llm-timeouts" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0022-typed-llm-timeouts" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0022-typed-llm-timeouts" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0023-current-skill-frontmatter</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0023-current-skill-frontmatter" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0023-current-skill-frontmatter" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0023-current-skill-frontmatter" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0024-unified-subagent-prompt-compilation</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0024-unified-subagent-prompt-compilation" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0024-unified-subagent-prompt-compilation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0024-unified-subagent-prompt-compilation" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0025-deterministic-command-cell-watcher</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0025-deterministic-command-cell-watcher" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0025-deterministic-command-cell-watcher" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0025-deterministic-command-cell-watcher" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0026-official-skill-frontmatter-only</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0026-official-skill-frontmatter-only" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0026-official-skill-frontmatter-only" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0026-official-skill-frontmatter-only" />
   </url>
   <url>
     <loc>https://echo-agent.dev/docs/knowledge-overview</loc>
@@ -467,6 +563,12 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/persistence-concepts" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/persistence-concepts" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/persistence-concepts" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/delivery-ledger</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/delivery-ledger" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/delivery-ledger" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/delivery-ledger" />
   </url>
   <url>
     <loc>https://echo-agent.dev/en/docs/compression</loc>
@@ -703,6 +805,12 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/testing" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/en/docs/framework-application-boundary</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/framework-application-boundary" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/framework-application-boundary" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/framework-application-boundary" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/en/docs/adr-0001-channel-session-sender-scope</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0001-channel-session-sender-scope" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0001-channel-session-sender-scope" />
@@ -773,6 +881,90 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0012-immutable-plugin-preparation" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0012-immutable-plugin-preparation" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0012-immutable-plugin-preparation" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0013-learning-examples-and-documentation-boundary</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0013-learning-examples-and-documentation-boundary" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0013-learning-examples-and-documentation-boundary" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0013-learning-examples-and-documentation-boundary" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0014-framework-capability-placement</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0014-framework-capability-placement" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0014-framework-capability-placement" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0014-framework-capability-placement" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0015-keyed-execution-admission</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0015-keyed-execution-admission" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0015-keyed-execution-admission" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0015-keyed-execution-admission" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0016-delivery-ledger-contract</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0016-delivery-ledger-contract" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0016-delivery-ledger-contract" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0016-delivery-ledger-contract" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0017-delivery-ledger-reconciliation</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0017-delivery-ledger-reconciliation" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0017-delivery-ledger-reconciliation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0017-delivery-ledger-reconciliation" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0018-agent-router-legacy-wire-boundary</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0018-agent-router-legacy-wire-boundary" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0018-agent-router-legacy-wire-boundary" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0018-agent-router-legacy-wire-boundary" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0019-typed-delivery-ledger-api</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0019-typed-delivery-ledger-api" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0019-typed-delivery-ledger-api" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0019-typed-delivery-ledger-api" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0020-structured-subagent-outcome-views</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0020-structured-subagent-outcome-views" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0020-structured-subagent-outcome-views" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0020-structured-subagent-outcome-views" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0021-framework-native-domain-values</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0021-framework-native-domain-values" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0021-framework-native-domain-values" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0021-framework-native-domain-values" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0022-typed-llm-timeouts</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0022-typed-llm-timeouts" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0022-typed-llm-timeouts" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0022-typed-llm-timeouts" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0023-current-skill-frontmatter</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0023-current-skill-frontmatter" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0023-current-skill-frontmatter" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0023-current-skill-frontmatter" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0024-unified-subagent-prompt-compilation</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0024-unified-subagent-prompt-compilation" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0024-unified-subagent-prompt-compilation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0024-unified-subagent-prompt-compilation" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0025-deterministic-command-cell-watcher</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0025-deterministic-command-cell-watcher" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0025-deterministic-command-cell-watcher" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0025-deterministic-command-cell-watcher" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0026-official-skill-frontmatter-only</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0026-official-skill-frontmatter-only" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0026-official-skill-frontmatter-only" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0026-official-skill-frontmatter-only" />
   </url>
   <url>
     <loc>https://echo-agent.dev/en/docs/knowledge-overview</loc>

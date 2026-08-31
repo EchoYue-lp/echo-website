@@ -2,63 +2,63 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "f6d81fe809a9661b58e7a9aaa71b753696defbc2",
+    "revision": "d9cb0030fea6dab382c9a54fd2fd07f313de04e7",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
         "sourcePath": "docs/en/01-react-agent.md",
         "destination": "src/docs/content/echo-agent/en/01-react-agent.md",
-        "sha256": "02f9e10d78c2228b49336f99d068e5b61e4c93afa20a9ac60ebe4e0afda54db0"
+        "sha256": "4a44a7c119b62427bd9a031c62a88230fa9292bf05bb0edc47cdc8721399c56a"
       },
       {
         "sourcePath": "docs/en/02-tools.md",
         "destination": "src/docs/content/echo-agent/en/02-tools.md",
-        "sha256": "796d5e35ad0b97dfc343ff040a799b609fc0889c9cb8d8dc7d867bc61ae6d8b5"
+        "sha256": "f3a7ae842760d296928306f588aea5fb5718017bb7186b803dfc7881d2645a5e"
       },
       {
         "sourcePath": "docs/en/03-memory.md",
         "destination": "src/docs/content/echo-agent/en/03-memory.md",
-        "sha256": "2becaf8bf0f2f2ccdde5aae90bca259885c09c16f5643b09e5ec34282166db11"
+        "sha256": "fa49b81213e7b75f1ba0b82c6188dfb167e0271d0f37fef6e3abc257588f6209"
       },
       {
         "sourcePath": "docs/en/04-compression.md",
         "destination": "src/docs/content/echo-agent/en/04-compression.md",
-        "sha256": "5fbee8688dae16251e7a273b9a5f6f1cd843869fcddc7f43a0be04c31a7014aa"
+        "sha256": "f2a981562e9b78d99321e304c3d9627c6f2b6640a185ac515b7e63465dc7b307"
       },
       {
         "sourcePath": "docs/en/05-human-loop.md",
         "destination": "src/docs/content/echo-agent/en/05-human-loop.md",
-        "sha256": "62578db553b8d8cc114112a41db26e8609522b8f90fea4a696a5e5092d8e78bd"
+        "sha256": "4990d8132ec1ac33091ae3dc35ea6b8a6c04c33bb30898ff7685584401cbe405"
       },
       {
         "sourcePath": "docs/en/06-subagent.md",
         "destination": "src/docs/content/echo-agent/en/06-subagent.md",
-        "sha256": "9e5f69f6d06581022bdef2717fd189e07e30554efa215412d17ec17dd2c3d225"
+        "sha256": "c7eb1d20097d43ba48febd96fecae4262a2bc7a638178c9bc71bde19c4ffc5b7"
       },
       {
         "sourcePath": "docs/en/07-skills.md",
         "destination": "src/docs/content/echo-agent/en/07-skills.md",
-        "sha256": "e9624a305f33fd9e4238682470bb89291f35c9f2615d7fadc9e8d340f4e5a840"
+        "sha256": "fd49e0dc9f82f5b9ada19c42c15dc55bf311e71906983df20074f850a3dd2070"
       },
       {
         "sourcePath": "docs/en/08-mcp.md",
         "destination": "src/docs/content/echo-agent/en/08-mcp.md",
-        "sha256": "407970e45eb9a2b4ef3123267a976e7ffc11cb474186911e5a9b315de0b933c4"
+        "sha256": "c4db3fc7dd5640e79fc4859bff6a00ec2dd34f106f0cef4321db3ec9fa73aa4a"
       },
       {
         "sourcePath": "docs/en/09-tasks.md",
         "destination": "src/docs/content/echo-agent/en/09-tasks.md",
-        "sha256": "c1c824770f5a5ed4eae57b568201831b13337f0548390ae186a2b0223629b5c9"
+        "sha256": "b758ea0c0168dc1e5bf65f1702ead8d46ee97001cbdeb19586198908f757290e"
       },
       {
         "sourcePath": "docs/en/10-streaming.md",
         "destination": "src/docs/content/echo-agent/en/10-streaming.md",
-        "sha256": "bd3e646fc38a8aa996119b9302f2ccb90f5df07d4dfa023a8247f545779da8ea"
+        "sha256": "1c1decfac3c872a43f70fc31ae147140379c6360f0477da83f7e6427c816ddd4"
       },
       {
         "sourcePath": "docs/en/11-structured-output.md",
         "destination": "src/docs/content/echo-agent/en/11-structured-output.md",
-        "sha256": "d09ec36c98b7bce0e4adfeaeff07e0c15742974dfb717dd264175ee8b8c58e0a"
+        "sha256": "ed9a2f134d8698a101c4d7c436d3285612a42375da060c312dc396973dd721f4"
       },
       {
         "sourcePath": "docs/en/12-mock.md",
@@ -68,37 +68,37 @@
       {
         "sourcePath": "docs/en/13-chat.md",
         "destination": "src/docs/content/echo-agent/en/13-chat.md",
-        "sha256": "5607ab87b2bf7324ae2e7bc09c4cea51d0921c37b8b850807e907c905d32f2cf"
+        "sha256": "80103e800ab0ca12e778a64505d40ef834e9011045622c710ae260b9a923ba7a"
       },
       {
         "sourcePath": "docs/en/14-semantic-search.md",
         "destination": "src/docs/content/echo-agent/en/14-semantic-search.md",
-        "sha256": "a2f8d874956e94c7874d71fb032ac9d7041bfb9bb0d292d038f448f66efeb650"
+        "sha256": "f2866888d1b2f1c904d5fc4b9cc27b029ef15673653feda816c5af41d3e8d056"
       },
       {
         "sourcePath": "docs/en/15-im-channels.md",
         "destination": "src/docs/content/echo-agent/en/15-im-channels.md",
-        "sha256": "567354386688576d0b9608cb9100b2e0ca77a53e36990a669990a5e5e66d93d0"
+        "sha256": "b930af7eea116fc970151c479b6d8b2f466d293687bd9762a26039275d206471"
       },
       {
         "sourcePath": "docs/en/17-graph-workflow.md",
         "destination": "src/docs/content/echo-agent/en/17-graph-workflow.md",
-        "sha256": "734f105610a1f8cd3375dd7230b3be7935c5f68ae97f13f96c8a3f1d32cd130d"
+        "sha256": "a6b5b53a409bf4dd280c72bee937a58993325198077c961e7c93a46894a3c3ee"
       },
       {
         "sourcePath": "docs/en/18-guard-system.md",
         "destination": "src/docs/content/echo-agent/en/18-guard-system.md",
-        "sha256": "c07c38d5fad3bc75ba06e676f28b50e051a2e0089b46e4505a3388692c33096d"
+        "sha256": "3938d61e1940d90fbe358efb110e9c3c0603038c7b5272e7f15bbd3e33fd4453"
       },
       {
         "sourcePath": "docs/en/20-web-tools.md",
         "destination": "src/docs/content/echo-agent/en/20-web-tools.md",
-        "sha256": "dc0f8e98741170fbfaa544bf0c4ddb1e9acfd6c81aa70cab8616fbe26be74759"
+        "sha256": "ad5309e127be3af302da6cfc15392de6d190cafff5f3eb6fa85709046148ec28"
       },
       {
         "sourcePath": "docs/en/21-common-tools.md",
         "destination": "src/docs/content/echo-agent/en/21-common-tools.md",
-        "sha256": "6b77588c5aa8cd8450212b16a5581f51d1499de39ef13df35999ae1f7a545289"
+        "sha256": "536dc4e5504a73be2b1043e28013982d5bb0a8bf1bbde9ffa36dcaf6abe3f1c4"
       },
       {
         "sourcePath": "docs/en/22-research-tools.md",
@@ -108,12 +108,12 @@
       {
         "sourcePath": "docs/en/23-hooks.md",
         "destination": "src/docs/content/echo-agent/en/23-hooks.md",
-        "sha256": "27f28ca3bf39eb39b9dc93e06ed32407d61a175293fda6438acf7ef27efda22f"
+        "sha256": "503923a5c90c20e8c45572ac6536ae25f47d254f18f867f8ca751c855a83ff30"
       },
       {
         "sourcePath": "docs/en/24-eval-system.md",
         "destination": "src/docs/content/echo-agent/en/24-eval-system.md",
-        "sha256": "940b0dc3b6c2e962ba8fae4af1f279d62474b99254130d7f450ae2cef1ed282a"
+        "sha256": "521b1e680617ca26ca425431eadc6959256b07a302fc24b4af9736b1f40db53f"
       },
       {
         "sourcePath": "docs/en/25-self-improvement.md",
@@ -123,17 +123,17 @@
       {
         "sourcePath": "docs/en/26-multi-agent.md",
         "destination": "src/docs/content/echo-agent/en/26-multi-agent.md",
-        "sha256": "1a0c65d4feff94ff0b65963de04a0284ff5c040da4e029527d60fdb1f76c9f66"
+        "sha256": "b78b2c75a1c7e43c8f1491f8a1c38cb607208ff50bc6581a52dacd1d72819d8e"
       },
       {
         "sourcePath": "docs/en/27-tracing.md",
         "destination": "src/docs/content/echo-agent/en/27-tracing.md",
-        "sha256": "3729af6824c83ecc0ea610503268bd839d006186bfa35f91b5e896ec9c6d57cc"
+        "sha256": "f498412b40602a7cdfa549c3ef9076db2c77b34652a7d223ca88c1caecbfea6a"
       },
       {
         "sourcePath": "docs/en/28-config-reference.md",
         "destination": "src/docs/content/echo-agent/en/28-config-reference.md",
-        "sha256": "3577b093605088159b4ffa8558f3a9a40fb8157f2a30d05b3ee80cb3954d4c49"
+        "sha256": "8be809406f61855cfa341cb9b3963bed4b87db0b2cf5f4c7b226cbe35b077511"
       },
       {
         "sourcePath": "docs/en/29-long-running-tasks.md",
@@ -148,12 +148,12 @@
       {
         "sourcePath": "docs/en/31-lsp-integration.md",
         "destination": "src/docs/content/echo-agent/en/31-lsp-integration.md",
-        "sha256": "2b783530c39ce5a405d40650e114d46c31646a759670e0d9c5ef4ee051ae4976"
+        "sha256": "aae05df9070e6842fcb4347e1ba638e93c4171959d6711e1d64cef1bcef123fe"
       },
       {
         "sourcePath": "docs/en/32-plugin-system.md",
         "destination": "src/docs/content/echo-agent/en/32-plugin-system.md",
-        "sha256": "ac82bd3de933de0961676c0a02b740f3b151241d4550dca6de0929133c842a5b"
+        "sha256": "697bb251fcd9890c2a9bb0873e41be48adca01d632c28f725ba6e891386545e5"
       },
       {
         "sourcePath": "docs/en/33-headless-mode.md",
@@ -186,9 +186,19 @@
         "sha256": "82a7c0f394b7e8a2a30825e1c5cf69ef983813367d115a0cf945b8d756a1230d"
       },
       {
+        "sourcePath": "docs/en/39-framework-application-boundary.md",
+        "destination": "src/docs/content/echo-agent/en/39-framework-application-boundary.md",
+        "sha256": "ca489e3312331dbefb4cfca915485fbe9117dfa6cb9069311b294202874ce64c"
+      },
+      {
         "sourcePath": "docs/en/40-context-system.md",
         "destination": "src/docs/content/echo-agent/en/40-context-system.md",
-        "sha256": "4840cf9f44da195b5ccedb8bbc83a38553d1ca6776f8b376f1e8fd701c8ea735"
+        "sha256": "7a2a8692c6d59d34b47de1bb895d116c7cc4db7a88de55c57e7b37dd30c7c974"
+      },
+      {
+        "sourcePath": "docs/en/41-delivery-ledger.md",
+        "destination": "src/docs/content/echo-agent/en/41-delivery-ledger.md",
+        "sha256": "90fbbfc1dab9b5a78b5b4c4238b92f209881e071e918b25432c9d9521331bed1"
       },
       {
         "sourcePath": "docs/en/41-persistence-concepts.md",
@@ -198,7 +208,7 @@
       {
         "sourcePath": "docs/en/41-shell-text-tools.md",
         "destination": "src/docs/content/echo-agent/en/41-shell-text-tools.md",
-        "sha256": "574362c08d41fd207e19133437e21f1a31f7a64b6d1d48289aec0e89350d208a"
+        "sha256": "0ac7ebc831ffb5d0b58fe4e3dfee4d7233342e1316b51610cdd4010102521217"
       },
       {
         "sourcePath": "docs/en/42-database-tools.md",
@@ -271,9 +281,79 @@
         "sha256": "d70621dd5a6cef1e4765ee14461756281c4ac5dc0f88ce1b095d09f5a234189c"
       },
       {
+        "sourcePath": "docs/adr/0013-learning-examples-and-documentation-boundary.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0013-learning-examples-and-documentation-boundary.md",
+        "sha256": "3ae6e5840213d141ffc33b83c123e761838486f5c169f92a96c9a6176075f23e"
+      },
+      {
+        "sourcePath": "docs/adr/0014-framework-capability-placement.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0014-framework-capability-placement.md",
+        "sha256": "db33c567f4b418c2742e66add37d4fab351658c753a7f2578538e1e573a4ce2c"
+      },
+      {
+        "sourcePath": "docs/adr/0015-keyed-execution-admission.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0015-keyed-execution-admission.md",
+        "sha256": "d8f4ec32495ba717ebe5a823b5324d06842a6ee8ce6e71a822c8324383cab94f"
+      },
+      {
+        "sourcePath": "docs/adr/0016-delivery-ledger-contract.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0016-delivery-ledger-contract.md",
+        "sha256": "33189ad27919ce72fa989ba0b188f96a306caac6ea05e66a5ef4a5fe05689729"
+      },
+      {
+        "sourcePath": "docs/adr/0017-delivery-ledger-reconciliation.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0017-delivery-ledger-reconciliation.md",
+        "sha256": "2911c5b1cae532ad7ca5ab109ad77ab169cc7f144e30e8042bece55ef830faba"
+      },
+      {
+        "sourcePath": "docs/adr/0018-agent-router-legacy-wire-boundary.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0018-agent-router-legacy-wire-boundary.md",
+        "sha256": "9b78d22924c50bb2ee13d736306e27eec0ba92542b460cf5e40031c39a978ed1"
+      },
+      {
+        "sourcePath": "docs/adr/0019-typed-delivery-ledger-api.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0019-typed-delivery-ledger-api.md",
+        "sha256": "2c284a43e0fbca46dce652e5daf98b621c3cebcefbf923963aaf90ccd5f6d3be"
+      },
+      {
+        "sourcePath": "docs/adr/0020-structured-subagent-outcome-views.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0020-structured-subagent-outcome-views.md",
+        "sha256": "59fe0f56ff32703f4ea12d9fe67f093fdd85560d6bd5f6d94bd0e4e19674eed5"
+      },
+      {
+        "sourcePath": "docs/adr/0021-framework-native-domain-values.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0021-framework-native-domain-values.md",
+        "sha256": "749f179f66fdce3fe6314b269dc84e5be0bcc6d339cde36efd8fb571ae3c156d"
+      },
+      {
+        "sourcePath": "docs/adr/0022-typed-llm-timeouts.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0022-typed-llm-timeouts.md",
+        "sha256": "16231b0b19b2632c47e9c79523e650b0bb6f6aecdc711add4f13943c80eca45a"
+      },
+      {
+        "sourcePath": "docs/adr/0023-current-skill-frontmatter.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0023-current-skill-frontmatter.md",
+        "sha256": "16b6494d8c4976f04714e581d43cc8621fe30c164709fe9c40ea522e65cb9ed0"
+      },
+      {
+        "sourcePath": "docs/adr/0024-unified-subagent-prompt-compilation.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0024-unified-subagent-prompt-compilation.md",
+        "sha256": "d812a9c85b11cf73f8672223d0d1c9136bbf2f65e2cfae3da5429ee76c1e1cec"
+      },
+      {
+        "sourcePath": "docs/adr/0025-deterministic-command-cell-watcher.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0025-deterministic-command-cell-watcher.md",
+        "sha256": "d961a78a2680fabca91916cda26ed51ace698e38e28ff4bb3f41d95223671704"
+      },
+      {
+        "sourcePath": "docs/adr/0026-official-skill-frontmatter-only.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0026-official-skill-frontmatter-only.md",
+        "sha256": "bc9bdc76b2170445e37a40dd765a4cfb10d8b2e4f9d941d672815939fe77060e"
+      },
+      {
         "sourcePath": "docs/en/getting-started.md",
         "destination": "src/docs/content/echo-agent/en/getting-started.md",
-        "sha256": "6388cd599da3759d8c88ac2200a284ac95a6c745465478733e8dd6b2a16b4155"
+        "sha256": "dd22aab658b66873c4ced113d797131e76558d89d5dec2048f8ad2fdd56fb39b"
       },
       {
         "sourcePath": "docs/internal/knowledge/en/a2a-protocol.md",
@@ -298,77 +378,77 @@
       {
         "sourcePath": "docs/internal/knowledge/en/skill-system.md",
         "destination": "src/docs/content/echo-agent/en/knowledge/skill-system.md",
-        "sha256": "04deed6333244fbc5dcaf2914b3886940076ed2895cc30583ec89a094e830f1b"
+        "sha256": "a173c2ba94a29f32292a3aa968b653bad9dc74c5a70b349f32950af54fb3b752"
       },
       {
         "sourcePath": "docs/en/README.md",
         "destination": "src/docs/content/echo-agent/en/README.md",
-        "sha256": "c575cba62a5659f0ea3559ec9b24402971567c49811af6a55207a3ba2b19704d"
+        "sha256": "372b12f09c8065224afcbc06e9a8b62c18adbfa16b884f0d5f7f00acd6c2f879"
       },
       {
         "sourcePath": "docs/en/security.md",
         "destination": "src/docs/content/echo-agent/en/security.md",
-        "sha256": "201303a1244a8218baa14961d03d89f0db476064e7bf6a00060dd8dbc3ba872e"
+        "sha256": "ea7758962b3e321f8f680994d293628d59751e757e505cd30c5ccc227643e241"
       },
       {
         "sourcePath": "docs/en/skill-authoring.md",
         "destination": "src/docs/content/echo-agent/en/skill-authoring.md",
-        "sha256": "7164443959a76bf8a69debb18a0fbbbef9739f49f36a0a296b4a8b7f58e03e06"
+        "sha256": "0fa6bdc0090b079e439ed9b02a3e9788320eb153b7bce77a9edfb49ce312d1e7"
       },
       {
         "sourcePath": "docs/zh/01-react-agent.md",
         "destination": "src/docs/content/echo-agent/zh/01-react-agent.md",
-        "sha256": "45f31cf0c2821209c616a4dcde8ada36277d626c927e57e2ca300410b5f0ed4e"
+        "sha256": "21f09da1ac5fb433aa7cca185fa968fea95eaa81ab6dc154ba18296cff02425c"
       },
       {
         "sourcePath": "docs/zh/02-tools.md",
         "destination": "src/docs/content/echo-agent/zh/02-tools.md",
-        "sha256": "f2cf26528dfeec60e25ca033ba1b1b6f73b44ce79f7d9366485639f3738e6a1c"
+        "sha256": "e1589125a8e8bb6d1904103301bded98e052b360dd1f8e11572f931c455f9e61"
       },
       {
         "sourcePath": "docs/zh/03-memory.md",
         "destination": "src/docs/content/echo-agent/zh/03-memory.md",
-        "sha256": "af85efe051c7e09d4b6c7c7afeb1b1548c1071b0d4d836c0a6e71ddef2e56380"
+        "sha256": "d36fa571a6612991059ec851ba549c909086b79785f982c792b6cf45172e84c3"
       },
       {
         "sourcePath": "docs/zh/04-compression.md",
         "destination": "src/docs/content/echo-agent/zh/04-compression.md",
-        "sha256": "63535d8377cf486374af4fa1f13cd57ab29c110a7b1531594750586db49aca66"
+        "sha256": "40dbc8c9321b0f3c3e44c6aa2c6ec5f6b34204cc6fba7173e357a779c8942ef4"
       },
       {
         "sourcePath": "docs/zh/05-human-loop.md",
         "destination": "src/docs/content/echo-agent/zh/05-human-loop.md",
-        "sha256": "48ebc1555726bb2546574f31813c50c5b7579111322aa216dfc9f7abd6208d0b"
+        "sha256": "f12a020cda171424523dd23f7224689c683d9146fa443e57aabb1b6d54a45077"
       },
       {
         "sourcePath": "docs/zh/06-subagent.md",
         "destination": "src/docs/content/echo-agent/zh/06-subagent.md",
-        "sha256": "4c6309b06689fdee5273ec27f02c3457740ed7ce592e52546ff7682e04e15728"
+        "sha256": "bd5ffc360d609fddebe59ec41df3a162c1c9d071fff5da72951a3af5745b33de"
       },
       {
         "sourcePath": "docs/zh/07-skills.md",
         "destination": "src/docs/content/echo-agent/zh/07-skills.md",
-        "sha256": "0ccebd3c74b11bca8311f85901adb5bfe9a7213fc388b0865353a7c70e3144ce"
+        "sha256": "c7a64a9a538bc5f56cf61a69a05b8790f764be1e37a36db6c28f8aadb5beaa1e"
       },
       {
         "sourcePath": "docs/zh/08-mcp.md",
         "destination": "src/docs/content/echo-agent/zh/08-mcp.md",
-        "sha256": "1eb9f0926e0e5de6e2d802c4777bf367582c1fb8422738fa89421035a3909fca"
+        "sha256": "2b9b689f53526b1ad39594a0bb520bda44c7d25e404334ade2069ffdd8713203"
       },
       {
         "sourcePath": "docs/zh/09-tasks.md",
         "destination": "src/docs/content/echo-agent/zh/09-tasks.md",
-        "sha256": "5643b91c9ae777d7598359553e20083de89f79a69ae6840c9134a89c4200a52a"
+        "sha256": "b2e004485d4c30fdfd9deb380eb6e001e4247358984d02afa12630091f316264"
       },
       {
         "sourcePath": "docs/zh/10-streaming.md",
         "destination": "src/docs/content/echo-agent/zh/10-streaming.md",
-        "sha256": "a7d3a28a58f0d41a852b048b415297a14f7cb6b899a5dca5cd7c89158d4f2bd5"
+        "sha256": "fd08d3d628487254381d129bedbb44fc67e5084e7b8d50d39633795eb2f10975"
       },
       {
         "sourcePath": "docs/zh/11-structured-output.md",
         "destination": "src/docs/content/echo-agent/zh/11-structured-output.md",
-        "sha256": "af2d68ff0da7c44c3627379c59aaa4a67e6f44392a82eb95152685c037c93e0f"
+        "sha256": "8c3a196b0a31a231ffdaf10609e38332999ba01aa85c001c84ce15a5f450a6be"
       },
       {
         "sourcePath": "docs/zh/12-mock.md",
@@ -378,37 +458,37 @@
       {
         "sourcePath": "docs/zh/13-chat.md",
         "destination": "src/docs/content/echo-agent/zh/13-chat.md",
-        "sha256": "81769c4a26e745512992f292ee5e5dc7ae37147fc59eaa1dcbf92b152efb3e74"
+        "sha256": "238b3dd7d8d369f22c4c5a02ddec55b8202121d64168ff5d91390c3a9d1c80fc"
       },
       {
         "sourcePath": "docs/zh/14-semantic-search.md",
         "destination": "src/docs/content/echo-agent/zh/14-semantic-search.md",
-        "sha256": "e1b23739bbb777956a72e3d874877fae322c06e2f32db6cd5d567744c9b08dd1"
+        "sha256": "c62e9379a686a41a37b51eea01d213f7bbe56463c487601ed738004b3e5350d9"
       },
       {
         "sourcePath": "docs/zh/15-im-channels.md",
         "destination": "src/docs/content/echo-agent/zh/15-im-channels.md",
-        "sha256": "06518ddf46d540be17c032ececfaf1307c5f36e19dd7f24145505ef10fb51f38"
+        "sha256": "811e6b03a13b960da57e112b4d832839203c60194abc529af59ed5eda619eccf"
       },
       {
         "sourcePath": "docs/zh/17-graph-workflow.md",
         "destination": "src/docs/content/echo-agent/zh/17-graph-workflow.md",
-        "sha256": "3938ca044bfb9acc6b4b42165c7de8e966b7692f45fc6dc27bf712b665fe3a47"
+        "sha256": "1ab92dfa2efeeb9dbb4a6dc1806ed7d6acc9946cc9d0250ddc0d45741190d1e8"
       },
       {
         "sourcePath": "docs/zh/18-guard-system.md",
         "destination": "src/docs/content/echo-agent/zh/18-guard-system.md",
-        "sha256": "486cf090ab8e3aaf5993e16bddf7e18852a2320b61ebea08a02cd0bb39ffd45a"
+        "sha256": "f991d795eb486bd01deb164504dc66b9ac2f200420b3f97f9120e5994c1189d1"
       },
       {
         "sourcePath": "docs/zh/20-web-tools.md",
         "destination": "src/docs/content/echo-agent/zh/20-web-tools.md",
-        "sha256": "16505920afce875c50b379118f47e7eb98217d76e2846e195cd806be74115556"
+        "sha256": "ddcac514416e227aa07765cd67a258db21ba1e9e8794c5adaab4443fdef37779"
       },
       {
         "sourcePath": "docs/zh/21-common-tools.md",
         "destination": "src/docs/content/echo-agent/zh/21-common-tools.md",
-        "sha256": "1d2769e176edf5c62cec58e553fe96459cb885268cfb4aad51a273dadf6d7e7f"
+        "sha256": "96e286f9bbfe206cdbd5c641906822910601c3f9f9dab0a94a7c2b806cd91453"
       },
       {
         "sourcePath": "docs/zh/22-research-tools.md",
@@ -418,12 +498,12 @@
       {
         "sourcePath": "docs/zh/23-hooks.md",
         "destination": "src/docs/content/echo-agent/zh/23-hooks.md",
-        "sha256": "8262a0254b433c88de6825bae9595389befaa9439be999fcfb9e8c30f150643d"
+        "sha256": "e98264ec146e8045c37ca57d2ac2cf04d140f63d7e49d4b5a1720938828ca64b"
       },
       {
         "sourcePath": "docs/zh/24-eval-system.md",
         "destination": "src/docs/content/echo-agent/zh/24-eval-system.md",
-        "sha256": "c39df7e09e18983f505eb22136855fd9add5042fe5d2d25f3d4f188f40680ed0"
+        "sha256": "547433e24ba93db69cc0a2eacc1471e3a59cb21a71e8e4bebb6f30adb7df69c3"
       },
       {
         "sourcePath": "docs/zh/25-self-improvement.md",
@@ -433,17 +513,17 @@
       {
         "sourcePath": "docs/zh/26-multi-agent.md",
         "destination": "src/docs/content/echo-agent/zh/26-multi-agent.md",
-        "sha256": "a40ce39ee3b4b9e718d5a8586df3abcb3bc15aeb5c945fc41dace0b0d823b7be"
+        "sha256": "a0d8ed2b02c39ef649e5db023fb20a1d1bca100130e521df6f132c1e930d6e01"
       },
       {
         "sourcePath": "docs/zh/27-tracing.md",
         "destination": "src/docs/content/echo-agent/zh/27-tracing.md",
-        "sha256": "be611ab8c65cdbfc7f9a936953edeeed5ec5de4bf9079cf0ad775f714bda8289"
+        "sha256": "7bdb37e217aab271b2a995562dac0da5f4baf609217d77a3d6bb959eae8fad8d"
       },
       {
         "sourcePath": "docs/zh/28-config-reference.md",
         "destination": "src/docs/content/echo-agent/zh/28-config-reference.md",
-        "sha256": "2d82d5bf2ba5e196c1e130aeb3564de86bdbfe75b4deef6480ad7640aec8e191"
+        "sha256": "d5923276bd592088d6674d4cbbfc56dbb6cec347efa80814588b799fe0162664"
       },
       {
         "sourcePath": "docs/zh/29-long-running-tasks.md",
@@ -458,12 +538,12 @@
       {
         "sourcePath": "docs/zh/31-lsp-integration.md",
         "destination": "src/docs/content/echo-agent/zh/31-lsp-integration.md",
-        "sha256": "1f918ae26e952bbbaf9414c9930fd33342dc30313a9de34b281b69d5e28bcb5c"
+        "sha256": "242e8747258f07613b4e26be38c4318ff24b0118ab6f0f7447b3c9386c0927d5"
       },
       {
         "sourcePath": "docs/zh/32-plugin-system.md",
         "destination": "src/docs/content/echo-agent/zh/32-plugin-system.md",
-        "sha256": "6348d88a70c13e05edced5ba7b41374334640f41a3de13aef1481220be2f47db"
+        "sha256": "c795230df093be76c53be8fe18e9e67a61188096947314b8e23377f92534fff5"
       },
       {
         "sourcePath": "docs/zh/33-headless-mode.md",
@@ -496,9 +576,19 @@
         "sha256": "e066c41afc9c9272009c2b7bf3f5e9c428ef7b17925700ff7800e1bf8d37f68a"
       },
       {
+        "sourcePath": "docs/zh/39-framework-application-boundary.md",
+        "destination": "src/docs/content/echo-agent/zh/39-framework-application-boundary.md",
+        "sha256": "aa37c25892c65c4b051085d851a12187c90e738a21944b4a9835a4db88ea0a2a"
+      },
+      {
         "sourcePath": "docs/zh/40-context-system.md",
         "destination": "src/docs/content/echo-agent/zh/40-context-system.md",
-        "sha256": "847ab27d4a05295bd7a25a9da54ae529a6b01cdc93fed5bfc2c099eef3870197"
+        "sha256": "2355b513e99b001f71205302e73f6a604d98ceb3c8a6c8236a6d61dec45f7c96"
+      },
+      {
+        "sourcePath": "docs/zh/41-delivery-ledger.md",
+        "destination": "src/docs/content/echo-agent/zh/41-delivery-ledger.md",
+        "sha256": "1ae435246d5225605358ed05325c8b8657b4fac2f974029ee464ff6c1e9bb890"
       },
       {
         "sourcePath": "docs/zh/41-persistence-concepts.md",
@@ -508,7 +598,7 @@
       {
         "sourcePath": "docs/zh/41-shell-text-tools.md",
         "destination": "src/docs/content/echo-agent/zh/41-shell-text-tools.md",
-        "sha256": "fd1af073a97e7a897a1e960fac790c5da7baa50c940320a7d434f13cb80bc1fb"
+        "sha256": "9fd43086c8e471e00b4a5e713756c29bde4160fd046817796ddac97692d26d09"
       },
       {
         "sourcePath": "docs/zh/42-database-tools.md",
@@ -581,9 +671,79 @@
         "sha256": "d70621dd5a6cef1e4765ee14461756281c4ac5dc0f88ce1b095d09f5a234189c"
       },
       {
+        "sourcePath": "docs/adr/0013-learning-examples-and-documentation-boundary.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0013-learning-examples-and-documentation-boundary.md",
+        "sha256": "3ae6e5840213d141ffc33b83c123e761838486f5c169f92a96c9a6176075f23e"
+      },
+      {
+        "sourcePath": "docs/adr/0014-framework-capability-placement.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0014-framework-capability-placement.md",
+        "sha256": "db33c567f4b418c2742e66add37d4fab351658c753a7f2578538e1e573a4ce2c"
+      },
+      {
+        "sourcePath": "docs/adr/0015-keyed-execution-admission.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0015-keyed-execution-admission.md",
+        "sha256": "d8f4ec32495ba717ebe5a823b5324d06842a6ee8ce6e71a822c8324383cab94f"
+      },
+      {
+        "sourcePath": "docs/adr/0016-delivery-ledger-contract.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0016-delivery-ledger-contract.md",
+        "sha256": "33189ad27919ce72fa989ba0b188f96a306caac6ea05e66a5ef4a5fe05689729"
+      },
+      {
+        "sourcePath": "docs/adr/0017-delivery-ledger-reconciliation.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0017-delivery-ledger-reconciliation.md",
+        "sha256": "2911c5b1cae532ad7ca5ab109ad77ab169cc7f144e30e8042bece55ef830faba"
+      },
+      {
+        "sourcePath": "docs/adr/0018-agent-router-legacy-wire-boundary.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0018-agent-router-legacy-wire-boundary.md",
+        "sha256": "9b78d22924c50bb2ee13d736306e27eec0ba92542b460cf5e40031c39a978ed1"
+      },
+      {
+        "sourcePath": "docs/adr/0019-typed-delivery-ledger-api.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0019-typed-delivery-ledger-api.md",
+        "sha256": "2c284a43e0fbca46dce652e5daf98b621c3cebcefbf923963aaf90ccd5f6d3be"
+      },
+      {
+        "sourcePath": "docs/adr/0020-structured-subagent-outcome-views.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0020-structured-subagent-outcome-views.md",
+        "sha256": "59fe0f56ff32703f4ea12d9fe67f093fdd85560d6bd5f6d94bd0e4e19674eed5"
+      },
+      {
+        "sourcePath": "docs/adr/0021-framework-native-domain-values.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0021-framework-native-domain-values.md",
+        "sha256": "749f179f66fdce3fe6314b269dc84e5be0bcc6d339cde36efd8fb571ae3c156d"
+      },
+      {
+        "sourcePath": "docs/adr/0022-typed-llm-timeouts.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0022-typed-llm-timeouts.md",
+        "sha256": "16231b0b19b2632c47e9c79523e650b0bb6f6aecdc711add4f13943c80eca45a"
+      },
+      {
+        "sourcePath": "docs/adr/0023-current-skill-frontmatter.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0023-current-skill-frontmatter.md",
+        "sha256": "16b6494d8c4976f04714e581d43cc8621fe30c164709fe9c40ea522e65cb9ed0"
+      },
+      {
+        "sourcePath": "docs/adr/0024-unified-subagent-prompt-compilation.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0024-unified-subagent-prompt-compilation.md",
+        "sha256": "d812a9c85b11cf73f8672223d0d1c9136bbf2f65e2cfae3da5429ee76c1e1cec"
+      },
+      {
+        "sourcePath": "docs/adr/0025-deterministic-command-cell-watcher.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0025-deterministic-command-cell-watcher.md",
+        "sha256": "d961a78a2680fabca91916cda26ed51ace698e38e28ff4bb3f41d95223671704"
+      },
+      {
+        "sourcePath": "docs/adr/0026-official-skill-frontmatter-only.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0026-official-skill-frontmatter-only.md",
+        "sha256": "bc9bdc76b2170445e37a40dd765a4cfb10d8b2e4f9d941d672815939fe77060e"
+      },
+      {
         "sourcePath": "docs/zh/getting-started.md",
         "destination": "src/docs/content/echo-agent/zh/getting-started.md",
-        "sha256": "d6cbb6ca19e384659a9a8f7642917d8388f5d75efef6cc1508f8b969c0d08e3b"
+        "sha256": "a9ec58e47b290746a93764d8e8a542451aca908ed39d76632d987b4c17da3f8d"
       },
       {
         "sourcePath": "docs/internal/knowledge/zh/a2a-protocol.md",
@@ -608,34 +768,380 @@
       {
         "sourcePath": "docs/internal/knowledge/zh/skill-system.md",
         "destination": "src/docs/content/echo-agent/zh/knowledge/skill-system.md",
-        "sha256": "a06f28cbd63d08f50884c1572fad920126fced6fbd3b89bc3f35a39807b0f2e7"
+        "sha256": "21b89c3452eeab0619979753f92c37e1d69e1c21cf5c5114cd21deb257493ae4"
       },
       {
         "sourcePath": "docs/zh/README.md",
         "destination": "src/docs/content/echo-agent/zh/README.md",
-        "sha256": "bc987f59b87c538b07358b74b418034c51e21ae3792fb20e94a47ea6731f3ba5"
+        "sha256": "de3de03dd4e35685d3b521acbb92efaffdb359fb532d5a8b63fe6e948cb2d470"
       },
       {
         "sourcePath": "docs/zh/security.md",
         "destination": "src/docs/content/echo-agent/zh/security.md",
-        "sha256": "46deed48de4b57f4d2bb010a10090a8742c26251aa5589e7fadceaa89d3ad223"
+        "sha256": "b15b7102b1d54c85aa2a5b8a3624e0a76b103a1ef6a4970015e3897d735bed4d"
       },
       {
         "sourcePath": "docs/zh/skill-authoring.md",
         "destination": "src/docs/content/echo-agent/zh/skill-authoring.md",
-        "sha256": "43fbd0f6511f3726a0589e8497e87bd72e3b00253c4b1df1c7a57385aeb60363"
+        "sha256": "db3555fad53618c7952ec63bd69447e36b372ffefb4c540cff68d2ce7ee996c3"
       }
     ]
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "d78762b0b321b2a63d993c93299d44fd2e556898",
+    "reviewedRevision": "c29ca20f0613e387ceec01700aa14b4744864c8c",
     "status": "reviewed-application-source-projection",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
+    "sourceFiles": [
+      {
+        "sourcePath": "docs/en/adr/0001-agent-collaboration.md",
+        "sha256": "c10a13736f382cec2c494c037e78b7658f712581f94c59c6f9e321bbbf097986"
+      },
+      {
+        "sourcePath": "docs/en/adr/0002-codex-tool-capability-catalog.md",
+        "sha256": "078a7744131d822b5389f4abbcb2df36eb845d2f2a0c1e4e31d12f129ea8e477"
+      },
+      {
+        "sourcePath": "docs/en/adr/0003-claude-code-capability-catalog.md",
+        "sha256": "261f2cfbc2f5e9b6931e23e18e2bf9c7f704981b0dd5a5eb551dbc8f7195f007"
+      },
+      {
+        "sourcePath": "docs/en/adr/0004-application-lifecycle-supervisor.md",
+        "sha256": "0ffe54fb24d05e00ad318731ba454c5f09a0ce377c4702b177fe1204cefc78f1"
+      },
+      {
+        "sourcePath": "docs/en/adr/0005-foreground-continuation-owner.md",
+        "sha256": "435d8d4c1505c3e8b735243ba625102569d4b7f1c9924bb690064deb587d937a"
+      },
+      {
+        "sourcePath": "docs/en/adr/0006-scoped-product-data-io.md",
+        "sha256": "6fd8a867cc68ad8b7a63017b48f3b26b2e7f404b2eab7d9459b8003b3551f3f0"
+      },
+      {
+        "sourcePath": "docs/en/adr/0007-taskruntime-agent-turn-authority.md",
+        "sha256": "9e424dcdd842e72e17946b0f101dcaaba272971e1fa0e5efd0fde3dc7e096f85"
+      },
+      {
+        "sourcePath": "docs/en/adr/0008-taskruntime-bounded-query-projections.md",
+        "sha256": "8f9f8618b79f8509148a046efa1fec010865a3ffc2aa3a5069177adba72eeac3"
+      },
+      {
+        "sourcePath": "docs/en/adr/0009-taskruntime-async-io-and-ipc-boundary.md",
+        "sha256": "6abe92c59d64afbd50b755668a9c5b4d17e3090856674ad1378718e6d60a690b"
+      },
+      {
+        "sourcePath": "docs/en/adr/0010-channel-scope-parity.md",
+        "sha256": "b3bf79fdbc71917adb8824f08a97280b2dfd95b99390950881401d65bcfcfc42"
+      },
+      {
+        "sourcePath": "docs/en/adr/0011-boot-inbox-recovery-authority.md",
+        "sha256": "b82d85d3056677637573e62abf141e21b2e92190d085d43a8df788d496a763cc"
+      },
+      {
+        "sourcePath": "docs/en/adr/0012-extension-control-authority.md",
+        "sha256": "db30490c89a8621d5a6e7389f420ebe413e923ecc11873d6c1f642178800e281"
+      },
+      {
+        "sourcePath": "docs/en/adr/0013-subagent-control-receipt-projection.md",
+        "sha256": "31c556ee397ae6bdfc483031955cb3678afa1df1f027725762839b6e48c5bdac"
+      },
+      {
+        "sourcePath": "docs/en/adr/0014-durable-conversation-input-ingress.md",
+        "sha256": "16e0c31cfc733cbab93bee9dd520559599aa7311bf96d2fb5534060cae9e2c39"
+      },
+      {
+        "sourcePath": "docs/en/adr/0015-task-graph-status-authority.md",
+        "sha256": "38955ff4a416d3cd3ef72cb49df2aa66cd42a03b351133c71d0da707fc39cfa6"
+      },
+      {
+        "sourcePath": "docs/en/adr/0016-agent-control-tools.md",
+        "sha256": "db20f5d31d1657d6598bf49d10007b0456ba422061b4285ba2fcc800f8024af0"
+      },
+      {
+        "sourcePath": "docs/en/adr/0017-f6-cursor-recovery-surface-parity.md",
+        "sha256": "b1c1767b275baa9ce8edd1db1cc4a09aa795cda67cc36eea5a668217e511f2dd"
+      },
+      {
+        "sourcePath": "docs/en/adr/0018-typed-tool-artifact-projection.md",
+        "sha256": "976b58519a072d7e4ab99c5b2b90ab2f1b5f15cf11849ad53b9496dba905e97a"
+      },
+      {
+        "sourcePath": "docs/en/adr/0019-unified-application-services-composition.md",
+        "sha256": "f98e58b204bebbb035e25655f09e6171b57e01731137bd238c17fef53049b3d6"
+      },
+      {
+        "sourcePath": "docs/en/adr/0020-interactive-tool-control-authority.md",
+        "sha256": "4d3c4de5c06f2ef34dc14586767828f6ed4cdf0f6f31f94cb59503cfc0a128c2"
+      },
+      {
+        "sourcePath": "docs/en/adr/0021-canonical-taskrun-dependency-graph.md",
+        "sha256": "753fb9092b8affc94f93fdd12f1b87d093f7dcfd5d49e0a4801a9f37f52d4a03"
+      },
+      {
+        "sourcePath": "docs/en/adr/0022-framework-prepared-plugin-generations.md",
+        "sha256": "04662acb5c07d9e11c738bc19783fbb744f2f488228a5ecb17546c30e5ad78a7"
+      },
+      {
+        "sourcePath": "docs/en/adr/0023-repl-output-surface-pruning.md",
+        "sha256": "b436d0ca2401d6b90f1f3b58247ebccbb04578246e7eb3f03448f0c897556510"
+      },
+      {
+        "sourcePath": "docs/en/adr/0024-generation-bound-hot-memory-projection.md",
+        "sha256": "d815cb3a2fa72778f8e03ea8dbcbe0d3da00ff0758b6af7a795cbbe1e8a6f599"
+      },
+      {
+        "sourcePath": "docs/en/adr/0025-app-core-global-modularization.md",
+        "sha256": "27fbda06765180879bf201b9e65be2c3b609e0c9c52b69004d752ec99f5e266c"
+      },
+      {
+        "sourcePath": "docs/en/adr/0026-typed-agent-router-ledger.md",
+        "sha256": "194088c24df9f38e14cc3ac552e260854c9bd8c8981846d4090448433a26009d"
+      },
+      {
+        "sourcePath": "docs/en/adr/0027-framework-native-domain-values.md",
+        "sha256": "2dfdc6f9f5c49194cb9718b7db73bb72b6a4da47f629e43726518f8c4f816b2e"
+      },
+      {
+        "sourcePath": "docs/en/adr/0028-current-product-schema-authority.md",
+        "sha256": "acce315e806c1d04a1dbb0c372984c9ba12681e1f968e528d82516c6b572ffc7"
+      },
+      {
+        "sourcePath": "docs/en/adr/0029-framework-native-agent-and-model-config.md",
+        "sha256": "ecbda4a581e1c7ad40d6f95f1e939545c55cf8503f2d1beacbd8c05f35c3ce5d"
+      },
+      {
+        "sourcePath": "docs/en/adr/0030-unified-subagent-prompt-architecture.md",
+        "sha256": "25aeaa62f2440852cf2b6551a3b0b39add431f9741d40164ce68fffb77a80428"
+      },
+      {
+        "sourcePath": "docs/en/adr/0031-deterministic-command-cell-watch.md",
+        "sha256": "0ad2187ae6db2cc0f3b07ccf8d94b59ef89e15adecee1cd5de03942f66292337"
+      },
+      {
+        "sourcePath": "docs/en/adr/0032-enabled-skill-runtime-authority.md",
+        "sha256": "4730c0732735ffe7f00e64f9930d44543811001154ca36b259b86b005987f211"
+      },
+      {
+        "sourcePath": "docs/en/adr/0033-skill-catalog-contraction-and-official-frontmatter.md",
+        "sha256": "256a7718b11c0acc0c8591cd65b7695af8f8cd998e738423ca1e79a3477c8378"
+      },
+      {
+        "sourcePath": "docs/en/architecture/overview.md",
+        "sha256": "9ccb36bde9210c68c078a37bfee93bf4d4d0a201cd803e89380cd61c0eca0f6e"
+      },
+      {
+        "sourcePath": "docs/en/architecture/persistence.md",
+        "sha256": "60b7d77216e3cb2e840be6a68974cdc425010f3ecb008e254261320c90f3cd41"
+      },
+      {
+        "sourcePath": "docs/en/architecture/providers.md",
+        "sha256": "9ae58d987a9252df836f00b78fe63ea98a2b91c85314c84310c061f7928ab885"
+      },
+      {
+        "sourcePath": "docs/en/architecture/runtime.md",
+        "sha256": "e3d140708fb0fd28ff3e4f3a2017cd06e84f431104191b6e3bd23fbc8faee172"
+      },
+      {
+        "sourcePath": "docs/en/configuration.md",
+        "sha256": "210b399bff6ab3c83fecced969e4bb850e55cdfd925041127c7de5344624234b"
+      },
+      {
+        "sourcePath": "docs/en/features.md",
+        "sha256": "a5ae48fe51a6096af3b4869ce8b413699177fbbe0f4de5ac5ac5255831829797"
+      },
+      {
+        "sourcePath": "docs/en/getting-started.md",
+        "sha256": "2e832e79f81dea14ed567826112663928a505d8f6620cd1bdf2b8910f102141b"
+      },
+      {
+        "sourcePath": "docs/en/operations/skill-sync.md",
+        "sha256": "90a24ae94abfaeed56657d0718357ae6cf2aad5cb1fab56dd95de4c7a8b5fba2"
+      },
+      {
+        "sourcePath": "docs/en/project-status.md",
+        "sha256": "9f2088a6afc8b63d6d66c0b4f33eb245e2563f3d2747d4e6555fc9399456eb95"
+      },
+      {
+        "sourcePath": "docs/en/README.md",
+        "sha256": "a54abbb73c7f87006c06c4d12da45fd00c3f8708ce7b4c0dfd99604a12c94abc"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0001-agent-collaboration.md",
+        "sha256": "45ac78d2c5c9d689b1747f5e8422d4ec6f26d8f3236b94d6fe3245842ca83dca"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0002-codex-tool-capability-catalog.md",
+        "sha256": "b06b37cb9d87abb25747e1de53f72154fefa73c9e99362971a627ef592a7772d"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0003-claude-code-capability-catalog.md",
+        "sha256": "5dd4568ae7ce306e00af6c573c7ffe3817f31834f83e69e1df7c27b08464642f"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0004-application-lifecycle-supervisor.md",
+        "sha256": "4b02dc5be09428eb1c8561af8c89bbb60160516839f95171d2c7dd7a93943c6f"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0005-foreground-continuation-owner.md",
+        "sha256": "8488d51077f98d728d9bb173ee64c83401fe094cd74377789d575d310854f1ec"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0006-scoped-product-data-io.md",
+        "sha256": "c11b761e0d0af6c761768e8edc02281d9ceb1002d8632dd65b67458094041a02"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0007-taskruntime-agent-turn-authority.md",
+        "sha256": "38996b5f6afeba13716997bb627a660cf08e5564ca491e5de09e00cb19d28dc9"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0008-taskruntime-bounded-query-projections.md",
+        "sha256": "e49042d1dc952abe2226f78970f10753908143a6f31665e78110fab6169b8400"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0009-taskruntime-async-io-and-ipc-boundary.md",
+        "sha256": "21bb5aacf1ba7353f8ab7722c333bf441cca95992c0f232b94d6c824982a2e30"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0010-channel-scope-parity.md",
+        "sha256": "581033b939ee6d5c31af3c2d63e1d04abbdf1e10b468e51b0d782841ae9b49e7"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0011-boot-inbox-recovery-authority.md",
+        "sha256": "00b21bc2c5e69a686e1170631f37e38e8250601c201f7f1ada6a7e84a3d44126"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0012-extension-control-authority.md",
+        "sha256": "4beea02cc3cc06629d5ab35e886c9970d074f4d148385981357e2b67fc688ee7"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0013-subagent-control-receipt-projection.md",
+        "sha256": "cef880e50424c9694283c69c0a9c90fca5fc90369fe983d129aa831f8b74dfce"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0014-durable-conversation-input-ingress.md",
+        "sha256": "25d9e054621e7089449a5161153e2612c39d22ac62be16559bcd43587930f6bd"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0015-task-graph-status-authority.md",
+        "sha256": "45c5a0ac1f58ad314d9af4acbc8c7bd4113bc4c0099768b8823641b238b32634"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0016-agent-control-tools.md",
+        "sha256": "54a1838588dfd02a9e3cc3be52aa1610d9c24697296539dbad8eb0ab6cf05305"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0017-f6-cursor-recovery-surface-parity.md",
+        "sha256": "4c9bdcc96c3b089e6b06f74f79dd471b56d72f4a3c596ebf4de2cd1d14dd245a"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0018-typed-tool-artifact-projection.md",
+        "sha256": "dde1b2a62afb38655ffe4d66233bfbc25ae11c821b838ade9244344f8ab654d0"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0019-unified-application-services-composition.md",
+        "sha256": "155b3211cee53f7e88b09bcec6814de0a391ed118c5aa984cd59db3a1e984850"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0020-interactive-tool-control-authority.md",
+        "sha256": "0e70928d38d8f99cf05d2a0c842b7c7096b792052d9d610ebab7ec7664cccdd7"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0021-canonical-taskrun-dependency-graph.md",
+        "sha256": "377b9f12a067747babe6f4f5303f99e06f629f777835329f9a01dcdaf6ae2de5"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0022-framework-prepared-plugin-generations.md",
+        "sha256": "ab49cb6acd6e2f2bfb5b1021fc6f9eb8e3bf3f528aeee05c730247153bce31df"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0023-repl-output-surface-pruning.md",
+        "sha256": "0ec8974b8c20a74ec439cd83a6ef698035970e8b3ef0ee5c447b4fb54496310f"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0024-generation-bound-hot-memory-projection.md",
+        "sha256": "1c90c2534fb4d18dfdb7bde3940022e21668b9ca7797b5b34dfb46314aac618f"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0025-app-core-global-modularization.md",
+        "sha256": "28a77e587305bc7d6ed45fa582390f9c45b62ca96aa0f3b8ff48999c6cc90f20"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0026-typed-agent-router-ledger.md",
+        "sha256": "db52198b9b05414c1f734bf273ceea30b53f8d4034e27b526c8e09bc425a607a"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0027-framework-native-domain-values.md",
+        "sha256": "d74fb9127745ba1627cd69fba18af34b560e376c1da76f91b091f2e3521c8bcb"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0028-current-product-schema-authority.md",
+        "sha256": "c1501f6d83ef8b4d3efd994d2f730abae4b92a9c38d6b60eb0fc689072138c9e"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0029-framework-native-agent-and-model-config.md",
+        "sha256": "00aaa16150432c5a52649b82c75bb4ba1bbf95ac1961bf54f5520b84fb714894"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0030-unified-subagent-prompt-architecture.md",
+        "sha256": "705544137c872c1b7678e41a7ddf4025f6da05312eb0efaca1f2e3f101e18ce8"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0031-deterministic-command-cell-watch.md",
+        "sha256": "14e06b3b65c81930d461eadafd0168972dec3cd9e18608d2136eff52cb0ab1a2"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0032-enabled-skill-runtime-authority.md",
+        "sha256": "7a6162088c81639d5cd40d3d46ec2d7fe1576d642c8de3bf4b6a0ed51bfbbced"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0033-skill-catalog-contraction-and-official-frontmatter.md",
+        "sha256": "bc09ca72472fc5b0090c9840bb2c594f4b8d89a0389a96eac888940b095ee884"
+      },
+      {
+        "sourcePath": "docs/zh/architecture/overview.md",
+        "sha256": "b5b8603cc3d440448abe2cdd8ffaed947f38908f0921bfa0078d6fdeb6ac7462"
+      },
+      {
+        "sourcePath": "docs/zh/architecture/persistence.md",
+        "sha256": "4ceaf42e2b88faa95bc7f56fc0a013dd0966f5ab7060fa2e3386ef207b11f95b"
+      },
+      {
+        "sourcePath": "docs/zh/architecture/providers.md",
+        "sha256": "bf5ad2d36b50cf4a96b787473c3df066e6af18bd39682fcf9a8443686724c993"
+      },
+      {
+        "sourcePath": "docs/zh/architecture/runtime.md",
+        "sha256": "9c56f861e65d7be0946bceef4fa1931885a69dd21487fa2af6f73d593b14cdf3"
+      },
+      {
+        "sourcePath": "docs/zh/configuration.md",
+        "sha256": "59e80328fa47494d0cf667470426a9a05df62e01298e9d55ec4d77ecb1ca4e8d"
+      },
+      {
+        "sourcePath": "docs/zh/features.md",
+        "sha256": "8cb6d347d577c28d343a542160ade725004debd3a87aefea11baad9aa932f977"
+      },
+      {
+        "sourcePath": "docs/zh/getting-started.md",
+        "sha256": "6bf27b1ac2f1787b9dfa1fb8d0cca717a0f79e8de9bfb0a69b653b7a02d46eed"
+      },
+      {
+        "sourcePath": "docs/zh/operations/skill-sync.md",
+        "sha256": "57487b324e47467ac22c50aab791e51910f899ff9e2b4d7cd128e2274555e167"
+      },
+      {
+        "sourcePath": "docs/zh/project-status.md",
+        "sha256": "b18f39e776c455dd4abc4c1f7c7c6d991cd84d5cfb3c50c52f8975540432a266"
+      },
+      {
+        "sourcePath": "docs/zh/README.md",
+        "sha256": "02e46d03fb4ca6b5a688198dbb2a459a4131dace6acd589c29f2b7ceea47a166"
+      }
+    ],
     "files": [
       {
         "destination": "src/docs/content/eko/en/capabilities.md",
-        "sha256": "3c58ebd55710d35b16e77c8f6355e6d78b955f224ac26308e70cba14c769eef7"
+        "sha256": "2d16f609c0b8d84c2f7e20c3efbc24c751c38f3cb43935265e4b0e1178daeed6"
       },
       {
         "destination": "src/docs/content/eko/en/getting-started.md",
@@ -651,7 +1157,7 @@
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "a70a683868854fcabfc54aa23f83ab3895bd1c931db9282fd88fe0f47c5d036d"
+        "sha256": "19f6d4da9ab2e78a90f216826e4f4dc22665d7323015a771c98aa54aef1aeeba"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
