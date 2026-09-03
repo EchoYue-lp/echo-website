@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "d9cb0030fea6dab382c9a54fd2fd07f313de04e7",
+    "revision": "ac00815b9221f97529df4d9401e11abdc8ddaa01",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -13,7 +13,7 @@
       {
         "sourcePath": "docs/en/02-tools.md",
         "destination": "src/docs/content/echo-agent/en/02-tools.md",
-        "sha256": "f3a7ae842760d296928306f588aea5fb5718017bb7186b803dfc7881d2645a5e"
+        "sha256": "094a2b8054cb1bf11c69d38e6a2b2f0ee7f7e9b7da3c8458c0ad4804ab27377d"
       },
       {
         "sourcePath": "docs/en/03-memory.md",
@@ -38,7 +38,7 @@
       {
         "sourcePath": "docs/en/07-skills.md",
         "destination": "src/docs/content/echo-agent/en/07-skills.md",
-        "sha256": "fd49e0dc9f82f5b9ada19c42c15dc55bf311e71906983df20074f850a3dd2070"
+        "sha256": "7df5c7301f70fccfa9d001a314ae1af3cfdc9a849a43130163d1c533a7b6f457"
       },
       {
         "sourcePath": "docs/en/08-mcp.md",
@@ -351,6 +351,11 @@
         "sha256": "bc9bdc76b2170445e37a40dd765a4cfb10d8b2e4f9d941d672815939fe77060e"
       },
       {
+        "sourcePath": "docs/adr/0027-subagent-communication-primitives.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0027-subagent-communication-primitives.md",
+        "sha256": "a14cefa7681646aab8f36e4b2d35aac13ca30ff8b89475d9bb936c153958c3fe"
+      },
+      {
         "sourcePath": "docs/en/getting-started.md",
         "destination": "src/docs/content/echo-agent/en/getting-started.md",
         "sha256": "dd22aab658b66873c4ced113d797131e76558d89d5dec2048f8ad2fdd56fb39b"
@@ -403,7 +408,7 @@
       {
         "sourcePath": "docs/zh/02-tools.md",
         "destination": "src/docs/content/echo-agent/zh/02-tools.md",
-        "sha256": "e1589125a8e8bb6d1904103301bded98e052b360dd1f8e11572f931c455f9e61"
+        "sha256": "8dd002cb44c1a2ecb94ff936983bb0406e6c2e9db5341625e4015cdf57d6c642"
       },
       {
         "sourcePath": "docs/zh/03-memory.md",
@@ -428,7 +433,7 @@
       {
         "sourcePath": "docs/zh/07-skills.md",
         "destination": "src/docs/content/echo-agent/zh/07-skills.md",
-        "sha256": "c7a64a9a538bc5f56cf61a69a05b8790f764be1e37a36db6c28f8aadb5beaa1e"
+        "sha256": "5fde22957860ae966e487f015f31372049ee9017adae29e5acaf8816e055bd25"
       },
       {
         "sourcePath": "docs/zh/08-mcp.md",
@@ -741,6 +746,11 @@
         "sha256": "bc9bdc76b2170445e37a40dd765a4cfb10d8b2e4f9d941d672815939fe77060e"
       },
       {
+        "sourcePath": "docs/adr/0027-subagent-communication-primitives.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0027-subagent-communication-primitives.md",
+        "sha256": "a14cefa7681646aab8f36e4b2d35aac13ca30ff8b89475d9bb936c153958c3fe"
+      },
+      {
         "sourcePath": "docs/zh/getting-started.md",
         "destination": "src/docs/content/echo-agent/zh/getting-started.md",
         "sha256": "a9ec58e47b290746a93764d8e8a542451aca908ed39d76632d987b4c17da3f8d"
@@ -789,8 +799,8 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "c29ca20f0613e387ceec01700aa14b4744864c8c",
-    "status": "reviewed-application-source-projection",
+    "reviewedRevision": "f194c43c96a967b56591c82ab60dd0523da1d0c9",
+    "status": "current-reviewed",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "sourceFiles": [
       {
@@ -839,7 +849,7 @@
       },
       {
         "sourcePath": "docs/en/adr/0012-extension-control-authority.md",
-        "sha256": "db30490c89a8621d5a6e7389f420ebe413e923ecc11873d6c1f642178800e281"
+        "sha256": "388f3c329fd7d20bc68a4d915cd885ccfc2213acd2ae2cd3526b661d802f5d17"
       },
       {
         "sourcePath": "docs/en/adr/0013-subagent-control-receipt-projection.md",
@@ -907,7 +917,7 @@
       },
       {
         "sourcePath": "docs/en/adr/0029-framework-native-agent-and-model-config.md",
-        "sha256": "ecbda4a581e1c7ad40d6f95f1e939545c55cf8503f2d1beacbd8c05f35c3ce5d"
+        "sha256": "1a5e2531f01f2ccfb51a10677ece487ec17289c472ca11ad9277eed90194a0d8"
       },
       {
         "sourcePath": "docs/en/adr/0030-unified-subagent-prompt-architecture.md",
@@ -919,11 +929,23 @@
       },
       {
         "sourcePath": "docs/en/adr/0032-enabled-skill-runtime-authority.md",
-        "sha256": "4730c0732735ffe7f00e64f9930d44543811001154ca36b259b86b005987f211"
+        "sha256": "8a9fd2e100037ef970cb24038cb0352723173c5a83d56ecefc49ac556543d356"
       },
       {
         "sourcePath": "docs/en/adr/0033-skill-catalog-contraction-and-official-frontmatter.md",
-        "sha256": "256a7718b11c0acc0c8591cd65b7695af8f8cd998e738423ca1e79a3477c8378"
+        "sha256": "1443925e502803a3a3ac2ff8e9475adb7e504e08b45cb418f5e918adc6fff99d"
+      },
+      {
+        "sourcePath": "docs/en/adr/0034-full-direction-agent-communication-matrix.md",
+        "sha256": "6d542c5a3a93b1995aa5f8d1dac2ce171fdb193b8b16a7548212cd7b7e2af6c6"
+      },
+      {
+        "sourcePath": "docs/en/adr/0035-conversation-archive-projection.md",
+        "sha256": "c4c7016593bae0b7222581a75ac3195c8538e1725fc3f21429647d6aaa415b78"
+      },
+      {
+        "sourcePath": "docs/en/adr/0036-skill-policy-simplification.md",
+        "sha256": "a424ef0c53cc9324cba90242a55986d470ae75a5d50a22a8279b656e615ef49d"
       },
       {
         "sourcePath": "docs/en/architecture/overview.md",
@@ -943,11 +965,11 @@
       },
       {
         "sourcePath": "docs/en/configuration.md",
-        "sha256": "210b399bff6ab3c83fecced969e4bb850e55cdfd925041127c7de5344624234b"
+        "sha256": "cdc619fbc869028680b3b85d3b8a0d253b12bb3eb01154e517a5ae627420f7cf"
       },
       {
         "sourcePath": "docs/en/features.md",
-        "sha256": "a5ae48fe51a6096af3b4869ce8b413699177fbbe0f4de5ac5ac5255831829797"
+        "sha256": "6c52e772f1100ddfc2db46e294d7975389aa8bc5e4641a6f8cb5967e904196f1"
       },
       {
         "sourcePath": "docs/en/getting-started.md",
@@ -955,11 +977,11 @@
       },
       {
         "sourcePath": "docs/en/operations/skill-sync.md",
-        "sha256": "90a24ae94abfaeed56657d0718357ae6cf2aad5cb1fab56dd95de4c7a8b5fba2"
+        "sha256": "d72294cc1fb832d5f4656a7a470d8c72a4b18d0e9adac7eda0c527e4db45d3f1"
       },
       {
         "sourcePath": "docs/en/project-status.md",
-        "sha256": "9f2088a6afc8b63d6d66c0b4f33eb245e2563f3d2747d4e6555fc9399456eb95"
+        "sha256": "43d915a2e1a65e2ffab06638d7c1995a598e5158af45e21e9028a3e62c114246"
       },
       {
         "sourcePath": "docs/en/README.md",
@@ -967,7 +989,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0001-agent-collaboration.md",
-        "sha256": "45ac78d2c5c9d689b1747f5e8422d4ec6f26d8f3236b94d6fe3245842ca83dca"
+        "sha256": "0e1dffc01e545c235e1cc4244c3ff97eeb9d948e36d9cc21e12f30857c1038f0"
       },
       {
         "sourcePath": "docs/zh/adr/0002-codex-tool-capability-catalog.md",
@@ -1011,7 +1033,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0012-extension-control-authority.md",
-        "sha256": "4beea02cc3cc06629d5ab35e886c9970d074f4d148385981357e2b67fc688ee7"
+        "sha256": "a0ae70cdd16802fd695cb4443f861f68691c0c3404d6a6fd90a05ef7ce5f1166"
       },
       {
         "sourcePath": "docs/zh/adr/0013-subagent-control-receipt-projection.md",
@@ -1079,7 +1101,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0029-framework-native-agent-and-model-config.md",
-        "sha256": "00aaa16150432c5a52649b82c75bb4ba1bbf95ac1961bf54f5520b84fb714894"
+        "sha256": "84c04d0e016cc365c4ba892ce9de2364e818c046162b09764b7d9326d46c1de8"
       },
       {
         "sourcePath": "docs/zh/adr/0030-unified-subagent-prompt-architecture.md",
@@ -1091,15 +1113,27 @@
       },
       {
         "sourcePath": "docs/zh/adr/0032-enabled-skill-runtime-authority.md",
-        "sha256": "7a6162088c81639d5cd40d3d46ec2d7fe1576d642c8de3bf4b6a0ed51bfbbced"
+        "sha256": "74d0967821ed142013bd971765981cf44e54e1529262836bcc93b98f4a53cc8b"
       },
       {
         "sourcePath": "docs/zh/adr/0033-skill-catalog-contraction-and-official-frontmatter.md",
-        "sha256": "bc09ca72472fc5b0090c9840bb2c594f4b8d89a0389a96eac888940b095ee884"
+        "sha256": "58e726bb3ac30d1777aca0c52a8ca5b8aa7764bcc9df1d608d8e818777ad805a"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0034-full-direction-agent-communication-matrix.md",
+        "sha256": "5fadafc89c58fb88a07c16dacec6d841c91aa41b9ced1e00a41ebb1506ada32d"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0035-conversation-archive-projection.md",
+        "sha256": "7a2e5bd211acef153a3fc36ae3db8c2d913c14bbd57b5e81e144286cf5bc8e4d"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0036-skill-policy-simplification.md",
+        "sha256": "ba9f8d196b49800c790af78775339e60d91a66c64a7cbf18e6f21f6150240de0"
       },
       {
         "sourcePath": "docs/zh/architecture/overview.md",
-        "sha256": "b5b8603cc3d440448abe2cdd8ffaed947f38908f0921bfa0078d6fdeb6ac7462"
+        "sha256": "5a84ccb6616bcac03570595765759639aee9caa6a7c8602c7422add5c2120f8b"
       },
       {
         "sourcePath": "docs/zh/architecture/persistence.md",
@@ -1115,11 +1149,11 @@
       },
       {
         "sourcePath": "docs/zh/configuration.md",
-        "sha256": "59e80328fa47494d0cf667470426a9a05df62e01298e9d55ec4d77ecb1ca4e8d"
+        "sha256": "36742734a3caaab6641fefb28ad7a59463d5fa21f0eddb8ce4407d996c726b17"
       },
       {
         "sourcePath": "docs/zh/features.md",
-        "sha256": "8cb6d347d577c28d343a542160ade725004debd3a87aefea11baad9aa932f977"
+        "sha256": "b5b63aed8009862073d1520c98c53fc8087e12c0c366c2acc20198f1b992b8f4"
       },
       {
         "sourcePath": "docs/zh/getting-started.md",
@@ -1127,11 +1161,11 @@
       },
       {
         "sourcePath": "docs/zh/operations/skill-sync.md",
-        "sha256": "57487b324e47467ac22c50aab791e51910f899ff9e2b4d7cd128e2274555e167"
+        "sha256": "b2277f9f866f4e7490cec00f9673ff849041444ccca8385d6ae9c8344f323d71"
       },
       {
         "sourcePath": "docs/zh/project-status.md",
-        "sha256": "b18f39e776c455dd4abc4c1f7c7c6d991cd84d5cfb3c50c52f8975540432a266"
+        "sha256": "a8e17e5430592327b6b19c6c1cf16689435915f809bf7a556fcd48ebcce7f916"
       },
       {
         "sourcePath": "docs/zh/README.md",
@@ -1141,7 +1175,7 @@
     "files": [
       {
         "destination": "src/docs/content/eko/en/capabilities.md",
-        "sha256": "2d16f609c0b8d84c2f7e20c3efbc24c751c38f3cb43935265e4b0e1178daeed6"
+        "sha256": "bd4523578b1b465a4ca1a433ff0f332be5814686af81372aeb522c544453bcbe"
       },
       {
         "destination": "src/docs/content/eko/en/getting-started.md",
@@ -1153,11 +1187,11 @@
       },
       {
         "destination": "src/docs/content/eko/en/storage.md",
-        "sha256": "1cde309402cf539d22bd8540ab5064c4046cac5e5cce7769ac55d1ebe6fd3226"
+        "sha256": "3bbb28e6c486fee2a4f643fef0e5b382911088e957c35eb60f01d9762c1e5a0c"
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "19f6d4da9ab2e78a90f216826e4f4dc22665d7323015a771c98aa54aef1aeeba"
+        "sha256": "58293e09801e4c8763158f8edde384ce7ef52b245f424ee1c47ab9bed488a7b5"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
@@ -1169,7 +1203,7 @@
       },
       {
         "destination": "src/docs/content/eko/zh/storage.md",
-        "sha256": "98a599da5604776651b1d83840a10c96978529b6bb51b1dc11c841d5fa43b94b"
+        "sha256": "39e51ea8618d05641fde26f12c8a1c72f9d8cdf1259dee1452adedb08dcf56d9"
       }
     ]
   }

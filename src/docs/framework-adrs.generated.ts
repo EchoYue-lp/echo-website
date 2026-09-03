@@ -209,4 +209,12 @@ export const frameworkAdrDocs = [
     },
     filePath: './content/echo-agent/adr/0026-official-skill-frontmatter-only.md',
   },
+  {
+    slug: 'adr-0027-subagent-communication-primitives',
+    title: {
+      zh: 'ADR 0027: Subagent Communication Primitives (Uplink + Shared Control Plane)',
+      en: 'ADR 0027: Subagent Communication Primitives (Uplink + Shared Control Plane)',
+    },
+    filePath: './content/echo-agent/adr/0027-subagent-communication-primitives.md',
+  },
 ];

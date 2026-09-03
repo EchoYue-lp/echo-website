@@ -451,6 +451,12 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0026-official-skill-frontmatter-only" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/docs/adr-0027-subagent-communication-primitives</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0027-subagent-communication-primitives" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0027-subagent-communication-primitives" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0027-subagent-communication-primitives" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/docs/knowledge-overview</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/knowledge-overview" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/knowledge-overview" />
@@ -965,6 +971,12 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0026-official-skill-frontmatter-only" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0026-official-skill-frontmatter-only" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0026-official-skill-frontmatter-only" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0027-subagent-communication-primitives</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0027-subagent-communication-primitives" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0027-subagent-communication-primitives" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0027-subagent-communication-primitives" />
   </url>
   <url>
     <loc>https://echo-agent.dev/en/docs/knowledge-overview</loc>

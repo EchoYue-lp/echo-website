@@ -42,7 +42,7 @@ TUI、GUI、CLI/JSONL 与 channel adapter 使用同一个 `ApplicationServices` 
 
 ## Extension 控制
 
-Skills、Plugins、MCP servers、Hooks、LSP 与 Browser 控制从 GUI、TUI、CLI/JSONL 和 channel 进入同一个应用核心权威。Skill 启用状态先提交 durable desired state，再发布到运行时。typed receipt 明确区分 committed、settled 与 degraded；保留的 repair debt 会在重启或 workspace load 后重放，不会被包装成成功。
+Skills、Plugins、MCP servers、Hooks、LSP 与 Browser 控制从 GUI、TUI、CLI/JSONL 和 channel 进入同一个应用核心权威。Skill 启用状态使用原子写入的 flat policy，再立即 reconcile 所有运行时目标；typed receipt 返回 settled 或 degraded，不保留 generation CAS 与 repair debt。损坏配置 fail-open 到默认启用集，下一次操作、重启或 workspace load 会重新收敛。内置 catalog 为 24 个，TUI 与 GUI 都能在当前会话显式激活 Skill，安装态 GUI 从 Tauri resource dir 加载内置目录。
 
 portable Plugin component 只解析一次，形成不可变 framework `PreparedPluginSet`。EKO 捕获精确 workspace target，只增加 executable Subagent、LSP process、scoped monitor、theme 与 output style 产品策略。rollback 使用 prepared generation，不重新读取可能已变化的文件。
 

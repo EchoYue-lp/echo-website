@@ -8,7 +8,7 @@ EKO runs on the user's own machine. Its product layer stores state in ordinary f
 - TaskRuntime `events.jsonl` is the formal task fact authority. `checkpoint.json`, `plan.json`, `run-state.json`, and bounded artifact/review history segments are rebuildable projections or indexes.
 - Ordinary chat uses its own `ChatEventLog`; it does not replace the TaskRuntime journal.
 - Each workspace owns its local memory Store, one generation-bound `MemoryLayerManager`, and an immutable hot-memory projection consumed at model safe points.
-- `enabled-skills.json` is the durable Skill desired-state and repair-debt authority. Prepared Plugin generations and their target receipts are runtime publication facts, not another desired-state file.
+- `enabled-skills.json` is the sole persistent Skill enablement fact. It stores only the atomically written `{category, enabled, baseline}` flat map; runtime reconciliation returns immediate target receipts and retains no generation or repair debt.
 - Artifacts and traces remain workspace-scoped. Trace data is diagnostic and does not determine whether a TaskRun or PlanTask committed.
 - TUI, GUI, CLI/JSONL, and channels access these authorities through the same application core.
 

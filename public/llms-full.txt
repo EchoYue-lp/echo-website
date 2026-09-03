@@ -111,6 +111,7 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0024: Unified Subagent Prompt Compilation | echo-agent 文档: https://echo-agent.dev/docs/adr-0024-unified-subagent-prompt-compilation
 - ADR 0025: Deterministic Command-Cell Watcher | echo-agent 文档: https://echo-agent.dev/docs/adr-0025-deterministic-command-cell-watcher
 - ADR 0026: SKILL.md Uses Official agentskills.io Fields Only | echo-agent 文档: https://echo-agent.dev/docs/adr-0026-official-skill-frontmatter-only
+- ADR 0027: Subagent Communication Primitives (Uplink + Shared Control Plane) | echo-agent 文档: https://echo-agent.dev/docs/adr-0027-subagent-communication-primitives
 - 知识库概述 | echo-agent 文档: https://echo-agent.dev/docs/knowledge-overview
 - Agent 设计模式 | echo-agent 文档: https://echo-agent.dev/docs/agent-patterns
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
@@ -195,6 +196,7 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0024: Unified Subagent Prompt Compilation | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0024-unified-subagent-prompt-compilation
 - ADR 0025: Deterministic Command-Cell Watcher | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0025-deterministic-command-cell-watcher
 - ADR 0026: SKILL.md Uses Official agentskills.io Fields Only | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0026-official-skill-frontmatter-only
+- ADR 0027: Subagent Communication Primitives (Uplink + Shared Control Plane) | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0027-subagent-communication-primitives
 - Knowledge Base Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/knowledge-overview
 - Agent Design Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/agent-patterns
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive
@@ -1199,6 +1201,25 @@ impl Tool for LongRunningTool {
     }
 }
 ```
+
+---
+
+## 子智能体身份与上行通道
+
+当工具运行在**被派发的 Subagent** 内部时,`ToolContext` 额外携带两样东西:
+
+- `subagent_lineage: Option<SubagentLineage>` — 本次 attempt 的身份快照
+  (自己的角色名/execution_id/run_id、父 agent、父 execution_id、
+  `root/<child>/...` 树路径、task_id/attempt/plan_revision)。主 Agent 调用
+  时为 `None`。框架在 dispatch 时自动盖章;调用方(如 `agent_tool`)预先
+  填写的亲缘字段优先。
+- `uplink: Option<SubagentUplinkFn>` — 上行通道,由派发方安装。通过内置
+  `subagent_message` 工具(需 `register_subagent_message_tools()`)可向父
+  agent 发送 `report`/`escalate` 或向兄弟 attempt 发送 queue-only 消息;
+  交付不阻塞发送方,回执是 `SubagentUplinkReceipt`。默认 sink 经共享控制面
+  投递并发 `SubagentEvent::UplinkReceived`;应用可安装自定义 sink 接管路由
+  (journal、暂停策略等)。详见 ADR 0027 与
+  `echo-agent-learning/examples/demo50_subagent_communication.rs`。
 
 ---
 
@@ -4883,7 +4904,7 @@ descriptor 声明 `depends_on`（程序化字段——标准 frontmatter 没有�
 
 两种激活入口使用同一份 wrapped skill 内容，也使用同一个受保护上下文投影权威。
 
-LLM 可以调用 `activate_skill` 工具；应用代码和 `IntentRouter` 可以调用 `ReactAgent::activate_skill`。`ActivateContent::to_prompt_block` 会把激活内容包裹为以下 XML 信封：
+LLM 可以调用 `activate_skill` 工具；应用代码和 `IntentRouter` 可以调用 `ReactAgent::activate_skill`。直接激活未注册的 Skill 时会返回错误；应用策略过滤掉的 disabled Skill 也属于未注册，因此用户入口不会把失败静默报告成成功。`ActivateContent::to_prompt_block` 会把激活内容包裹为以下 XML 信封：
 
 ```
 <skill_content name="paper-search">
@@ -15262,6 +15283,113 @@ frontmatter extension concepts, not even namespaced ones.
 
 ---
 
+Source: https://echo-agent.dev/docs/adr-0027-subagent-communication-primitives
+
+# ADR 0027: Subagent Communication Primitives (Uplink + Shared Control Plane)
+
+- Status: Accepted
+- Date: 2026-09-02
+- Owners: `echo-core/tools`, `echo-agent/agent/subagent`
+
+## Context
+
+The Subagent control plane was strictly downward: hosts and parents could
+steer/interrupt a running attempt (`SubagentControlRegistry`, tracked steer),
+but a running Subagent had no way to reach its parent or siblings, and could
+not even learn its own identity inside a dispatched attempt. The context chain
+(`ExternalRunContext` → `AgentInvocationContext` → `AgentRunSnapshot` →
+`ToolContext`) carried `run_id` / `execution_id` / `cancel` / `trace_sink`,
+but nothing about lineage (own role name, parent, dispatch-tree position) —
+and each `SubagentExecutor` kept a **private** `SubagentControlRegistry`,
+so an `execution_id` was only addressable within the executor that created
+it. Cross-executor sibling addressing (e.g. one registry shared by a primary
+agent and delegation-capable Subagents) was structurally impossible.
+
+Reference implementations (per EKO ADR 0001 §4.9/§4.12, which reverse-engineers
+Codex's collaboration runtime): mature systems give running subagents a
+queue-only uplink to the parent (report / escalate / completion envelope) and
+tree-scoped sibling messaging, while keeping the control plane host-held —
+subagents are addressed objects, not mailbox owners. Claude Code, by contrast,
+keeps strict hub-and-spoke. We adopt the Codex-shaped uplink as framework
+mechanism while leaving routing policy (journaling, pausing, surfacing) to
+applications.
+
+## Options Considered
+
+1. **Application-only layer**: build the whole uplink in the product (EKO)
+   with no framework support. Rejected — the identity gap (`ToolContext`
+   lacks lineage) and the per-executor control split are framework problems;
+   every embedder would re-implement them.
+2. **Peer mailbox per Subagent**: give each Subagent its own inbox and let
+   siblings address each other directly. Rejected — duplicates the existing
+   `TurnSteerMailbox` + control-registry lifecycle, creates a second
+   message-authority, and invites unobservable P2P graphs.
+3. **Uplink sink + shared control plane (chosen)**: keep the existing steer
+   mailbox as the single delivery mechanism; add (a) a `SubagentLineage`
+   value carried through the context chain, (b) an injectable
+   `SubagentUplinkFn` sink with a framework default (event bus + shared
+   control-registry delivery), and (c) move `SubagentControlRegistry` onto
+   `SubagentRegistry` so one registry owns one addressable control plane.
+
+## Decision
+
+1. **`SubagentLineage`** (`echo-core/tools`): self-contained identity snapshot
+   (`agent_name`, own `execution_id`/`run_id`, `parent_agent`,
+   `parent_execution_id`, canonical `agent_path`, `task_id`, `attempt`,
+   `plan_revision`), carried as `ExternalRunContext.subagent_lineage` and
+   copied into `ToolContext`. `SubagentExecutor::enrich_dispatch_context`
+   stamps missing basics at dispatch; caller-stamped values (the
+   `agent_tool` path chains the parent path and execution id; application
+   task runtimes stamp task/attempt/revision) always win.
+2. **Uplink channel**: `ExternalRunContext.uplink: Option<SubagentUplinkFn>`.
+   Messages are `SubagentUplinkMessage { from, target }` with
+   `target = Parent { kind: Report|Escalate, text } | Sibling {
+   to_execution_id, text }`. Delivery is **queue-only and fire-and-forget**:
+   the sender never waits for a reply, so parent/child mutual waiting cannot
+   deadlock a dispatch tree. The framework default sink
+   (`default_uplink_sink`) steers the parent (when its execution id is known
+   and live) or the sibling through the shared control registry, and always
+   emits `SubagentEvent::UplinkReceived` for observability. An
+   application-provided sink is never replaced.
+3. **Shared control plane**: `SubagentRegistry` owns exactly one
+   `SubagentControlRegistry` (`registry.control_registry()`); every
+   `SubagentExecutor` on that registry shares it. `execution_id` becomes
+   addressable across executors. New bounded read:
+   `active_snapshot(limit) -> Vec<ActiveAttemptSummary>`.
+4. **Tools**: `subagent_message` (parent report/escalate + sibling
+   queue-only, bounded to 8 000 chars) and `subagent_list` (bounded active
+   view for sibling discovery). Registered opt-in via
+   `ReactAgentBuilder::register_subagent_message_tools()` / the
+   `register_subagent_message_tools` `AgentConfig` flag — deliberately
+   decoupled from `register_agent_dispatch_tool`, because uplink messaging is
+   useful for every dispatched Subagent, including roles without delegation
+   rights.
+
+## Consequences
+
+- Applications own routing policy: EKO installs its own uplink sink at
+  TaskRun dispatch to journal escalations and map blocking ones to a
+  `NeedsInput` pause; the framework default is observability + steer only.
+- Escalation never blocks the sender: `Escalate` means "host should decide",
+  not "child waits". Answers return through the existing guidance/steer
+  path into the same attempt.
+- No second mailbox: all delivery reuses `Agent::steer_input_tracked` and
+  the control-registry attempt lifecycle (admit → attach → settle).
+- Sibling messages are claims, not verified evidence — enforcing that
+  interpretation stays a prompt-policy concern (product layer).
+
+## Verification
+
+- Unit: `enrich_dispatch_context_fills_missing_lineage_and_keeps_caller_values`,
+  `default_uplink_sink_delivers_to_active_attempt_and_reports_missing`
+  (executor tests), tool schema tests.
+- Example: `echo-agent-learning/examples/demo50_subagent_communication.rs`
+  (no LLM required; end-to-end dispatch → sibling message → escalate →
+  event observability → settlement).
+
+
+---
+
 Source: https://echo-agent.dev/docs/knowledge-overview
 
 # echo-agent 知识库
@@ -17150,7 +17278,7 @@ TUI、GUI、CLI/JSONL 与 channel adapter 使用同一个 `ApplicationServices` 
 
 ## Extension 控制
 
-Skills、Plugins、MCP servers、Hooks、LSP 与 Browser 控制从 GUI、TUI、CLI/JSONL 和 channel 进入同一个应用核心权威。Skill 启用状态先提交 durable desired state，再发布到运行时。typed receipt 明确区分 committed、settled 与 degraded；保留的 repair debt 会在重启或 workspace load 后重放，不会被包装成成功。
+Skills、Plugins、MCP servers、Hooks、LSP 与 Browser 控制从 GUI、TUI、CLI/JSONL 和 channel 进入同一个应用核心权威。Skill 启用状态使用原子写入的 flat policy，再立即 reconcile 所有运行时目标；typed receipt 返回 settled 或 degraded，不保留 generation CAS 与 repair debt。损坏配置 fail-open 到默认启用集，下一次操作、重启或 workspace load 会重新收敛。内置 catalog 为 24 个，TUI 与 GUI 都能在当前会话显式激活 Skill，安装态 GUI 从 Tauri resource dir 加载内置目录。
 
 portable Plugin component 只解析一次，形成不可变 framework `PreparedPluginSet`。EKO 捕获精确 workspace target，只增加 executable Subagent、LSP process、scoped monitor、theme 与 output style 产品策略。rollback 使用 prepared generation，不重新读取可能已变化的文件。
 
@@ -17177,7 +17305,7 @@ EKO 面向用户自己的机器，产品层使用普通文件或内存保存状�
 - TaskRuntime `events.jsonl` 是正式任务事实权威；`checkpoint.json`、`plan.json`、`run-state.json` 以及有界 artifact/review history segment 都是可重建投影或索引。
 - 普通 chat 使用独立 `ChatEventLog`，不替代 TaskRuntime journal。
 - 每个 workspace 拥有本地 memory Store、一个 generation-bound `MemoryLayerManager` 和一个在 model safe point 消费的 immutable hot-memory projection。
-- `enabled-skills.json` 是 durable Skill desired state 与 repair debt 的权威。prepared Plugin generation 与 target receipt 是 runtime publication 事实，不是第二个 desired-state 文件。
+- `enabled-skills.json` 是 Skill 启用状态的唯一持久事实，只保存 `{category, enabled, baseline}` flat map 并原子写入；运行时 reconcile 只返回即时 target receipt，不保留 generation 或 repair debt。
 - artifact 与 trace 保持 workspace scope；trace 只用于诊断，不能判定 TaskRun 或 PlanTask 是否已提交。
 - TUI、GUI、CLI/JSONL 与 channel 通过同一应用核心访问这些权威。
 
@@ -17954,8 +18082,6 @@ Source: https://echo-agent.dev/en/docs/tools
 
 Tools are the only mechanism through which an Agent interacts with the external world. The LLM learns about a tool's capabilities via JSON Schema, decides when to call it and with what parameters, and the framework handles the actual execution and returns the result back to the LLM.
 
----
-
 ## Problem It Solves
 
 LLMs are pure text models — they cannot:
@@ -18187,6 +18313,30 @@ impl Tool for LongRunningTool {
     }
 }
 ```
+
+---
+
+## Subagent identity and uplink channel
+
+When a tool runs inside a **dispatched Subagent**, `ToolContext` additionally
+carries:
+
+- `subagent_lineage: Option<SubagentLineage>` — an identity snapshot of the
+  attempt (own role name/execution_id/run_id, parent agent, parent
+  execution_id, `root/<child>/...` tree path, task_id/attempt/plan_revision).
+  `None` for primary agent invocations. The framework stamps it at dispatch;
+  caller-stamped lineage fields (e.g. from `agent_tool`) take precedence.
+- `uplink: Option<SubagentUplinkFn>` — the uplink channel installed by the
+  dispatcher. The built-in `subagent_message` tool (opt in via
+  `register_subagent_message_tools()`) sends `report`/`escalate` to the
+  parent or queue-only notes to sibling attempts; delivery never blocks the
+  sender and returns a `SubagentUplinkReceipt`. The default sink delivers
+  through the shared control plane and emits
+  `SubagentEvent::UplinkReceived`; applications may install their own sink
+  to own routing (journal, pause policy, ...). See ADR 0027 and
+  `echo-agent-learning/examples/demo50_subagent_communication.rs`.
+
+---
 
 ---
 
@@ -21981,7 +22131,7 @@ deduplicated and one acyclic activation order is picked.
 
 Both activation entry points use the same wrapped skill content and the same protected context-projection authority.
 
-The LLM can call `activate_skill`; application code and `IntentRouter` can call `ReactAgent::activate_skill`. `ActivateContent::to_prompt_block` wraps the activated content in this XML envelope:
+The LLM can call `activate_skill`; application code and `IntentRouter` can call `ReactAgent::activate_skill`. Direct activation returns an error when the Skill is not registered, including when an application policy filtered out a disabled Skill, so user-facing callers never report a silent success. `ActivateContent::to_prompt_block` wraps the activated content in this XML envelope:
 
 ```
 <skill_content name="paper-search">
@@ -32220,6 +32370,113 @@ frontmatter extension concepts, not even namespaced ones.
 
 ---
 
+Source: https://echo-agent.dev/en/docs/adr-0027-subagent-communication-primitives
+
+# ADR 0027: Subagent Communication Primitives (Uplink + Shared Control Plane)
+
+- Status: Accepted
+- Date: 2026-09-02
+- Owners: `echo-core/tools`, `echo-agent/agent/subagent`
+
+## Context
+
+The Subagent control plane was strictly downward: hosts and parents could
+steer/interrupt a running attempt (`SubagentControlRegistry`, tracked steer),
+but a running Subagent had no way to reach its parent or siblings, and could
+not even learn its own identity inside a dispatched attempt. The context chain
+(`ExternalRunContext` → `AgentInvocationContext` → `AgentRunSnapshot` →
+`ToolContext`) carried `run_id` / `execution_id` / `cancel` / `trace_sink`,
+but nothing about lineage (own role name, parent, dispatch-tree position) —
+and each `SubagentExecutor` kept a **private** `SubagentControlRegistry`,
+so an `execution_id` was only addressable within the executor that created
+it. Cross-executor sibling addressing (e.g. one registry shared by a primary
+agent and delegation-capable Subagents) was structurally impossible.
+
+Reference implementations (per EKO ADR 0001 §4.9/§4.12, which reverse-engineers
+Codex's collaboration runtime): mature systems give running subagents a
+queue-only uplink to the parent (report / escalate / completion envelope) and
+tree-scoped sibling messaging, while keeping the control plane host-held —
+subagents are addressed objects, not mailbox owners. Claude Code, by contrast,
+keeps strict hub-and-spoke. We adopt the Codex-shaped uplink as framework
+mechanism while leaving routing policy (journaling, pausing, surfacing) to
+applications.
+
+## Options Considered
+
+1. **Application-only layer**: build the whole uplink in the product (EKO)
+   with no framework support. Rejected — the identity gap (`ToolContext`
+   lacks lineage) and the per-executor control split are framework problems;
+   every embedder would re-implement them.
+2. **Peer mailbox per Subagent**: give each Subagent its own inbox and let
+   siblings address each other directly. Rejected — duplicates the existing
+   `TurnSteerMailbox` + control-registry lifecycle, creates a second
+   message-authority, and invites unobservable P2P graphs.
+3. **Uplink sink + shared control plane (chosen)**: keep the existing steer
+   mailbox as the single delivery mechanism; add (a) a `SubagentLineage`
+   value carried through the context chain, (b) an injectable
+   `SubagentUplinkFn` sink with a framework default (event bus + shared
+   control-registry delivery), and (c) move `SubagentControlRegistry` onto
+   `SubagentRegistry` so one registry owns one addressable control plane.
+
+## Decision
+
+1. **`SubagentLineage`** (`echo-core/tools`): self-contained identity snapshot
+   (`agent_name`, own `execution_id`/`run_id`, `parent_agent`,
+   `parent_execution_id`, canonical `agent_path`, `task_id`, `attempt`,
+   `plan_revision`), carried as `ExternalRunContext.subagent_lineage` and
+   copied into `ToolContext`. `SubagentExecutor::enrich_dispatch_context`
+   stamps missing basics at dispatch; caller-stamped values (the
+   `agent_tool` path chains the parent path and execution id; application
+   task runtimes stamp task/attempt/revision) always win.
+2. **Uplink channel**: `ExternalRunContext.uplink: Option<SubagentUplinkFn>`.
+   Messages are `SubagentUplinkMessage { from, target }` with
+   `target = Parent { kind: Report|Escalate, text } | Sibling {
+   to_execution_id, text }`. Delivery is **queue-only and fire-and-forget**:
+   the sender never waits for a reply, so parent/child mutual waiting cannot
+   deadlock a dispatch tree. The framework default sink
+   (`default_uplink_sink`) steers the parent (when its execution id is known
+   and live) or the sibling through the shared control registry, and always
+   emits `SubagentEvent::UplinkReceived` for observability. An
+   application-provided sink is never replaced.
+3. **Shared control plane**: `SubagentRegistry` owns exactly one
+   `SubagentControlRegistry` (`registry.control_registry()`); every
+   `SubagentExecutor` on that registry shares it. `execution_id` becomes
+   addressable across executors. New bounded read:
+   `active_snapshot(limit) -> Vec<ActiveAttemptSummary>`.
+4. **Tools**: `subagent_message` (parent report/escalate + sibling
+   queue-only, bounded to 8 000 chars) and `subagent_list` (bounded active
+   view for sibling discovery). Registered opt-in via
+   `ReactAgentBuilder::register_subagent_message_tools()` / the
+   `register_subagent_message_tools` `AgentConfig` flag — deliberately
+   decoupled from `register_agent_dispatch_tool`, because uplink messaging is
+   useful for every dispatched Subagent, including roles without delegation
+   rights.
+
+## Consequences
+
+- Applications own routing policy: EKO installs its own uplink sink at
+  TaskRun dispatch to journal escalations and map blocking ones to a
+  `NeedsInput` pause; the framework default is observability + steer only.
+- Escalation never blocks the sender: `Escalate` means "host should decide",
+  not "child waits". Answers return through the existing guidance/steer
+  path into the same attempt.
+- No second mailbox: all delivery reuses `Agent::steer_input_tracked` and
+  the control-registry attempt lifecycle (admit → attach → settle).
+- Sibling messages are claims, not verified evidence — enforcing that
+  interpretation stays a prompt-policy concern (product layer).
+
+## Verification
+
+- Unit: `enrich_dispatch_context_fills_missing_lineage_and_keeps_caller_values`,
+  `default_uplink_sink_delivers_to_active_attempt_and_reports_missing`
+  (executor tests), tool schema tests.
+- Example: `echo-agent-learning/examples/demo50_subagent_communication.rs`
+  (no LLM required; end-to-end dispatch → sibling message → escalate →
+  event observability → settlement).
+
+
+---
+
 Source: https://echo-agent.dev/en/docs/knowledge-overview
 
 # echo-agent Knowledge Base
@@ -34113,7 +34370,7 @@ TUI, GUI, CLI/JSONL, and channel adapters use one `ApplicationServices` composit
 
 ## Extension control
 
-Skills, Plugins, MCP servers, Hooks, LSP, and Browser controls enter one application-core authority from the GUI, TUI, CLI/JSONL, and channels. Skill enablement commits durable desired state before runtime publication. Typed receipts distinguish committed, settled, and degraded outcomes, and retained repair debt is replayed after restart or workspace load instead of being hidden as success.
+Skills, Plugins, MCP servers, Hooks, LSP, and Browser controls enter one application-core authority from the GUI, TUI, CLI/JSONL, and channels. Skill enablement uses an atomically written flat policy followed by immediate reconciliation of every runtime target; typed receipts return settled or degraded and retain no generation CAS or repair debt. Corrupt policy fails open to the default active set, and the next operation, restart, or workspace load converges again. The bundled catalog contains 24 Skills, TUI and GUI can explicitly activate a Skill in the current conversation, and packaged GUI builds load the catalog from Tauri's resource directory.
 
 Portable Plugin components are parsed once into an immutable framework `PreparedPluginSet`. EKO captures exact workspace targets and adds only product policy for executable Subagents, LSP processes, scoped monitors, themes, and output styles. Rollback uses the prepared generation rather than rereading changed files.
 
@@ -34140,7 +34397,7 @@ EKO runs on the user's own machine. Its product layer stores state in ordinary f
 - TaskRuntime `events.jsonl` is the formal task fact authority. `checkpoint.json`, `plan.json`, `run-state.json`, and bounded artifact/review history segments are rebuildable projections or indexes.
 - Ordinary chat uses its own `ChatEventLog`; it does not replace the TaskRuntime journal.
 - Each workspace owns its local memory Store, one generation-bound `MemoryLayerManager`, and an immutable hot-memory projection consumed at model safe points.
-- `enabled-skills.json` is the durable Skill desired-state and repair-debt authority. Prepared Plugin generations and their target receipts are runtime publication facts, not another desired-state file.
+- `enabled-skills.json` is the sole persistent Skill enablement fact. It stores only the atomically written `{category, enabled, baseline}` flat map; runtime reconciliation returns immediate target receipts and retains no generation or repair debt.
 - Artifacts and traces remain workspace-scoped. Trace data is diagnostic and does not determine whether a TaskRun or PlanTask committed.
 - TUI, GUI, CLI/JSONL, and channels access these authorities through the same application core.
 

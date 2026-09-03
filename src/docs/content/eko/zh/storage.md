@@ -8,7 +8,7 @@ EKO 面向用户自己的机器，产品层使用普通文件或内存保存状�
 - TaskRuntime `events.jsonl` 是正式任务事实权威；`checkpoint.json`、`plan.json`、`run-state.json` 以及有界 artifact/review history segment 都是可重建投影或索引。
 - 普通 chat 使用独立 `ChatEventLog`，不替代 TaskRuntime journal。
 - 每个 workspace 拥有本地 memory Store、一个 generation-bound `MemoryLayerManager` 和一个在 model safe point 消费的 immutable hot-memory projection。
-- `enabled-skills.json` 是 durable Skill desired state 与 repair debt 的权威。prepared Plugin generation 与 target receipt 是 runtime publication 事实，不是第二个 desired-state 文件。
+- `enabled-skills.json` 是 Skill 启用状态的唯一持久事实，只保存 `{category, enabled, baseline}` flat map 并原子写入；运行时 reconcile 只返回即时 target receipt，不保留 generation 或 repair debt。
 - artifact 与 trace 保持 workspace scope；trace 只用于诊断，不能判定 TaskRun 或 PlanTask 是否已提交。
 - TUI、GUI、CLI/JSONL 与 channel 通过同一应用核心访问这些权威。
 
