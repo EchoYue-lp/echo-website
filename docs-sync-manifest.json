@@ -799,7 +799,7 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "f194c43c96a967b56591c82ab60dd0523da1d0c9",
+    "reviewedRevision": "be273d3f2345b5724215c7ff9d7285b1d220f5e2",
     "status": "current-reviewed",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "sourceFiles": [
@@ -948,12 +948,16 @@
         "sha256": "a424ef0c53cc9324cba90242a55986d470ae75a5d50a22a8279b656e615ef49d"
       },
       {
+        "sourcePath": "docs/en/adr/0037-unified-turn-run-binding.md",
+        "sha256": "1064d15f407cb600430d1123532109e4dbea53b643879d5aa7b9370f905bf9c5"
+      },
+      {
         "sourcePath": "docs/en/architecture/overview.md",
         "sha256": "9ccb36bde9210c68c078a37bfee93bf4d4d0a201cd803e89380cd61c0eca0f6e"
       },
       {
         "sourcePath": "docs/en/architecture/persistence.md",
-        "sha256": "60b7d77216e3cb2e840be6a68974cdc425010f3ecb008e254261320c90f3cd41"
+        "sha256": "aedc16c200361da6d978d0165cfc98163bb2413dd27f9f43326d66f4b2544c5d"
       },
       {
         "sourcePath": "docs/en/architecture/providers.md",
@@ -981,7 +985,7 @@
       },
       {
         "sourcePath": "docs/en/project-status.md",
-        "sha256": "43d915a2e1a65e2ffab06638d7c1995a598e5158af45e21e9028a3e62c114246"
+        "sha256": "7a2fcbd52f583bd50202a04f00e532b4347d083a34a69e25f5170dad64b20491"
       },
       {
         "sourcePath": "docs/en/README.md",
@@ -1132,12 +1136,16 @@
         "sha256": "ba9f8d196b49800c790af78775339e60d91a66c64a7cbf18e6f21f6150240de0"
       },
       {
+        "sourcePath": "docs/zh/adr/0037-unified-turn-run-binding.md",
+        "sha256": "30a29a313de80e8ff0873df0e60f964a82c6632b3133f3795d11ca0d0d188d8f"
+      },
+      {
         "sourcePath": "docs/zh/architecture/overview.md",
         "sha256": "5a84ccb6616bcac03570595765759639aee9caa6a7c8602c7422add5c2120f8b"
       },
       {
         "sourcePath": "docs/zh/architecture/persistence.md",
-        "sha256": "4ceaf42e2b88faa95bc7f56fc0a013dd0966f5ab7060fa2e3386ef207b11f95b"
+        "sha256": "4974ddcf223a37a46e2bd7760daba42105567340b675afc7fe5fe3f874ee12ad"
       },
       {
         "sourcePath": "docs/zh/architecture/providers.md",
@@ -1165,7 +1173,7 @@
       },
       {
         "sourcePath": "docs/zh/project-status.md",
-        "sha256": "a8e17e5430592327b6b19c6c1cf16689435915f809bf7a556fcd48ebcce7f916"
+        "sha256": "eda4e2b14122496d0cf79d52a77949d7b121a742466c289411db1aa414dd234a"
       },
       {
         "sourcePath": "docs/zh/README.md",
@@ -1187,7 +1195,7 @@
       },
       {
         "destination": "src/docs/content/eko/en/storage.md",
-        "sha256": "3bbb28e6c486fee2a4f643fef0e5b382911088e957c35eb60f01d9762c1e5a0c"
+        "sha256": "c7011dbdc1cd6f6dd72c6ee0100457a27f57e55dd7391be7cc0f01823a9505f0"
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
@@ -1203,7 +1211,7 @@
       },
       {
         "destination": "src/docs/content/eko/zh/storage.md",
-        "sha256": "39e51ea8618d05641fde26f12c8a1c72f9d8cdf1259dee1452adedb08dcf56d9"
+        "sha256": "acce8dec29224328623876227d0e642d73d59081b085a9728665df7451e16baf"
       }
     ]
   }
