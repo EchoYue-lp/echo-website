@@ -457,6 +457,18 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0027-subagent-communication-primitives" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/docs/adr-0029-shared-subagent-execution-admission</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0029-shared-subagent-execution-admission" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0029-shared-subagent-execution-admission" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0029-shared-subagent-execution-admission" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0030-versioned-subagent-event-envelope</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0030-versioned-subagent-event-envelope" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0030-versioned-subagent-event-envelope" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0030-versioned-subagent-event-envelope" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/docs/knowledge-overview</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/knowledge-overview" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/knowledge-overview" />
@@ -977,6 +989,18 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0027-subagent-communication-primitives" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0027-subagent-communication-primitives" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0027-subagent-communication-primitives" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0029-shared-subagent-execution-admission</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0029-shared-subagent-execution-admission" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0029-shared-subagent-execution-admission" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0029-shared-subagent-execution-admission" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0030-versioned-subagent-event-envelope</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0030-versioned-subagent-event-envelope" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0030-versioned-subagent-event-envelope" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0030-versioned-subagent-event-envelope" />
   </url>
   <url>
     <loc>https://echo-agent.dev/en/docs/knowledge-overview</loc>

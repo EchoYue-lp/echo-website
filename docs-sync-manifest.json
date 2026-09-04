@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "ac00815b9221f97529df4d9401e11abdc8ddaa01",
+    "revision": "4ed1bcbe6a2bbb4aeb215af959fddd2a1a94dd71",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -13,7 +13,7 @@
       {
         "sourcePath": "docs/en/02-tools.md",
         "destination": "src/docs/content/echo-agent/en/02-tools.md",
-        "sha256": "094a2b8054cb1bf11c69d38e6a2b2f0ee7f7e9b7da3c8458c0ad4804ab27377d"
+        "sha256": "dbd733ac6050e3ffd41c46305d4462324e17234e52cf5b6b0d6d4aa781f3fe32"
       },
       {
         "sourcePath": "docs/en/03-memory.md",
@@ -33,7 +33,7 @@
       {
         "sourcePath": "docs/en/06-subagent.md",
         "destination": "src/docs/content/echo-agent/en/06-subagent.md",
-        "sha256": "c7eb1d20097d43ba48febd96fecae4262a2bc7a638178c9bc71bde19c4ffc5b7"
+        "sha256": "b2d2294070273576404f5242536d434804fb07bc7b3197ec525136af808c8cda"
       },
       {
         "sourcePath": "docs/en/07-skills.md",
@@ -123,7 +123,7 @@
       {
         "sourcePath": "docs/en/26-multi-agent.md",
         "destination": "src/docs/content/echo-agent/en/26-multi-agent.md",
-        "sha256": "b78b2c75a1c7e43c8f1491f8a1c38cb607208ff50bc6581a52dacd1d72819d8e"
+        "sha256": "8674f9575870cb157c3a1fd5d39bef88ae4dd645c6b6cbd96c4bd3172e0f1637"
       },
       {
         "sourcePath": "docs/en/27-tracing.md",
@@ -188,7 +188,7 @@
       {
         "sourcePath": "docs/en/39-framework-application-boundary.md",
         "destination": "src/docs/content/echo-agent/en/39-framework-application-boundary.md",
-        "sha256": "ca489e3312331dbefb4cfca915485fbe9117dfa6cb9069311b294202874ce64c"
+        "sha256": "b162dcc57e7265f2af6263cefc10e82394f4db7f184b6ee25a3897a47e1b25e8"
       },
       {
         "sourcePath": "docs/en/40-context-system.md",
@@ -356,6 +356,16 @@
         "sha256": "a14cefa7681646aab8f36e4b2d35aac13ca30ff8b89475d9bb936c153958c3fe"
       },
       {
+        "sourcePath": "docs/adr/0029-shared-subagent-execution-admission.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0029-shared-subagent-execution-admission.md",
+        "sha256": "a09d0542082a36c30f223ac8f939841cd43430d9d05163393d910cc60fb378bd"
+      },
+      {
+        "sourcePath": "docs/adr/0030-versioned-subagent-event-envelope.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0030-versioned-subagent-event-envelope.md",
+        "sha256": "8e75f3792f0cc28ece721f6d24b12669cfa6585f991c37ac137e2d6639182e22"
+      },
+      {
         "sourcePath": "docs/en/getting-started.md",
         "destination": "src/docs/content/echo-agent/en/getting-started.md",
         "sha256": "dd22aab658b66873c4ced113d797131e76558d89d5dec2048f8ad2fdd56fb39b"
@@ -408,7 +418,7 @@
       {
         "sourcePath": "docs/zh/02-tools.md",
         "destination": "src/docs/content/echo-agent/zh/02-tools.md",
-        "sha256": "8dd002cb44c1a2ecb94ff936983bb0406e6c2e9db5341625e4015cdf57d6c642"
+        "sha256": "f620b7bab70b5677995dead513a7904c37bb358d8b20d164de47115acd6f15f1"
       },
       {
         "sourcePath": "docs/zh/03-memory.md",
@@ -428,7 +438,7 @@
       {
         "sourcePath": "docs/zh/06-subagent.md",
         "destination": "src/docs/content/echo-agent/zh/06-subagent.md",
-        "sha256": "bd5ffc360d609fddebe59ec41df3a162c1c9d071fff5da72951a3af5745b33de"
+        "sha256": "d155e9a354c3d66415502ebaa79d716f8edfc1a51268ceccc1348d8213475e18"
       },
       {
         "sourcePath": "docs/zh/07-skills.md",
@@ -518,7 +528,7 @@
       {
         "sourcePath": "docs/zh/26-multi-agent.md",
         "destination": "src/docs/content/echo-agent/zh/26-multi-agent.md",
-        "sha256": "a0d8ed2b02c39ef649e5db023fb20a1d1bca100130e521df6f132c1e930d6e01"
+        "sha256": "4344266bcaeb1744213b2a473b8f5da813d3fee463bdc97eb91f07cd84a61c9e"
       },
       {
         "sourcePath": "docs/zh/27-tracing.md",
@@ -583,7 +593,7 @@
       {
         "sourcePath": "docs/zh/39-framework-application-boundary.md",
         "destination": "src/docs/content/echo-agent/zh/39-framework-application-boundary.md",
-        "sha256": "aa37c25892c65c4b051085d851a12187c90e738a21944b4a9835a4db88ea0a2a"
+        "sha256": "134cb4449cf6acfef824c1be95fe840f44e2ed06dec73bcf70740bb8f61600db"
       },
       {
         "sourcePath": "docs/zh/40-context-system.md",
@@ -749,6 +759,16 @@
         "sourcePath": "docs/adr/0027-subagent-communication-primitives.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0027-subagent-communication-primitives.md",
         "sha256": "a14cefa7681646aab8f36e4b2d35aac13ca30ff8b89475d9bb936c153958c3fe"
+      },
+      {
+        "sourcePath": "docs/adr/0029-shared-subagent-execution-admission.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0029-shared-subagent-execution-admission.md",
+        "sha256": "a09d0542082a36c30f223ac8f939841cd43430d9d05163393d910cc60fb378bd"
+      },
+      {
+        "sourcePath": "docs/adr/0030-versioned-subagent-event-envelope.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0030-versioned-subagent-event-envelope.md",
+        "sha256": "8e75f3792f0cc28ece721f6d24b12669cfa6585f991c37ac137e2d6639182e22"
       },
       {
         "sourcePath": "docs/zh/getting-started.md",
@@ -952,6 +972,14 @@
         "sha256": "1064d15f407cb600430d1123532109e4dbea53b643879d5aa7b9370f905bf9c5"
       },
       {
+        "sourcePath": "docs/en/adr/0038-unified-task-subagent-execution.md",
+        "sha256": "96a2dc72b1f081d888f284c6ffca964f8b3ae001ed1413ec6be889bed67a108e"
+      },
+      {
+        "sourcePath": "docs/en/adr/0039-unified-agent-conversation-pane.md",
+        "sha256": "ae7089801f59aa12b007ff3b0932743911b27a3c149cfaaf0c0f702fde643f8c"
+      },
+      {
         "sourcePath": "docs/en/architecture/overview.md",
         "sha256": "9ccb36bde9210c68c078a37bfee93bf4d4d0a201cd803e89380cd61c0eca0f6e"
       },
@@ -1138,6 +1166,14 @@
       {
         "sourcePath": "docs/zh/adr/0037-unified-turn-run-binding.md",
         "sha256": "30a29a313de80e8ff0873df0e60f964a82c6632b3133f3795d11ca0d0d188d8f"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0038-unified-task-subagent-execution.md",
+        "sha256": "416a5eb1d7476f78a08a552700db9dd7c76f73826600582c9f698bf56ad3832c"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0039-unified-agent-conversation-pane.md",
+        "sha256": "9d1f5b88296987f2fd50269ef88b6d978819a81af45f228c713f3c497feb690d"
       },
       {
         "sourcePath": "docs/zh/architecture/overview.md",
