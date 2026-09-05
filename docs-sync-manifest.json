@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "4ed1bcbe6a2bbb4aeb215af959fddd2a1a94dd71",
+    "revision": "dbdb579eb360f7426f2bb06566038e375c56c922",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -33,7 +33,7 @@
       {
         "sourcePath": "docs/en/06-subagent.md",
         "destination": "src/docs/content/echo-agent/en/06-subagent.md",
-        "sha256": "b2d2294070273576404f5242536d434804fb07bc7b3197ec525136af808c8cda"
+        "sha256": "96b36f5f2dc6e488cd03d7d4df9eccce4484797fe969f5bdb4851a1f75918620"
       },
       {
         "sourcePath": "docs/en/07-skills.md",
@@ -438,7 +438,7 @@
       {
         "sourcePath": "docs/zh/06-subagent.md",
         "destination": "src/docs/content/echo-agent/zh/06-subagent.md",
-        "sha256": "d155e9a354c3d66415502ebaa79d716f8edfc1a51268ceccc1348d8213475e18"
+        "sha256": "82bf1af7d7a22458b66d174b007b22a2bc37cfc83f1186dfc8eadb8d01e3a167"
       },
       {
         "sourcePath": "docs/zh/07-skills.md",
@@ -819,7 +819,7 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "be273d3f2345b5724215c7ff9d7285b1d220f5e2",
+    "reviewedRevision": "37cd9b03f2fee41285181b7a29c8258f69a67f6d",
     "status": "current-reviewed",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "sourceFiles": [
@@ -980,6 +980,10 @@
         "sha256": "ae7089801f59aa12b007ff3b0932743911b27a3c149cfaaf0c0f702fde643f8c"
       },
       {
+        "sourcePath": "docs/en/adr/0040-app-core-subagent-event-projection.md",
+        "sha256": "c1cc4e6d03c5581721a7662202c33c40d49eeac2cea242b135ebf01c1e20cdb4"
+      },
+      {
         "sourcePath": "docs/en/architecture/overview.md",
         "sha256": "9ccb36bde9210c68c078a37bfee93bf4d4d0a201cd803e89380cd61c0eca0f6e"
       },
@@ -993,7 +997,7 @@
       },
       {
         "sourcePath": "docs/en/architecture/runtime.md",
-        "sha256": "e3d140708fb0fd28ff3e4f3a2017cd06e84f431104191b6e3bd23fbc8faee172"
+        "sha256": "a60f3fd6a6cdd91dc7d7eeb068959891be4882f0b34f2dd5f342af4a77d337ae"
       },
       {
         "sourcePath": "docs/en/configuration.md",
@@ -1176,6 +1180,10 @@
         "sha256": "9d1f5b88296987f2fd50269ef88b6d978819a81af45f228c713f3c497feb690d"
       },
       {
+        "sourcePath": "docs/zh/adr/0040-app-core-subagent-event-projection.md",
+        "sha256": "411825587802176b0fd04c9b6b197beb74224698bc704c34453b9f89e9e3f0d4"
+      },
+      {
         "sourcePath": "docs/zh/architecture/overview.md",
         "sha256": "5a84ccb6616bcac03570595765759639aee9caa6a7c8602c7422add5c2120f8b"
       },
@@ -1189,7 +1197,7 @@
       },
       {
         "sourcePath": "docs/zh/architecture/runtime.md",
-        "sha256": "9c56f861e65d7be0946bceef4fa1931885a69dd21487fa2af6f73d593b14cdf3"
+        "sha256": "80e7fee4ae5d96c2b306aa3b058af82b27fe57b736a27edcd43daa18ea1e3ed7"
       },
       {
         "sourcePath": "docs/zh/configuration.md",
