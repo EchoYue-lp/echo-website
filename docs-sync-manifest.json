@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "dbdb579eb360f7426f2bb06566038e375c56c922",
+    "revision": "94803b09057e86f4446c50664596b1973f9b90cb",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -819,7 +819,7 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "37cd9b03f2fee41285181b7a29c8258f69a67f6d",
+    "reviewedRevision": "319250d0bd84d54dc46f5972dea4e024f6cd611f",
     "status": "current-reviewed",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "sourceFiles": [
