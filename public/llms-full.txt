@@ -112,6 +112,8 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0025: Deterministic Command-Cell Watcher | echo-agent 文档: https://echo-agent.dev/docs/adr-0025-deterministic-command-cell-watcher
 - ADR 0026: SKILL.md Uses Official agentskills.io Fields Only | echo-agent 文档: https://echo-agent.dev/docs/adr-0026-official-skill-frontmatter-only
 - ADR 0027: Subagent Communication Primitives (Uplink + Shared Control Plane) | echo-agent 文档: https://echo-agent.dev/docs/adr-0027-subagent-communication-primitives
+- ADR 0029: Shared Subagent Execution Admission | echo-agent 文档: https://echo-agent.dev/docs/adr-0029-shared-subagent-execution-admission
+- ADR 0030: Versioned Subagent Event Envelope | echo-agent 文档: https://echo-agent.dev/docs/adr-0030-versioned-subagent-event-envelope
 - 知识库概述 | echo-agent 文档: https://echo-agent.dev/docs/knowledge-overview
 - Agent 设计模式 | echo-agent 文档: https://echo-agent.dev/docs/agent-patterns
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
@@ -197,6 +199,8 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0025: Deterministic Command-Cell Watcher | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0025-deterministic-command-cell-watcher
 - ADR 0026: SKILL.md Uses Official agentskills.io Fields Only | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0026-official-skill-frontmatter-only
 - ADR 0027: Subagent Communication Primitives (Uplink + Shared Control Plane) | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0027-subagent-communication-primitives
+- ADR 0029: Shared Subagent Execution Admission | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0029-shared-subagent-execution-admission
+- ADR 0030: Versioned Subagent Event Envelope | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0030-versioned-subagent-event-envelope
 - Knowledge Base Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/knowledge-overview
 - Agent Design Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/agent-patterns
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive
@@ -1209,7 +1213,7 @@ impl Tool for LongRunningTool {
 当工具运行在**被派发的 Subagent** 内部时,`ToolContext` 额外携带两样东西:
 
 - `subagent_lineage: Option<SubagentLineage>` — 本次 attempt 的身份快照
-  (自己的角色名/execution_id/run_id、父 agent、父 execution_id、
+  (自己的角色名/execution_id/run_id、父 agent、父 execution/event id、
   `root/<child>/...` 树路径、task_id/attempt/plan_revision)。主 Agent 调用
   时为 `None`。框架在 dispatch 时自动盖章;调用方(如 `agent_tool`)预先
   填写的亲缘字段优先。
@@ -1217,7 +1221,8 @@ impl Tool for LongRunningTool {
   `subagent_message` 工具(需 `register_subagent_message_tools()`)可向父
   agent 发送 `report`/`escalate` 或向兄弟 attempt 发送 queue-only 消息;
   交付不阻塞发送方,回执是 `SubagentUplinkReceipt`。默认 sink 经共享控制面
-  投递并发 `SubagentEvent::UplinkReceived`;应用可安装自定义 sink 接管路由
+  投递,并通过发送者的活动 publisher 发出 enveloped `SubagentEvent::UplinkReceived`;
+  应用可安装自定义 sink 接管路由
   (journal、暂停策略等)。详见 ADR 0027 与
   `echo-agent-learning/examples/demo50_subagent_communication.rs`。
 
@@ -3855,6 +3860,29 @@ result；只有真正的产品 wire 字段才应留在应用层。
 usage 值。两类结果都直接提供 `result.usage()` 或 `turn_receipt.usage()`。应用不需要
 source-named adapter、转换 trait，也不需要再定义平行的 execution-usage DTO。
 
+## 版本化执行事件
+
+`SubagentEventBus::subscribe_envelopes` 是执行事件的权威传输。每个外层 dispatch attempt
+只有一个 `SubagentEventPublisher`；started、isolation、可展示的 thinking/token delta、usage、
+tool 与 terminal 共享同一个 `stream_id` 和单调 `sequence`。内部 hook retry 不会重置序号。
+`SubagentEventPayload::invocation` 无损携带 task、attempt、plan revision、agent path 和
+parent execution 关联，不需要解析 execution-id 字符串。
+
+既有 `subscribe` 方法继续作为从 envelope 派生的 raw 兼容视图；手工 raw emit 只接受 registry
+事件并拒绝 execution variant，因此不会形成第二个执行权威。需要顺序或恢复语义的新消费者应使用 envelope。
+tool terminal envelope 指向对应 tool-start event；其它执行事件指向 dispatch start 或上游
+parent event。
+
+broadcast 和 replay 窗口都是有界的。receiver 落后时先收到 Tokio `Lagged`，再按已知 stream
+调用 `replay_after`，或按错过 start envelope 的 exact execution 调用 `replay_for_execution`。
+可能漏掉整条短 attempt 的进程级 consumer 先调用 `retained_stream_ids` 与
+`active_stream_ids`，再从自己的 cursor 对并集逐条 replay；未观察过的 stream 从零开始。
+若某条活跃 stream 的完整 replay 后缀已被挤出，`active_stream_anchor` 仍保留其不可变的
+dispatch 身份，使 consumer 能以准确地址持久化 gap。
+`SubagentEventReplay::gap` 会明确报告保留后缀不连续；高频 thinking/token
+delta 可能在 gap 后缺失，但保留的 lifecycle/tool 边界与 `terminal` 可用于恢复状态和最终输出。
+该能力是进程内恢复窗口，不是永久存储；应用仍负责自己的 durable projection。
+
 
 ---
 
@@ -3989,6 +4017,10 @@ runtime，不累计匿名 graph。需要跨进程持久恢复的框架复用方�
 metadata key，且不得改写依赖、成员或执行语义。
 
 ## 设计参考
+
+Framework 可注入 `echo_core::agent::ExecutionAdmission`，让 RuntimeTaskService 与
+SubagentExecutor 共享跨入口容量；未注入时保留 per-runtime wave width 与 Fork fallback。
+委派深度继续由唯一的 `NestedDelegationPolicy` 控制，EKO 的容量和默认策略由应用 adapter 提供。
 
 这里参考了两类成熟实现：
 
@@ -13106,6 +13138,10 @@ review/worktree 行为和各 surface projection 继续属于应用层。
 
 ## 单一权威
 
+`ExecutionAdmission` 是 `KeyedExecutionAdmission` 的组合入口，不携带 EKO 配额。
+`max_concurrent_subagents` 仍是 standalone per-runtime width，
+`max_concurrent_forks` 仍是无 shared admission 时的 fallback。
+
 Framework 和应用必须对通用生命周期或 receipt 共享同一种语义。如果某个 adapter
 需要自己的 DAG 遍历、status reducer、retry policy 或 durable input lifecycle，说明边界
 不正确。应复用或扩展已有 framework authority；如果无法在不耦合产品的前提下形成更小的
@@ -15386,6 +15422,169 @@ applications.
 - Example: `echo-agent-learning/examples/demo50_subagent_communication.rs`
   (no LLM required; end-to-end dispatch → sibling message → escalate →
   event observability → settlement).
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0029-shared-subagent-execution-admission
+
+# ADR 0029: Shared Subagent Execution Admission
+
+- Status: Proposed
+- Date: 2026-09-04
+- Scope: `echo-agent::agent::admission`, `echo-agent::agent::subagent`,
+  `echo-agent::echo-orchestration::tasks`
+
+## Context
+
+The framework already owns the reusable execution mechanisms needed by an Agent application:
+
+- `RuntimeTaskService` drives a revisioned task graph and applies a local per-runtime semaphore
+  for parallel task dispatch;
+- `NestedDelegationPolicy` carries delegation depth and whether a caller may spawn a child;
+- `SubagentExecutor` routes `Sync`, `Fork`, `Teammate`, and `Team` through one dispatch engine;
+- `KeyedExecutionAdmission` owns opaque-key leases, optional process permits, retirement fences,
+  close, and shutdown waiting.
+
+An application can nevertheless bypass a common Subagent limit when it combines these mechanisms:
+the task runtime may use one semaphore, the Subagent executor may use a Fork-only semaphore, and
+the application may add a third process governor. `Sync` can then bypass a Fork limit, and direct
+or nested `agent_tool` dispatch can bypass a TaskRuntime limit entirely.
+
+This is a generic execution-lifecycle problem. The framework must provide the shared admission
+composition point; the application must retain the meaning of its product capacity, key scope,
+and defaults.
+
+## Existing framework evidence
+
+- `echo-agent/echo-orchestration/src/tasks/runtime_executor.rs` already owns task graph revision
+  safe points, ready waves, local concurrency, cancellation, and terminal settlement.
+- `echo-agent/echo-core/src/tools/mod.rs` already owns `NestedDelegationPolicy` and its child
+  policy transition.
+- `echo-agent/src/agent/subagent/executor.rs` already provides one dispatch engine for all
+  Subagent execution modes and currently keeps `max_concurrent_forks` as a Fork-local semaphore.
+- `echo-agent/src/agent/admission.rs` already provides the lease/permit lifecycle that EKO's
+  `AgentPoolAdmission` wraps.
+
+## Decision
+
+1. Extend the existing framework admission boundary so a caller can provide one shared execution
+   admission to both `RuntimeTaskService` and `SubagentExecutor`. Do not create an EKO-specific
+   `SubagentAdmission` state machine.
+2. A shared admission lease represents one active execution identity, normally a unique
+   `SubagentRun`/attempt key. Its process semaphore and lease lifecycle are owned by framework
+   primitives; the application supplies the capacity and key namespace.
+3. When a shared admission is configured, every Subagent execution mode that creates a
+   `SubagentRun` (`Sync`, `Fork`, `Teammate`, and concrete Team members) obtains the same shared
+   lease. `max_concurrent_forks` is not a bypass path in this mode.
+4. `RuntimeTaskServiceConfig.max_concurrent_subagents` remains available to standalone framework
+   consumers as a per-runtime scheduling width. It is not automatically the process-wide shared
+   capacity. A caller may derive the local width from the shared capacity, but the two authorities
+   must not maintain independent product counters.
+5. `SubagentExecutorConfig.max_concurrent_forks` remains a standalone compatibility fallback for
+   consumers that do not configure shared admission. EKO must not expose it as a second product
+   setting once shared admission is wired.
+6. `NestedDelegationPolicy` remains the sole depth policy. Framework consumers choose their own
+   maximum; EKO supplies `max_delegate_depth = 1` and `can_spawn_subagents = true` only for the
+   primary context. Child contexts receive the existing child policy and cannot delegate again.
+7. `KeyedExecutionAdmission` instances for AgentPool leases and SubagentRun leases remain
+   separate resource classes even though they use the same framework primitive. Agent instance
+   reuse, workspace retirement, and foreground execution must not be counted as SubagentRun
+   capacity.
+
+## Alternatives considered
+
+1. **Keep EKO's process Subagent governor and add more adapters.** Rejected because direct,
+   nested, Sync, and Fork paths would continue to have multiple authorities.
+2. **Delete framework local concurrency settings.** Rejected because standalone framework
+   consumers still need a per-runtime scheduling width and Fork fallback.
+3. **Put EKO's default, workspace, or UI policy in the framework.** Rejected because those are
+   application decisions and would pollute a reusable crate.
+4. **Extend the existing admission primitive and inject it into both framework runtimes.**
+   Accepted because it preserves framework ownership of lease/permit lifecycle while keeping
+   product capacity and key policy with the application.
+
+## Consequences
+
+- Framework gains one generic integration point for shared execution capacity without knowing
+  EKO or Subagent product policy.
+- EKO can expose one `max_concurrent_subagents` value and remove its duplicate Subagent process
+  governor and raw TaskRuntime/Executor bridging.
+- Standalone framework consumers retain existing local configuration and are not forced into a
+  process-global policy.
+- Tests must cover shared admission across TaskRuntime/direct dispatch, all execution modes,
+  cancellation, terminal release, close, and capacity rejection.
+- The framework default delegation depth remains a generic default; EKO's one-level rule belongs
+  in the application configuration and capability projection.
+
+## References
+
+## Implemented framework contract
+
+`echo_core::agent::ExecutionAdmission` composes keyed lease lifecycle with
+optional process capacity. Runtime services may inject it while retaining
+per-runtime wave width; `max_concurrent_forks` remains standalone fallback.
+EKO supplies product capacity and policy through its adapter.
+
+- `echo-agent/src/agent/admission.rs`
+- `echo-agent/src/agent/subagent/executor.rs`
+- `echo-agent/echo-core/src/tools/mod.rs`
+- `echo-agent/echo-orchestration/src/tasks/runtime_executor.rs`
+- `echo-agent/docs/adr/0015-keyed-execution-admission.md`
+- `echo-agent-cli/echo-agent-app-core/src/tasks/task_runtime/executor/limits.rs`
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0030-versioned-subagent-event-envelope
+
+# ADR 0030: Versioned Subagent Event Envelope
+
+- Status: Accepted
+- Date: 2026-09-04
+- Scope: `echo-core::agent::EventEnvelope`, `echo-agent::agent::subagent`
+
+## Context
+
+The Subagent executor already wrapped inner `AgentEvent` streams in `EventEnvelope`, but it
+discarded the envelope and re-emitted raw `SubagentEvent` values. Dispatch start, isolation, and
+terminal events were outside that inner stream. Consumers therefore received no common sequence,
+stable event id, timestamp, or parent link. A bounded broadcast receiver could lag without a
+Subagent-specific replay contract, and a GUI adapter had to reconstruct identity after receipt.
+
+## Decision
+
+1. `EventEnvelope` accepts a serializable payload while retaining `AgentEvent` as its default type.
+   All event families reuse the same identity validation, deterministic event id, canonical content
+   hash, timestamp, and payload-neutral trajectory validation.
+2. One outer Subagent dispatch attempt owns one `SubagentEventPublisher`. Its complete lifecycle,
+   including internal hook retries, uses one stream and one monotonic sequence.
+3. `SubagentEventPayload` hashes the Subagent invocation identity together with the raw event.
+   Task, attempt, plan revision, agent path, and parent execution come from existing lineage values;
+   applications must not reconstruct them from execution-id formatting.
+4. The existing raw event subscription remains a compatibility projection derived from envelopes.
+   Direct raw emission accepts registry events only; execution and uplink events require the active
+   attempt publisher. New consumers use `subscribe_envelopes` as the ordering and identity authority.
+5. The bus retains bounded general history, lifecycle/tool boundaries, and terminal snapshots.
+   `replay_after` returns a typed gap when its suffix is not contiguous, while
+   `replay_for_execution` discovers a retained stream even when its start was missed. The latest
+   retained terminal is returned separately for final-output reconciliation.
+
+## Alternatives
+
+- Add sequence numbers in each application adapter: rejected because loss before the adapter would
+  appear continuous.
+- Add common fields to every raw enum variant: rejected because start and terminal production still
+  would not share one sequencing authority and identity logic would be duplicated.
+- Make replay unbounded: rejected because model deltas can grow without limit in a long-running
+  local process.
+
+## Consequences
+
+Framework consumers can detect lag, replay retained boundaries, and reconcile terminal output
+without adopting EKO concepts. Raw listeners remain source compatible but do not provide ordering
+or recovery guarantees. Replay is an in-process bounded window, so embedding applications still
+own durable storage and product addressing.
 
 
 ---
@@ -18324,7 +18523,7 @@ carries:
 
 - `subagent_lineage: Option<SubagentLineage>` — an identity snapshot of the
   attempt (own role name/execution_id/run_id, parent agent, parent
-  execution_id, `root/<child>/...` tree path, task_id/attempt/plan_revision).
+  execution/event id, `root/<child>/...` tree path, task_id/attempt/plan_revision).
   `None` for primary agent invocations. The framework stamps it at dispatch;
   caller-stamped lineage fields (e.g. from `agent_tool`) take precedence.
 - `uplink: Option<SubagentUplinkFn>` — the uplink channel installed by the
@@ -18332,8 +18531,8 @@ carries:
   `register_subagent_message_tools()`) sends `report`/`escalate` to the
   parent or queue-only notes to sibling attempts; delivery never blocks the
   sender and returns a `SubagentUplinkReceipt`. The default sink delivers
-  through the shared control plane and emits
-  `SubagentEvent::UplinkReceived`; applications may install their own sink
+  through the shared control plane and emits an enveloped
+  `SubagentEvent::UplinkReceived` on the sender's active publisher; applications may install their own sink
   to own routing (journal, pause policy, ...). See ADR 0027 and
   `echo-agent-learning/examples/demo50_subagent_communication.rs`.
 
@@ -21018,6 +21217,37 @@ and finite primary-Agent turns. Both result surfaces expose it directly with
 `result.usage()` or `turn_receipt.usage()`. Applications do not need a
 source-named adapter, conversion trait, or parallel execution-usage DTO.
 
+## Versioned Execution Events
+
+`SubagentEventBus::subscribe_envelopes` is the authoritative execution-event
+transport. Each outer dispatch attempt owns one `SubagentEventPublisher`; start,
+isolation, displayable thinking/token deltas, usage, tool activity, and terminal
+events share one `stream_id` and monotonic `sequence`. Internal hook retries do
+not restart that sequence. `SubagentEventPayload::invocation` carries task,
+attempt, plan revision, agent path, and parent-execution correlation without
+parsing an execution-id string.
+
+The existing `subscribe` method remains a raw compatibility view derived from
+envelopes. Manual raw emission accepts registry events only and rejects execution
+variants, so it cannot become a second execution authority. New consumers that
+need ordering or recovery should use envelopes. Tool terminal envelopes
+point to their matching tool-start event; other execution events point to the
+dispatch start or an upstream parent event.
+
+The broadcast and replay windows are bounded. A lagging receiver observes
+Tokio's `Lagged` result, then calls `replay_after` for a known stream or
+`replay_for_execution` for an exact attempt whose start envelope was missed.
+Process-level consumers that may have missed an entire short attempt first call
+`retained_stream_ids` and `active_stream_ids`, then replay their union from each
+stream's own cursor (or zero for an unseen stream). If an active stream's whole
+replay suffix was evicted, `active_stream_anchor` retains its immutable dispatch
+identity so the consumer can persist an accurately addressed gap.
+`SubagentEventReplay::gap` explicitly reports when the retained suffix is not
+contiguous. High-volume thinking/token deltas may be absent after a gap, while
+retained lifecycle/tool boundaries and `terminal` allow state and final output
+to be reconciled. This is an in-process recovery window, not permanent storage;
+applications remain responsible for their own durable projections.
+
 
 ---
 
@@ -21167,6 +21397,12 @@ task policy may extend task metadata, but must preserve Team-owned metadata keys
 and may not rewrite dependency, member, or execution semantics.
 
 ## Design References
+
+Framework callers may inject `echo_core::agent::ExecutionAdmission` so
+`RuntimeTaskService` and `SubagentExecutor` share cross-entry capacity. Without
+it, per-runtime wave width and the standalone Fork fallback remain available.
+Delegation depth continues to use the single `NestedDelegationPolicy`; EKO
+provides product capacity and defaults through its application adapter.
 
 This split follows two mature orchestration patterns:
 
@@ -30193,6 +30429,11 @@ concerns.
 
 ## One authority
 
+`ExecutionAdmission` is the composition entry point and carries no EKO quota.
+`max_concurrent_subagents` remains standalone per-runtime width, while
+`max_concurrent_forks` remains the executor fallback when no shared admission
+is injected.
+
 The framework and application must share one meaning for a generic lifecycle or
 receipt. If a proposed adapter needs its own DAG traversal, status reducer,
 retry policy, or durable input lifecycle, the boundary is wrong. Reuse or extend
@@ -32474,6 +32715,169 @@ applications.
 - Example: `echo-agent-learning/examples/demo50_subagent_communication.rs`
   (no LLM required; end-to-end dispatch → sibling message → escalate →
   event observability → settlement).
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0029-shared-subagent-execution-admission
+
+# ADR 0029: Shared Subagent Execution Admission
+
+- Status: Proposed
+- Date: 2026-09-04
+- Scope: `echo-agent::agent::admission`, `echo-agent::agent::subagent`,
+  `echo-agent::echo-orchestration::tasks`
+
+## Context
+
+The framework already owns the reusable execution mechanisms needed by an Agent application:
+
+- `RuntimeTaskService` drives a revisioned task graph and applies a local per-runtime semaphore
+  for parallel task dispatch;
+- `NestedDelegationPolicy` carries delegation depth and whether a caller may spawn a child;
+- `SubagentExecutor` routes `Sync`, `Fork`, `Teammate`, and `Team` through one dispatch engine;
+- `KeyedExecutionAdmission` owns opaque-key leases, optional process permits, retirement fences,
+  close, and shutdown waiting.
+
+An application can nevertheless bypass a common Subagent limit when it combines these mechanisms:
+the task runtime may use one semaphore, the Subagent executor may use a Fork-only semaphore, and
+the application may add a third process governor. `Sync` can then bypass a Fork limit, and direct
+or nested `agent_tool` dispatch can bypass a TaskRuntime limit entirely.
+
+This is a generic execution-lifecycle problem. The framework must provide the shared admission
+composition point; the application must retain the meaning of its product capacity, key scope,
+and defaults.
+
+## Existing framework evidence
+
+- `echo-agent/echo-orchestration/src/tasks/runtime_executor.rs` already owns task graph revision
+  safe points, ready waves, local concurrency, cancellation, and terminal settlement.
+- `echo-agent/echo-core/src/tools/mod.rs` already owns `NestedDelegationPolicy` and its child
+  policy transition.
+- `echo-agent/src/agent/subagent/executor.rs` already provides one dispatch engine for all
+  Subagent execution modes and currently keeps `max_concurrent_forks` as a Fork-local semaphore.
+- `echo-agent/src/agent/admission.rs` already provides the lease/permit lifecycle that EKO's
+  `AgentPoolAdmission` wraps.
+
+## Decision
+
+1. Extend the existing framework admission boundary so a caller can provide one shared execution
+   admission to both `RuntimeTaskService` and `SubagentExecutor`. Do not create an EKO-specific
+   `SubagentAdmission` state machine.
+2. A shared admission lease represents one active execution identity, normally a unique
+   `SubagentRun`/attempt key. Its process semaphore and lease lifecycle are owned by framework
+   primitives; the application supplies the capacity and key namespace.
+3. When a shared admission is configured, every Subagent execution mode that creates a
+   `SubagentRun` (`Sync`, `Fork`, `Teammate`, and concrete Team members) obtains the same shared
+   lease. `max_concurrent_forks` is not a bypass path in this mode.
+4. `RuntimeTaskServiceConfig.max_concurrent_subagents` remains available to standalone framework
+   consumers as a per-runtime scheduling width. It is not automatically the process-wide shared
+   capacity. A caller may derive the local width from the shared capacity, but the two authorities
+   must not maintain independent product counters.
+5. `SubagentExecutorConfig.max_concurrent_forks` remains a standalone compatibility fallback for
+   consumers that do not configure shared admission. EKO must not expose it as a second product
+   setting once shared admission is wired.
+6. `NestedDelegationPolicy` remains the sole depth policy. Framework consumers choose their own
+   maximum; EKO supplies `max_delegate_depth = 1` and `can_spawn_subagents = true` only for the
+   primary context. Child contexts receive the existing child policy and cannot delegate again.
+7. `KeyedExecutionAdmission` instances for AgentPool leases and SubagentRun leases remain
+   separate resource classes even though they use the same framework primitive. Agent instance
+   reuse, workspace retirement, and foreground execution must not be counted as SubagentRun
+   capacity.
+
+## Alternatives considered
+
+1. **Keep EKO's process Subagent governor and add more adapters.** Rejected because direct,
+   nested, Sync, and Fork paths would continue to have multiple authorities.
+2. **Delete framework local concurrency settings.** Rejected because standalone framework
+   consumers still need a per-runtime scheduling width and Fork fallback.
+3. **Put EKO's default, workspace, or UI policy in the framework.** Rejected because those are
+   application decisions and would pollute a reusable crate.
+4. **Extend the existing admission primitive and inject it into both framework runtimes.**
+   Accepted because it preserves framework ownership of lease/permit lifecycle while keeping
+   product capacity and key policy with the application.
+
+## Consequences
+
+- Framework gains one generic integration point for shared execution capacity without knowing
+  EKO or Subagent product policy.
+- EKO can expose one `max_concurrent_subagents` value and remove its duplicate Subagent process
+  governor and raw TaskRuntime/Executor bridging.
+- Standalone framework consumers retain existing local configuration and are not forced into a
+  process-global policy.
+- Tests must cover shared admission across TaskRuntime/direct dispatch, all execution modes,
+  cancellation, terminal release, close, and capacity rejection.
+- The framework default delegation depth remains a generic default; EKO's one-level rule belongs
+  in the application configuration and capability projection.
+
+## References
+
+## Implemented framework contract
+
+`echo_core::agent::ExecutionAdmission` composes keyed lease lifecycle with
+optional process capacity. Runtime services may inject it while retaining
+per-runtime wave width; `max_concurrent_forks` remains standalone fallback.
+EKO supplies product capacity and policy through its adapter.
+
+- `echo-agent/src/agent/admission.rs`
+- `echo-agent/src/agent/subagent/executor.rs`
+- `echo-agent/echo-core/src/tools/mod.rs`
+- `echo-agent/echo-orchestration/src/tasks/runtime_executor.rs`
+- `echo-agent/docs/adr/0015-keyed-execution-admission.md`
+- `echo-agent-cli/echo-agent-app-core/src/tasks/task_runtime/executor/limits.rs`
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0030-versioned-subagent-event-envelope
+
+# ADR 0030: Versioned Subagent Event Envelope
+
+- Status: Accepted
+- Date: 2026-09-04
+- Scope: `echo-core::agent::EventEnvelope`, `echo-agent::agent::subagent`
+
+## Context
+
+The Subagent executor already wrapped inner `AgentEvent` streams in `EventEnvelope`, but it
+discarded the envelope and re-emitted raw `SubagentEvent` values. Dispatch start, isolation, and
+terminal events were outside that inner stream. Consumers therefore received no common sequence,
+stable event id, timestamp, or parent link. A bounded broadcast receiver could lag without a
+Subagent-specific replay contract, and a GUI adapter had to reconstruct identity after receipt.
+
+## Decision
+
+1. `EventEnvelope` accepts a serializable payload while retaining `AgentEvent` as its default type.
+   All event families reuse the same identity validation, deterministic event id, canonical content
+   hash, timestamp, and payload-neutral trajectory validation.
+2. One outer Subagent dispatch attempt owns one `SubagentEventPublisher`. Its complete lifecycle,
+   including internal hook retries, uses one stream and one monotonic sequence.
+3. `SubagentEventPayload` hashes the Subagent invocation identity together with the raw event.
+   Task, attempt, plan revision, agent path, and parent execution come from existing lineage values;
+   applications must not reconstruct them from execution-id formatting.
+4. The existing raw event subscription remains a compatibility projection derived from envelopes.
+   Direct raw emission accepts registry events only; execution and uplink events require the active
+   attempt publisher. New consumers use `subscribe_envelopes` as the ordering and identity authority.
+5. The bus retains bounded general history, lifecycle/tool boundaries, and terminal snapshots.
+   `replay_after` returns a typed gap when its suffix is not contiguous, while
+   `replay_for_execution` discovers a retained stream even when its start was missed. The latest
+   retained terminal is returned separately for final-output reconciliation.
+
+## Alternatives
+
+- Add sequence numbers in each application adapter: rejected because loss before the adapter would
+  appear continuous.
+- Add common fields to every raw enum variant: rejected because start and terminal production still
+  would not share one sequencing authority and identity logic would be duplicated.
+- Make replay unbounded: rejected because model deltas can grow without limit in a long-running
+  local process.
+
+## Consequences
+
+Framework consumers can detect lag, replay retained boundaries, and reconcile terminal output
+without adopting EKO concepts. Raw listeners remain source compatible but do not provide ordering
+or recovery guarantees. Replay is an in-process bounded window, so embedding applications still
+own durable storage and product addressing.
 
 
 ---

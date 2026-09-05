@@ -217,4 +217,20 @@ export const frameworkAdrDocs = [
     },
     filePath: './content/echo-agent/adr/0027-subagent-communication-primitives.md',
   },
+  {
+    slug: 'adr-0029-shared-subagent-execution-admission',
+    title: {
+      zh: 'ADR 0029: Shared Subagent Execution Admission',
+      en: 'ADR 0029: Shared Subagent Execution Admission',
+    },
+    filePath: './content/echo-agent/adr/0029-shared-subagent-execution-admission.md',
+  },
+  {
+    slug: 'adr-0030-versioned-subagent-event-envelope',
+    title: {
+      zh: 'ADR 0030: Versioned Subagent Event Envelope',
+      en: 'ADR 0030: Versioned Subagent Event Envelope',
+    },
+    filePath: './content/echo-agent/adr/0030-versioned-subagent-event-envelope.md',
+  },
 ];

@@ -112,6 +112,8 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0025: Deterministic Command-Cell Watcher | echo-agent 文档: https://echo-agent.dev/docs/adr-0025-deterministic-command-cell-watcher
 - ADR 0026: SKILL.md Uses Official agentskills.io Fields Only | echo-agent 文档: https://echo-agent.dev/docs/adr-0026-official-skill-frontmatter-only
 - ADR 0027: Subagent Communication Primitives (Uplink + Shared Control Plane) | echo-agent 文档: https://echo-agent.dev/docs/adr-0027-subagent-communication-primitives
+- ADR 0029: Shared Subagent Execution Admission | echo-agent 文档: https://echo-agent.dev/docs/adr-0029-shared-subagent-execution-admission
+- ADR 0030: Versioned Subagent Event Envelope | echo-agent 文档: https://echo-agent.dev/docs/adr-0030-versioned-subagent-event-envelope
 - 知识库概述 | echo-agent 文档: https://echo-agent.dev/docs/knowledge-overview
 - Agent 设计模式 | echo-agent 文档: https://echo-agent.dev/docs/agent-patterns
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
@@ -197,6 +199,8 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0025: Deterministic Command-Cell Watcher | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0025-deterministic-command-cell-watcher
 - ADR 0026: SKILL.md Uses Official agentskills.io Fields Only | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0026-official-skill-frontmatter-only
 - ADR 0027: Subagent Communication Primitives (Uplink + Shared Control Plane) | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0027-subagent-communication-primitives
+- ADR 0029: Shared Subagent Execution Admission | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0029-shared-subagent-execution-admission
+- ADR 0030: Versioned Subagent Event Envelope | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0030-versioned-subagent-event-envelope
 - Knowledge Base Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/knowledge-overview
 - Agent Design Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/agent-patterns
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive
