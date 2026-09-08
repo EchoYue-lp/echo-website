@@ -42,7 +42,7 @@ TUI, GUI, CLI/JSONL, and channel adapters use one `ApplicationServices` composit
 
 ## Extension control
 
-Skills, Plugins, MCP servers, Hooks, LSP, and Browser controls enter one application-core authority from the GUI, TUI, CLI/JSONL, and channels. EKO consumes only independent Skills installed under `~/.eko/skills/` and Skills supplied by plugin generations; it no longer bundles a catalog, default active set, baseline, or Tauri Skill resource. Version 3 `enabled-skills.json` stores only external `{enabled}` choices. Typed receipts return settled or degraded, and the next operation, restart, or workspace load converges again.
+Skills, Plugins, MCP servers, Hooks, LSP, and Browser controls enter one application-core authority from the GUI, TUI, CLI/JSONL, and channels. EKO consumes independent Skills installed under `~/.eko/skills/`, project Skills under the current project's `.eko/skills/`, and Skills supplied by plugin generations; it no longer bundles a catalog, default active set, baseline, or Tauri Skill resource. Version 3 `enabled-skills.json` stores only user `{enabled}` choices. The project's root-to-working-directory `AGENTS.md` chain enters the same instruction projection. Name collisions use project Skills, plugin Skills, then user Skills as the precedence order. Typed receipts return settled or degraded, and the next operation, restart, or workspace load converges again.
 
 Portable Plugin components are parsed once into an immutable framework `PreparedPluginSet`. EKO captures exact workspace targets and adds only product policy for executable Subagents, LSP processes, scoped monitors, themes, and output styles. Rollback uses the prepared generation rather than rereading changed files.
 
