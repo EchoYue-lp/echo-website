@@ -9,7 +9,7 @@ EKO runs on the user's own machine. Its product layer stores state in ordinary f
 - Every store-backed turn eagerly owns a TaskRun. Typed execution provenance distinguishes an internal conversation turn from an orchestrated run; a planless conversation run keeps its journal but stays out of the task UI.
 - Ordinary chat also uses its own `ChatEventLog` for input/output delivery and surface replay. It can correlate with the TaskRuntime journal for the same turn, but neither journal replaces the other.
 - Each workspace owns its local memory Store, one generation-bound `MemoryLayerManager`, and an immutable hot-memory projection consumed at model safe points.
-- `enabled-skills.json` is the sole persistent Skill enablement fact. It stores only the atomically written `{category, enabled, baseline}` flat map; runtime reconciliation returns immediate target receipts and retains no generation or repair debt.
+- `enabled-skills.json` is the sole persistent enablement fact for external Skills. Version 3 stores only the atomically written `{enabled}` flat map. EKO no longer bundles Skills, creates a default active set, or injects a baseline; runtime reconciliation returns immediate target receipts and retains no generation or repair debt.
 - Artifacts and traces remain workspace-scoped. Trace data is diagnostic and does not determine whether a TaskRun or PlanTask committed.
 - TUI, GUI, CLI/JSONL, and channels access these authorities through the same application core.
 

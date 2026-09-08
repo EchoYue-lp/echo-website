@@ -17477,7 +17477,7 @@ TUI、GUI、CLI/JSONL 与 channel adapter 使用同一个 `ApplicationServices` 
 
 ## Extension 控制
 
-Skills、Plugins、MCP servers、Hooks、LSP 与 Browser 控制从 GUI、TUI、CLI/JSONL 和 channel 进入同一个应用核心权威。Skill 启用状态使用原子写入的 flat policy，再立即 reconcile 所有运行时目标；typed receipt 返回 settled 或 degraded，不保留 generation CAS 与 repair debt。损坏配置 fail-open 到默认启用集，下一次操作、重启或 workspace load 会重新收敛。内置 catalog 为 24 个，TUI 与 GUI 都能在当前会话显式激活 Skill，安装态 GUI 从 Tauri resource dir 加载内置目录。
+Skills、Plugins、MCP servers、Hooks、LSP 与 Browser 控制从 GUI、TUI、CLI/JSONL 和 channel 进入同一个应用核心权威。EKO 只消费用户安装到 `~/.eko/skills/` 的独立 Skill 与 Plugin generation 提供的 Skill，不再捆绑 catalog、默认启用集、baseline 或 Tauri Skill resource。`enabled-skills.json` version 3 只保存外部 Skill 的 `{enabled}` 选择；typed receipt 返回 settled 或 degraded，下一次操作、重启或 workspace load 会重新收敛。
 
 portable Plugin component 只解析一次，形成不可变 framework `PreparedPluginSet`。EKO 捕获精确 workspace target，只增加 executable Subagent、LSP process、scoped monitor、theme 与 output style 产品策略。rollback 使用 prepared generation，不重新读取可能已变化的文件。
 
@@ -17505,7 +17505,7 @@ EKO 面向用户自己的机器，产品层使用普通文件或内存保存状�
 - 每个 store-backed turn 都急切绑定 TaskRun。typed execution provenance 区分内部 conversation turn 与 orchestrated run；无 plan conversation run 保留 journal，但不进入任务 UI。
 - 普通 chat 同时使用独立 `ChatEventLog` 保存输入输出交付与 surface 重放。它和 TaskRuntime journal 可以关联同一 turn，但互不替代。
 - 每个 workspace 拥有本地 memory Store、一个 generation-bound `MemoryLayerManager` 和一个在 model safe point 消费的 immutable hot-memory projection。
-- `enabled-skills.json` 是 Skill 启用状态的唯一持久事实，只保存 `{category, enabled, baseline}` flat map 并原子写入；运行时 reconcile 只返回即时 target receipt，不保留 generation 或 repair debt。
+- `enabled-skills.json` 是外部 Skill 启用状态的唯一持久事实，version 3 只保存 `{enabled}` flat map 并原子写入；EKO 不再捆绑 Skill、生成默认启用集或注入 baseline，运行时 reconcile 只返回即时 target receipt，不保留 generation 或 repair debt。
 - artifact 与 trace 保持 workspace scope；trace 只用于诊断，不能判定 TaskRun 或 PlanTask 是否已提交。
 - TUI、GUI、CLI/JSONL 与 channel 通过同一应用核心访问这些权威。
 
@@ -34775,7 +34775,7 @@ TUI, GUI, CLI/JSONL, and channel adapters use one `ApplicationServices` composit
 
 ## Extension control
 
-Skills, Plugins, MCP servers, Hooks, LSP, and Browser controls enter one application-core authority from the GUI, TUI, CLI/JSONL, and channels. Skill enablement uses an atomically written flat policy followed by immediate reconciliation of every runtime target; typed receipts return settled or degraded and retain no generation CAS or repair debt. Corrupt policy fails open to the default active set, and the next operation, restart, or workspace load converges again. The bundled catalog contains 24 Skills, TUI and GUI can explicitly activate a Skill in the current conversation, and packaged GUI builds load the catalog from Tauri's resource directory.
+Skills, Plugins, MCP servers, Hooks, LSP, and Browser controls enter one application-core authority from the GUI, TUI, CLI/JSONL, and channels. EKO consumes only independent Skills installed under `~/.eko/skills/` and Skills supplied by plugin generations; it no longer bundles a catalog, default active set, baseline, or Tauri Skill resource. Version 3 `enabled-skills.json` stores only external `{enabled}` choices. Typed receipts return settled or degraded, and the next operation, restart, or workspace load converges again.
 
 Portable Plugin components are parsed once into an immutable framework `PreparedPluginSet`. EKO captures exact workspace targets and adds only product policy for executable Subagents, LSP processes, scoped monitors, themes, and output styles. Rollback uses the prepared generation rather than rereading changed files.
 
@@ -34803,7 +34803,7 @@ EKO runs on the user's own machine. Its product layer stores state in ordinary f
 - Every store-backed turn eagerly owns a TaskRun. Typed execution provenance distinguishes an internal conversation turn from an orchestrated run; a planless conversation run keeps its journal but stays out of the task UI.
 - Ordinary chat also uses its own `ChatEventLog` for input/output delivery and surface replay. It can correlate with the TaskRuntime journal for the same turn, but neither journal replaces the other.
 - Each workspace owns its local memory Store, one generation-bound `MemoryLayerManager`, and an immutable hot-memory projection consumed at model safe points.
-- `enabled-skills.json` is the sole persistent Skill enablement fact. It stores only the atomically written `{category, enabled, baseline}` flat map; runtime reconciliation returns immediate target receipts and retains no generation or repair debt.
+- `enabled-skills.json` is the sole persistent enablement fact for external Skills. Version 3 stores only the atomically written `{enabled}` flat map. EKO no longer bundles Skills, creates a default active set, or injects a baseline; runtime reconciliation returns immediate target receipts and retains no generation or repair debt.
 - Artifacts and traces remain workspace-scoped. Trace data is diagnostic and does not determine whether a TaskRun or PlanTask committed.
 - TUI, GUI, CLI/JSONL, and channels access these authorities through the same application core.
 

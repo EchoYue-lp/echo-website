@@ -42,7 +42,7 @@ TUI, GUI, CLI/JSONL, and channel adapters use one `ApplicationServices` composit
 
 ## Extension control
 
-Skills, Plugins, MCP servers, Hooks, LSP, and Browser controls enter one application-core authority from the GUI, TUI, CLI/JSONL, and channels. Skill enablement uses an atomically written flat policy followed by immediate reconciliation of every runtime target; typed receipts return settled or degraded and retain no generation CAS or repair debt. Corrupt policy fails open to the default active set, and the next operation, restart, or workspace load converges again. The bundled catalog contains 24 Skills, TUI and GUI can explicitly activate a Skill in the current conversation, and packaged GUI builds load the catalog from Tauri's resource directory.
+Skills, Plugins, MCP servers, Hooks, LSP, and Browser controls enter one application-core authority from the GUI, TUI, CLI/JSONL, and channels. EKO consumes only independent Skills installed under `~/.eko/skills/` and Skills supplied by plugin generations; it no longer bundles a catalog, default active set, baseline, or Tauri Skill resource. Version 3 `enabled-skills.json` stores only external `{enabled}` choices. Typed receipts return settled or degraded, and the next operation, restart, or workspace load converges again.
 
 Portable Plugin components are parsed once into an immutable framework `PreparedPluginSet`. EKO captures exact workspace targets and adds only product policy for executable Subagents, LSP processes, scoped monitors, themes, and output styles. Rollback uses the prepared generation rather than rereading changed files.
 

@@ -42,7 +42,7 @@ TUI、GUI、CLI/JSONL 与 channel adapter 使用同一个 `ApplicationServices` 
 
 ## Extension 控制
 
-Skills、Plugins、MCP servers、Hooks、LSP 与 Browser 控制从 GUI、TUI、CLI/JSONL 和 channel 进入同一个应用核心权威。Skill 启用状态使用原子写入的 flat policy，再立即 reconcile 所有运行时目标；typed receipt 返回 settled 或 degraded，不保留 generation CAS 与 repair debt。损坏配置 fail-open 到默认启用集，下一次操作、重启或 workspace load 会重新收敛。内置 catalog 为 24 个，TUI 与 GUI 都能在当前会话显式激活 Skill，安装态 GUI 从 Tauri resource dir 加载内置目录。
+Skills、Plugins、MCP servers、Hooks、LSP 与 Browser 控制从 GUI、TUI、CLI/JSONL 和 channel 进入同一个应用核心权威。EKO 只消费用户安装到 `~/.eko/skills/` 的独立 Skill 与 Plugin generation 提供的 Skill，不再捆绑 catalog、默认启用集、baseline 或 Tauri Skill resource。`enabled-skills.json` version 3 只保存外部 Skill 的 `{enabled}` 选择；typed receipt 返回 settled 或 degraded，下一次操作、重启或 workspace load 会重新收敛。
 
 portable Plugin component 只解析一次，形成不可变 framework `PreparedPluginSet`。EKO 捕获精确 workspace target，只增加 executable Subagent、LSP process、scoped monitor、theme 与 output style 产品策略。rollback 使用 prepared generation，不重新读取可能已变化的文件。
 

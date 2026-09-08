@@ -819,7 +819,7 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "319250d0bd84d54dc46f5972dea4e024f6cd611f",
+    "reviewedRevision": "823ffca1ea7cd7e834963e21acbff3377e9c4ed0",
     "status": "current-reviewed",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "sourceFiles": [
@@ -949,11 +949,11 @@
       },
       {
         "sourcePath": "docs/en/adr/0032-enabled-skill-runtime-authority.md",
-        "sha256": "8a9fd2e100037ef970cb24038cb0352723173c5a83d56ecefc49ac556543d356"
+        "sha256": "8e3af53b82583c6944d0eab19e98a710f68d1654049a58f70b0cb61d9d112a82"
       },
       {
         "sourcePath": "docs/en/adr/0033-skill-catalog-contraction-and-official-frontmatter.md",
-        "sha256": "1443925e502803a3a3ac2ff8e9475adb7e504e08b45cb418f5e918adc6fff99d"
+        "sha256": "b4914140b7d856a4430ff77b2e6ff79ea8b06e6eaedf1b0a463a52912d7cd1ef"
       },
       {
         "sourcePath": "docs/en/adr/0034-full-direction-agent-communication-matrix.md",
@@ -965,11 +965,15 @@
       },
       {
         "sourcePath": "docs/en/adr/0036-skill-policy-simplification.md",
-        "sha256": "a424ef0c53cc9324cba90242a55986d470ae75a5d50a22a8279b656e615ef49d"
+        "sha256": "14566430085f8a30dcae81f52ee851a0bf6a90baa5feddb91199a8d58563b13b"
       },
       {
         "sourcePath": "docs/en/adr/0037-unified-turn-run-binding.md",
         "sha256": "1064d15f407cb600430d1123532109e4dbea53b643879d5aa7b9370f905bf9c5"
+      },
+      {
+        "sourcePath": "docs/en/adr/0038-builtin-creator-skills.md",
+        "sha256": "578499106c81b382f0cdae5fa962ea5ef55fd56aa5f590e46c6c6c0f61cda843"
       },
       {
         "sourcePath": "docs/en/adr/0038-unified-task-subagent-execution.md",
@@ -984,12 +988,16 @@
         "sha256": "c1cc4e6d03c5581721a7662202c33c40d49eeac2cea242b135ebf01c1e20cdb4"
       },
       {
+        "sourcePath": "docs/en/adr/0041-external-only-skills.md",
+        "sha256": "c8fb9b19a2c9ed46864130f2f281d9e28980c3b311d6e2377af3c6611992174b"
+      },
+      {
         "sourcePath": "docs/en/architecture/overview.md",
-        "sha256": "9ccb36bde9210c68c078a37bfee93bf4d4d0a201cd803e89380cd61c0eca0f6e"
+        "sha256": "234efb80ed0bac2bca61495f8e05a970b13918d7ca435fb2d62890e829bd4b32"
       },
       {
         "sourcePath": "docs/en/architecture/persistence.md",
-        "sha256": "aedc16c200361da6d978d0165cfc98163bb2413dd27f9f43326d66f4b2544c5d"
+        "sha256": "654e064f5c030c9865ff3d7a6e2c964ad20fb955cb2f9c007322c6f19cc99b8b"
       },
       {
         "sourcePath": "docs/en/architecture/providers.md",
@@ -1001,11 +1009,11 @@
       },
       {
         "sourcePath": "docs/en/configuration.md",
-        "sha256": "cdc619fbc869028680b3b85d3b8a0d253b12bb3eb01154e517a5ae627420f7cf"
+        "sha256": "877d76f4c7fce6978f88eb8665cc516075459f557301308de060ac2baadd3a59"
       },
       {
         "sourcePath": "docs/en/features.md",
-        "sha256": "6c52e772f1100ddfc2db46e294d7975389aa8bc5e4641a6f8cb5967e904196f1"
+        "sha256": "64bd23d3e5c6aa91ae96c95f55e4bee366ea49c6c39739bca63d700a669da7b4"
       },
       {
         "sourcePath": "docs/en/getting-started.md",
@@ -1013,11 +1021,11 @@
       },
       {
         "sourcePath": "docs/en/operations/skill-sync.md",
-        "sha256": "d72294cc1fb832d5f4656a7a470d8c72a4b18d0e9adac7eda0c527e4db45d3f1"
+        "sha256": "27e9632cf938921c813549dea0f1a0b8135fed98211376a50b0cfd7a19ca70d9"
       },
       {
         "sourcePath": "docs/en/project-status.md",
-        "sha256": "7a2fcbd52f583bd50202a04f00e532b4347d083a34a69e25f5170dad64b20491"
+        "sha256": "cc400861ad02dd2473fb1c7e675bb0ee596e180db1e8b3b155775d8ab6a13624"
       },
       {
         "sourcePath": "docs/en/README.md",
@@ -1149,11 +1157,11 @@
       },
       {
         "sourcePath": "docs/zh/adr/0032-enabled-skill-runtime-authority.md",
-        "sha256": "74d0967821ed142013bd971765981cf44e54e1529262836bcc93b98f4a53cc8b"
+        "sha256": "7de11615786f92493e64608998aa5cb2f8caf57db2b322775dab48b0855b7108"
       },
       {
         "sourcePath": "docs/zh/adr/0033-skill-catalog-contraction-and-official-frontmatter.md",
-        "sha256": "58e726bb3ac30d1777aca0c52a8ca5b8aa7764bcc9df1d608d8e818777ad805a"
+        "sha256": "677850fa673210c01abe845c94d7cd6372e8621cf855ff03e1ef407133eb93dd"
       },
       {
         "sourcePath": "docs/zh/adr/0034-full-direction-agent-communication-matrix.md",
@@ -1165,11 +1173,15 @@
       },
       {
         "sourcePath": "docs/zh/adr/0036-skill-policy-simplification.md",
-        "sha256": "ba9f8d196b49800c790af78775339e60d91a66c64a7cbf18e6f21f6150240de0"
+        "sha256": "47e96e4418a6946cfa0913ff1fbfc7df4e0d90268288ea57924295cfa03e4554"
       },
       {
         "sourcePath": "docs/zh/adr/0037-unified-turn-run-binding.md",
         "sha256": "30a29a313de80e8ff0873df0e60f964a82c6632b3133f3795d11ca0d0d188d8f"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0038-builtin-creator-skills.md",
+        "sha256": "b0592508da90744ad1a0c16217f0593c5f2eb6c6a81c810129df741ec3a66d5f"
       },
       {
         "sourcePath": "docs/zh/adr/0038-unified-task-subagent-execution.md",
@@ -1184,12 +1196,16 @@
         "sha256": "411825587802176b0fd04c9b6b197beb74224698bc704c34453b9f89e9e3f0d4"
       },
       {
+        "sourcePath": "docs/zh/adr/0041-external-only-skills.md",
+        "sha256": "1e09679736eb08bc47a14c3044590850ab57f8ce1b1839b65255ed24fc401b3f"
+      },
+      {
         "sourcePath": "docs/zh/architecture/overview.md",
-        "sha256": "5a84ccb6616bcac03570595765759639aee9caa6a7c8602c7422add5c2120f8b"
+        "sha256": "dd4a90e1c451fb5d1a45fd67b93e76177c4ceeb644986dc6f15fa383b7226da2"
       },
       {
         "sourcePath": "docs/zh/architecture/persistence.md",
-        "sha256": "4974ddcf223a37a46e2bd7760daba42105567340b675afc7fe5fe3f874ee12ad"
+        "sha256": "9166e829fb856c6b5a6c49a334293caa48a36ffb78086913e81822eb35a6b49c"
       },
       {
         "sourcePath": "docs/zh/architecture/providers.md",
@@ -1201,11 +1217,11 @@
       },
       {
         "sourcePath": "docs/zh/configuration.md",
-        "sha256": "36742734a3caaab6641fefb28ad7a59463d5fa21f0eddb8ce4407d996c726b17"
+        "sha256": "7feb3acb70ee8f057787164c255c9dfaa80359aad471b3065c892774369a951c"
       },
       {
         "sourcePath": "docs/zh/features.md",
-        "sha256": "b5b63aed8009862073d1520c98c53fc8087e12c0c366c2acc20198f1b992b8f4"
+        "sha256": "5c0525bcc0bf502a3d181a8535432c5a55f161623d0cc2a8a93afa14d503149a"
       },
       {
         "sourcePath": "docs/zh/getting-started.md",
@@ -1213,11 +1229,11 @@
       },
       {
         "sourcePath": "docs/zh/operations/skill-sync.md",
-        "sha256": "b2277f9f866f4e7490cec00f9673ff849041444ccca8385d6ae9c8344f323d71"
+        "sha256": "891521e875363ef6b130ad7857cdb3388f989b8dbe433ca702deed7434f1a99a"
       },
       {
         "sourcePath": "docs/zh/project-status.md",
-        "sha256": "eda4e2b14122496d0cf79d52a77949d7b121a742466c289411db1aa414dd234a"
+        "sha256": "9e5673613363d10005eb6ef75b87d2d33c6cbaf220ccbe0c41a835a37e221c71"
       },
       {
         "sourcePath": "docs/zh/README.md",
@@ -1227,7 +1243,7 @@
     "files": [
       {
         "destination": "src/docs/content/eko/en/capabilities.md",
-        "sha256": "bd4523578b1b465a4ca1a433ff0f332be5814686af81372aeb522c544453bcbe"
+        "sha256": "d7455a4cadf443cd00e2f1c15756b4252dbab5d697e4ad9e5656259d83b764bf"
       },
       {
         "destination": "src/docs/content/eko/en/getting-started.md",
@@ -1239,11 +1255,11 @@
       },
       {
         "destination": "src/docs/content/eko/en/storage.md",
-        "sha256": "c7011dbdc1cd6f6dd72c6ee0100457a27f57e55dd7391be7cc0f01823a9505f0"
+        "sha256": "27b3aa17c153dfaeeb329246aff189fc552a931117221f8381e861cc07ea0353"
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "58293e09801e4c8763158f8edde384ce7ef52b245f424ee1c47ab9bed488a7b5"
+        "sha256": "385c7249e5139127877c5649ad84a9bbd743b95e088e4e1bc00fc07b5d300c9e"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
@@ -1255,7 +1271,7 @@
       },
       {
         "destination": "src/docs/content/eko/zh/storage.md",
-        "sha256": "acce8dec29224328623876227d0e642d73d59081b085a9728665df7451e16baf"
+        "sha256": "4866b57b851241b23490f90e6daf1f849864e36bff16741be5f100ef95576690"
       }
     ]
   }
