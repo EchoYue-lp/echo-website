@@ -6,6 +6,10 @@ The website is a presentation layer. Framework behavior is authoritative in
 [`echo-agent`](https://github.com/EchoYue-lp/echo-agent), and EKO product behavior is authoritative
 in [`echo-agent-cli`](https://github.com/EchoYue-lp/echo-agent-cli).
 
+The framework's cross-language SDK product, protocol contracts, and Host adapters are maintained in
+the independent [`echo-agent-sdk`](https://github.com/EchoYue-lp/echo-agent-sdk) repository. This
+site links to that repository rather than copying its contract or implementation.
+
 ## Requirements
 
 - Node.js 22.22.0 (`.nvmrc`)
