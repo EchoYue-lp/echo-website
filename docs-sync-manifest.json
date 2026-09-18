@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "94803b09057e86f4446c50664596b1973f9b90cb",
+    "revision": "c08e327cea671f7cc71472927f3b687bdbf5c57a",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -18,7 +18,7 @@
       {
         "sourcePath": "docs/en/03-memory.md",
         "destination": "src/docs/content/echo-agent/en/03-memory.md",
-        "sha256": "fa49b81213e7b75f1ba0b82c6188dfb167e0271d0f37fef6e3abc257588f6209"
+        "sha256": "60f986cd1eabf8b737abeca2fe345764375c5dc7b97ffc90f1dc088e00613378"
       },
       {
         "sourcePath": "docs/en/04-compression.md",
@@ -38,22 +38,22 @@
       {
         "sourcePath": "docs/en/07-skills.md",
         "destination": "src/docs/content/echo-agent/en/07-skills.md",
-        "sha256": "7df5c7301f70fccfa9d001a314ae1af3cfdc9a849a43130163d1c533a7b6f457"
+        "sha256": "766ebf64d254adad2ca25fad50b6a3235312c29000006a4b81477f002e7e8794"
       },
       {
         "sourcePath": "docs/en/08-mcp.md",
         "destination": "src/docs/content/echo-agent/en/08-mcp.md",
-        "sha256": "c4db3fc7dd5640e79fc4859bff6a00ec2dd34f106f0cef4321db3ec9fa73aa4a"
+        "sha256": "a1740309fd7d4cd3b2ea2ee8e75f0effa20047bfa4072b88490705568713e598"
       },
       {
         "sourcePath": "docs/en/09-tasks.md",
         "destination": "src/docs/content/echo-agent/en/09-tasks.md",
-        "sha256": "b758ea0c0168dc1e5bf65f1702ead8d46ee97001cbdeb19586198908f757290e"
+        "sha256": "84a20b30ec1b0b1845aa5642c8a5b33d5f1ed9bb9245ce369eba56a9c04a3fa6"
       },
       {
         "sourcePath": "docs/en/10-streaming.md",
         "destination": "src/docs/content/echo-agent/en/10-streaming.md",
-        "sha256": "1c1decfac3c872a43f70fc31ae147140379c6360f0477da83f7e6427c816ddd4"
+        "sha256": "fd0be95db49f545ae0db6abc3cbc35b8a312a66f28c4299a40ae3ea74883cfe3"
       },
       {
         "sourcePath": "docs/en/11-structured-output.md",
@@ -78,12 +78,12 @@
       {
         "sourcePath": "docs/en/15-im-channels.md",
         "destination": "src/docs/content/echo-agent/en/15-im-channels.md",
-        "sha256": "b930af7eea116fc970151c479b6d8b2f466d293687bd9762a26039275d206471"
+        "sha256": "453ce784b73efbaca6dc1da33ac4b5bc58fecfb3d7da4bbdcf29e20b8049083c"
       },
       {
         "sourcePath": "docs/en/17-graph-workflow.md",
         "destination": "src/docs/content/echo-agent/en/17-graph-workflow.md",
-        "sha256": "a6b5b53a409bf4dd280c72bee937a58993325198077c961e7c93a46894a3c3ee"
+        "sha256": "2b2cf88a4ab37495118089413f9b13628d5ef175962a18259657f0370e3b666b"
       },
       {
         "sourcePath": "docs/en/18-guard-system.md",
@@ -108,12 +108,12 @@
       {
         "sourcePath": "docs/en/23-hooks.md",
         "destination": "src/docs/content/echo-agent/en/23-hooks.md",
-        "sha256": "503923a5c90c20e8c45572ac6536ae25f47d254f18f867f8ca751c855a83ff30"
+        "sha256": "7faeae92e8588e7cdbec6e94ae48696e0e244f9cde6eaebb5813cf05106e1592"
       },
       {
         "sourcePath": "docs/en/24-eval-system.md",
         "destination": "src/docs/content/echo-agent/en/24-eval-system.md",
-        "sha256": "521b1e680617ca26ca425431eadc6959256b07a302fc24b4af9736b1f40db53f"
+        "sha256": "d8c6ac45cd966a022982c7d9c241b30e1c4a8c2f72838b1446239bdc41b49bc9"
       },
       {
         "sourcePath": "docs/en/25-self-improvement.md",
@@ -123,12 +123,12 @@
       {
         "sourcePath": "docs/en/26-multi-agent.md",
         "destination": "src/docs/content/echo-agent/en/26-multi-agent.md",
-        "sha256": "8674f9575870cb157c3a1fd5d39bef88ae4dd645c6b6cbd96c4bd3172e0f1637"
+        "sha256": "bfae5f193fab2f642fdbdb408b2cf2fe2d93370a3b33bc1d0bd4d97f24ed2c0e"
       },
       {
         "sourcePath": "docs/en/27-tracing.md",
         "destination": "src/docs/content/echo-agent/en/27-tracing.md",
-        "sha256": "f498412b40602a7cdfa549c3ef9076db2c77b34652a7d223ca88c1caecbfea6a"
+        "sha256": "34a25d2eaf4e03041d7a0a014dc130b46de230cd4b2a988c2a4d74a10f2c84fb"
       },
       {
         "sourcePath": "docs/en/28-config-reference.md",
@@ -138,7 +138,7 @@
       {
         "sourcePath": "docs/en/29-long-running-tasks.md",
         "destination": "src/docs/content/echo-agent/en/29-long-running-tasks.md",
-        "sha256": "a3329d8e52283101a6a0d132212bf4193ba8b9086f24d99e4eb27236f24dc815"
+        "sha256": "e964b585a62c70c9558480152f653c45b3a532f2f4b1d7475cf4a8a6e2c88cb4"
       },
       {
         "sourcePath": "docs/en/30-react-safety.md",
@@ -148,12 +148,12 @@
       {
         "sourcePath": "docs/en/31-lsp-integration.md",
         "destination": "src/docs/content/echo-agent/en/31-lsp-integration.md",
-        "sha256": "aae05df9070e6842fcb4347e1ba638e93c4171959d6711e1d64cef1bcef123fe"
+        "sha256": "6b45f80eb187b4b8ddc8219b7d18f22542e11bb5294f1d0fc5f83f3bb6d8406b"
       },
       {
         "sourcePath": "docs/en/32-plugin-system.md",
         "destination": "src/docs/content/echo-agent/en/32-plugin-system.md",
-        "sha256": "697bb251fcd9890c2a9bb0873e41be48adca01d632c28f725ba6e891386545e5"
+        "sha256": "a83d7179d7a6b954ee5a056de30c36d4038f3b2a7a4906a14cc4b0b16c476002"
       },
       {
         "sourcePath": "docs/en/33-headless-mode.md",
@@ -203,7 +203,7 @@
       {
         "sourcePath": "docs/en/41-persistence-concepts.md",
         "destination": "src/docs/content/echo-agent/en/41-persistence-concepts.md",
-        "sha256": "3a6a1bca68aefe0941c9e5ad0d671704d61d21a1d739c8398f04f4a7243848f4"
+        "sha256": "0166eb1dff3a3285ae4f5dc3cb1d1bb2bdb0fe8eaacb73550e3c85fc5674b83e"
       },
       {
         "sourcePath": "docs/en/41-shell-text-tools.md",
@@ -223,12 +223,12 @@
       {
         "sourcePath": "docs/adr/0001-channel-session-sender-scope.md",
         "destination": "src/docs/content/echo-agent/en/adr/0001-channel-session-sender-scope.md",
-        "sha256": "6349132b5274f6e6dc3697c56ef48d2cd98dadd315773f913ca84811369f78cf"
+        "sha256": "a684410d7f4bfb3fe8c1a8e78f43abf09e7b648972cbeb2cc1afa193f90ed43c"
       },
       {
         "sourcePath": "docs/adr/0002-sandbox-cancellation-cleanup.md",
         "destination": "src/docs/content/echo-agent/en/adr/0002-sandbox-cancellation-cleanup.md",
-        "sha256": "003d242545055e71157c2f4f4775c7e627d0b220b4f10dadd85c9b73ab871904"
+        "sha256": "9fd6a282ce40d29593dbd13c5049f432f790119bc57a61784df00d957776cd9e"
       },
       {
         "sourcePath": "docs/adr/0003-tracked-steer-lifecycle.md",
@@ -248,7 +248,7 @@
       {
         "sourcePath": "docs/adr/0006-runtime-state-scope-lineage.md",
         "destination": "src/docs/content/echo-agent/en/adr/0006-runtime-state-scope-lineage.md",
-        "sha256": "c2c83e490ed5606ef563daf32bccef775049dc9e770bdb7dc8a7ebdb40e57785"
+        "sha256": "5584a2e087bff99bd0cc20a36450a2c13b587e7b4fa3e448462a5d3cc92b7060"
       },
       {
         "sourcePath": "docs/adr/0007-atomic-journal-batch-commits.md",
@@ -258,7 +258,7 @@
       {
         "sourcePath": "docs/adr/0008-canonical-runtime-task-authority.md",
         "destination": "src/docs/content/echo-agent/en/adr/0008-canonical-runtime-task-authority.md",
-        "sha256": "355be73539238da84b5c9a33309ba91a86dd7492c292ec4d57da790406b950d1"
+        "sha256": "014f8d76e914c5db8e63b325e42d00c60195ca39daa50a79c7475b0919be3bbc"
       },
       {
         "sourcePath": "docs/adr/0009-tracked-input-receipts.md",
@@ -268,7 +268,7 @@
       {
         "sourcePath": "docs/adr/0010-canonical-turn-receipt-accounting.md",
         "destination": "src/docs/content/echo-agent/en/adr/0010-canonical-turn-receipt-accounting.md",
-        "sha256": "410bc2f6a5e465398d7919dfd6a50296f647b3d50bd688b511054b80c0d55608"
+        "sha256": "3f075632b018ebb78c6cbe989c38148b9cc5b149ee2809de154a1cd1cf96ab4a"
       },
       {
         "sourcePath": "docs/adr/0011-typed-tool-output-artifact.md",
@@ -278,7 +278,7 @@
       {
         "sourcePath": "docs/adr/0012-immutable-plugin-preparation.md",
         "destination": "src/docs/content/echo-agent/en/adr/0012-immutable-plugin-preparation.md",
-        "sha256": "d70621dd5a6cef1e4765ee14461756281c4ac5dc0f88ce1b095d09f5a234189c"
+        "sha256": "3c4cbb5d3d092e2d08734bcac8df68a6b607907f26bc0f2ee540e0db73146138"
       },
       {
         "sourcePath": "docs/adr/0013-learning-examples-and-documentation-boundary.md",
@@ -343,7 +343,7 @@
       {
         "sourcePath": "docs/adr/0025-deterministic-command-cell-watcher.md",
         "destination": "src/docs/content/echo-agent/en/adr/0025-deterministic-command-cell-watcher.md",
-        "sha256": "d961a78a2680fabca91916cda26ed51ace698e38e28ff4bb3f41d95223671704"
+        "sha256": "e2efe630c983c35b01eb453fa66098ac3b98c02ea2239c3bf570d42d1701a52b"
       },
       {
         "sourcePath": "docs/adr/0026-official-skill-frontmatter-only.md",
@@ -356,6 +356,11 @@
         "sha256": "a14cefa7681646aab8f36e4b2d35aac13ca30ff8b89475d9bb936c153958c3fe"
       },
       {
+        "sourcePath": "docs/adr/0028-source-first-multilanguage-sdk-runtime.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0028-source-first-multilanguage-sdk-runtime.md",
+        "sha256": "1e8eae9a0d7eeaf60c0a4a506eb11484f8f566200a71579fd753e6f20d089976"
+      },
+      {
         "sourcePath": "docs/adr/0029-shared-subagent-execution-admission.md",
         "destination": "src/docs/content/echo-agent/en/adr/0029-shared-subagent-execution-admission.md",
         "sha256": "a09d0542082a36c30f223ac8f939841cd43430d9d05163393d910cc60fb378bd"
@@ -364,6 +369,156 @@
         "sourcePath": "docs/adr/0030-versioned-subagent-event-envelope.md",
         "destination": "src/docs/content/echo-agent/en/adr/0030-versioned-subagent-event-envelope.md",
         "sha256": "8e75f3792f0cc28ece721f6d24b12669cfa6585f991c37ac137e2d6639182e22"
+      },
+      {
+        "sourcePath": "docs/adr/0031-sdk-identity-governance-scope.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0031-sdk-identity-governance-scope.md",
+        "sha256": "40cb3f1917e3fb585d88d74e98ec21355903d9bf0e22b50c9f2ca3dc400eb2ad"
+      },
+      {
+        "sourcePath": "docs/adr/0032-sdk-contract-scope-classification.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0032-sdk-contract-scope-classification.md",
+        "sha256": "7d24f8320ac202b019bc516810e468a0b0a2c6492be26bfebf00ebb18482da25"
+      },
+      {
+        "sourcePath": "docs/adr/0033-subagent-factory-singleflight-publication.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0033-subagent-factory-singleflight-publication.md",
+        "sha256": "a91bee045e9b705c1aac3ddafc0f595b7b1f9905c5ea7ca2741fe4020eb22b77"
+      },
+      {
+        "sourcePath": "docs/adr/0034-context-scoped-tool-result-cache.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0034-context-scoped-tool-result-cache.md",
+        "sha256": "315c64b0b68de5903406ce8b2193f9c54d197f1d6fc0bc5da37a297280ca54f3"
+      },
+      {
+        "sourcePath": "docs/adr/0035-owned-tool-registry-handles.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0035-owned-tool-registry-handles.md",
+        "sha256": "3fc93abce5b37050ed2cb674f81c1fecc677c6b52bf1dc405c624bd25dde9f68"
+      },
+      {
+        "sourcePath": "docs/adr/0036-eval-workspace-generation-lifecycle.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0036-eval-workspace-generation-lifecycle.md",
+        "sha256": "2e774693fd8a93c77cf878564660f0ba74e7ee26af7facb780dc34e0f8d1e603"
+      },
+      {
+        "sourcePath": "docs/adr/0037-eval-timeout-turn-settlement.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0037-eval-timeout-turn-settlement.md",
+        "sha256": "0439fe9603b64801f2a45cd2f2dc40eb66c7d87cf8836380b035a2a65f5df568"
+      },
+      {
+        "sourcePath": "docs/adr/0038-eval-trace-correlation-identity.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0038-eval-trace-correlation-identity.md",
+        "sha256": "609e4ec5d1edb91d04272bf55e0a57874155352ff26f628d92de67258eb8837f"
+      },
+      {
+        "sourcePath": "docs/adr/0039-background-task-terminal-authority.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0039-background-task-terminal-authority.md",
+        "sha256": "9101fafb84aff542ab0ba3e929cdd8d662785b68f631a23be36ba7ed2467b92d"
+      },
+      {
+        "sourcePath": "docs/adr/0040-framework-concept-documentation-authority.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0040-framework-concept-documentation-authority.md",
+        "sha256": "04db80eb6ff293c7b51cc81b53d0da0136285ba5c301a447ffdf14c18438be36"
+      },
+      {
+        "sourcePath": "docs/adr/0040-workflow-checkpoint-lease-and-sibling-settlement.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0040-workflow-checkpoint-lease-and-sibling-settlement.md",
+        "sha256": "62dc5a5bbfcdf73e081ed249ff2cece24f572ae5ae981aee76cc50790be5794f"
+      },
+      {
+        "sourcePath": "docs/adr/0041-semantic-governance-continuity.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0041-semantic-governance-continuity.md",
+        "sha256": "dda2d6bf1498ca087dfef6a27f6e8ab81252664801e56c8f1692c0d5ae04959e"
+      },
+      {
+        "sourcePath": "docs/adr/0042-scheduler-occurrence-authority.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0042-scheduler-occurrence-authority.md",
+        "sha256": "c7907dded0fd5321ed443c55434cb53ac99c031ffc731dbe8c5c4025256ea41e"
+      },
+      {
+        "sourcePath": "docs/adr/0043-lsp-derived-handle-lifecycle.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0043-lsp-derived-handle-lifecycle.md",
+        "sha256": "58b19a5f373ff94f0cf744f1992838da727b782630e17910427390e45c124a30"
+      },
+      {
+        "sourcePath": "docs/adr/0044-skill-activation-authority.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0044-skill-activation-authority.md",
+        "sha256": "a3b8079855048cd5018eeba329304f0f8ed62fcb584a1c68212007c14849fd82"
+      },
+      {
+        "sourcePath": "docs/adr/0045-confirmed-semantic-governance-decisions.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0045-confirmed-semantic-governance-decisions.md",
+        "sha256": "e7696ed2ffe427672631a4a11dfa0ce57bd77cf91204364fddd3f0eb14bb878c"
+      },
+      {
+        "sourcePath": "docs/adr/0046-turn-execution-delivery-settlement.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0046-turn-execution-delivery-settlement.md",
+        "sha256": "3b9d63356066e8b7159d768dd9332e14c2fc6c149ff3f316ee86cf312ce710f3"
+      },
+      {
+        "sourcePath": "docs/adr/0050-mcp-tool-local-classification.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0050-mcp-tool-local-classification.md",
+        "sha256": "cbd70b79c2c68fc3f267f2e5c2d07b89860eb891e592339c4d339e0d13bdd82e"
+      },
+      {
+        "sourcePath": "docs/adr/0051-extract-sdk-repository.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0051-extract-sdk-repository.md",
+        "sha256": "ae4384d5edacddcdfd9afc5540b0453bd7595ba01d60ce6d2c8cbf6eb14f096c"
+      },
+      {
+        "sourcePath": "docs/adr/0052-workflow-entry-loop-authority.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0052-workflow-entry-loop-authority.md",
+        "sha256": "9250f4f045c93b56c532b59a22b2a45c25f95fbbe99f3b2ae63108dc1678c34a"
+      },
+      {
+        "sourcePath": "docs/adr/0053-trace-audit-persistence-visibility.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0053-trace-audit-persistence-visibility.md",
+        "sha256": "160867e5cb53b6987a46baa2c0e57f76094caf8e1074487275cf4969f4e64e69"
+      },
+      {
+        "sourcePath": "docs/adr/0055-checkpoint-journal-identity.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0055-checkpoint-journal-identity.md",
+        "sha256": "c3c7dd7b1e46fb0786784d1f5cbd5b7a79c1fc5a9ee77958c5ee2ca6d94ef70b"
+      },
+      {
+        "sourcePath": "docs/adr/0056-durable-transcript-projection-settlement.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0056-durable-transcript-projection-settlement.md",
+        "sha256": "18516731e55e6886a019f74f710e316a90b98929a72f63e9cd29f6f3a013e620"
+      },
+      {
+        "sourcePath": "docs/adr/0057-channel-generation-delivery-fence.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0057-channel-generation-delivery-fence.md",
+        "sha256": "def2325642968a8711f82ed50cc03a8287e57a5cc9922eb2961a841d7631f2d3"
+      },
+      {
+        "sourcePath": "docs/adr/0058-task-claim-subagent-attempt-control.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0058-task-claim-subagent-attempt-control.md",
+        "sha256": "f8a6ff9fb0410b2a6ef51e108d5d2cfad55c956f1a18da5ffe1257d6c7256d32"
+      },
+      {
+        "sourcePath": "docs/adr/0059-task-workflow-dag-authority.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0059-task-workflow-dag-authority.md",
+        "sha256": "b1ca5c2ae305bd7665824ed639e205a520ada1ade16b2dacf4db2562c2f9bf94"
+      },
+      {
+        "sourcePath": "docs/adr/0060-plugin-lifecycle-reconcile-settlement.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0060-plugin-lifecycle-reconcile-settlement.md",
+        "sha256": "54399dfd901aa80ce3fa5636f07650d5566068ae001956c367c3693bfe09f3b1"
+      },
+      {
+        "sourcePath": "docs/adr/0064-provider-stream-semantic-terminal.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0064-provider-stream-semantic-terminal.md",
+        "sha256": "2b44659cd6eb67c338b2c18e849910fbc92c2894c6385ba5a456382ef34dd5de"
+      },
+      {
+        "sourcePath": "docs/en/architecture.md",
+        "destination": "src/docs/content/echo-agent/en/architecture.md",
+        "sha256": "8b11ed1b9e69e40c269ecfde39a903434d9cb7f0348804b83b2dc6461ef8b7a6"
+      },
+      {
+        "sourcePath": "docs/en/concepts.md",
+        "destination": "src/docs/content/echo-agent/en/concepts.md",
+        "sha256": "77c52827d6296cc7c70ce9a2a742bfd1a330a9541adf208c66b41db262753343"
       },
       {
         "sourcePath": "docs/en/getting-started.md",
@@ -396,14 +551,19 @@
         "sha256": "a173c2ba94a29f32292a3aa968b653bad9dc74c5a70b349f32950af54fb3b752"
       },
       {
+        "sourcePath": "docs/en/lifecycles.md",
+        "destination": "src/docs/content/echo-agent/en/lifecycles.md",
+        "sha256": "cad370e5fdd1925d3847e5597cfeb53c3de172a806e9b9523413cf188ff0ce8f"
+      },
+      {
         "sourcePath": "docs/en/README.md",
         "destination": "src/docs/content/echo-agent/en/README.md",
-        "sha256": "372b12f09c8065224afcbc06e9a8b62c18adbfa16b884f0d5f7f00acd6c2f879"
+        "sha256": "7ac35c75011b2db1ad51e2f59148e13ccc6d88519c5fdd7ffcf8bd5be4fa8e1d"
       },
       {
         "sourcePath": "docs/en/security.md",
         "destination": "src/docs/content/echo-agent/en/security.md",
-        "sha256": "ea7758962b3e321f8f680994d293628d59751e757e505cd30c5ccc227643e241"
+        "sha256": "8bad1daa3429c8b6e20ebe41a310cea84349cc6926a53fd0b3a2e2da16f5989b"
       },
       {
         "sourcePath": "docs/en/skill-authoring.md",
@@ -423,7 +583,7 @@
       {
         "sourcePath": "docs/zh/03-memory.md",
         "destination": "src/docs/content/echo-agent/zh/03-memory.md",
-        "sha256": "d36fa571a6612991059ec851ba549c909086b79785f982c792b6cf45172e84c3"
+        "sha256": "172bab8158399a078480e18fe293172af443b4bb80dad497285c9cd56d4d1a66"
       },
       {
         "sourcePath": "docs/zh/04-compression.md",
@@ -443,22 +603,22 @@
       {
         "sourcePath": "docs/zh/07-skills.md",
         "destination": "src/docs/content/echo-agent/zh/07-skills.md",
-        "sha256": "5fde22957860ae966e487f015f31372049ee9017adae29e5acaf8816e055bd25"
+        "sha256": "de6ad644dd5b36d5c67ce30dce68c924a98444eeb6a66f894603f48fa3e6b2a6"
       },
       {
         "sourcePath": "docs/zh/08-mcp.md",
         "destination": "src/docs/content/echo-agent/zh/08-mcp.md",
-        "sha256": "2b9b689f53526b1ad39594a0bb520bda44c7d25e404334ade2069ffdd8713203"
+        "sha256": "013b8b3796eda1d781336ae684722615b500b3251be023dc62f6ca8b7a16b0b2"
       },
       {
         "sourcePath": "docs/zh/09-tasks.md",
         "destination": "src/docs/content/echo-agent/zh/09-tasks.md",
-        "sha256": "b2e004485d4c30fdfd9deb380eb6e001e4247358984d02afa12630091f316264"
+        "sha256": "ce25e4cea7cb6ed797d6f6310415cf5b6d2c40ad3ab51f14090f42fcbc25a2b9"
       },
       {
         "sourcePath": "docs/zh/10-streaming.md",
         "destination": "src/docs/content/echo-agent/zh/10-streaming.md",
-        "sha256": "fd08d3d628487254381d129bedbb44fc67e5084e7b8d50d39633795eb2f10975"
+        "sha256": "0578699cf8e09a21cdeea9cb954e015d71193aee7f8697af35062bd2f08b6f5d"
       },
       {
         "sourcePath": "docs/zh/11-structured-output.md",
@@ -483,12 +643,12 @@
       {
         "sourcePath": "docs/zh/15-im-channels.md",
         "destination": "src/docs/content/echo-agent/zh/15-im-channels.md",
-        "sha256": "811e6b03a13b960da57e112b4d832839203c60194abc529af59ed5eda619eccf"
+        "sha256": "253f11df5d310ed4edf8d0a6c60ce768db4189d722ccb6b6535389e6bd6b308b"
       },
       {
         "sourcePath": "docs/zh/17-graph-workflow.md",
         "destination": "src/docs/content/echo-agent/zh/17-graph-workflow.md",
-        "sha256": "1ab92dfa2efeeb9dbb4a6dc1806ed7d6acc9946cc9d0250ddc0d45741190d1e8"
+        "sha256": "398666a9a2ef1749ba3ef029542a63ebacfac4dd706e676dbe14096d0d41d6e9"
       },
       {
         "sourcePath": "docs/zh/18-guard-system.md",
@@ -513,12 +673,12 @@
       {
         "sourcePath": "docs/zh/23-hooks.md",
         "destination": "src/docs/content/echo-agent/zh/23-hooks.md",
-        "sha256": "e98264ec146e8045c37ca57d2ac2cf04d140f63d7e49d4b5a1720938828ca64b"
+        "sha256": "e3a183ba27956a5b8e0f8884a362c0ccf651f7b9b761da1107420e0139a57a05"
       },
       {
         "sourcePath": "docs/zh/24-eval-system.md",
         "destination": "src/docs/content/echo-agent/zh/24-eval-system.md",
-        "sha256": "547433e24ba93db69cc0a2eacc1471e3a59cb21a71e8e4bebb6f30adb7df69c3"
+        "sha256": "92fe364e546bb88dbf28aeb9bc10998b5b055d705bdc36b1e3f04557655e8390"
       },
       {
         "sourcePath": "docs/zh/25-self-improvement.md",
@@ -528,12 +688,12 @@
       {
         "sourcePath": "docs/zh/26-multi-agent.md",
         "destination": "src/docs/content/echo-agent/zh/26-multi-agent.md",
-        "sha256": "4344266bcaeb1744213b2a473b8f5da813d3fee463bdc97eb91f07cd84a61c9e"
+        "sha256": "db024e2c3229f9ae30daa80c1fd81d92bd5892a051bbe19e6722e79d703a268f"
       },
       {
         "sourcePath": "docs/zh/27-tracing.md",
         "destination": "src/docs/content/echo-agent/zh/27-tracing.md",
-        "sha256": "7bdb37e217aab271b2a995562dac0da5f4baf609217d77a3d6bb959eae8fad8d"
+        "sha256": "1019d26d48e06de36b778c35aad0a1ce02fccad0fbf333144150b8d8da2582fd"
       },
       {
         "sourcePath": "docs/zh/28-config-reference.md",
@@ -543,7 +703,7 @@
       {
         "sourcePath": "docs/zh/29-long-running-tasks.md",
         "destination": "src/docs/content/echo-agent/zh/29-long-running-tasks.md",
-        "sha256": "7c947b165ffb6fbd3e8a5b4fc2f239c98728baf5c45b9d6cd7cfab547d172d74"
+        "sha256": "4f16e753072afb147903b3669d1bbbcc29b324d8cb00fc4647c1ac72718e746b"
       },
       {
         "sourcePath": "docs/zh/30-react-safety.md",
@@ -553,12 +713,12 @@
       {
         "sourcePath": "docs/zh/31-lsp-integration.md",
         "destination": "src/docs/content/echo-agent/zh/31-lsp-integration.md",
-        "sha256": "242e8747258f07613b4e26be38c4318ff24b0118ab6f0f7447b3c9386c0927d5"
+        "sha256": "96c41a7f7993a2adade8dbae7ad4946a3250b05754ebd8c8253144b3c4b4d1a3"
       },
       {
         "sourcePath": "docs/zh/32-plugin-system.md",
         "destination": "src/docs/content/echo-agent/zh/32-plugin-system.md",
-        "sha256": "c795230df093be76c53be8fe18e9e67a61188096947314b8e23377f92534fff5"
+        "sha256": "2882f2ea1e27287c76062a27b3457c3e11287980de407b4a78ba8c3e9dde77eb"
       },
       {
         "sourcePath": "docs/zh/33-headless-mode.md",
@@ -608,7 +768,7 @@
       {
         "sourcePath": "docs/zh/41-persistence-concepts.md",
         "destination": "src/docs/content/echo-agent/zh/41-persistence-concepts.md",
-        "sha256": "d1e533e71fa02c7a5e25564de613e80af0857b716c51ec24aa50969bd5e564c1"
+        "sha256": "36c1929865892c701f2a170027eec10d62c1c5999de26efb8666bc6ee3b2ebba"
       },
       {
         "sourcePath": "docs/zh/41-shell-text-tools.md",
@@ -628,12 +788,12 @@
       {
         "sourcePath": "docs/adr/0001-channel-session-sender-scope.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0001-channel-session-sender-scope.md",
-        "sha256": "6349132b5274f6e6dc3697c56ef48d2cd98dadd315773f913ca84811369f78cf"
+        "sha256": "a684410d7f4bfb3fe8c1a8e78f43abf09e7b648972cbeb2cc1afa193f90ed43c"
       },
       {
         "sourcePath": "docs/adr/0002-sandbox-cancellation-cleanup.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0002-sandbox-cancellation-cleanup.md",
-        "sha256": "003d242545055e71157c2f4f4775c7e627d0b220b4f10dadd85c9b73ab871904"
+        "sha256": "9fd6a282ce40d29593dbd13c5049f432f790119bc57a61784df00d957776cd9e"
       },
       {
         "sourcePath": "docs/adr/0003-tracked-steer-lifecycle.md",
@@ -653,7 +813,7 @@
       {
         "sourcePath": "docs/adr/0006-runtime-state-scope-lineage.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0006-runtime-state-scope-lineage.md",
-        "sha256": "c2c83e490ed5606ef563daf32bccef775049dc9e770bdb7dc8a7ebdb40e57785"
+        "sha256": "5584a2e087bff99bd0cc20a36450a2c13b587e7b4fa3e448462a5d3cc92b7060"
       },
       {
         "sourcePath": "docs/adr/0007-atomic-journal-batch-commits.md",
@@ -663,7 +823,7 @@
       {
         "sourcePath": "docs/adr/0008-canonical-runtime-task-authority.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0008-canonical-runtime-task-authority.md",
-        "sha256": "355be73539238da84b5c9a33309ba91a86dd7492c292ec4d57da790406b950d1"
+        "sha256": "014f8d76e914c5db8e63b325e42d00c60195ca39daa50a79c7475b0919be3bbc"
       },
       {
         "sourcePath": "docs/adr/0009-tracked-input-receipts.md",
@@ -673,7 +833,7 @@
       {
         "sourcePath": "docs/adr/0010-canonical-turn-receipt-accounting.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0010-canonical-turn-receipt-accounting.md",
-        "sha256": "410bc2f6a5e465398d7919dfd6a50296f647b3d50bd688b511054b80c0d55608"
+        "sha256": "3f075632b018ebb78c6cbe989c38148b9cc5b149ee2809de154a1cd1cf96ab4a"
       },
       {
         "sourcePath": "docs/adr/0011-typed-tool-output-artifact.md",
@@ -683,7 +843,7 @@
       {
         "sourcePath": "docs/adr/0012-immutable-plugin-preparation.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0012-immutable-plugin-preparation.md",
-        "sha256": "d70621dd5a6cef1e4765ee14461756281c4ac5dc0f88ce1b095d09f5a234189c"
+        "sha256": "3c4cbb5d3d092e2d08734bcac8df68a6b607907f26bc0f2ee540e0db73146138"
       },
       {
         "sourcePath": "docs/adr/0013-learning-examples-and-documentation-boundary.md",
@@ -748,7 +908,7 @@
       {
         "sourcePath": "docs/adr/0025-deterministic-command-cell-watcher.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0025-deterministic-command-cell-watcher.md",
-        "sha256": "d961a78a2680fabca91916cda26ed51ace698e38e28ff4bb3f41d95223671704"
+        "sha256": "e2efe630c983c35b01eb453fa66098ac3b98c02ea2239c3bf570d42d1701a52b"
       },
       {
         "sourcePath": "docs/adr/0026-official-skill-frontmatter-only.md",
@@ -761,6 +921,11 @@
         "sha256": "a14cefa7681646aab8f36e4b2d35aac13ca30ff8b89475d9bb936c153958c3fe"
       },
       {
+        "sourcePath": "docs/adr/0028-source-first-multilanguage-sdk-runtime.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0028-source-first-multilanguage-sdk-runtime.md",
+        "sha256": "1e8eae9a0d7eeaf60c0a4a506eb11484f8f566200a71579fd753e6f20d089976"
+      },
+      {
         "sourcePath": "docs/adr/0029-shared-subagent-execution-admission.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0029-shared-subagent-execution-admission.md",
         "sha256": "a09d0542082a36c30f223ac8f939841cd43430d9d05163393d910cc60fb378bd"
@@ -769,6 +934,156 @@
         "sourcePath": "docs/adr/0030-versioned-subagent-event-envelope.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0030-versioned-subagent-event-envelope.md",
         "sha256": "8e75f3792f0cc28ece721f6d24b12669cfa6585f991c37ac137e2d6639182e22"
+      },
+      {
+        "sourcePath": "docs/adr/0031-sdk-identity-governance-scope.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0031-sdk-identity-governance-scope.md",
+        "sha256": "40cb3f1917e3fb585d88d74e98ec21355903d9bf0e22b50c9f2ca3dc400eb2ad"
+      },
+      {
+        "sourcePath": "docs/adr/0032-sdk-contract-scope-classification.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0032-sdk-contract-scope-classification.md",
+        "sha256": "7d24f8320ac202b019bc516810e468a0b0a2c6492be26bfebf00ebb18482da25"
+      },
+      {
+        "sourcePath": "docs/adr/0033-subagent-factory-singleflight-publication.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0033-subagent-factory-singleflight-publication.md",
+        "sha256": "a91bee045e9b705c1aac3ddafc0f595b7b1f9905c5ea7ca2741fe4020eb22b77"
+      },
+      {
+        "sourcePath": "docs/adr/0034-context-scoped-tool-result-cache.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0034-context-scoped-tool-result-cache.md",
+        "sha256": "315c64b0b68de5903406ce8b2193f9c54d197f1d6fc0bc5da37a297280ca54f3"
+      },
+      {
+        "sourcePath": "docs/adr/0035-owned-tool-registry-handles.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0035-owned-tool-registry-handles.md",
+        "sha256": "3fc93abce5b37050ed2cb674f81c1fecc677c6b52bf1dc405c624bd25dde9f68"
+      },
+      {
+        "sourcePath": "docs/adr/0036-eval-workspace-generation-lifecycle.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0036-eval-workspace-generation-lifecycle.md",
+        "sha256": "2e774693fd8a93c77cf878564660f0ba74e7ee26af7facb780dc34e0f8d1e603"
+      },
+      {
+        "sourcePath": "docs/adr/0037-eval-timeout-turn-settlement.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0037-eval-timeout-turn-settlement.md",
+        "sha256": "0439fe9603b64801f2a45cd2f2dc40eb66c7d87cf8836380b035a2a65f5df568"
+      },
+      {
+        "sourcePath": "docs/adr/0038-eval-trace-correlation-identity.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0038-eval-trace-correlation-identity.md",
+        "sha256": "609e4ec5d1edb91d04272bf55e0a57874155352ff26f628d92de67258eb8837f"
+      },
+      {
+        "sourcePath": "docs/adr/0039-background-task-terminal-authority.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0039-background-task-terminal-authority.md",
+        "sha256": "9101fafb84aff542ab0ba3e929cdd8d662785b68f631a23be36ba7ed2467b92d"
+      },
+      {
+        "sourcePath": "docs/adr/0040-framework-concept-documentation-authority.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0040-framework-concept-documentation-authority.md",
+        "sha256": "04db80eb6ff293c7b51cc81b53d0da0136285ba5c301a447ffdf14c18438be36"
+      },
+      {
+        "sourcePath": "docs/adr/0040-workflow-checkpoint-lease-and-sibling-settlement.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0040-workflow-checkpoint-lease-and-sibling-settlement.md",
+        "sha256": "62dc5a5bbfcdf73e081ed249ff2cece24f572ae5ae981aee76cc50790be5794f"
+      },
+      {
+        "sourcePath": "docs/adr/0041-semantic-governance-continuity.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0041-semantic-governance-continuity.md",
+        "sha256": "dda2d6bf1498ca087dfef6a27f6e8ab81252664801e56c8f1692c0d5ae04959e"
+      },
+      {
+        "sourcePath": "docs/adr/0042-scheduler-occurrence-authority.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0042-scheduler-occurrence-authority.md",
+        "sha256": "c7907dded0fd5321ed443c55434cb53ac99c031ffc731dbe8c5c4025256ea41e"
+      },
+      {
+        "sourcePath": "docs/adr/0043-lsp-derived-handle-lifecycle.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0043-lsp-derived-handle-lifecycle.md",
+        "sha256": "58b19a5f373ff94f0cf744f1992838da727b782630e17910427390e45c124a30"
+      },
+      {
+        "sourcePath": "docs/adr/0044-skill-activation-authority.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0044-skill-activation-authority.md",
+        "sha256": "a3b8079855048cd5018eeba329304f0f8ed62fcb584a1c68212007c14849fd82"
+      },
+      {
+        "sourcePath": "docs/adr/0045-confirmed-semantic-governance-decisions.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0045-confirmed-semantic-governance-decisions.md",
+        "sha256": "e7696ed2ffe427672631a4a11dfa0ce57bd77cf91204364fddd3f0eb14bb878c"
+      },
+      {
+        "sourcePath": "docs/adr/0046-turn-execution-delivery-settlement.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0046-turn-execution-delivery-settlement.md",
+        "sha256": "3b9d63356066e8b7159d768dd9332e14c2fc6c149ff3f316ee86cf312ce710f3"
+      },
+      {
+        "sourcePath": "docs/adr/0050-mcp-tool-local-classification.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0050-mcp-tool-local-classification.md",
+        "sha256": "cbd70b79c2c68fc3f267f2e5c2d07b89860eb891e592339c4d339e0d13bdd82e"
+      },
+      {
+        "sourcePath": "docs/adr/0051-extract-sdk-repository.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0051-extract-sdk-repository.md",
+        "sha256": "ae4384d5edacddcdfd9afc5540b0453bd7595ba01d60ce6d2c8cbf6eb14f096c"
+      },
+      {
+        "sourcePath": "docs/adr/0052-workflow-entry-loop-authority.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0052-workflow-entry-loop-authority.md",
+        "sha256": "9250f4f045c93b56c532b59a22b2a45c25f95fbbe99f3b2ae63108dc1678c34a"
+      },
+      {
+        "sourcePath": "docs/adr/0053-trace-audit-persistence-visibility.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0053-trace-audit-persistence-visibility.md",
+        "sha256": "160867e5cb53b6987a46baa2c0e57f76094caf8e1074487275cf4969f4e64e69"
+      },
+      {
+        "sourcePath": "docs/adr/0055-checkpoint-journal-identity.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0055-checkpoint-journal-identity.md",
+        "sha256": "c3c7dd7b1e46fb0786784d1f5cbd5b7a79c1fc5a9ee77958c5ee2ca6d94ef70b"
+      },
+      {
+        "sourcePath": "docs/adr/0056-durable-transcript-projection-settlement.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0056-durable-transcript-projection-settlement.md",
+        "sha256": "18516731e55e6886a019f74f710e316a90b98929a72f63e9cd29f6f3a013e620"
+      },
+      {
+        "sourcePath": "docs/adr/0057-channel-generation-delivery-fence.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0057-channel-generation-delivery-fence.md",
+        "sha256": "def2325642968a8711f82ed50cc03a8287e57a5cc9922eb2961a841d7631f2d3"
+      },
+      {
+        "sourcePath": "docs/adr/0058-task-claim-subagent-attempt-control.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0058-task-claim-subagent-attempt-control.md",
+        "sha256": "f8a6ff9fb0410b2a6ef51e108d5d2cfad55c956f1a18da5ffe1257d6c7256d32"
+      },
+      {
+        "sourcePath": "docs/adr/0059-task-workflow-dag-authority.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0059-task-workflow-dag-authority.md",
+        "sha256": "b1ca5c2ae305bd7665824ed639e205a520ada1ade16b2dacf4db2562c2f9bf94"
+      },
+      {
+        "sourcePath": "docs/adr/0060-plugin-lifecycle-reconcile-settlement.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0060-plugin-lifecycle-reconcile-settlement.md",
+        "sha256": "54399dfd901aa80ce3fa5636f07650d5566068ae001956c367c3693bfe09f3b1"
+      },
+      {
+        "sourcePath": "docs/adr/0064-provider-stream-semantic-terminal.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0064-provider-stream-semantic-terminal.md",
+        "sha256": "2b44659cd6eb67c338b2c18e849910fbc92c2894c6385ba5a456382ef34dd5de"
+      },
+      {
+        "sourcePath": "docs/zh/architecture.md",
+        "destination": "src/docs/content/echo-agent/zh/architecture.md",
+        "sha256": "0185cb8d98c76763849a8fa6bd91852c72e12d30ad028ecbe350632aaebad165"
+      },
+      {
+        "sourcePath": "docs/zh/concepts.md",
+        "destination": "src/docs/content/echo-agent/zh/concepts.md",
+        "sha256": "8f4c29f349ba46204ac2bcd84a9fb709d0df46e62dd137d175e2bc3c6f893735"
       },
       {
         "sourcePath": "docs/zh/getting-started.md",
@@ -801,14 +1116,19 @@
         "sha256": "21b89c3452eeab0619979753f92c37e1d69e1c21cf5c5114cd21deb257493ae4"
       },
       {
+        "sourcePath": "docs/zh/lifecycles.md",
+        "destination": "src/docs/content/echo-agent/zh/lifecycles.md",
+        "sha256": "92bf0bb44eda38227dff1ccce8615b8a1d0c326ed26c55ea63e3126e4efa6483"
+      },
+      {
         "sourcePath": "docs/zh/README.md",
         "destination": "src/docs/content/echo-agent/zh/README.md",
-        "sha256": "de3de03dd4e35685d3b521acbb92efaffdb359fb532d5a8b63fe6e948cb2d470"
+        "sha256": "bc4bd91fc7a68ba868c54a0dfcc93c449529b5f4d94a840bf6de292c3f31df31"
       },
       {
         "sourcePath": "docs/zh/security.md",
         "destination": "src/docs/content/echo-agent/zh/security.md",
-        "sha256": "b15b7102b1d54c85aa2a5b8a3624e0a76b103a1ef6a4970015e3897d735bed4d"
+        "sha256": "7fdbd6dbbf82abc3fe4a751359bb0696b0f8c7f878bd6dcde6f55dfbff0887ba"
       },
       {
         "sourcePath": "docs/zh/skill-authoring.md",

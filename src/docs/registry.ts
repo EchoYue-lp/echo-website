@@ -44,12 +44,22 @@ export const frameworkDocCategories: DocCategory[] = [
         title: { zh: 'echo-agent 如何工作', en: 'How echo-agent Works' },
         filePath: './content/echo-agent/01-react-agent.md',
       },
+      {
+        slug: 'architecture',
+        title: { zh: 'Framework 架构', en: 'Framework Architecture' },
+        filePath: './content/echo-agent/architecture.md',
+      },
     ],
   },
   {
     title: { zh: '核心概念', en: 'Core Concepts' },
     icon: 'brain',
     docs: [
+      {
+        slug: 'concepts',
+        title: { zh: '核心概念总览', en: 'Core Concepts Overview' },
+        filePath: './content/echo-agent/concepts.md',
+      },
       {
         slug: 'tools',
         title: { zh: '工具系统', en: 'Tools' },
@@ -254,6 +264,11 @@ export const frameworkDocCategories: DocCategory[] = [
     title: { zh: '高级主题', en: 'Advanced Topics' },
     icon: 'flask',
     docs: [
+      {
+        slug: 'lifecycles',
+        title: { zh: 'Framework 生命周期', en: 'Framework Lifecycles' },
+        filePath: './content/echo-agent/lifecycles.md',
+      },
       {
         slug: 'tracing',
         title: { zh: '追踪与观测', en: 'Tracing & Observability' },

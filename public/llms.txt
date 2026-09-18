@@ -41,6 +41,8 @@ Each capability below is grounded in a production binding in the current applica
 - 概述 | echo-agent 文档: https://echo-agent.dev/docs/overview
 - 快速开始 | echo-agent 文档: https://echo-agent.dev/docs/getting-started
 - echo-agent 如何工作 | echo-agent 文档: https://echo-agent.dev/docs/how-it-works
+- Framework 架构 | echo-agent 文档: https://echo-agent.dev/docs/architecture
+- 核心概念总览 | echo-agent 文档: https://echo-agent.dev/docs/concepts
 - 工具系统 | echo-agent 文档: https://echo-agent.dev/docs/tools
 - 记忆系统 | echo-agent 文档: https://echo-agent.dev/docs/memory
 - 持久化概念 | echo-agent 文档: https://echo-agent.dev/docs/persistence-concepts
@@ -77,6 +79,7 @@ Each capability below is grounded in a production binding in the current applica
 - 数据管道 | echo-agent 文档: https://echo-agent.dev/docs/pipelines
 - 数据质量与统计 | echo-agent 文档: https://echo-agent.dev/docs/data-quality
 - 数据输出格式 | echo-agent 文档: https://echo-agent.dev/docs/data-output-format
+- Framework 生命周期 | echo-agent 文档: https://echo-agent.dev/docs/lifecycles
 - 追踪与观测 | echo-agent 文档: https://echo-agent.dev/docs/tracing
 - ReAct 安全模式 | echo-agent 文档: https://echo-agent.dev/docs/react-safety
 - 配置参考 | echo-agent 文档: https://echo-agent.dev/docs/config-reference
@@ -112,8 +115,37 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0025: Deterministic Command-Cell Watcher | echo-agent 文档: https://echo-agent.dev/docs/adr-0025-deterministic-command-cell-watcher
 - ADR 0026: SKILL.md Uses Official agentskills.io Fields Only | echo-agent 文档: https://echo-agent.dev/docs/adr-0026-official-skill-frontmatter-only
 - ADR 0027: Subagent Communication Primitives (Uplink + Shared Control Plane) | echo-agent 文档: https://echo-agent.dev/docs/adr-0027-subagent-communication-primitives
+- ADR 0028: Source-First Multilanguage SDK Runtime | echo-agent 文档: https://echo-agent.dev/docs/adr-0028-source-first-multilanguage-sdk-runtime
 - ADR 0029: Shared Subagent Execution Admission | echo-agent 文档: https://echo-agent.dev/docs/adr-0029-shared-subagent-execution-admission
 - ADR 0030: Versioned Subagent Event Envelope | echo-agent 文档: https://echo-agent.dev/docs/adr-0030-versioned-subagent-event-envelope
+- ADR 0031: SDK Identity Inventory Is Not Framework Semantic Completion | echo-agent 文档: https://echo-agent.dev/docs/adr-0031-sdk-identity-governance-scope
+- ADR 0032: SDK Contract Scope Classification | echo-agent 文档: https://echo-agent.dev/docs/adr-0032-sdk-contract-scope-classification
+- ADR 0033: Cancellation-safe Subagent factory publication | echo-agent 文档: https://echo-agent.dev/docs/adr-0033-subagent-factory-singleflight-publication
+- ADR 0034: Context-scoped Tool result cache | echo-agent 文档: https://echo-agent.dev/docs/adr-0034-context-scoped-tool-result-cache
+- ADR 0035: Owned handles for the Tool registry | echo-agent 文档: https://echo-agent.dev/docs/adr-0035-owned-tool-registry-handles
+- ADR 0036: Eval workspace generation lifecycle | echo-agent 文档: https://echo-agent.dev/docs/adr-0036-eval-workspace-generation-lifecycle
+- ADR 0037: Eval timeout waits for Turn settlement | echo-agent 文档: https://echo-agent.dev/docs/adr-0037-eval-timeout-turn-settlement
+- ADR 0038: Eval resolves trace identity through invocation correlation | echo-agent 文档: https://echo-agent.dev/docs/adr-0038-eval-trace-correlation-identity
+- ADR 0039: BackgroundTask uses one process-local terminal authority | echo-agent 文档: https://echo-agent.dev/docs/adr-0039-background-task-terminal-authority
+- ADR 0040: Framework Concept Documentation Authority | echo-agent 文档: https://echo-agent.dev/docs/adr-0040-framework-concept-documentation-authority
+- ADR 0040: Workflow Checkpoint Lease and Sibling Settlement | echo-agent 文档: https://echo-agent.dev/docs/adr-0040-workflow-checkpoint-lease-and-sibling-settlement
+- ADR 0041: Semantic Governance Continuity from the SDK Baseline | echo-agent 文档: https://echo-agent.dev/docs/adr-0041-semantic-governance-continuity
+- ADR 0042: Scheduler Occurrence Authority | echo-agent 文档: https://echo-agent.dev/docs/adr-0042-scheduler-occurrence-authority
+- ADR 0043: Manager-owned LSP derived handle lifecycle | echo-agent 文档: https://echo-agent.dev/docs/adr-0043-lsp-derived-handle-lifecycle
+- ADR 0044: One Runtime Authority for Skill Activation | echo-agent 文档: https://echo-agent.dev/docs/adr-0044-skill-activation-authority
+- ADR 0045: Confirmed Semantic Governance Decisions | echo-agent 文档: https://echo-agent.dev/docs/adr-0045-confirmed-semantic-governance-decisions
+- ADR 0046: Separate Turn Execution and Delivery Settlement | echo-agent 文档: https://echo-agent.dev/docs/adr-0046-turn-execution-delivery-settlement
+- ADR 0050: Local MCP Tool Classification Authority | echo-agent 文档: https://echo-agent.dev/docs/adr-0050-mcp-tool-local-classification
+- ADR 0051: Extract echo-agent SDK into an Independent Repository | echo-agent 文档: https://echo-agent.dev/docs/adr-0051-extract-sdk-repository
+- ADR 0052: Canonical Workflow Entry Loop Authority | echo-agent 文档: https://echo-agent.dev/docs/adr-0052-workflow-entry-loop-authority
+- ADR 0053: Separate Diagnostic Persistence Delivery from Execution | echo-agent 文档: https://echo-agent.dev/docs/adr-0053-trace-audit-persistence-visibility
+- ADR 0055: Bind Checkpoints to Journal Generation Identity | echo-agent 文档: https://echo-agent.dev/docs/adr-0055-checkpoint-journal-identity
+- ADR 0056: Durable Transcript Projection Settlement | echo-agent 文档: https://echo-agent.dev/docs/adr-0056-durable-transcript-projection-settlement
+- ADR 0057: Fence Channel Delivery by Session Generation | echo-agent 文档: https://echo-agent.dev/docs/adr-0057-channel-generation-delivery-fence
+- ADR 0058: TaskClaim-Derived Subagent Attempt Control | echo-agent 文档: https://echo-agent.dev/docs/adr-0058-task-claim-subagent-attempt-control
+- ADR 0059: Task Graph and Workflow Graph Authorities | echo-agent 文档: https://echo-agent.dev/docs/adr-0059-task-workflow-dag-authority
+- ADR 0060: Fail-Closed Plugin Callback Reconciliation | echo-agent 文档: https://echo-agent.dev/docs/adr-0060-plugin-lifecycle-reconcile-settlement
+- ADR 0064: Provider Stream Semantic Terminal | echo-agent 文档: https://echo-agent.dev/docs/adr-0064-provider-stream-semantic-terminal
 - 知识库概述 | echo-agent 文档: https://echo-agent.dev/docs/knowledge-overview
 - Agent 设计模式 | echo-agent 文档: https://echo-agent.dev/docs/agent-patterns
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
@@ -128,6 +160,8 @@ Each capability below is grounded in a production binding in the current applica
 - Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/overview
 - Getting Started | echo-agent Documentation: https://echo-agent.dev/en/docs/getting-started
 - How echo-agent Works | echo-agent Documentation: https://echo-agent.dev/en/docs/how-it-works
+- Framework Architecture | echo-agent Documentation: https://echo-agent.dev/en/docs/architecture
+- Core Concepts Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/concepts
 - Tools | echo-agent Documentation: https://echo-agent.dev/en/docs/tools
 - Memory | echo-agent Documentation: https://echo-agent.dev/en/docs/memory
 - Persistence Concepts | echo-agent Documentation: https://echo-agent.dev/en/docs/persistence-concepts
@@ -164,6 +198,7 @@ Each capability below is grounded in a production binding in the current applica
 - Data Pipelines | echo-agent Documentation: https://echo-agent.dev/en/docs/pipelines
 - Data Quality & Statistics | echo-agent Documentation: https://echo-agent.dev/en/docs/data-quality
 - Data Output Format | echo-agent Documentation: https://echo-agent.dev/en/docs/data-output-format
+- Framework Lifecycles | echo-agent Documentation: https://echo-agent.dev/en/docs/lifecycles
 - Tracing & Observability | echo-agent Documentation: https://echo-agent.dev/en/docs/tracing
 - ReAct Safety Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/react-safety
 - Config Reference | echo-agent Documentation: https://echo-agent.dev/en/docs/config-reference
@@ -199,8 +234,37 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0025: Deterministic Command-Cell Watcher | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0025-deterministic-command-cell-watcher
 - ADR 0026: SKILL.md Uses Official agentskills.io Fields Only | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0026-official-skill-frontmatter-only
 - ADR 0027: Subagent Communication Primitives (Uplink + Shared Control Plane) | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0027-subagent-communication-primitives
+- ADR 0028: Source-First Multilanguage SDK Runtime | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0028-source-first-multilanguage-sdk-runtime
 - ADR 0029: Shared Subagent Execution Admission | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0029-shared-subagent-execution-admission
 - ADR 0030: Versioned Subagent Event Envelope | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0030-versioned-subagent-event-envelope
+- ADR 0031: SDK Identity Inventory Is Not Framework Semantic Completion | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0031-sdk-identity-governance-scope
+- ADR 0032: SDK Contract Scope Classification | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0032-sdk-contract-scope-classification
+- ADR 0033: Cancellation-safe Subagent factory publication | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0033-subagent-factory-singleflight-publication
+- ADR 0034: Context-scoped Tool result cache | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0034-context-scoped-tool-result-cache
+- ADR 0035: Owned handles for the Tool registry | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0035-owned-tool-registry-handles
+- ADR 0036: Eval workspace generation lifecycle | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0036-eval-workspace-generation-lifecycle
+- ADR 0037: Eval timeout waits for Turn settlement | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0037-eval-timeout-turn-settlement
+- ADR 0038: Eval resolves trace identity through invocation correlation | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0038-eval-trace-correlation-identity
+- ADR 0039: BackgroundTask uses one process-local terminal authority | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0039-background-task-terminal-authority
+- ADR 0040: Framework Concept Documentation Authority | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0040-framework-concept-documentation-authority
+- ADR 0040: Workflow Checkpoint Lease and Sibling Settlement | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0040-workflow-checkpoint-lease-and-sibling-settlement
+- ADR 0041: Semantic Governance Continuity from the SDK Baseline | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0041-semantic-governance-continuity
+- ADR 0042: Scheduler Occurrence Authority | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0042-scheduler-occurrence-authority
+- ADR 0043: Manager-owned LSP derived handle lifecycle | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0043-lsp-derived-handle-lifecycle
+- ADR 0044: One Runtime Authority for Skill Activation | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0044-skill-activation-authority
+- ADR 0045: Confirmed Semantic Governance Decisions | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0045-confirmed-semantic-governance-decisions
+- ADR 0046: Separate Turn Execution and Delivery Settlement | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0046-turn-execution-delivery-settlement
+- ADR 0050: Local MCP Tool Classification Authority | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0050-mcp-tool-local-classification
+- ADR 0051: Extract echo-agent SDK into an Independent Repository | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0051-extract-sdk-repository
+- ADR 0052: Canonical Workflow Entry Loop Authority | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0052-workflow-entry-loop-authority
+- ADR 0053: Separate Diagnostic Persistence Delivery from Execution | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0053-trace-audit-persistence-visibility
+- ADR 0055: Bind Checkpoints to Journal Generation Identity | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0055-checkpoint-journal-identity
+- ADR 0056: Durable Transcript Projection Settlement | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0056-durable-transcript-projection-settlement
+- ADR 0057: Fence Channel Delivery by Session Generation | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0057-channel-generation-delivery-fence
+- ADR 0058: TaskClaim-Derived Subagent Attempt Control | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0058-task-claim-subagent-attempt-control
+- ADR 0059: Task Graph and Workflow Graph Authorities | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0059-task-workflow-dag-authority
+- ADR 0060: Fail-Closed Plugin Callback Reconciliation | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0060-plugin-lifecycle-reconcile-settlement
+- ADR 0064: Provider Stream Semantic Terminal | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0064-provider-stream-semantic-terminal
 - Knowledge Base Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/knowledge-overview
 - Agent Design Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/agent-patterns
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive

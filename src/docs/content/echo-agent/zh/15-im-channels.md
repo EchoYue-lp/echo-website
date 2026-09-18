@@ -137,6 +137,17 @@ async fn main() -> echo_agent::error::Result<()> {
 
 ## ChannelPlugin 接口
 
+`AgentChannelHandler` 将每条入站消息交给 `AgentTurnDriver`。标准 handler 只在
+`TurnReceipt` 为 `Completed + Delivered` 且包含最终答案时生成回复；取消或失败
+不能被误判为成功。框架调用者可通过
+`AgentChannelHandler::drive_turn(&message, cancel_token)` 获取 Turn 身份、用量和
+取消终态。这里的 delivery 指事件 sink 接纳，向 IM 平台发送则继续由 channel
+generation fence 约束；`drive_turn_with_sink` 可接入调用方自己的 Journal 或投影
+sink，默认 sink 仅表示进程内接纳，不是 QQ/飞书送达确认。framework session reset
+会把取消 token 交给该 driven handler，并等待 Turn 结算后再确认替换。底层 Rust
+`Agent::chat` API 保留。参见
+[ADR 0046](../adr/0046-turn-execution-delivery-settlement.md)。
+
 所有 IM 通道实现统一接口：
 
 ```rust
@@ -187,11 +198,13 @@ handler 持续复用 incarnation；framework timeout/reset 替换会创建新 in
 clone 与 `SessionEndInfo` 都能看到该变化，因此应用可以精确回收旧模型/runtime context，同时
 继续用稳定产品会话 ID 保存 journal 与 Task 历史。
 
-reset 回复和 replacement session 会立即可用。如果旧 stream 仍在运行（包括已准入但尚未 poll 的
-stream），旧 `SessionEndInfo` 清理回调只会在该 stream 完成结算后触发。这样消费者总是在旧
-stream 最后一次写入之后精确回收 checkpoint，不会发生“先清理、后被旧 stream 重新写回”。
-如果消费者回调自身 panic，`SessionHandler` 会在 lifecycle 边界内隔离该 panic，不会让它从
-stream 析构继续传播，也不会污染 replacement session。
+reset 会先 retire 旧 generation 并取消其 stream。已经被内置 transport 接纳的 chunk 可以先完成
+结算，reset 随后才会确认；旧 generation 的后续 chunk 会在进入队列或网络请求前被拒绝。
+replacement handler 与 reset 回复只在该 delivery barrier 之后发布，因此 reset 确认之后不会再出现
+旧回复。已经准入但从未 poll 的 stream 仍持有自己的 receipt，其 `SessionEndInfo` 清理回调会在
+stream 被 drop 后执行。如果消费者回调自身 panic，`SessionHandler` 会在 lifecycle 边界内隔离
+该 panic，不会让它从 stream 析构继续传播，也不会污染 replacement session。详见
+[ADR 0057](../adr/0057-channel-generation-delivery-fence.md)。
 
 自定义 Agent driver 应把稳定产品 ID 放在
 `AgentInvocationContext.runtime.conversation_id`，并把 instance 派生的 runtime key 同时传给
@@ -211,6 +224,7 @@ pub struct OutboundMessage {
     pub chat_type: ChatType,
     pub text: String,
     pub reply_to: Option<String>,  // 被回复的消息 ID
+    // SessionHandler 会附加进程内 opaque delivery fence。
 }
 ```
 
@@ -279,6 +293,11 @@ pub struct QqConfig {
 ### Token 管理
 
 Token 自动缓存，提前 5 分钟刷新，无需手动管理。
+
+`QqConfig` 与 `FeishuConfig` 提供 credential-safe `Debug`：client/app secret、
+Webhook verification token 和 signing key 都显示为 `[REDACTED]`。Channel
+transport 日志和返回的诊断也会在格式化前脱敏符合凭据形态的响应文本与 URL；实际请求和
+连接行为不变。
 
 ## 飞书
 
