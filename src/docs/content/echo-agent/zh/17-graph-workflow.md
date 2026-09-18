@@ -196,6 +196,16 @@ while let Some(event) = stream.next().await {
 }
 ```
 
+`NodeError` 是失败终态的诊断事件：流会先发出该事件，随后以同一个错误结束，
+不会再发出 `Completed`。并行分支遇到首个失败时会取消并排空其余 sibling，避免
+挂起节点遮蔽错误或在调用方取消后继续产生副作用。
+Agent 节点会把 `AgentEvent::Token` 转发为 `WorkflowEvent::Token`，并在发出
+`NodeEnd` 前把最终答案提交到 `SharedState`。
+
+`run`、`run_until_interrupt`、checkpoint resume 和 `run_stream` 的节点路由、
+path/step 计数、fan-out、错误和完成结算全部委托给同一条内部执行循环。流式入口只是
+该循环的事件投影，不是第二个执行器。
+
 ---
 
 ## 声明式 YAML 工作流
@@ -255,7 +265,13 @@ let result = graph.run(state).await?;
 | `Graph` | LangGraph 风格，支持条件边、循环 | 复杂多 Agent 编排 |
 | `SequentialWorkflow` | 简单管道，步骤 N 输出 → 步骤 N+1 输入 | ETL 管道 |
 | `ConcurrentWorkflow` | 所有 Agent 并行执行，结果合并 | 并行分析 |
-| `DagWorkflow` | 拓扑调度，独立节点自动并行 | DAG 任务 |
+| `DagWorkflow` | 固定的无环 Agent 管道，前驱文本输出传给后继节点 | 静态管道调用 |
+
+这些是公开的 Workflow API，与版本化 Task graph 分属不同权威。`Graph` 拥有条件
+路由、共享状态和 checkpoint continuation；`DagWorkflow` 拥有一次固定拓扑的管道
+调用，没有 Task claim 或 checkpoint 合同。动态 Task DAG 应使用
+`RuntimeTaskService`。Task 派发 Workflow 时，其输出是精确 claim 结算的证据，
+不是另一套 Task 状态权威。见 [ADR 0059](../adr/0059-task-workflow-dag-authority.md)。
 
 ### SequentialWorkflow
 
@@ -308,6 +324,17 @@ let result = graph.run_with_checkpoints(state.clone(), &checkpoint_store).await?
 let checkpoint_id = checkpoint_store.latest()?.id;
 let resumed = graph.resume_from_checkpoint(&checkpoint_store, &checkpoint_id).await?;
 ```
+
+恢复通过 `CheckpointStore` 的 claim lease 完成。成功的 continuation 必须 ack，
+节点失败或恢复异常会 requeue；文件 store 的 claim 在 `load`/`list` 中保持可见，
+长时间 continuation 运行期间由 `Graph` 使用同一 attempt heartbeat 续租，只有停止
+续租的崩溃 claim 才能在 lease 到期后重新发现。对活动 claim 修改标签会因 generation
+冲突失败，不会复活已领取的 continuation。自定义和 SDK-backed store 必须实现 renew、
+ack、requeue 与 generation-CAS；不支持的结算会失败关闭。
+
+批准 `BeforeNode` checkpoint 只会跳过它所代表的那一次中断，后续节点自己的中断仍会
+正常检查。finish 节点与其它可执行节点使用相同的 before/after 中断语义；从 finish 后的
+checkpoint 恢复时会沿保留路径完成，不会重复执行 finish 节点。
 
 ---
 

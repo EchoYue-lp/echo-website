@@ -126,12 +126,24 @@ EchoAgent 向 stdio 子进程提供 `PLUGIN_ROOT` 和 `PLUGIN_DATA`。`${PLUGIN_
 
 应用可以覆盖插件数据根目录，embedding application 会将其设为 `<application-data>`。
 
-插件按依赖顺序加载。清单致命错误会跳过整个包；组件错误按最小可行边界隔离。运行时记录每个插件的组件所有权，因此 disable、uninstall 和 reload 能精确卸载对应组件。
+插件按依赖顺序加载。清单致命错误会跳过整个包；framework解析的Skill、Hook、MCP错误按组件边界隔离并记录error diagnostic，无法读取的冻结Subagent/LSP文档也按相同方式排除。二者的产品级语法由embedding application的第二阶段prepare校验。同一插件中健康的兄弟组件仍保留在prepared plugin中。运行时记录每个插件的组件所有权，因此disable、uninstall和reload能精确卸载对应组件。
 
 `PluginIntegrator::prepare` 捕获唯一不可变的 `PreparedPluginSet`，包括单调 generation、确定性
 内容 identity、结构化诊断、已解析的 Skills/Hooks/MCP，以及保留 owner 的 Subagent/LSP 文档。
 `wire_prepared` 与 rollback 不读取组件文件；磁盘变化只在 registry mutation 或显式 invalidation
 后可见。见 [ADR 0012](../adr/0012-immutable-plugin-preparation.md)。
+
+存在组件诊断时，整个 set 仍然可应用；只有依赖排序或 generation 分配等代次级不变量无法
+构造完整不可变快照时，set 才会被拒绝。
+
+`PluginLifecycleManager` 单独拥有 callback 清理状态。`deactivate`、`init` 或 `activate`
+失败会留下 cleanup debt，并阻断 `reconcile`、`activate_enabled` 和直接 `activate` 的后续
+callback 激活。失败注册项保留供重试；已激活 callback 成功撤销后只结清撤销债务，初始化或
+激活失败则须成功执行 `unregister` 清理；初始化失败只需 shutdown，不调用尚未进入的
+deactivate 阶段。期望 enabled 集合变化本身不表示旧资源已撤销。
+`shutdown` 失败的债务不会被后续成功的 `deactivate` 清除，仍需通过 `unregister` 重试。见
+[ADR 0060](../adr/0060-plugin-lifecycle-reconcile-settlement.md)。完整 reload 事务仍需宿主
+协调 Registry 与组件 wiring。
 
 ## API
 

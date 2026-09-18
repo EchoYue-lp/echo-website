@@ -286,6 +286,13 @@ availability 使用实例共享短缓存，截断的全局容器列表会显式�
 输出保留上限；额外 Docker 参数采用窄 allowlist，不能覆盖容器身份、
 label、restart、network、namespace、mount、security 或 capability 设置。
 
+`K8sSandbox` 同样把 kubectl 执行和预分配的 Pod 名称转交 detached backend owner。
+成功、非零退出、超时、取消、stdin 或 kubectl 失败以及 caller drop 都汇合到有界的
+graceful Pod 删除；即使 kubectl leader 已退出，也会结算其进程组并有界 drain 输出。
+terminal 会等待 Pod API 对象及其 finalizer 消失。删除命令 spawn、超时或非零退出会先由
+owner 记录，再返回保留 primary terminal facts 的 typed sandbox I/O 错误。这里不使用
+force deletion，因为 Kubernetes 不会在强制移除 Pod API 对象前确认节点进程已经终止。
+
 ---
 
 ## 6. 密钥管理
@@ -367,6 +374,10 @@ export JWT_SECRET="your-secret-at-least-32-characters-long"
 ## 9. 审计日志
 
 所有工具调用、权限决策、Guard 拦截均被记录：
+
+通过 `ReactAgentBuilder::audit_logger` 配置的 `AuditLogger` 在工具结果结算后记录
+`ToolCall`（包含耗时与处理后的输出）。PostToolUse 在执行后拒绝时记为失败，同时保留
+工具已产生的输出；执行前被拒绝的调用不生成工具结果审计事件。
 
 ```rust
 let logs = state.get_audit_logs().await;

@@ -31,6 +31,18 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/how-it-works" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/docs/architecture</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/architecture" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/architecture" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/architecture" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/concepts</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/concepts" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/concepts" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/concepts" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/docs/tools</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/tools" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/tools" />
@@ -247,6 +259,12 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/data-output-format" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/docs/lifecycles</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/lifecycles" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/lifecycles" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/lifecycles" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/docs/tracing</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/tracing" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/tracing" />
@@ -457,6 +475,12 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0027-subagent-communication-primitives" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/docs/adr-0028-source-first-multilanguage-sdk-runtime</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0028-source-first-multilanguage-sdk-runtime" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0028-source-first-multilanguage-sdk-runtime" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0028-source-first-multilanguage-sdk-runtime" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/docs/adr-0029-shared-subagent-execution-admission</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0029-shared-subagent-execution-admission" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0029-shared-subagent-execution-admission" />
@@ -467,6 +491,174 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0030-versioned-subagent-event-envelope" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0030-versioned-subagent-event-envelope" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0030-versioned-subagent-event-envelope" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0031-sdk-identity-governance-scope</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0031-sdk-identity-governance-scope" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0031-sdk-identity-governance-scope" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0031-sdk-identity-governance-scope" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0032-sdk-contract-scope-classification</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0032-sdk-contract-scope-classification" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0032-sdk-contract-scope-classification" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0032-sdk-contract-scope-classification" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0033-subagent-factory-singleflight-publication</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0033-subagent-factory-singleflight-publication" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0033-subagent-factory-singleflight-publication" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0033-subagent-factory-singleflight-publication" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0034-context-scoped-tool-result-cache</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0034-context-scoped-tool-result-cache" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0034-context-scoped-tool-result-cache" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0034-context-scoped-tool-result-cache" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0035-owned-tool-registry-handles</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0035-owned-tool-registry-handles" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0035-owned-tool-registry-handles" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0035-owned-tool-registry-handles" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0036-eval-workspace-generation-lifecycle</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0036-eval-workspace-generation-lifecycle" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0036-eval-workspace-generation-lifecycle" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0036-eval-workspace-generation-lifecycle" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0037-eval-timeout-turn-settlement</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0037-eval-timeout-turn-settlement" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0037-eval-timeout-turn-settlement" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0037-eval-timeout-turn-settlement" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0038-eval-trace-correlation-identity</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0038-eval-trace-correlation-identity" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0038-eval-trace-correlation-identity" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0038-eval-trace-correlation-identity" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0039-background-task-terminal-authority</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0039-background-task-terminal-authority" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0039-background-task-terminal-authority" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0039-background-task-terminal-authority" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0040-framework-concept-documentation-authority</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0040-framework-concept-documentation-authority" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0040-framework-concept-documentation-authority" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0040-framework-concept-documentation-authority" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0040-workflow-checkpoint-lease-and-sibling-settlement</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0040-workflow-checkpoint-lease-and-sibling-settlement" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0040-workflow-checkpoint-lease-and-sibling-settlement" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0040-workflow-checkpoint-lease-and-sibling-settlement" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0041-semantic-governance-continuity</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0041-semantic-governance-continuity" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0041-semantic-governance-continuity" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0041-semantic-governance-continuity" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0042-scheduler-occurrence-authority</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0042-scheduler-occurrence-authority" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0042-scheduler-occurrence-authority" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0042-scheduler-occurrence-authority" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0043-lsp-derived-handle-lifecycle</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0043-lsp-derived-handle-lifecycle" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0043-lsp-derived-handle-lifecycle" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0043-lsp-derived-handle-lifecycle" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0044-skill-activation-authority</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0044-skill-activation-authority" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0044-skill-activation-authority" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0044-skill-activation-authority" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0045-confirmed-semantic-governance-decisions</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0045-confirmed-semantic-governance-decisions" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0045-confirmed-semantic-governance-decisions" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0045-confirmed-semantic-governance-decisions" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0046-turn-execution-delivery-settlement</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0046-turn-execution-delivery-settlement" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0046-turn-execution-delivery-settlement" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0046-turn-execution-delivery-settlement" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0050-mcp-tool-local-classification</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0050-mcp-tool-local-classification" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0050-mcp-tool-local-classification" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0050-mcp-tool-local-classification" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0051-extract-sdk-repository</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0051-extract-sdk-repository" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0051-extract-sdk-repository" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0051-extract-sdk-repository" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0052-workflow-entry-loop-authority</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0052-workflow-entry-loop-authority" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0052-workflow-entry-loop-authority" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0052-workflow-entry-loop-authority" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0053-trace-audit-persistence-visibility</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0053-trace-audit-persistence-visibility" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0053-trace-audit-persistence-visibility" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0053-trace-audit-persistence-visibility" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0055-checkpoint-journal-identity</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0055-checkpoint-journal-identity" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0055-checkpoint-journal-identity" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0055-checkpoint-journal-identity" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0056-durable-transcript-projection-settlement</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0056-durable-transcript-projection-settlement" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0056-durable-transcript-projection-settlement" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0056-durable-transcript-projection-settlement" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0057-channel-generation-delivery-fence</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0057-channel-generation-delivery-fence" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0057-channel-generation-delivery-fence" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0057-channel-generation-delivery-fence" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0058-task-claim-subagent-attempt-control</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0058-task-claim-subagent-attempt-control" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0058-task-claim-subagent-attempt-control" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0058-task-claim-subagent-attempt-control" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0059-task-workflow-dag-authority</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0059-task-workflow-dag-authority" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0059-task-workflow-dag-authority" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0059-task-workflow-dag-authority" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0060-plugin-lifecycle-reconcile-settlement</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0060-plugin-lifecycle-reconcile-settlement" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0060-plugin-lifecycle-reconcile-settlement" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0060-plugin-lifecycle-reconcile-settlement" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0064-provider-stream-semantic-terminal</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0064-provider-stream-semantic-terminal" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0064-provider-stream-semantic-terminal" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0064-provider-stream-semantic-terminal" />
   </url>
   <url>
     <loc>https://echo-agent.dev/docs/knowledge-overview</loc>
@@ -563,6 +755,18 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/how-it-works" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/how-it-works" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/how-it-works" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/architecture</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/architecture" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/architecture" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/architecture" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/concepts</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/concepts" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/concepts" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/concepts" />
   </url>
   <url>
     <loc>https://echo-agent.dev/en/docs/tools</loc>
@@ -781,6 +985,12 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/data-output-format" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/en/docs/lifecycles</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/lifecycles" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/lifecycles" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/lifecycles" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/en/docs/tracing</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/tracing" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/tracing" />
@@ -991,6 +1201,12 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0027-subagent-communication-primitives" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0028-source-first-multilanguage-sdk-runtime</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0028-source-first-multilanguage-sdk-runtime" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0028-source-first-multilanguage-sdk-runtime" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0028-source-first-multilanguage-sdk-runtime" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/en/docs/adr-0029-shared-subagent-execution-admission</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0029-shared-subagent-execution-admission" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0029-shared-subagent-execution-admission" />
@@ -1001,6 +1217,174 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0030-versioned-subagent-event-envelope" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0030-versioned-subagent-event-envelope" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0030-versioned-subagent-event-envelope" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0031-sdk-identity-governance-scope</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0031-sdk-identity-governance-scope" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0031-sdk-identity-governance-scope" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0031-sdk-identity-governance-scope" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0032-sdk-contract-scope-classification</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0032-sdk-contract-scope-classification" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0032-sdk-contract-scope-classification" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0032-sdk-contract-scope-classification" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0033-subagent-factory-singleflight-publication</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0033-subagent-factory-singleflight-publication" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0033-subagent-factory-singleflight-publication" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0033-subagent-factory-singleflight-publication" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0034-context-scoped-tool-result-cache</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0034-context-scoped-tool-result-cache" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0034-context-scoped-tool-result-cache" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0034-context-scoped-tool-result-cache" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0035-owned-tool-registry-handles</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0035-owned-tool-registry-handles" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0035-owned-tool-registry-handles" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0035-owned-tool-registry-handles" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0036-eval-workspace-generation-lifecycle</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0036-eval-workspace-generation-lifecycle" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0036-eval-workspace-generation-lifecycle" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0036-eval-workspace-generation-lifecycle" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0037-eval-timeout-turn-settlement</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0037-eval-timeout-turn-settlement" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0037-eval-timeout-turn-settlement" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0037-eval-timeout-turn-settlement" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0038-eval-trace-correlation-identity</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0038-eval-trace-correlation-identity" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0038-eval-trace-correlation-identity" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0038-eval-trace-correlation-identity" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0039-background-task-terminal-authority</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0039-background-task-terminal-authority" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0039-background-task-terminal-authority" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0039-background-task-terminal-authority" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0040-framework-concept-documentation-authority</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0040-framework-concept-documentation-authority" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0040-framework-concept-documentation-authority" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0040-framework-concept-documentation-authority" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0040-workflow-checkpoint-lease-and-sibling-settlement</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0040-workflow-checkpoint-lease-and-sibling-settlement" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0040-workflow-checkpoint-lease-and-sibling-settlement" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0040-workflow-checkpoint-lease-and-sibling-settlement" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0041-semantic-governance-continuity</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0041-semantic-governance-continuity" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0041-semantic-governance-continuity" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0041-semantic-governance-continuity" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0042-scheduler-occurrence-authority</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0042-scheduler-occurrence-authority" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0042-scheduler-occurrence-authority" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0042-scheduler-occurrence-authority" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0043-lsp-derived-handle-lifecycle</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0043-lsp-derived-handle-lifecycle" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0043-lsp-derived-handle-lifecycle" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0043-lsp-derived-handle-lifecycle" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0044-skill-activation-authority</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0044-skill-activation-authority" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0044-skill-activation-authority" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0044-skill-activation-authority" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0045-confirmed-semantic-governance-decisions</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0045-confirmed-semantic-governance-decisions" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0045-confirmed-semantic-governance-decisions" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0045-confirmed-semantic-governance-decisions" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0046-turn-execution-delivery-settlement</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0046-turn-execution-delivery-settlement" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0046-turn-execution-delivery-settlement" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0046-turn-execution-delivery-settlement" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0050-mcp-tool-local-classification</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0050-mcp-tool-local-classification" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0050-mcp-tool-local-classification" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0050-mcp-tool-local-classification" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0051-extract-sdk-repository</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0051-extract-sdk-repository" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0051-extract-sdk-repository" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0051-extract-sdk-repository" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0052-workflow-entry-loop-authority</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0052-workflow-entry-loop-authority" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0052-workflow-entry-loop-authority" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0052-workflow-entry-loop-authority" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0053-trace-audit-persistence-visibility</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0053-trace-audit-persistence-visibility" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0053-trace-audit-persistence-visibility" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0053-trace-audit-persistence-visibility" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0055-checkpoint-journal-identity</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0055-checkpoint-journal-identity" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0055-checkpoint-journal-identity" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0055-checkpoint-journal-identity" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0056-durable-transcript-projection-settlement</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0056-durable-transcript-projection-settlement" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0056-durable-transcript-projection-settlement" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0056-durable-transcript-projection-settlement" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0057-channel-generation-delivery-fence</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0057-channel-generation-delivery-fence" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0057-channel-generation-delivery-fence" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0057-channel-generation-delivery-fence" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0058-task-claim-subagent-attempt-control</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0058-task-claim-subagent-attempt-control" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0058-task-claim-subagent-attempt-control" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0058-task-claim-subagent-attempt-control" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0059-task-workflow-dag-authority</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0059-task-workflow-dag-authority" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0059-task-workflow-dag-authority" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0059-task-workflow-dag-authority" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0060-plugin-lifecycle-reconcile-settlement</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0060-plugin-lifecycle-reconcile-settlement" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0060-plugin-lifecycle-reconcile-settlement" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0060-plugin-lifecycle-reconcile-settlement" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0064-provider-stream-semantic-terminal</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0064-provider-stream-semantic-terminal" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0064-provider-stream-semantic-terminal" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0064-provider-stream-semantic-terminal" />
   </url>
   <url>
     <loc>https://echo-agent.dev/en/docs/knowledge-overview</loc>
