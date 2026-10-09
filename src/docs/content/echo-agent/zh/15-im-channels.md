@@ -148,6 +148,27 @@ sink，默认 sink 仅表示进程内接纳，不是 QQ/飞书送达确认。fra
 `Agent::chat` API 保留。参见
 [ADR 0046](../adr/0046-turn-execution-delivery-settlement.md)。
 
+入站消息带附件时，同一个 Turn 传入 typed user message：非空文本在前，附件按原顺序
+排列。图像按字节签名识别 PNG、JPEG、GIF、WebP，并用正确 MIME 的 data URL 编码；
+无法识别的图像在模型接纳前拒绝。文件以 base64 `ContentPart::File` 保留原始字节，
+transport 未给文件名时使用稳定生成名。核心消息类型没有音频、视频对应的 typed part，
+因此这两类附件明确报错，不会悄悄退化为纯文本。无附件消息沿用原纯文本路径。
+这保证 framework typed 投影保留附件字节与部件顺序，不表示所有 transport 元数据
+都有对应字段，也不保证各 provider 都能读取任意二进制文件；
+provider adapter 可能把不支持的文件渲染成只有名称的占位内容。参见
+[ADR 0077](../adr/0077-channel-attachment-projection.md)。
+
+资源关闭是独立边界：`ChannelManager::stop_all` 先停止每个 transport，再 await
+它保留的 `MessageHandler::close`。`SessionHandler` 取消 sender generation、
+等待全部 accepted/polled active stream 与 delivery lease，然后 await 每个 sender
+Agent close。shutdown 也等待不发布 driven terminal 的 legacy/custom handler；
+该 receipt 只证明资源生命周期，不新建 Turn terminal。reset 继续使用既有
+driven-only terminal settlement policy。
+reset 或超时替换会先关闭旧 Agent，再发布新 Agent。关闭错误或调用方取消时保留
+handler/session owner，后续可重试 `stop` 或 `close`，且不会重新开放消息接纳。
+有资源的自定义 handler 应实现 `MessageHandler::close`；无资源 handler 使用默认
+no-op。参见 [ADR 0066](../adr/0066-agent-adapter-close-ownership.md)。
+
 所有 IM 通道实现统一接口：
 
 ```rust
@@ -181,6 +202,7 @@ pub struct InboundMessage {
     pub text: String,
     pub message_id: String,   // 平台原始消息 ID（用于回复）
     pub timestamp: u64,
+    pub attachments: Vec<MessageAttachment>,
 }
 ```
 
@@ -344,11 +366,13 @@ manager.register(Box::new(QqChannel::new(config)?));
 manager.register(Box::new(FeishuChannel::new(config)?));
 
 // 为每个通道创建独立的 Handler
-manager.start_all(|channel_id| {
+for started in manager.start_all(|_channel_id| {
     Arc::new(MyHandler::new(llm_client.clone()))
-}).await?;
+}).await {
+    started.result?;
+}
 
-// 停止所有
+// 停止 transport、排空 handler，并等待各 sender Agent close。
 manager.stop_all().await?;
 ```
 

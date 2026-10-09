@@ -378,6 +378,22 @@ export const frameworkAdrDocs = [
     filePath: './content/echo-agent/adr/0046-turn-execution-delivery-settlement.md',
   },
   {
+    slug: 'adr-0047-model-facts-freshness-authority',
+    title: {
+      zh: 'ADR 0047: Model Facts Freshness Authority',
+      en: 'ADR 0047: Model Facts Freshness Authority',
+    },
+    filePath: './content/echo-agent/adr/0047-model-facts-freshness-authority.md',
+  },
+  {
+    slug: 'adr-0049-mcp-transport-close-settlement',
+    title: {
+      zh: 'ADR 0049: MCP Transport Close Settlement',
+      en: 'ADR 0049: MCP Transport Close Settlement',
+    },
+    filePath: './content/echo-agent/adr/0049-mcp-transport-close-settlement.md',
+  },
+  {
     slug: 'adr-0050-mcp-tool-local-classification',
     title: {
       zh: 'ADR 0050: Local MCP Tool Classification Authority',
@@ -434,12 +450,28 @@ export const frameworkAdrDocs = [
     filePath: './content/echo-agent/adr/0057-channel-generation-delivery-fence.md',
   },
   {
+    slug: 'adr-0058-background-review-settlement-ownership',
+    title: {
+      zh: 'ADR 0058: Background Review Settlement Ownership',
+      en: 'ADR 0058: Background Review Settlement Ownership',
+    },
+    filePath: './content/echo-agent/adr/0058-background-review-settlement-ownership.md',
+  },
+  {
     slug: 'adr-0058-task-claim-subagent-attempt-control',
     title: {
       zh: 'ADR 0058: TaskClaim-Derived Subagent Attempt Control',
       en: 'ADR 0058: TaskClaim-Derived Subagent Attempt Control',
     },
     filePath: './content/echo-agent/adr/0058-task-claim-subagent-attempt-control.md',
+  },
+  {
+    slug: 'adr-0059-observed-tool-effects-and-background-dispatch',
+    title: {
+      zh: 'ADR 0059: Record Confirmed Tool Effects at Their Owning Boundary',
+      en: 'ADR 0059: Record Confirmed Tool Effects at Their Owning Boundary',
+    },
+    filePath: './content/echo-agent/adr/0059-observed-tool-effects-and-background-dispatch.md',
   },
   {
     slug: 'adr-0059-task-workflow-dag-authority',
@@ -464,5 +496,149 @@ export const frameworkAdrDocs = [
       en: 'ADR 0064: Provider Stream Semantic Terminal',
     },
     filePath: './content/echo-agent/adr/0064-provider-stream-semantic-terminal.md',
+  },
+  {
+    slug: 'adr-0065-evolution-memory-audit-reconciliation',
+    title: {
+      zh: 'ADR 0065: Recover Layered Memory Mutations with Durable Audit Identities',
+      en: 'ADR 0065: Recover Layered Memory Mutations with Durable Audit Identities',
+    },
+    filePath: './content/echo-agent/adr/0065-evolution-memory-audit-reconciliation.md',
+  },
+  {
+    slug: 'adr-0066-agent-adapter-close-ownership',
+    title: {
+      zh: 'ADR 0066: Settle Agent Resources at Adapter Close',
+      en: 'ADR 0066: Settle Agent Resources at Adapter Close',
+    },
+    filePath: './content/echo-agent/adr/0066-agent-adapter-close-ownership.md',
+  },
+  {
+    slug: 'adr-0067-mcp-owner-qualified-identity',
+    title: {
+      zh: 'ADR 0067: Owner-qualified MCP server identity',
+      en: 'ADR 0067: Owner-qualified MCP server identity',
+    },
+    filePath: './content/echo-agent/adr/0067-mcp-owner-qualified-identity.md',
+  },
+  {
+    slug: 'adr-0068-skill-candidate-mutation-audit-reconciliation',
+    title: {
+      zh: 'ADR 0068: Reconcile Skill Candidate Mutation with Business Audit',
+      en: 'ADR 0068: Reconcile Skill Candidate Mutation with Business Audit',
+    },
+    filePath: './content/echo-agent/adr/0068-skill-candidate-mutation-audit-reconciliation.md',
+  },
+  {
+    slug: 'adr-0069-plugin-host-lifecycle-coordinator',
+    title: {
+      zh: 'ADR 0069: Host-level plugin lifecycle coordinator',
+      en: 'ADR 0069: Host-level plugin lifecycle coordinator',
+    },
+    filePath: './content/echo-agent/adr/0069-plugin-host-lifecycle-coordinator.md',
+  },
+  {
+    slug: 'adr-0069-skill-lifecycle-mutation-authority',
+    title: {
+      zh: 'ADR 0069: Canonical Skill Lifecycle Mutation and Rollback Authority',
+      en: 'ADR 0069: Canonical Skill Lifecycle Mutation and Rollback Authority',
+    },
+    filePath: './content/echo-agent/adr/0069-skill-lifecycle-mutation-authority.md',
+  },
+  {
+    slug: 'adr-0070-memory-provenance-and-recall-authority',
+    title: {
+      zh: 'ADR 0070: Evidence-Bound Memory Activation and Recall',
+      en: 'ADR 0070: Evidence-Bound Memory Activation and Recall',
+    },
+    filePath: './content/echo-agent/adr/0070-memory-provenance-and-recall-authority.md',
+  },
+  {
+    slug: 'adr-0071-protected-path-and-readonly-tool-boundary',
+    title: {
+      zh: 'ADR 0071: Protected Paths and Read-Only Tool Boundaries',
+      en: 'ADR 0071: Protected Paths and Read-Only Tool Boundaries',
+    },
+    filePath: './content/echo-agent/adr/0071-protected-path-and-readonly-tool-boundary.md',
+  },
+  {
+    slug: 'adr-0072-resource-cleanup-ownership',
+    title: {
+      zh: 'ADR 0072: Exact Resource Cleanup Ownership',
+      en: 'ADR 0072: Exact Resource Cleanup Ownership',
+    },
+    filePath: './content/echo-agent/adr/0072-resource-cleanup-ownership.md',
+  },
+  {
+    slug: 'adr-0073-hook-event-producer-contract',
+    title: {
+      zh: 'ADR 0073: Hook Event Producer Contract',
+      en: 'ADR 0073: Hook Event Producer Contract',
+    },
+    filePath: './content/echo-agent/adr/0073-hook-event-producer-contract.md',
+  },
+  {
+    slug: 'adr-0074-trace-audit-retention-contract',
+    title: {
+      zh: 'ADR 0074: Trace and Audit Retention at the Producer Boundary',
+      en: 'ADR 0074: Trace and Audit Retention at the Producer Boundary',
+    },
+    filePath: './content/echo-agent/adr/0074-trace-audit-retention-contract.md',
+  },
+  {
+    slug: 'adr-0075-invocation-approval-receipt',
+    title: {
+      zh: 'ADR 0075: Invocation-Scoped Tool Approval Receipt',
+      en: 'ADR 0075: Invocation-Scoped Tool Approval Receipt',
+    },
+    filePath: './content/echo-agent/adr/0075-invocation-approval-receipt.md',
+  },
+  {
+    slug: 'adr-0076-guard-direction-and-boundary-authority',
+    title: {
+      zh: 'ADR 0076: Guard Direction and Boundary Authority',
+      en: 'ADR 0076: Guard Direction and Boundary Authority',
+    },
+    filePath: './content/echo-agent/adr/0076-guard-direction-and-boundary-authority.md',
+  },
+  {
+    slug: 'adr-0077-channel-attachment-projection',
+    title: {
+      zh: 'ADR 0077: Project Channel Attachments into Typed Agent Messages',
+      en: 'ADR 0077: Project Channel Attachments into Typed Agent Messages',
+    },
+    filePath: './content/echo-agent/adr/0077-channel-attachment-projection.md',
+  },
+  {
+    slug: 'adr-0078-structured-output-main-request',
+    title: {
+      zh: 'ADR 0078: Main ReAct structured-output request authority',
+      en: 'ADR 0078: Main ReAct structured-output request authority',
+    },
+    filePath: './content/echo-agent/adr/0078-structured-output-main-request.md',
+  },
+  {
+    slug: 'adr-0079-strict-structured-output-validation',
+    title: {
+      zh: 'ADR 0079: Strict structured-output validation before terminal success',
+      en: 'ADR 0079: Strict structured-output validation before terminal success',
+    },
+    filePath: './content/echo-agent/adr/0079-strict-structured-output-validation.md',
+  },
+  {
+    slug: 'adr-0080-managed-transcript-import-generation',
+    title: {
+      zh: 'ADR 0080: Managed Transcript Import Seeds One Projection Generation',
+      en: 'ADR 0080: Managed Transcript Import Seeds One Projection Generation',
+    },
+    filePath: './content/echo-agent/adr/0080-managed-transcript-import-generation.md',
+  },
+  {
+    slug: 'adr-0081-token-budgeted-compression-tail',
+    title: {
+      zh: 'ADR 0081: Token-budgeted recent conversation tail',
+      en: 'ADR 0081: Token-budgeted recent conversation tail',
+    },
+    filePath: './content/echo-agent/adr/0081-token-budgeted-compression-tail.md',
   },
 ];

@@ -95,6 +95,25 @@ EchoAgent provides `PLUGIN_ROOT` and `PLUGIN_DATA` to stdio subprocesses. `${PLU
 
 An invalid top-level `mcp.json` disables only MCP for that plugin. An invalid, unavailable, or colliding server disables only that entry.
 
+### MCP ownership and projections
+
+The `name` key remains the portable local server name. At runtime the framework
+qualifies it with its owner: direct configuration uses `McpServerOwner::Direct`,
+while plugin wiring uses the stable `PreparedPlugin.id`. Thus two plugins may
+both declare `filesystem` without sharing a connection or cleanup debt. Use the
+typed `McpServerId`/`server_ids()` APIs when the owner matters; legacy string
+APIs continue to address direct servers.
+
+Direct tools retain `mcp__<server>__<tool>`. Plugin tools use
+`mcp__plugin_<plugin>_<server>__<tool>` with a stable digest suffix when the
+canonical Unicode or punctuation name is lossy. Resource selectors are opaque
+`plugin:<base64url-plugin>:<base64url-server>` values. The resource directory
+keeps the typed identity and does not infer an owner from a tool name or URI.
+Direct names keep their legacy selector except reserved `plugin:`/`direct:`
+prefixes, which are reversibly escaped as `direct:<base64url-name>`. A plugin
+Hook `mcp_tool.server` remains a local name in the package and is qualified by
+the prepared plugin owner before registration.
+
 ## Fixed local components
 
 The remaining components are discovered from fixed root locations:
@@ -132,6 +151,40 @@ Loading proceeds in dependency order. Fatal manifest errors skip the package. Fr
 deterministic content identity, structured diagnostics, parsed Skills/Hooks/MCP, and owner-qualified
 Subagent/LSP documents. `wire_prepared` and rollback perform no component file reads. Disk changes
 become visible only after registry mutation or explicit invalidation. See [ADR 0012](../adr/0012-immutable-plugin-preparation.md).
+Generation ordinals are allocated across all integrators in the process, so independent integrators
+can publish successive snapshots to the same Agent without resetting their order.
+
+Each `ReactAgent` still owns one publication target, but hosts drive complete lifecycle
+transitions through `PluginCoordinator`. Construct it with the durable registry and integrator,
+then call `coordinator.reconcile(&mut agent)` for current intent or the typed `enable`, `reload`,
+`disable`, `uninstall`, and `shutdown` operations. A failed transition returns `ActualPending`;
+call `coordinator.retry(&mut agent)` to resume its exact receipt and phase before starting another
+operation. The coordinator serializes transitions while the target remains the sole generation,
+publication receipt, and cleanup-debt authority.
+
+The registry dependency graph fixes transition order: dependencies activate and emit
+`PluginLoaded` first, while dependents deactivate and emit `PluginDisabled` first. A converged
+receipt is valid only for the same Agent publication target. Registering lifecycle callbacks after
+convergence invalidates the no-op fast path so the next reconcile activates them. A wrong Agent is
+rejected before registry intent or callbacks can change.
+
+Registry intent commits before runtime convergence. Callback cleanup therefore precedes exact
+receipt withdrawal, immutable generation publication, callback activation, and lifecycle Hook
+notification attempts. Dependency resolution and generation-wide applicability validation happen
+before callback cleanup, so invalid input preserves the old actual generation and retry reparses
+repaired package files under the same operation receipt. Shutdown withdraws process-local effects
+without disabling durable intent.
+Registry refresh commits only after a complete scan and preserves the last successful scope set;
+a restricted Host view is never widened by coordinator retry.
+`PluginLoaded` and `PluginDisabled` attempts are ordered and de-duplicated within one operation;
+they are not a durable cross-process event log. Cancellation or process failure can lose a Hook
+notification, which remains part of the broader Hook producer contract.
+An unfinished receipt reports `ActualPending` at the next retry phase, including after its future
+is cancelled.
+Each successful MCP connection enters the pending receipt before the next server begins. A name
+that was absent before connection is reserved for cleanup across cancellation during its await;
+failed new connections settle that name before the generation may publish. This does not change
+the separate owner-qualified MCP identity work tracked by #75.
 
 The set remains applicable when a component diagnostic is present. It is rejected only when a
 generation-wide invariant, such as dependency ordering or generation allocation, prevents building
@@ -145,24 +198,36 @@ failed initialization requires shutdown but not deactivation, and failed activat
 successful `unregister` cleanup. A failed callback is
 not treated as withdrawn merely because the desired enabled set changed. Failed `shutdown` remains
 unsettled even if a later `deactivate` succeeds, and must be retried through `unregister`. See
-[ADR 0060](../adr/0060-plugin-lifecycle-reconcile-settlement.md). Registry and component wiring
-still require host-level coordination for a complete reload transaction.
+[ADR 0060](../adr/0060-plugin-lifecycle-reconcile-settlement.md). `PluginCoordinator` composes that
+callback authority with durable registry intent and Agent-bound publication receipts; it does not
+copy callback or generation state. See
+[ADR 0069](../adr/0069-plugin-host-lifecycle-coordinator.md).
+An init or activation retry first uses `PluginLifecycleManager::reset_for_retry` to settle the
+failed callback's own deactivate/shutdown debt without replacing its registration.
 
 ## API
 
 ```rust,no_run
-use echo_agent::plugin::{InstallSource, PluginRegistry, PluginScope};
+use echo_agent::agent::ReactAgentBuilder;
+use echo_agent::plugin::{
+    InstallSource, PluginCoordinator, PluginIntegrator, PluginRegistry, PluginScope,
+};
 
-let mut registry = PluginRegistry::new(Some(std::env::current_dir()?));
+# async fn run() -> Result<(), Box<dyn std::error::Error>> {
+let root = std::env::current_dir()?;
+let mut registry = PluginRegistry::new(root.join(".echo-agent"), Some(root));
 registry.scan_all()?;
-
 let id = registry.install(
     &InstallSource::Local("./review-tools".into()),
     PluginScope::Project,
 )?;
-registry.disable(&id)?;
-registry.enable(&id)?;
-# Ok::<(), Box<dyn std::error::Error>>(())
+let mut agent = ReactAgentBuilder::new().model("local-model").build()?;
+let mut coordinator = PluginCoordinator::new(registry, PluginIntegrator::new());
+coordinator.reconcile(&mut agent).await?;
+coordinator.disable(&mut agent, &id).await?;
+coordinator.enable(&mut agent, &id).await?;
+# Ok(())
+# }
 ```
 
 Use `PluginRegistry::validate_plugin_dir` before installation when a validation report is required.

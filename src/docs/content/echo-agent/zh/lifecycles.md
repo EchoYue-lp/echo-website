@@ -39,7 +39,22 @@ Reply 和 Wait 操作返回或观察owner的result/receipt，不把partial text�
 Delivery failure 在 execution terminal 旁边单独报告，不能改写 producer 已经发出的 execution result。
 Trace、transcript和checkpoint write可在finalization前或期间发生。它们各自存储的status和ordering不定义TurnReceipt，
 但Agent producer contract显式传播的write error可令driven Turn失败；best-effort transcript diagnostic本身不会。
-Adapter projection和awaited close覆盖由各详细adapter contract定义，本概览不定义一条固定顺序。
+Adapter projection 与 awaited close 是不同事实。ACP、Headless、Channels
+现在由各自 owner 关闭接纳、取消已接纳工作、等待结算，再 await `Agent::close`。
+A2A 不在本轮修复范围，既有 lifecycle Findings 保持开放；Channel delivery 仍有
+独立协议边界。参见 [ADR 0066](../adr/0066-agent-adapter-close-ownership.md)
+及[IM Channels](./15-im-channels.md)。
+
+ACP 调用方在把 adapter 传给 `ConnectTo` 或 `Client::connect_with` 前必须保留
+`let close_owner = adapter.close_owner()`。官方 trait 按值消费 adapter，关闭失败时
+无法返还 Session/Agent owner；未保留句柄的连接因此在创建资源前拒绝。出错后调用
+`close_owner.close().await` 可重试同一 framework Session/Run service。独立 SDK
+Host 在升级 framework 依赖时必须同步接入这一公共生命周期合同。
+直接 transport 调用方可用 `let (close_owner, connection) =
+adapter.connect_retaining_close_owner(transport)`，在 poll、await 或 spawn `connection`
+前同步取得句柄。使用官方 Client 的调用方需手动持有句柄，直到连接返回并且
+全部关闭成功；接纳后提前 drop 会放弃重试所有权，属于违反调用合同。连接启动前 drop
+则会拒绝建立连接，不创建 Agent。
 
 详见 [ReAct Agent](./01-react-agent.md)、[流式输出](./10-streaming.md)和
 [Headless](./33-headless-mode.md)。Adapter-specific 保证仍属于各自协议章节；本页不声称所有
@@ -125,6 +140,14 @@ Prompt、project rule 或 Plan 可以引导行为，但不能授予 Permission�
 Hook reduction、protected path、read-only classification和layered shell policy保留各自详细合同；本概览不声称它们已形成全局唯一decision owner。详见 [Tool](./02-tools.md)、[人工环路](./05-human-loop.md)、
 [安全](./security.md)和[Guard 系统](./18-guard-system.md)。
 
+资源清理由创建组件持有精确身份。Tool-output scope 中仍有活跃 writer 时，删除返回
+`WouldBlock`；延迟删除失败保留为可重试债务，并在删除前复核原根目录的物理文件身份。
+目录被替换时不删除新目录，删除时机仍由应用决定。Docker/K8s
+执行 owner 在终态前结算各自命名的资源；manager cleanup 只重试本实例债务并报告
+活跃 owner。Agent close 在 Turn drain 后调用保留的 manager；共享 manager 中仍有其他
+活跃 owner 时，close 报告未结算并允许重试。按共享标签扫描只供明确的人工恢复。Worktree 创建必须完成 marker
+发布，或证明目标 checkout 精确且干净后才补偿移除。详见 [ADR 0072](../adr/0072-resource-cleanup-ownership.md)。
+
 ## Observation 与 Delivery
 
 ```text
@@ -169,8 +192,11 @@ withdraw request -> component-specific close / cleanup observation
 | Terminal | 只有specific owner报告resource已settle时close才是terminal；并非所有management API郺wait全部child resource |
 | Recovery 与 Projection | Generation fencing存在时也由component拥有；stale derived-handle覆盖、catalog和status view遵循详细component contract |
 
-Plugin publication 可组合component，但不消除child cleanup责任。当前行为必须从 [MCP](./08-mcp.md)、
-当前framework不声称拥有覆盖全部extension的单一production coordinator、通用generation fence或awaited close。
+Plugin publication 可组合component，但不消除child cleanup责任。当前framework不声称拥有覆盖全部extension的
+单一production coordinator、通用generation fence或awaited close。MCP 组件有更强的局部合同：transport、
+client、manager 与 Agent close 会传播 `Result`；stdio 与旧版 SSE 只有在 pending call、owned task 和 child
+process 已结算后才返回成功，manager 会继续尝试全部 client 后再聚合失败。
+当前行为必须从 [MCP](./08-mcp.md)、
 [Hook](./23-hooks.md)、[Skill](./07-skills.md)、[Plugin](./32-plugin-system.md) 和 [LSP](./31-lsp-integration.md)
 读取；本概览不承诺atomic hot reload。
 

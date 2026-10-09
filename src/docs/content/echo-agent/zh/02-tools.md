@@ -34,7 +34,8 @@ ToolManager                      ← 注册表 + 执行器
     ├─ task_list                 ← 读取已提交任务图版本
     ├─ agent_tool                ← 分派任务给已注册 Subagent
     ├─ human_in_loop             ← 向人类请求文本输入
-    ├─ remember / recall / forget ← 长期记忆操作
+    ├─ recall / search_memory    ← 已批准记忆的 Store 召回
+    ├─ remember / forget         ← 安装 MemoryLayerManager 后的 journal 写入
     └─ think                     ← CoT 显式思维工具（已被 CoT 文本方案替代）
 
 扩展工具（开箱即用）：
@@ -337,6 +338,15 @@ impl Tool for DeleteFileTool {
 }
 ```
 
+`ReactAgentBuilder::readonly_tools()` 同时约束标准工具包和自定义工具。自定义工具
+必须声明只读 `ToolCapabilities` 才会在构造时注册。调用期间后续注册的变更工具
+也不会出现在模型工具面中，默认执行管线会拒绝其调用。此边界按能力声明判定，
+不依赖工具名称。
+框架观察工具 `task_list`、`list_cells` 和 `subagent_list` 声明只读能力。
+`task_create`、`task_update`、`stop_cell` 和 `subagent_message` 仍是变更工具。
+基于 Store 的记忆召回会更新持久化召回统计；分层记忆搜索可能先结算待处理
+的持久化变更，因此两类记忆搜索都按变更工具处理。
+
 风险分类器 `ToolRiskClassifier`（在 `echo-execution` 中）会自动根据工具名称细分为 7 类风险：
 
 | 类别 | 风险等级 | 示例工具 |
@@ -580,28 +590,13 @@ let choice = ToolChoice::None;
 
 ### 管线阶段
 
-```
-Tool Call → InterventionStage → ParseValidate → PlanMode → PreToolUseHook
-           → Permission → ReadBeforeEdit → Callback(Start) → Execution
-           → TraceRecording → PostToolUseHook → OutputGuard → Truncation
-           → Callback(End)
-```
+默认管线在发布调用或执行工具前检查可见性、计划模式、Hook、权限和最终有效输入。
+执行后，PostToolUse Hook 与输出守卫先于输出预算、Trace、Audit 和终态回调。
+执行后拦截不会抹去已经发生的副作用，也不会跳过其终态观察。工具参数由
+ToolManager 在执行边界校验；不存在独立的 ParseValidate 阶段。
 
-| 阶段 | 作用 |
-|------|------|
-| **InterventionStage** | 干预回调：block / cancel / redirect / modify_args |
-| **ParseValidate** | 参数解析与类型校验 |
-| **PlanMode** | 在计划模式下拦截写操作工具 |
-| **PreToolUseHook** | PreToolUse 钩子：可修改输入或阻止执行 |
-| **Permission** | 权限检查（PermissionService 统一管线） |
-| **ReadBeforeEdit** | 编辑前强制先读取文件（防止盲写） |
-| **Callback(Start)** | on_tool_start 回调 |
-| **Execution** | 实际执行工具 |
-| **TraceRecording** | 记录 Trace 事件 |
-| **PostToolUseHook** | PostToolUse 钩子 |
-| **OutputGuard** | 输出内容守卫检查 |
-| **Truncation** | 输出截断（token 预算） |
-| **Callback(End)** | on_tool_end 回调 |
+[demo64 可执行合同](../../echo-agent-learning/tests/example_contracts/demo64_tool_pipeline.rs)
+从真实默认管线调用发出的结构化事件打印完整阶段顺序，并对生产顺序检查上述约束。
 
 ### 配置管线
 
@@ -612,8 +607,9 @@ use echo_agent::prelude::*;
 let pipeline = ToolExecutionPipeline::default();
 
 let agent = ReactAgentBuilder::new()
+    .model("your-model")
     .tool_execution_pipeline(pipeline)
-    .build(config);
+    .build()?;
 ```
 
 详见 [demo64_tool_pipeline.rs](../../echo-agent-learning/tests/example_contracts/demo64_tool_pipeline.rs)。
