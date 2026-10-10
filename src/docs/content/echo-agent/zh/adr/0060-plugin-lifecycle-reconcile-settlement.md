@@ -4,6 +4,9 @@
 
 Accepted
 
+ADR 0069 adds the host coordinator that orders this callback authority around exact publication
+receipts. Callback debt and retry settlement remain owned by `PluginLifecycleManager`.
+
 ## Context
 
 `PluginLifecycleManager::reconcile` deactivated callbacks absent from the desired set and then
@@ -15,6 +18,10 @@ active with cleanup debt, so two callback owners could run effects at once. The 
 ADR 0012 owns immutable preparation, and ADR 0045 DU-71 forbids overlapping Plugin generations.
 This decision concerns callback ownership inside the existing manager. Registry persistence,
 component wiring, and full host coordination remain separate authorities tracked by #72 and #73.
+Owner-qualified MCP identity is defined independently by
+[ADR 0067](0067-mcp-owner-qualified-identity.md).
+ADR 0012 now defines the per-Agent component-publication fence for #72; it does not merge this
+callback authority with registry persistence or the application reload coordinator.
 
 Kubernetes controllers reconcile actual state toward desired state and retry unresolved work;
 desired state alone is not proof that an old resource was removed. Tokio's graceful shutdown

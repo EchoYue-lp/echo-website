@@ -2,6 +2,11 @@
 
 ## What It Is
 
+On Unix, command-cell and direct-shell cancellation clean up the launched process
+group. Cleanup passes the negative group ID after `kill -KILL --` so it remains
+a positional target across platform utility parsers; child reaping keeps its
+existing lifecycle owner.
+
 Tools are the only mechanism through which an Agent interacts with the external world. The LLM learns about a tool's capabilities via JSON Schema, decides when to call it and with what parameters, and the framework handles the actual execution and returns the result back to the LLM.
 
 ## Problem It Solves
@@ -32,7 +37,8 @@ Built-in tools (builtin):
     ├─ task_list                  ← read the committed graph revision
     ├─ agent_tool                 ← dispatch to a registered Subagent
     ├─ human_in_loop              ← request human text input
-    ├─ remember / recall / forget ← long-term memory operations
+    ├─ recall / search_memory    ← approved Store recall
+    ├─ remember / forget         ← journaled writes with MemoryLayerManager
     └─ think                      ← explicit CoT tool (superseded by CoT text approach)
 
 Extension tools (ready to use):
@@ -346,6 +352,17 @@ impl Tool for DeleteFileTool {
 }
 ```
 
+`ReactAgentBuilder::readonly_tools()` applies to custom tools as well as the
+standard pack. A custom tool must declare read-only `ToolCapabilities` to be
+registered during construction. The invocation surface also hides mutating
+tools registered later and the default execution pipeline rejects their calls.
+The tool capability declaration, rather than its name, controls this boundary.
+Framework observation tools `task_list`, `list_cells`, and `subagent_list`
+declare read-only access. `task_create`, `task_update`, `stop_cell`, and
+`subagent_message` remain mutating. Both Store-backed and layered memory
+search remain mutating: Store-backed recall updates persistent recall telemetry,
+while layered search may reconcile pending durable changes before returning.
+
 `ToolRiskClassifier` (in `echo-execution`) auto-classifies tools by name into 7 risk categories:
 
 | Category | Risk Level | Example Tools |
@@ -589,28 +606,17 @@ Tool calls no longer execute directly — they flow through a pluggable pipeline
 
 ### Pipeline Stages
 
-```
-Tool Call → InterventionStage → ParseValidate → PlanMode → PreToolUseHook
-           → Permission → ReadBeforeEdit → Callback(Start) → Execution
-           → TraceRecording → PostToolUseHook → OutputGuard → Truncation
-           → Callback(End)
-```
+The default pipeline checks visibility, plan mode, hooks, permissions, and the
+effective tool input before publishing an invocation or executing the tool.
+After execution, the post-use hook and output guard run before output budgeting,
+trace, audit, and the terminal callback. A post-use block does not erase an
+effect that already occurred or skip its terminal observation. ToolManager
+validates tool parameters at execution; there is no separate ParseValidate
+stage.
 
-| Stage | Purpose |
-|-------|---------|
-| **InterventionStage** | Intervention callbacks: block / cancel / redirect / modify_args |
-| **ParseValidate** | Parameter parsing and type validation |
-| **PlanMode** | Intercept write operations in planning mode |
-| **PreToolUseHook** | PreToolUse hooks: can modify input or block execution |
-| **Permission** | Permission check (PermissionService unified pipeline) |
-| **ReadBeforeEdit** | Force file read before edit (prevents blind writes) |
-| **Callback(Start)** | on_tool_start callbacks |
-| **Execution** | Actual tool execution |
-| **TraceRecording** | Record trace events |
-| **PostToolUseHook** | PostToolUse hooks |
-| **OutputGuard** | Output content guard check |
-| **Truncation** | Output truncation (token budget) |
-| **Callback(End)** | on_tool_end callbacks |
+The [executable demo64 contract](../../echo-agent-learning/tests/example_contracts/demo64_tool_pipeline.rs)
+prints the full stage sequence from structured events emitted by a real default
+pipeline invocation and checks these order constraints against production.
 
 ### Configuring the Pipeline
 
@@ -621,8 +627,9 @@ use echo_agent::prelude::*;
 let pipeline = ToolExecutionPipeline::default();
 
 let agent = ReactAgentBuilder::new()
+    .model("your-model")
     .tool_execution_pipeline(pipeline)
-    .build(config);
+    .build()?;
 ```
 
 See [demo64_tool_pipeline.rs](../../echo-agent-learning/tests/example_contracts/demo64_tool_pipeline.rs).

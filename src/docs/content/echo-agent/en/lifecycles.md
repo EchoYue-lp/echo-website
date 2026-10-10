@@ -47,8 +47,28 @@ Trace, transcript, and checkpoint writes can occur before or during finalization
 Their independently stored status and ordering do not define the TurnReceipt,
 but a write error explicitly propagated by the Agent producer contract can make
 a driven Turn fail. A best-effort transcript diagnostic does not do so by itself.
-Adapter projection and awaited close coverage remain defined by each detailed
-adapter contract, not by one fixed sequence in this overview.
+Adapter projection and awaited close are separate facts. ACP, Headless, and
+Channels now fence adapter admission, cancel accepted work, wait for its
+owner, and await `Agent::close` where the owner survives. A2A remains outside
+this repair and keeps its existing open lifecycle Findings. Channel delivery
+still has its own protocol boundary. See
+[ADR 0066](../adr/0066-agent-adapter-close-ownership.md),
+and [IM Channels](./15-im-channels.md).
+
+ACP callers must retain `let close_owner = adapter.close_owner()` before
+passing the adapter to `ConnectTo` or `Client::connect_with`. Connection setup
+rejects callers without a retained handle, because the official trait
+consumes the adapter and cannot return the Session/Agent owner after a failed
+close. On error, `close_owner.close().await` retries the same framework
+Session/Run service. Independent SDK Host consumers must adopt this public
+lifecycle contract when updating their framework dependency.
+Direct transport callers can use
+`let (close_owner, connection) =
+adapter.connect_retaining_close_owner(transport)` to receive the handle before
+polling, awaiting, or spawning `connection`. Manual official Client callers must keep their handle
+through connection return and any failed close; dropping it after admission
+forfeits retry ownership and violates the contract. Dropping it before the
+connection starts rejects setup without creating an Agent.
 
 See [ReAct Agent](./01-react-agent.md), [Streaming](./10-streaming.md), and
 [Headless](./33-headless-mode.md). Adapter-specific guarantees stay in their
@@ -143,6 +163,18 @@ claim they already form one universal decision owner. See [Tools](./02-tools.md)
 [Human Loop](./05-human-loop.md), [Security](./security.md), and
 [Guard System](./18-guard-system.md).
 
+Resource cleanup keeps the creating component's exact identity. Tool-output
+scope deletion returns `WouldBlock` while a writer is active and retains failed
+deletion for retry. Deferred deletion checks the bound root's physical file
+identity before removal; the application chooses when to request it. Docker
+and K8s execution owners settle their named resource before a terminal, while
+manager cleanup retries only that manager's debt and reports active owners.
+Agent close calls the retained manager after its Turn drain; a shared manager
+with another active owner makes close retryable. Label-wide sandbox sweeps are
+explicit manual recovery. Worktree creation
+finishes marker publication or proves a clean exact-checkout compensation before
+returning a settled error. See [ADR 0072](../adr/0072-resource-cleanup-ownership.md).
+
 ## Observation And Delivery
 
 ```text
@@ -192,6 +224,10 @@ withdraw request -> component-specific close / cleanup observation
 Plugin publication can compose components without erasing child cleanup
 responsibility. The framework does not currently claim one production
 coordinator, universal generation fence, or awaited close across every extension.
+MCP is one component with a stronger local contract: transport, client, manager,
+and Agent close propagate a `Result`; stdio and legacy SSE settle pending calls
+and owned tasks or child processes before successful return. Manager close
+continues across all clients before aggregating failures.
 Current behavior must be read from [MCP](./08-mcp.md),
 [Hooks](./23-hooks.md), [Skills](./07-skills.md), [Plugins](./32-plugin-system.md),
 and [LSP](./31-lsp-integration.md); this overview does not promise atomic hot reload.

@@ -24,6 +24,10 @@ The biomedical research profile can search PubMed and Europe PMC and organize bi
 
 Task relationships have one authority: a revisioned `TaskRun -> PlanTask -> SubagentRun` graph. Framework `TaskStatus` owns execution state, Plan is an editable artifact, and Todo is a read-only display projection. Same-run dependencies use `PlanRevision.tasks[].depends_on`; EKO does not maintain a second cross-run dependency graph.
 
+## Context compression
+
+EKO defaults to a recent-text token budget of 25% of the model window, capped at 20K tokens, with `compress_window: 0`. Compression preserves canonical instructions and the latest user request, and keeps tool calls and results together. Active task goals and recovery constraints are rebuilt from TaskRuntime; complete conversation history remains in the conversation store. CLI, TUI, GUI, and channels share the installed strategy and optional compression focus. An explicit positive `compress_window` selects the legacy message cap; the adaptive strategy uses its own L1-L5 policy.
+
 ## Agent collaboration and recovery
 
 Six model-callable `agent_*` tools list, inspect, message, follow up, wait, and interrupt explicit Conversation or Task Subagent targets. Runtime queries are bounded at the journal layer. Cursor identity survives router or TaskRuntime reopen, cold addresses are checked against the bound workspace, and the five interactive/automation surfaces replay the same typed terminal facts.

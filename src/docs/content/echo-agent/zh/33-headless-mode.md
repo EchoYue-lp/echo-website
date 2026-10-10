@@ -34,6 +34,9 @@ pub struct HeadlessConfig {
 
     /// 强制停止前的最大迭代次数（安全限制）
     pub max_iterations: Option<usize>,
+
+    /// 调用方可提供的取消 token
+    pub cancel_token: Option<CancellationToken>,
 }
 ```
 
@@ -43,6 +46,7 @@ pub struct HeadlessConfig {
 | `exit_on_error` | `bool` | `true` | 为 `true` 时，Agent 失败则进程以退出码 1 终止。 |
 | `output_format` | `String` | `"text"` | 控制 `format_output()`：`"text"` 返回原始输出；`"json"` 将结果包装为结构化 JSON。 |
 | `max_iterations` | `Option<usize>` | `None` | ReAct 循环的迭代次数上限。在无人值守环境中防止失控执行。 |
+| `cancel_token` | `Option<CancellationToken>` | `None` | 本次 run 观察的父取消作用域。Headless 自持 child token，因此取消本次 run 不会取消父作用域或 sibling。 |
 
 ---
 
@@ -89,10 +93,12 @@ run_headless(config, configure)
     │                               │
     │                               ├─ 构建失败？ → 返回错误 HeadlessResult
     │                               │
-    │                               └─ agent.execute(&prompt)
+    │                               └─ AgentTurnDriver.drive(agent, prompt)
     │                                       │
-    │                                       ├─ Ok → HeadlessResult { success: true, ... }
-    │                                       └─ Err → HeadlessResult { success: false, ... }
+    │                                       ├─ 结算唯一 TurnReceipt
+    │                                       └─ await Agent::close
+    │                                               ├─ Ok → 投影 Turn 结果
+    │                                               └─ Err → 失败结果包含 close 错误
     │
     └─ 返回 HeadlessResult
 ```
@@ -114,6 +120,9 @@ pub struct HeadlessResult {
 
     /// 请求的输出格式
     pub format: String,
+
+    /// 失败是否改变进程退出码
+    pub exit_on_error: bool,
 }
 ```
 
@@ -126,6 +135,27 @@ pub fn exit_code(&self) -> i32
 ```
 
 成功返回 `0`，失败返回 `1` —— 可直接配合 `std::process::exit()` 使用。
+显式设置 `exit_on_error: false` 时，失败仍使 `success` 为 `false` 并在 `output`
+中可见，但 `exit_code()` 按调用方策略返回 `0`。
+
+Headless 由 owned task 执行，并在 Turn receipt 后始终 await `Agent::close`，包括
+Turn 失败或取消。如果调用方 abort 或 drop `run_headless` waiter，wrapper 会请求取消
+Turn，owned task 仍继续完成 close。需要停止等待、稍后观察同一结果，或重试失败 close
+的调用方使用 `start_headless` 并保留 `HeadlessRunHandle`：
+
+```rust
+let run = start_headless(config, |builder| builder);
+let result = run.wait().await;
+if !result.success {
+    run.retry_close().await?;
+}
+```
+
+只能在 `wait` 发布结果 receipt 后调用 `retry_close`。执行仍进行时会返回 phase error；
+close 成功后重复调用保持幂等。若 runtime 在 owned task 首次 poll 前释放任务，handle 会发布
+失败 receipt，并保留同一个 Agent 供 close retry。
+
+参见 [ADR 0066](../adr/0066-agent-adapter-close-ownership.md)。
 
 #### format_output()
 
@@ -164,6 +194,7 @@ async fn main() {
         exit_on_error: true,
         output_format: "text".into(),
         max_iterations: Some(10),
+        cancel_token: None,
     };
 
     let result = run_headless(config, |builder| builder).await;
@@ -186,6 +217,7 @@ async fn main() {
         exit_on_error: true,
         output_format: "text".into(),
         max_iterations: Some(20),
+        cancel_token: None,
     };
 
     let result = run_headless(config, |builder| {
@@ -216,6 +248,7 @@ async fn main() {
         exit_on_error: true,
         output_format: "json".into(),   // ← JSON 信封
         max_iterations: Some(10),
+        cancel_token: None,
     };
 
     let result = run_headless(config, |builder| builder).await;

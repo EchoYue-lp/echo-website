@@ -10,7 +10,7 @@ echo-agent 的记忆系统包含三个正交层次，每层解决不同的"记�
 | **历史投影** | `ConversationStore` | 聊天记录 | 用户可见的消息历史投影（驱动 GUI/TUI 历史面板） |
 | **长期知识** | `Store` | 笔记本 | 跨会话保留用户偏好、领域知识、任务结果 |
 
-运行时检查点和历史投影针对同一段对话从不同角度切入：检查点保存 ReAct 循环状态（消息 + 当前计划文本 + 激活技能 + 阻塞原因），用于重启循环；历史投影是**用户可见**的消息流投影。版本化任务关系与生命周期只属于 canonical task runtime，不进入该检查点。Store 是正交的长期知识后端。
+运行时检查点和历史投影针对同一段对话从不同角度切入：检查点保存 ReAct 循环状态（消息 + 激活技能 + 阻塞原因），用于重启循环；历史投影是**用户可见**的消息流投影。版本化任务关系、计划 artifact 与生命周期只属于 canonical task runtime，不进入该检查点。Store 是正交的长期知识后端。
 
 ---
 
@@ -26,7 +26,7 @@ echo-agent 的记忆系统包含三个正交层次，每层解决不同的"记�
 
 LLM 的上下文窗口在每次请求结束后就消失了，进程也可能在循环中途崩溃。没有运行时检查点，长任务被中断就需要从头开始；用户想在明天继续昨天的对话也只能重新输入。
 
-`RuntimeStateStore` 在 run 推进过程中持续保存完整的 `AgentCheckpoint`（消息 + 当前计划 + 激活技能 + 阻塞原因 + 时间戳）。下次使用同一 `conversation_id` 启动时，运行时自动恢复先前状态，实现**线程连续性**。
+`RuntimeStateStore` 在 run 推进过程中持续保存 `AgentCheckpoint` 的运行时字段（消息 + 激活技能 + 阻塞原因 + 时间戳）。下次使用同一 `conversation_id` 启动时，运行时自动恢复先前状态，实现**线程连续性**。公开的 `current_plan` 字段仍可读取旧 checkpoint，但 ReactAgent 不把它恢复成任务计划，也不会将它写入新 checkpoint。
 
 ### 工作原理
 
@@ -42,7 +42,7 @@ FileRuntimeStateStore (./agent-data/runtime_state/_runtime_owners/):
   "phase": "active",
   "checkpoint": {
     "messages_json":  "...完整消息历史...",
-    "current_plan":   "Step 3: draft the haiku",
+    "current_plan":   null,
     "active_skills":  ["doc-writing"],
     "blocked_reason": null,
     "timestamp":      "2026-06-14T..."
@@ -162,31 +162,33 @@ store.json:
 
 同一个物理文件，不同 namespace，数据完全不可互访（除非持有 Store 对象的代码显式跨 namespace 查询）。
 
-启用 `enable_memory=true` 时，Agent 会自动使用 `[agent_name, "memories"]` 作为命名空间。
+Agent 记忆统一使用 `["agent", "memories"]` 命名空间。
 
 ### 工作原理
 
-Agent 通过三个内置工具操作 Store（无需手动调用 API）：
+未安装 layer manager 时，Agent 只提供 `recall` 和 `search_memory`；两者只返回已批准
+记忆。原始 KV 值与 Draft 仍可由直接持有 Store 的调用方检查，但不会进入 Agent 工具结果。
+安装 manager 后，`remember` 创建经过 journal 的 Draft，`forget` 由 manager 结算：
 
 ```
 LLM 决定记住某件事
     │
     └─► remember("斐波那契前10项: 1,1,2,3,5,8,13,21,34,55", importance=8)
             │
-            └─► store.put(["agent_name", "memories"], uuid, {
-                    "content": "斐波那契前10项...",
-                    "importance": 8,
-                    "created_at": "2026-02-28T..."
-                })
+            └─► manager.write_memory(["agent", "memories"], uuid, Draft)
+                    → 调用方审阅并激活精确 proposal
 
 LLM 需要检索时
     │
     └─► recall("斐波那契")
             │
-            └─► store.search(["agent_name", "memories"], "斐波那契", limit=5)
-                    → 关键词匹配（先精确匹配，再词频相关性评分）
-                    → 返回最相关的 5 条记忆
+            └─► MemoryRecaller 搜索 ["agent", "memories"]
+                    → 只返回已批准的 Active 或 Archived 记忆
 ```
+
+`install_memory_layer_manager`、`set_memory_store`、`install_memory_store` 均返回
+`Result`。同步安装遇到忙碌 context 时不会发布部分配置；要更换 manager 所属的 Store，
+必须更换 manager。
 
 ### 使用方式
 
@@ -194,36 +196,36 @@ LLM 需要检索时
 use echo_agent::prelude::*;
 
 # async fn demo() -> echo_agent::error::Result<()> {
-// 方式一：通过 AgentConfig 自动注册 remember/recall/forget 工具
+// 方式一：AgentConfig 注册已批准记忆的 recall/search 工具
 let config = AgentConfig::new("qwen3-max", "my_agent", "你是一个助手")
     .enable_memory(true)
     .memory_path("./store.json");
 
 let mut agent = ReactAgent::new(config);
-// LLM 可以自主调用 remember / recall / forget 工具
+// 安装 MemoryLayerManager 后才启用经过 journal 的 remember / forget。
 
 // 方式二：直接操作 Store API（无需 Agent）
 let store = FileStore::new("./store.json")?;
 
 // 写入记忆
 store.put(
-    &["my_agent", "memories"],
+    &["my_agent", "raw_notes"],
     "fact-001",
     serde_json::json!({ "content": "用户偏好深色主题", "importance": 7 })
 ).await?;
 
 // 关键词搜索
-let results = store.search(&["my_agent", "memories"], "主题", 5).await?;
+let results = store.search(&["my_agent", "raw_notes"], "主题", 5).await?;
 for item in results {
     let content = item.value["content"].as_str().unwrap_or("");
     println!("[score={:.2}] {}", item.score.unwrap_or(0.0), content);
 }
 
 // 精确获取
-let item = store.get(&["my_agent", "memories"], "fact-001").await?;
+let item = store.get(&["my_agent", "raw_notes"], "fact-001").await?;
 
 // 删除
-store.delete(&["my_agent", "memories"], "fact-001").await?;
+store.delete(&["my_agent", "raw_notes"], "fact-001").await?;
 
 // 列出所有 namespace
 let namespaces = store.list_namespaces(None).await?;
@@ -231,14 +233,35 @@ let namespaces = store.list_namespaces(None).await?;
 # }
 ```
 
+### 已审阅的 Typed Memory
+
+`MemoryLayerManager` 拥有框架中带来源证据的长期记忆。压缩前 LLM 抽取、被压缩
+消息提取、memory trigger、分层 `remember` 与可选的 Background Review
+持久化都先在统一的 `["agent", "memories"]` namespace 写入 `Draft`。
+`MemoryMeta.provenance` 保存原文片段及 user、assistant 或 tool 来源角色；
+`L3Promotion`、`AutoExtracted` 等 source 只表示生成机制，不等于可信来源或批准。
+缺少精确用户证据的“用户偏好”不能激活或召回；部分自动提取入口会在写入 Draft 前
+直接拒绝。含密钥或指令式内容的证据不会持久化。
+
+调用方先用 `MemoryLayerManager::preview_activation(key)` 审阅 Draft，再携带
+`MemoryApproval` 调用 `activate_draft(proposal, approval)`。proposal 绑定内容、
+metadata 与 operation journal generation；即使发生 A→B→A，过期批准仍被拒绝。
+取消或结果不明的激活由同一 manager 在重启后对账。只有已批准的 Active 或
+Archived typed memory 可进入自动 context 与 Store/分层 `recall`/`search_memory`；
+已批准的 Hot 记忆晋升后仍进入轮次上下文。
+Draft、Superseded 和缺少 provenance 的旧记录仍可检查，但不会注入模型。
+参见可执行的[分层记忆示例](../../echo-agent-learning/tests/example_contracts/demo51_self_improvement.rs)
+与 [ADR 0070](../adr/0070-memory-provenance-and-recall-authority.md)。
+
 ---
 
-## 三层记忆联动
+## 跨对话记忆联动
 
 ```
 用户第 1 天：
   user: "我叫张三，喜欢古典音乐"
-  agent → remember("张三喜欢古典音乐")  ← 存入 Store（跨会话永久保存）
+  已安装 manager 的 agent → remember("张三喜欢古典音乐")  ← Store 中的 Draft
+  调用方 → preview_activation + activate_draft  ← 审阅并批准
   轮次收尾 → RuntimeStateStore 保存 AgentCheckpoint
             → ConversationStore 保存消息行
 
@@ -271,7 +294,8 @@ let store = InMemoryStore::new(); // 进程退出后数据丢失
 
 ## 上下文隔离
 
-每个 Agent 都有独立的 Store namespace 和 `conversation_id`：
+底层 Store API 允许复用方给不同 Agent 指定独立 namespace；
+`conversation_id` 则分别隔离运行时与对话投影：
 
 ```
 主 Agent    conversation_id = "main-conv-001"     namespace = ["main_agent", "memories"]
@@ -279,9 +303,17 @@ Subagent A  conversation_id = "sub-a-conv-001"    namespace = ["sub_a", "memorie
 Subagent B  conversation_id = "sub-b-conv-001"    namespace = ["sub_b", "memories"]
 ```
 
-- Subagent A 无法读取 Subagent B 的记忆（不同 namespace）
+- 在此调用方自定布局中，Subagent A 无法读取 Subagent B 的记忆（不同 namespace）
 - Subagent A 无法看到主 Agent 的运行时状态（不同 `conversation_id`）
 - 主 Agent 持有 `Store` / `RuntimeStateStore` 对象，可显式跨 conversation / namespace 读取（用于审计）
+
+这个例子不是 `MemoryLayerManager` 的布局。其暖层在注入的 Store 内固定使用
+`WARM_NAMESPACE = ["agent", "memories"]`。若不同 Agent 的分层记忆必须隔离，
+需为各 Agent 提供独立的 Store 底层路径或分区，以及独立的 manager root
+（包含 `MEMORY.md` 和 `evolution/memory-operations.jsonl`）；ChangeLog 路径
+也应分开。调用方自建分区 adapter 时，必须同时隔离 Store 数据与 root 下的文件。
+多个 `FileStore::new` 句柄指向相同 canonical 路径时共享同一权威；仅换句柄或
+`conversation_id` 不会隔离记忆。
 
 ---
 
@@ -295,5 +327,5 @@ Subagent B  conversation_id = "sub-b-conv-001"    namespace = ["sub_b", "memorie
 ## 类型化与分层记忆（自进化）
 
 本文档介绍的是底层的三种 Store（长期 `Store`、运行时 `RuntimeStateStore`、对话 `ConversationStore`）。
-若你需要**带元数据的结构化记忆**（类型、置信度、来源）和**热/暖/冷三层自动管理、写入触发、审查/GC、技能自创建**等运行时演化能力，
+若你需要**带元数据的结构化记忆**（类型、置信度、来源）和**热/暖两层管理（Archived 留在暖层）、写入触发、审查/GC、技能自创建**等运行时演化能力，
 参见 [25 - 自进化系统](./25-self-improvement.md)（`evolution` 模块）。

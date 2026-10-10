@@ -290,6 +290,14 @@ async fn main() -> echo_agent::error::Result<()> {
 判断交给 framework `McpManager`。替换准备失败时会保留 last-known-good 连接；应用只需
 在调用前后协调自己的文件和作用域策略。
 
+插件拥有的 MCP server 使用 `McpServerId::plugin(plugin_id, local_name)`。`McpServerConfig.name`
+和可移植的 `mcp.json` 保持不变，但 manager 的类型化 map 与 cleanup receipt 使用带 owner 的
+selector。旧字符串 API 仍映射到 `McpServerOwner::Direct`。插件工具名带 namespace，资源
+selector 是不透明且可逆的值，因此一个插件撤销同名 server 不会关闭另一个插件的连接。
+Direct selector 保持普通旧名称；以保留的 `plugin:`/`direct:` 开头时进行可逆转义。
+`build_mcp_resource_tools(HashMap<String, ...>)` 保持为兼容旧调用方的 Direct builder；
+携带 owner identity 的 integration 使用 `build_mcp_resource_tools_by_id`。
+
 ### 方式二：通过 McpManager 管理连接
 
 ```rust
@@ -320,10 +328,25 @@ async fn main() -> echo_agent::error::Result<()> {
     println!("{}", answer);
 
     // 手动关闭连接
-    mcp.close_all().await;
+    mcp.close_all().await?;
     Ok(())
 }
 ```
+
+`McpClient::close`、`McpManager::disconnect` 和 `McpManager::close_all`
+现在返回 `Result`。close 成功表示 transport 已停止接纳新请求、全部 pending caller
+已释放，并在有界 shutdown 策略内等待完 transport 持有的 I/O task 与 stdio child
+process。`close_all` 也会取消并等待仍在构建或握手的 client，然后尝试关闭全部已连接
+client 并聚合 cleanup error。构建阶段关闭失败会留给下次 `close_all` 重试。旧版 SSE close
+同时取消 receive/POST 生命周期并等待 receive task。
+这些生命周期约束不会给用户选择的 MCP server 增加权限门控。
+直接调用 `McpClient::new` 或 `McpClient::from_transport` 且可能丢弃准备 Future 的调用方，
+应先保留 `preparation.cleanup_scope()`，取消后 await `scope.close()`；关闭失败时可用同一
+scope 重试。`McpManager` 会自动保留该 scope。
+若 MCP client 由 `ReactAgent` 持有，adapter 必须在仍持有 Agent 时 await
+`Agent::close`。同步的 `ReactAgent::drop` 无法等待 MCP 清理，因此不再启动
+detached cleanup task；丢弃尚有可见 server 名称的 Agent 只发出诊断。
+参见 [ADR 0066](../adr/0066-agent-adapter-close-ownership.md)。
 
 ---
 
@@ -532,6 +555,9 @@ MCP 操作可能产生的错误：
 | `McpError::ProtocolError` | 协议层错误 | 检查 JSON 格式 |
 | `McpError::ToolCallFailed` | 工具调用失败 | 检查参数是否正确 |
 | `McpError::TransportClosed` | 传输层已关闭 | 重新连接服务端 |
+
+Close timeout、task join、child kill/wait 和聚合 close 失败会携带 cleanup 上下文，
+以 `McpError::ConnectionFailed` 从 close 调用返回，不会被转换成成功终态。
 
 ---
 

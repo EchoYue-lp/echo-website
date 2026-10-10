@@ -95,6 +95,21 @@ EchoAgent 向 stdio 子进程提供 `PLUGIN_ROOT` 和 `PLUGIN_DATA`。`${PLUGIN_
 
 顶层 `mcp.json` 无效时，只禁用该插件的 MCP；单个服务配置无效、不可连接或重名时，只跳过该服务。
 
+### MCP 所有权与投影
+
+`name` 仍是可移植配置中的本地 server 名称。运行时框架会注入所有者：普通配置使用
+`McpServerOwner::Direct`，插件 wiring 使用稳定的 `PreparedPlugin.id`。因此两个插件都声明
+`filesystem` 时仍会拥有不同连接、工具和清理债务。需要区分所有者时使用类型化的
+`McpServerId`/`server_ids()`；旧字符串 API 继续指向 Direct server。
+
+Direct 工具保持 `mcp__<server>__<tool>`。插件工具使用
+`mcp__plugin_<plugin>_<server>__<tool>`；规范 Unicode 或标点被有损归一化时追加稳定摘要。
+资源 selector 使用不透明的 `plugin:<base64url-plugin>:<base64url-server>`。资源目录保存
+类型化 identity，不从工具名或 URI 反推 owner。
+Direct 名称通常保持旧 selector；以保留的 `plugin:`/`direct:` 开头时，会可逆转义为
+`direct:<base64url-name>`。插件 Hook 的 `mcp_tool.server` 在包内仍写本地名称，注册前由
+Integrator 注入 prepared plugin owner。
+
 ## 固定本地组件
 
 其余组件从固定根位置发现：
@@ -132,6 +147,35 @@ EchoAgent 向 stdio 子进程提供 `PLUGIN_ROOT` 和 `PLUGIN_DATA`。`${PLUGIN_
 内容 identity、结构化诊断、已解析的 Skills/Hooks/MCP，以及保留 owner 的 Subagent/LSP 文档。
 `wire_prepared` 与 rollback 不读取组件文件；磁盘变化只在 registry mutation 或显式 invalidation
 后可见。见 [ADR 0012](../adr/0012-immutable-plugin-preparation.md)。
+generation 序号在同一进程的所有 Integrator 间统一分配，因此两个独立 Integrator 为同一 Agent
+准备的新旧快照仍有可比较的顺序。
+
+每个 `ReactAgent` 仍拥有唯一 publication target，但 Host 通过 `PluginCoordinator` 驱动完整
+生命周期。用 durable registry 与 integrator 构造 coordinator 后，调用
+`coordinator.reconcile(&mut agent)` 收敛当前意图，或使用 `enable`、`reload`、`disable`、
+`uninstall`、`shutdown` typed operation。失败返回 `ActualPending`；必须先调用
+`coordinator.retry(&mut agent)` 从原 operation receipt 与 phase 继续，再开始后续 operation。
+Coordinator 只串行化 transition；target 仍是 generation、publication receipt 与 cleanup debt
+的唯一权威。
+
+Registry dependency graph 决定 transition 顺序：dependency 先 init/activate 并发出
+`PluginLoaded`，dependent 先 deactivate 并发出 `PluginDisabled`。Converged receipt 只对同一
+Agent publication target 有效；收敛后新增 lifecycle callback 会使 no-op 快径失效，下一次
+reconcile 必须初始化并激活它。错误 Agent 会在 registry intent 或 callback 改变前被拒绝。
+
+Registry 意图先于 runtime 收敛提交。实际顺序固定为 callback cleanup、精确 receipt withdrawal、
+immutable generation publication、callback activation，最后才尝试 lifecycle Hook 通知。
+dependency resolution 与 generation-wide applicability validation 会先于 callback cleanup；
+无效输入保留旧 actual generation，retry 在同一 operation receipt 下重新读取修复后的插件文件。
+Shutdown 只撤销进程内 effect，不改变 durable enabled intent。`PluginLoaded` 与
+`PluginDisabled` 在单个 operation 内有序且去重，但不是跨进程 durable event log；取消或崩溃
+仍可能丢失通知，该缺口继续属于更广泛的 Hook producer contract。
+Registry refresh 只在完整 scan 成功后提交，并保留上一次成功的 scope 集合；受限 Host view
+不会因 coordinator retry 被扩大。
+未完成 receipt 始终投影为下一 retry phase 的 `ActualPending`，包括 transition future 被取消后。
+每个成功的 MCP 连接在开始下一个 server 前立即进入 pending receipt。原本不存在的名字在
+连接 await 前预留清理范围，覆盖 manager 已发布而 Agent 尚未返回时的取消；新连接失败须先
+结算该名字才能发布 generation。这不代替 #75 独立处理的 MCP owner-qualified identity。
 
 存在组件诊断时，整个 set 仍然可应用；只有依赖排序或 generation 分配等代次级不变量无法
 构造完整不可变快照时，set 才会被拒绝。
@@ -142,24 +186,36 @@ callback 激活。失败注册项保留供重试；已激活 callback 成功撤�
 激活失败则须成功执行 `unregister` 清理；初始化失败只需 shutdown，不调用尚未进入的
 deactivate 阶段。期望 enabled 集合变化本身不表示旧资源已撤销。
 `shutdown` 失败的债务不会被后续成功的 `deactivate` 清除，仍需通过 `unregister` 重试。见
-[ADR 0060](../adr/0060-plugin-lifecycle-reconcile-settlement.md)。完整 reload 事务仍需宿主
-协调 Registry 与组件 wiring。
+[ADR 0060](../adr/0060-plugin-lifecycle-reconcile-settlement.md)。`PluginCoordinator` 将该
+callback authority 与 durable registry intent、Agent-bound publication receipt 串联起来，
+不复制 callback 或 generation 状态。见
+[ADR 0069](../adr/0069-plugin-host-lifecycle-coordinator.md)。
+init 或 activate 失败后，retry 先调用 `PluginLifecycleManager::reset_for_retry`，由原 authority
+结算 callback 自身的 deactivate/shutdown debt，并保留同一 registration。
 
 ## API
 
 ```rust,no_run
-use echo_agent::plugin::{InstallSource, PluginRegistry, PluginScope};
+use echo_agent::agent::ReactAgentBuilder;
+use echo_agent::plugin::{
+    InstallSource, PluginCoordinator, PluginIntegrator, PluginRegistry, PluginScope,
+};
 
-let mut registry = PluginRegistry::new(Some(std::env::current_dir()?));
+# async fn run() -> Result<(), Box<dyn std::error::Error>> {
+let root = std::env::current_dir()?;
+let mut registry = PluginRegistry::new(root.join(".echo-agent"), Some(root));
 registry.scan_all()?;
-
 let id = registry.install(
     &InstallSource::Local("./review-tools".into()),
     PluginScope::Project,
 )?;
-registry.disable(&id)?;
-registry.enable(&id)?;
-# Ok::<(), Box<dyn std::error::Error>>(())
+let mut agent = ReactAgentBuilder::new().model("local-model").build()?;
+let mut coordinator = PluginCoordinator::new(registry, PluginIntegrator::new());
+coordinator.reconcile(&mut agent).await?;
+coordinator.disable(&mut agent, &id).await?;
+coordinator.enable(&mut agent, &id).await?;
+# Ok(())
+# }
 ```
 
 需要安装前报告时，使用 `PluginRegistry::validate_plugin_dir`。

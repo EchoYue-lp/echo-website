@@ -135,6 +135,8 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0044: One Runtime Authority for Skill Activation | echo-agent 文档: https://echo-agent.dev/docs/adr-0044-skill-activation-authority
 - ADR 0045: Confirmed Semantic Governance Decisions | echo-agent 文档: https://echo-agent.dev/docs/adr-0045-confirmed-semantic-governance-decisions
 - ADR 0046: Separate Turn Execution and Delivery Settlement | echo-agent 文档: https://echo-agent.dev/docs/adr-0046-turn-execution-delivery-settlement
+- ADR 0047: Model Facts Freshness Authority | echo-agent 文档: https://echo-agent.dev/docs/adr-0047-model-facts-freshness-authority
+- ADR 0049: MCP Transport Close Settlement | echo-agent 文档: https://echo-agent.dev/docs/adr-0049-mcp-transport-close-settlement
 - ADR 0050: Local MCP Tool Classification Authority | echo-agent 文档: https://echo-agent.dev/docs/adr-0050-mcp-tool-local-classification
 - ADR 0051: Extract echo-agent SDK into an Independent Repository | echo-agent 文档: https://echo-agent.dev/docs/adr-0051-extract-sdk-repository
 - ADR 0052: Canonical Workflow Entry Loop Authority | echo-agent 文档: https://echo-agent.dev/docs/adr-0052-workflow-entry-loop-authority
@@ -142,10 +144,30 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0055: Bind Checkpoints to Journal Generation Identity | echo-agent 文档: https://echo-agent.dev/docs/adr-0055-checkpoint-journal-identity
 - ADR 0056: Durable Transcript Projection Settlement | echo-agent 文档: https://echo-agent.dev/docs/adr-0056-durable-transcript-projection-settlement
 - ADR 0057: Fence Channel Delivery by Session Generation | echo-agent 文档: https://echo-agent.dev/docs/adr-0057-channel-generation-delivery-fence
+- ADR 0058: Background Review Settlement Ownership | echo-agent 文档: https://echo-agent.dev/docs/adr-0058-background-review-settlement-ownership
 - ADR 0058: TaskClaim-Derived Subagent Attempt Control | echo-agent 文档: https://echo-agent.dev/docs/adr-0058-task-claim-subagent-attempt-control
+- ADR 0059: Record Confirmed Tool Effects at Their Owning Boundary | echo-agent 文档: https://echo-agent.dev/docs/adr-0059-observed-tool-effects-and-background-dispatch
 - ADR 0059: Task Graph and Workflow Graph Authorities | echo-agent 文档: https://echo-agent.dev/docs/adr-0059-task-workflow-dag-authority
 - ADR 0060: Fail-Closed Plugin Callback Reconciliation | echo-agent 文档: https://echo-agent.dev/docs/adr-0060-plugin-lifecycle-reconcile-settlement
 - ADR 0064: Provider Stream Semantic Terminal | echo-agent 文档: https://echo-agent.dev/docs/adr-0064-provider-stream-semantic-terminal
+- ADR 0065: Recover Layered Memory Mutations with Durable Audit Identities | echo-agent 文档: https://echo-agent.dev/docs/adr-0065-evolution-memory-audit-reconciliation
+- ADR 0066: Settle Agent Resources at Adapter Close | echo-agent 文档: https://echo-agent.dev/docs/adr-0066-agent-adapter-close-ownership
+- ADR 0067: Owner-qualified MCP server identity | echo-agent 文档: https://echo-agent.dev/docs/adr-0067-mcp-owner-qualified-identity
+- ADR 0068: Reconcile Skill Candidate Mutation with Business Audit | echo-agent 文档: https://echo-agent.dev/docs/adr-0068-skill-candidate-mutation-audit-reconciliation
+- ADR 0069: Host-level plugin lifecycle coordinator | echo-agent 文档: https://echo-agent.dev/docs/adr-0069-plugin-host-lifecycle-coordinator
+- ADR 0069: Canonical Skill Lifecycle Mutation and Rollback Authority | echo-agent 文档: https://echo-agent.dev/docs/adr-0069-skill-lifecycle-mutation-authority
+- ADR 0070: Evidence-Bound Memory Activation and Recall | echo-agent 文档: https://echo-agent.dev/docs/adr-0070-memory-provenance-and-recall-authority
+- ADR 0071: Protected Paths and Read-Only Tool Boundaries | echo-agent 文档: https://echo-agent.dev/docs/adr-0071-protected-path-and-readonly-tool-boundary
+- ADR 0072: Exact Resource Cleanup Ownership | echo-agent 文档: https://echo-agent.dev/docs/adr-0072-resource-cleanup-ownership
+- ADR 0073: Hook Event Producer Contract | echo-agent 文档: https://echo-agent.dev/docs/adr-0073-hook-event-producer-contract
+- ADR 0074: Trace and Audit Retention at the Producer Boundary | echo-agent 文档: https://echo-agent.dev/docs/adr-0074-trace-audit-retention-contract
+- ADR 0075: Invocation-Scoped Tool Approval Receipt | echo-agent 文档: https://echo-agent.dev/docs/adr-0075-invocation-approval-receipt
+- ADR 0076: Guard Direction and Boundary Authority | echo-agent 文档: https://echo-agent.dev/docs/adr-0076-guard-direction-and-boundary-authority
+- ADR 0077: Project Channel Attachments into Typed Agent Messages | echo-agent 文档: https://echo-agent.dev/docs/adr-0077-channel-attachment-projection
+- ADR 0078: Main ReAct structured-output request authority | echo-agent 文档: https://echo-agent.dev/docs/adr-0078-structured-output-main-request
+- ADR 0079: Strict structured-output validation before terminal success | echo-agent 文档: https://echo-agent.dev/docs/adr-0079-strict-structured-output-validation
+- ADR 0080: Managed Transcript Import Seeds One Projection Generation | echo-agent 文档: https://echo-agent.dev/docs/adr-0080-managed-transcript-import-generation
+- ADR 0081: Token-budgeted recent conversation tail | echo-agent 文档: https://echo-agent.dev/docs/adr-0081-token-budgeted-compression-tail
 - 知识库概述 | echo-agent 文档: https://echo-agent.dev/docs/knowledge-overview
 - Agent 设计模式 | echo-agent 文档: https://echo-agent.dev/docs/agent-patterns
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
@@ -254,6 +276,8 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0044: One Runtime Authority for Skill Activation | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0044-skill-activation-authority
 - ADR 0045: Confirmed Semantic Governance Decisions | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0045-confirmed-semantic-governance-decisions
 - ADR 0046: Separate Turn Execution and Delivery Settlement | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0046-turn-execution-delivery-settlement
+- ADR 0047: Model Facts Freshness Authority | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0047-model-facts-freshness-authority
+- ADR 0049: MCP Transport Close Settlement | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0049-mcp-transport-close-settlement
 - ADR 0050: Local MCP Tool Classification Authority | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0050-mcp-tool-local-classification
 - ADR 0051: Extract echo-agent SDK into an Independent Repository | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0051-extract-sdk-repository
 - ADR 0052: Canonical Workflow Entry Loop Authority | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0052-workflow-entry-loop-authority
@@ -261,10 +285,30 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0055: Bind Checkpoints to Journal Generation Identity | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0055-checkpoint-journal-identity
 - ADR 0056: Durable Transcript Projection Settlement | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0056-durable-transcript-projection-settlement
 - ADR 0057: Fence Channel Delivery by Session Generation | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0057-channel-generation-delivery-fence
+- ADR 0058: Background Review Settlement Ownership | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0058-background-review-settlement-ownership
 - ADR 0058: TaskClaim-Derived Subagent Attempt Control | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0058-task-claim-subagent-attempt-control
+- ADR 0059: Record Confirmed Tool Effects at Their Owning Boundary | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0059-observed-tool-effects-and-background-dispatch
 - ADR 0059: Task Graph and Workflow Graph Authorities | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0059-task-workflow-dag-authority
 - ADR 0060: Fail-Closed Plugin Callback Reconciliation | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0060-plugin-lifecycle-reconcile-settlement
 - ADR 0064: Provider Stream Semantic Terminal | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0064-provider-stream-semantic-terminal
+- ADR 0065: Recover Layered Memory Mutations with Durable Audit Identities | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0065-evolution-memory-audit-reconciliation
+- ADR 0066: Settle Agent Resources at Adapter Close | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0066-agent-adapter-close-ownership
+- ADR 0067: Owner-qualified MCP server identity | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0067-mcp-owner-qualified-identity
+- ADR 0068: Reconcile Skill Candidate Mutation with Business Audit | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0068-skill-candidate-mutation-audit-reconciliation
+- ADR 0069: Host-level plugin lifecycle coordinator | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0069-plugin-host-lifecycle-coordinator
+- ADR 0069: Canonical Skill Lifecycle Mutation and Rollback Authority | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0069-skill-lifecycle-mutation-authority
+- ADR 0070: Evidence-Bound Memory Activation and Recall | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0070-memory-provenance-and-recall-authority
+- ADR 0071: Protected Paths and Read-Only Tool Boundaries | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0071-protected-path-and-readonly-tool-boundary
+- ADR 0072: Exact Resource Cleanup Ownership | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0072-resource-cleanup-ownership
+- ADR 0073: Hook Event Producer Contract | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0073-hook-event-producer-contract
+- ADR 0074: Trace and Audit Retention at the Producer Boundary | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0074-trace-audit-retention-contract
+- ADR 0075: Invocation-Scoped Tool Approval Receipt | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0075-invocation-approval-receipt
+- ADR 0076: Guard Direction and Boundary Authority | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0076-guard-direction-and-boundary-authority
+- ADR 0077: Project Channel Attachments into Typed Agent Messages | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0077-channel-attachment-projection
+- ADR 0078: Main ReAct structured-output request authority | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0078-structured-output-main-request
+- ADR 0079: Strict structured-output validation before terminal success | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0079-strict-structured-output-validation
+- ADR 0080: Managed Transcript Import Seeds One Projection Generation | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0080-managed-transcript-import-generation
+- ADR 0081: Token-budgeted recent conversation tail | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0081-token-budgeted-compression-tail
 - Knowledge Base Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/knowledge-overview
 - Agent Design Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/agent-patterns
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive

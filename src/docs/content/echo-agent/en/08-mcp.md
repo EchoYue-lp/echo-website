@@ -298,6 +298,18 @@ the framework `McpManager`. A failed replacement leaves the last-known-good
 connection in place; applications only coordinate their own file and scope
 policy around this call.
 
+Plugin-owned MCP servers use `McpServerId::plugin(plugin_id, local_name)`.
+`McpServerConfig.name` and portable `mcp.json` remain unchanged, while the
+manager's typed maps and cleanup receipts use the owner-qualified selector.
+Direct string APIs map to `McpServerOwner::Direct`. Plugin tool names are
+namespaced and resource selectors are opaque, reversible values; a plugin
+withdrawal therefore cannot close another plugin's same-named server.
+Direct selectors preserve ordinary legacy names and reversibly escape the
+reserved `plugin:`/`direct:` prefixes.
+`build_mcp_resource_tools(HashMap<String, ...>)` remains the source-compatible
+Direct builder; integrations carrying owner identity use
+`build_mcp_resource_tools_by_id`.
+
 ### Method 2: Manage Connections via McpManager
 
 ```rust
@@ -328,10 +340,29 @@ async fn main() -> echo_agent::error::Result<()> {
     println!("{}", answer);
 
     // Manually close connections
-    mcp.close_all().await;
+    mcp.close_all().await?;
     Ok(())
 }
 ```
+
+`McpClient::close`, `McpManager::disconnect`, and `McpManager::close_all`
+return a `Result`. A successful close fences new transport requests, releases
+all pending callers, and waits for transport-owned I/O tasks and stdio child
+processes within the transport's bounded shutdown policy. `close_all` also
+cancels and awaits clients still in construction or negotiation, then attempts
+every connected client before returning an aggregate cleanup error. Failed
+construction cleanup remains registered for a later `close_all` retry. Legacy
+SSE close also aborts the receive/POST lifecycle and awaits the receive task.
+These lifecycle checks do not add a permission gate for user-selected MCP servers.
+Direct callers of `McpClient::new` or `McpClient::from_transport` that may drop
+the preparation waiter should retain `preparation.cleanup_scope()` first and
+await `scope.close()` after cancellation; a failed close can be retried through
+the same scope. `McpManager` retains this scope automatically.
+When a `ReactAgent` owns those clients, its adapter must await
+`Agent::close` while retaining the Agent. `ReactAgent::drop` cannot await MCP
+cleanup and no longer starts a detached cleanup task; dropping an unclosed
+Agent only emits a diagnostic for visible server names. See
+[ADR 0066](../adr/0066-agent-adapter-close-ownership.md).
 
 ---
 
@@ -541,6 +572,10 @@ Potential MCP errors:
 | `McpError::ProtocolError` | Protocol layer error | Check JSON format |
 | `McpError::ToolCallFailed` | Tool invocation failed | Check parameter correctness |
 | `McpError::TransportClosed` | Transport layer closed | Reconnect to server |
+
+Close timeout, task join, child kill/wait, and aggregate close failures use
+`McpError::ConnectionFailed` with cleanup context and are returned from the
+close call rather than converted to successful completion.
 
 ---
 
