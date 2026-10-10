@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "13a8b2857cc8a10128e2bb21a8f5e5f4291878d2",
+    "revision": "1486d2f4a26adbefab393679c58da2804e5f4a75",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -13,7 +13,7 @@
       {
         "sourcePath": "docs/en/02-tools.md",
         "destination": "src/docs/content/echo-agent/en/02-tools.md",
-        "sha256": "b3d3eabc24a38ba1a1791324051e11187bd891a0c7f3299f09b32a22e637cdde"
+        "sha256": "b250503920666da3304c9031bbbcc7d121958fb1d0ea7ee25281526a6b336a76"
       },
       {
         "sourcePath": "docs/en/03-memory.md",
@@ -688,7 +688,7 @@
       {
         "sourcePath": "docs/zh/02-tools.md",
         "destination": "src/docs/content/echo-agent/zh/02-tools.md",
-        "sha256": "869f9dae8973f8159fdce7b9941439f22f527d8eb420e664cb9cfa6f363add07"
+        "sha256": "4cec1f927c9ed36037a25da294853f7caa085ca7ed86e2df2a3fe100884e2ba8"
       },
       {
         "sourcePath": "docs/zh/03-memory.md",
@@ -1359,7 +1359,7 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "dfaad8377fc979c231ccaada80cf5bc49220a242",
+    "reviewedRevision": "f98f50985c9dbc8aad8c1c7e873a8997fe5024f0",
     "status": "reviewed-local-compression-policy",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "sourceFiles": [
