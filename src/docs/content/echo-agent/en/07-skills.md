@@ -309,6 +309,30 @@ Skill directory: ...
 
 `ReactAgent::activate_skill` writes the block with `ContextManager::replace_projection` under the exact marker `echo-agent:skill:<name>`. The `activate_skill` tool returns a typed activation fact; the ReAct tool phase projects its block under the same marker. Re-activation replaces that projection instead of accumulating another authority. Context projections are excluded from compression and reinserted after compaction.
 
+The agent's primary `SkillRegistry` and the concurrent descriptor view used by
+`activate_skill`, `read_skill_resource`, and `run_skill_script` share one
+runtime activation authority. Direct API activation, tool activation,
+checkpoint save/restore, allowed-tool filtering, and resource/script access
+therefore observe the same active names. Catalog descriptors remain definition
+data and do not form another activation state.
+
+Activation is single-flight by `(name, arguments, source)`. Repeating the same
+identity returns the committed content without executing inline commands
+again. A later activation with different arguments or source creates a new
+generation after the prior one completes. Reset, descriptor replacement, and
+removal fence any older in-flight completion. Checkpoint save reads this live
+authority, while restore atomically derives sandbox policy from the current
+descriptor. Cancellation with uncertain inline-command settlement poisons that
+activation identity until explicit reset or removal, preventing an automatic
+effect replay.
+
+Applications that mutate Agent-owned file Skills use
+`register_skill_descriptor`, `register_prepared_skill`,
+`tag_skills_source{_with_variables}`, `unregister_skill_names`, or
+`unregister_skills_by_source`. These APIs reconcile the catalog and progressive
+tool definition views together; the former raw mutable registry accessor is no
+longer available on `ReactAgent`.
+
 ### Where triggers come from
 
 The standard frontmatter has no trigger field, so file-based skills arrive
@@ -322,23 +346,32 @@ explicit API activation and the LLM tool path remain available.
 
 ## Hooks System
 
-Skills participate in the same 31-event Hook system as user and plugin Hook
+Skills participate in the same 31-event Hook catalog as user and plugin Hook
 files. This covers tool execution, sessions, Subagents, tasks, plugins, and
-self-evolution; it is not limited to successful tool calls.
+self-evolution; it is not limited to successful tool calls. The catalog is not
+an automatic-emission guarantee: each event is either framework-auto, host-owned,
+or currently has no producer. See the [authoritative producer matrix](./23-hooks.md#hook-event-producer-matrix)
+and [ADR 0073](../adr/0073-hook-event-producer-contract.md).
 
 ### Hook Events
 
 | Category | Events |
 |----------|--------|
 | Tool (5) | `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `PermissionRequest`, `PermissionDenied` |
-| Session/run (11) | `SessionStart`, `SessionEnd`, `Stop`, `StopFailure`, `Notification`, `UserPromptSubmit`, `PreCompact`, `PostCompact`, `ConfigChange`, `InstructionsLoaded`, `PostToolBatch` |
+| Session/run (10) | `SessionStart`, `SessionEnd`, `Stop`, `Notification`, `UserPromptSubmit`, `PreCompact`, `PostCompact`, `ConfigChange`, `InstructionsLoaded`, `PostToolBatch` |
+| Error (1) | `StopFailure` |
 | Subagent (2) | `SubagentStart`, `SubagentStop` |
 | Task (3) | `TaskCreated`, `TaskStarted`, `TaskCompleted` |
 | Plugin (2) | `PluginLoaded`, `PluginDisabled` |
 | Evolution (8) | `PostMemoryWrite`, `MemoryLayerChange`, `SkillCandidateDetected`, `SkillLifecycleTransition`, `SkillHealthCheck`, `SkillPatchApplied`, `SkillMergeApplied`, `RulePromoted` |
 
-The authoritative trigger and matcher semantics are documented in
-[Hooks System](./23-hooks.md).
+The authoritative trigger, matcher, and producer semantics are documented in
+[Hooks System](./23-hooks.md). In particular, `PermissionDenied`,
+`Notification`, `ConfigChange`, and four evolution events are currently
+catalog-only (`no-producer`); registering a hook for them does not make the
+framework emit an event. Task events and the four wired evolution callbacks
+require the embedding application's bridge or observer configuration. Subagent
+events are framework-auto when `ReactAgent` installs the unified executor.
 
 ### Hook Types
 
@@ -390,7 +423,12 @@ These canonical wire names are case-sensitive. `modified_input`, `message`, and
 
 If multiple matching hooks emit a `permission_mode_override`, the runtime keeps the
 last non-empty override. Permission decisions themselves still follow the stricter
-priority order (`deny > ask > allow`).
+priority order (`deny > ask > require_approval > allow`). Every matching permission
+decision is reduced before returning: an earlier `allow` or `ask` never prevents a
+later source from contributing a `deny`. A `continue: false` returned with a
+permission decision cannot stop that safety reduction; it remains a propagation
+stop for results without a permission decision. A `deny` also blocks the Agent
+automatic tool call.
 
 For a plugin-owned Skill, `PluginVariables` substitution is applied to the
 complete `SKILL.md` before parsing. Plugin Hooks belong to the plugin's Hook

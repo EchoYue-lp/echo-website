@@ -15,15 +15,22 @@ Subagent 使用 `Sync`、`Fork` 或 `Teammate`；需要声明式协作时使用
 所有模式都通过 `SubagentRegistry` 解析目标并由 `SubagentExecutor` 执行。
 因此工具调用与程序化调度共享 hook、取消、prompt 编译、隔离和 typed event。
 
+`register_definition`（或 `ReactAgent::register_subagent_definition`）只保存待装配的定义。
+`get` 和 `contains` 可以查询它，但 `list_available`、`list_by_tag`、`agent_names`
+及模型可见的 `agent_tool` catalog 只展示已绑定 Agent 实例或 factory 的定义。同名定义
+补齐实例或 factory 后进入这些可执行视图；移除后从视图退出。装配前显式程序化调度会因
+没有可运行的 Agent 而失败。
+
 Active Subagent 消息使用 `SubagentExecutor::send_message_tracked`。返回的
 `SubagentMessageReceipt` 只携带 exact attempt identity 与嵌套的
 `AgentSteerReceipt`；mailbox 接收、上下文 drain 和所属 turn 结算只由嵌套
 receipt 负责。单独的 turn ID 不代表投递完成。
 
-`SubagentAttemptIdentity` 是 framework 所有的可序列化值，只包含逻辑 task、物理
-execution 和 attempt 编号。消费者需要关联 command 或 recovery 记录时可直接持久化
-此值，不需要再建立产品 identity 镜像。反序列化与 `new` 使用相同的不变量：task 和
-execution 非空，attempt 必须为正数。
+`SubagentAttemptIdentity` 是 framework 所有的可序列化值，包含逻辑 task、不透明的
+物理 execution、attempt 编号，以及可选的 run 与 control-scope identity。消费者需要
+关联 command 或 recovery 记录时可直接持久化此值，不需要再建立产品 identity 镜像。
+反序列化与 `new` 使用相同的不变量：task、execution 和出现时的 run/scope 非空，
+attempt 必须为正数。
 未知 identity 字段也会被拒绝。
 
 `SubagentResult::usage()` 返回所有消费者共用的可序列化 `ExecutionUsage`

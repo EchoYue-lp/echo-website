@@ -17,7 +17,7 @@ Run the Agent
    ├─ explicit/app-scheduled ─ BackgroundReviewer ─ ReviewCandidate (proposal)
    └─ accepted/explicit memory evidence ──────────────────────────┤
                                                                   ▼
-                                          MemoryLayerManager (hot/warm/cold tiers)
+                                          MemoryLayerManager (hot/warm tiers)
                                                                   │
                   ┌──────────────┬───────────────────┬────────────┴──────────┬──────────────┐
                   ▼              ▼                   ▼                       ▼              ▼
@@ -49,7 +49,7 @@ explicit user-save/correction paths may write automatically, but the system **ne
 - Applies skill merges, patches, or rule promotions (it only generates proposals, applied by humans via commands)
 - Promotes memory from untrusted sources (tool output) into the hot layer or rules
 
-Every mutation to memory/skills/rules is written to the change audit log (`change-log.jsonl`), which is queryable and rollback-capable. Writes also undergo secret scanning and prompt-injection detection.
+Layered memory mutations use a durable recovery operation before writing Store or `MEMORY.md`; their committed business changes are queryable in `change-log.jsonl`. Canonical layered memory also supports later rollback by settled `ChangeId` or `BatchId`; Skill and Rule rollback remain separate contracts (#54/#94/host owner). Memory writes also undergo secret scanning and prompt-injection detection.
 
 ---
 
@@ -63,8 +63,8 @@ Every mutation to memory/skills/rules is written to the change audit log (`chang
 | **PromptGenerator** | LLM-driven prompt improvement | `improve/` |
 | **TrajectorySaver** | Convert runs into ShareGPT fine-tune data | `improve/` |
 | **TypedMemoryStore** | Typed memory read/write with metadata | `echo-state` |
-| **MemoryLayerManager** | Hot/warm/cold tiered memory management | `evolution/` |
-| **ChangeLog** | Change audit and rollback | `evolution/` |
+| **MemoryLayerManager** | Hot/warm memory management; Archived remains in warm | `evolution/` |
+| **ChangeLog** | Append-only queryable business audit; `MemoryLayerManager` owns generation-fenced later memory rollback | `evolution/` |
 | **TriggerDetector** | Online conversation signals → new memory | `evolution/` |
 | **MemoryReviewer** | Staleness scoring, conflict detection, merge, archival (GC) | `evolution/` |
 | **Curator** | Skill lifecycle state machine | `evolution/` |
@@ -174,7 +174,13 @@ This is the core self-evolution capability added in `v0.2.x`, letting the Agent 
 
 Every memory carries structured metadata `MemoryMeta`: type, confidence, stability, risk, status, source, topic. Backward compatible — legacy untyped entries get default metadata on read.
 
+The example below uses the low-level typed Store API. Entries intended for
+runtime recall must instead be written through `MemoryLayerManager` and
+reviewed before activation; a direct Store write does not perform its durable
+operation, audit, or approval workflow.
+
 ```rust
+use echo_agent::evolution::layer::WARM_NAMESPACE;
 use echo_agent::memory::typed_store::{TypedMemoryStore, MemoryFilter};
 use echo_agent::prelude::{MemoryMeta, MemorySource, MemoryType, MemoryStatus};
 
@@ -185,14 +191,14 @@ let meta = MemoryMeta::new(MemoryType::ProjectFact, MemorySource::UserCorrection
     .with_confidence(0.9)
     .with_stability(0.8);
 store
-    .put_typed(&["agent", "typed_memories"], "build:java8", "Project uses Java 8", meta)
+    .put_typed(WARM_NAMESPACE, "build:java8", "Project uses Java 8", meta)
     .await?;
 
 // Filtered retrieval
 let filter = MemoryFilter::new()
     .with_type(MemoryType::ProjectFact)
     .with_min_confidence(0.7);
-let entries = store.list_typed(&["agent", "typed_memories"], &filter).await?;
+let entries = store.list_typed(WARM_NAMESPACE, &filter).await?;
 ```
 
 #### MemoryType categories
@@ -215,17 +221,18 @@ Memory is tiered by value; the hot tier is always in context, warm is retrieved 
 
 - **Hot** (`.echo-agent/MEMORY.md`): highest value, YAML frontmatter + markdown body, ~2000 token cap, editable by both humans and the Agent.
 - **Warm** (Store KV `["agent","memories"]`): unified typed-memory store; organized by topic, loaded on demand. Memories can be `Active` or `Archived` (staleness is a recall-decay weight, not a layer move — Archived stays recallable with decay).
-- **Cold** (optional; Store KV `["agent","cold_memories"]`): retained as pub API for consumers aligned with Letta/MemGPT archival memory (recall-on-demand, not proactively loaded). The default product path collapses cold into `Warm`+`Archived`; consumers who need a distinct cold tier can opt in via `COLD_NAMESPACE`.
+- **Separate cold storage** (optional API constant `COLD_NAMESPACE = ["agent", "cold_memories"]`): a consumer may implement its own archival tier. `MemoryLayerManager` does not read, write, or migrate that namespace; the constant and `MemoryLayer::Cold` do not enable a third tier in the manager.
 
 ```rust
 use echo_agent::evolution::{MemoryLayerManager, JsonlChangeLog, MemoryMeta, MemorySource, MemoryType};
 use std::path::PathBuf;
 
-let mgr = MemoryLayerManager::new(
+let mgr = MemoryLayerManager::try_new(
     PathBuf::from(".echo-agent"),
     arc_store,
     Box::new(JsonlChangeLog::new(PathBuf::from(".echo-agent/evolution/change-log.jsonl"))?),
-);
+)?;
+mgr.reconcile_pending().await?; // before exposing this Store to independent readers
 
 // Write (auto-scans secrets/injection, promotes to hot based on confidence)
 let meta = MemoryMeta::new(MemoryType::ProjectFact, MemorySource::ExplicitSave, "deploy")
@@ -233,8 +240,8 @@ let meta = MemoryMeta::new(MemoryType::ProjectFact, MemorySource::ExplicitSave, 
 mgr.write_memory("deploy:prod-script", "Build with pnpm build", meta).await?;
 
 // Promote / demote
-mgr.promote("some-key").await?;          // cold→warm→hot
-mgr.demote("some-key", "stale").await?;  // hot→warm→cold
+mgr.promote("some-key").await?;          // eligible warm→hot
+mgr.demote("some-key", "stale").await?;  // hot→warm or warm→Archived
 
 // Cross-tier search
 let hits = mgr.search_layered("deploy", 10).await?;
@@ -242,7 +249,7 @@ let hits = mgr.search_layered("deploy", 10).await?;
 
 ### Change Audit — `ChangeLog`
 
-Every mutation to memory/skills/rules is recorded in an append-only JSONL, filterable:
+Committed layered-memory changes are recorded in a filterable append-only JSONL; other evolution producers have their own audit contracts:
 
 ```rust
 use echo_agent::evolution::{ChangeFilter, ChangeType, EntityType};
@@ -252,6 +259,63 @@ let filter = ChangeFilter::new()
     .with_change_type(ChangeType::Promote)
     .with_limit(50);
 // log file: .echo-agent/evolution/change-log.jsonl
+```
+
+For `MemoryLayerManager`, `.echo-agent/evolution/memory-operations.jsonl` is the
+separate crash-recovery authority. A SyncData-confirmed prepared operation
+contains the stable change IDs and target values before Store/`MEMORY.md`
+mutation. The manager applies the projection, appends those IDs to the business
+`ChangeLog` idempotently, and settles the operation. A failure after prepare
+returns an uncertain outcome; `reconcile_pending().await?` finishes it after
+restart without duplicate business audit. Reconciliation also checks settled
+keys against the latest journal target, repairing a Store projection that lost
+its durability barrier. Synchronous hot reads fail before startup recovery or
+while an operation is pending; manager async reads reconcile before returning.
+Raw Store or file readers can observe a prepared intermediate state and must
+wait for startup reconciliation. Observers fire only after live settlement and
+are not replayed after restart. See [ADR 0065](../adr/0065-evolution-memory-audit-reconciliation.md).
+
+Hot entries with newlines or surrounding whitespace carry `content_json: true`
+in `MEMORY.md` frontmatter and a JSON-escaped body bullet, preserving the
+exact text through promotion and demotion; legacy plain bullets remain valid.
+A promotion or demotion based on a stale read fails before prepare when another
+manager has already changed that key.
+
+### Evidence-Bound Draft and Activation
+
+`MemorySource` names the extraction mechanism; `MemoryProvenance` separately
+records the exact user, assistant, or tool excerpts and derived trust.
+Automatic producers and the layered `remember` tool persist Drafts.
+`write_memory` cannot activate a record by accepting a caller-supplied
+`Active` status or approval. A reviewer uses the same manager:
+
+```rust,no_run
+use echo_agent::prelude::MemoryApproval;
+use echo_agent::evolution::MemoryLayerManager;
+
+# async fn review(mgr: &MemoryLayerManager) -> echo_agent::error::Result<()> {
+if let Some(proposal) = mgr.preview_activation("candidate-key").await? {
+    let approval = MemoryApproval::new("review-123", "reviewer", 1_750_000_000);
+    mgr.activate_draft(&proposal, approval).await?;
+}
+# Ok(())
+# }
+```
+
+The proposal binds the exact content, metadata, and journal generation. A
+stale value or A-to-B-to-A edit fails before mutation; retrying the same
+settled approval returns the original activation result. A failed or
+cancelled write retains journal debt for `reconcile_pending`. Only approved
+Active/Archived memory can be recalled. Historical typed or hot records
+without provenance remain readable for review, not model context. Recall
+telemetry uses Store CAS and cannot restore an overwritten status or trust.
+See [ADR 0070](../adr/0070-memory-provenance-and-recall-authority.md).
+
+An approved `MemoryMerger` now binds to the same manager:
+
+```rust
+use echo_agent::evolution::MemoryMerger;
+let outcome = MemoryMerger::new(&mgr).merge_group(&reviewed_group).await?;
 ```
 
 ### Memory Review and Deterministic Maintenance
@@ -295,7 +359,14 @@ the before snapshot for undo.
 strict JSON output with an exact quote. It returns a structured `ReviewCandidate`;
 the default is proposal-only. Only framework consumers that explicitly enable
 `auto_persist_user_preferences` may persist a high-confidence user preference,
-and that write is stored as Draft memory. The review response is capped at 512 tokens.
+and that write is stored as Draft memory. Review methods return a lazy
+`BackgroundReviewHandle`; its `ReviewIdentity` is available before polling and
+binds the run ID to the deterministic persistence key. The handle directly polls
+the caller-owned operation, so the framework adds no Tokio runtime prerequisite,
+detached task, receipt registry, or shutdown owner. Applications must retain the
+identity and perform admission, generation fencing, cancellation, evidence
+settlement, and retry reconciliation in their own lifecycle owner. The review
+response is capped at 512 tokens.
 
 ### Skill Lifecycle and Auto-Creation
 
@@ -305,20 +376,22 @@ and that write is stored as Draft memory. The review response is capped at 512 t
 Candidate → Draft → Active → Stale → Deprecated → Archived
 ```
 
-`Curator` (in `evolution/`) manages these transitions:
+`Curator` stores lifecycle state. Mutations are submitted through
+`SkillMutationAuthority`; the former direct Curator mutation methods are no
+longer public. The host reviews the exact preview digest and supplies a one-use
+approval artifact:
 
 ```rust
-use echo_agent::evolution::{Curator, CuratorConfig, SkillLifecycle};
+use echo_agent::evolution::{SkillApprovalArtifact, SkillMutationAuthority};
 
-let curator = Curator::new(
-    CuratorConfig { stale_days: 30, archive_days: 90, enabled: true },
-    "~/.echo-agent/curator_state.json",
+let authority = Arc::new(SkillMutationAuthority::open(
+    curator, change_log.clone(),
+)?);
+let preview = authority.preview(&request)?;
+let approval = SkillApprovalArtifact::new(
+    approval_id, &preview.operation_digest, approver, approved_at,
 );
-curator.register_candidate("cargo-build")?;   // candidate
-curator.promote_to_draft("cargo-build")?;      // → draft
-curator.promote_to_active("cargo-build")?;     // → active
-curator.pin_skill("critical-skill")?;          // pin (exempt from auto-transition)
-let transitions = curator.apply_transitions()?; // auto-transition by idle time
+let receipt = authority.apply(request, approval).await?;
 ```
 
 #### Auto-creating skills from observed patterns
@@ -326,20 +399,54 @@ let transitions = curator.apply_transitions()?; // auto-transition by idle time
 1. **`SkillCandidateDetector`** scans `TypedMemoryStore` for `WorkflowPattern`/`DebuggingLesson` memory; when ≥3 entries share a topic with source `RepeatedWorkflow` → proposes a skill candidate.
 
    ```rust
-   use echo_agent::evolution::SkillCandidateDetector;
-   let detector = SkillCandidateDetector::new();
+   use echo_agent::evolution::{Curator, CuratorConfig, SkillCandidateDetector};
+   let curator = Curator::new(CuratorConfig::default(), "<application-data>/evolution/curator-state.json");
+   let detector = SkillCandidateDetector::new(curator);
    let report = detector.detect(&typed_store, &change_log).await?;
    // report.new_candidates / report.reinforced
    ```
 
+   Creation and reinforcement share one private durable operation journal. Each
+   detection pass reconciles prepared candidate payloads and stable idempotent
+   `ChangeLog` entries before scanning. Report items are published only after
+   settlement; a scan with no observation growth writes no payload or audit.
+   `TypedMemoryStore`, `Curator`, and `ChangeLog` remain the payload, lifecycle,
+   and append-only audit authorities respectively. Reserved Store and ChangeLog
+   markers bind the journal to those concrete authorities, Store projection uses
+   exact atomic compare-and-put, and Curator preserves the candidate authority
+   lineage across legitimate Draft/Active transitions. Stores without atomic
+   compare-and-put are rejected instead of falling back to a racy write;
+   `EmbeddingStore` is one such wrapper because its derived vector index cannot
+   share the inner payload commit. See
+   [ADR 0068](../adr/0068-skill-candidate-mutation-audit-reconciliation.md).
+
 2. **`SkillDraftGenerator`** generates a draft `SKILL.md` from a candidate via template, saved under the consumer-supplied evolution root at `skills/_drafts/<name>/SKILL.md`.
 
    ```rust
-   use echo_agent::evolution::SkillDraftGenerator;
-   let gen = SkillDraftGenerator::new("<application-data>".into(), &change_log);
-   let result = gen.generate_from_candidate(&candidate).await?;
+   use echo_agent::evolution::{SkillApprovalArtifact, SkillDraftGenerator};
+   let gen = SkillDraftGenerator::new("<application-data>".into(), authority.clone());
+   let preview = gen.preview_generate_from_candidate(&candidate, request_id).await?;
+   let approval = SkillApprovalArtifact::new(
+       approval_id, &preview.preview.operation_digest, approver, approved_at,
+   );
+   let result = gen.generate_from_preview(preview, approval).await?;
    // result.skill_md_path points to the generated draft
    ```
+
+   Draft, Merge, and Patch use the same prepare → projection → idempotent audit
+   → settle owner. Later rollback targets a retained change or batch, fences
+   every file and lifecycle identity by journal generation, and writes a fresh
+   inverse batch. Rule rollback is typed `HostOwned`; framework code never
+   reconstructs Rule state from ChangeLog. See
+   [ADR 0069](../adr/0069-skill-lifecycle-mutation-authority.md).
+
+   One authority is permanently bound to the business `ChangeLog`'s canonical
+   durable destination identity; copied markers at another path and logs
+   without such an identity fail closed. Apply/reconcile/rollback do not accept another log. SKILL.md paths are
+   canonical absolute identities and `after` bytes must be UTF-8. Exact bytes
+   stay in the private recovery journal; business audit records path, hash,
+   length, and a bounded secret-redacted summary. Curator projection uses
+   per-Skill merge CAS, preserving unrelated candidate inserts.
 
    embedding application currently supplies `<application-data>`, so its drafts live at `<application-data>/skills/_drafts/<name>/SKILL.md`. That product-owned location should be verified against the [embedding application app-core source](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src).
 
@@ -376,7 +483,15 @@ for report in monitor.analyze_all_skills().await? {
 - **Pre-write**: secret scanning (AWS `AKIA...`, GitHub `ghp_...`, `BEGIN PRIVATE KEY`, etc.; matches replaced with `[REDACTED]`) + prompt-injection detection (e.g. "ignore previous" patterns)
 - **Untrusted-input isolation**: memory from tool output gets `risk = High` and cannot be promoted to hot layer or rules without human approval
 - **Rate limiting**: max 50 memory writes per session, max 5 skill patches per day
-- All changes are rollback-capable via `ChangeLog`
+- `ChangeLog` remains an append-only audit. Later memory rollback is owned by
+  `MemoryLayerManager::preview_rollback` and `rollback_memory`: target a
+  `ChangeId` or complete `BatchId`, require every affected key to remain at the
+  batch's latest journal generation, then commit a durable inverse batch.
+  Results distinguish `Ready`, `Conflict`, and `HistoryUnavailable`; a stable
+  request ID makes retries return the original receipt. Its append-only audit
+  records the actual inverse type and exact before/after warm/hot projection.
+  Merge members are always rolled back as one batch. Skill and Rule rollback
+  remain outside this memory-only contract (#54/#94/host owner).
 
 ---
 
@@ -395,33 +510,27 @@ There are three automatic memory paths with strictly divided responsibilities to
 
 ---
 
-## File Layout
+## Layered Memory Files
 
 ```
 .echo-agent/
-  MEMORY.md                        # hot tier (human-readable, editable by Agent and humans)
-  AGENTS.md                        # auto-promoted rules
-  project.md / local.md            # existing static prompt files
-  memory/
-    topics/*.md                    # warm-tier topic files
-    archive/                       # cold-tier archive
+  MEMORY.md                        # hot tier (human-readable)
   evolution/
-    change-log.jsonl               # change audit log
-    skill_candidates/              # candidate proposals
-    patches/                       # skill patches
-  skills/
-    _drafts/<name>/SKILL.md        # draft skills
-  curator_state.json               # Curator state
+    memory-operations.jsonl        # recovery journal owned by MemoryLayerManager
+    change-log.jsonl               # default business audit path for MemoryRuntimeIntegrationBuilder
 ```
 
-Framework consumers may choose another path. embedding application injects workspace-scoped files under `<application-data>/evolution/`, including `evidence-candidates.jsonl` and `curator-state.json`.
+The warm tier is Store KV under `WARM_NAMESPACE`, not a `memory/topics` or
+`memory/archive` directory. A consumer supplies the Store implementation and
+root path; the change-log path is configurable. Other product files and skill
+artifacts have separate ownership.
 
 ## Store Namespaces
 
 | Namespace | Purpose |
 |-----------|---------|
-| `["agent", "typed_memories"]` | typed memory (warm tier) |
-| `["agent", "cold_memories"]` | archived memory (cold tier) |
+| `["agent", "memories"]` | `WARM_NAMESPACE`: unified typed warm tier, including `MemoryStatus::Archived` |
+| `["agent", "cold_memories"]` | Optional `COLD_NAMESPACE` constant for a consumer-owned separate tier; not read or written by `MemoryLayerManager` |
 | `["agent", "skill_candidates"]` | skill candidate proposals |
 | `["agent", "skill_telemetry"]` | skill telemetry |
 | `["agent", "profile"]` | Agent profile |

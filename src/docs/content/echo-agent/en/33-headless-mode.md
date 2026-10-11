@@ -34,6 +34,9 @@ pub struct HeadlessConfig {
 
     /// Max iterations before forcing stop (safety limit).
     pub max_iterations: Option<usize>,
+
+    /// Optional caller-owned cancellation token.
+    pub cancel_token: Option<CancellationToken>,
 }
 ```
 
@@ -43,6 +46,7 @@ pub struct HeadlessConfig {
 | `exit_on_error` | `bool` | `true` | When `true`, the process exits with code 1 on agent failure. |
 | `output_format` | `String` | `"text"` | Controls `format_output()`: `"text"` returns raw output; `"json"` wraps the result in a structured JSON envelope. |
 | `max_iterations` | `Option<usize>` | `None` | Safety cap on ReAct loop iterations. Prevents runaway execution in unattended environments. |
+| `cancel_token` | `Option<CancellationToken>` | `None` | Parent cancellation scope observed by the run. Headless owns a child token, so cancelling this run does not cancel the parent or siblings. |
 
 ---
 
@@ -89,10 +93,12 @@ run_headless(config, configure)
     │                               │
     │                               ├─ Build error? → return error HeadlessResult
     │                               │
-    │                               └─ agent.execute(&prompt)
+    │                               └─ AgentTurnDriver.drive(agent, prompt)
     │                                       │
-    │                                       ├─ Ok → HeadlessResult { success: true, ... }
-    │                                       └─ Err → HeadlessResult { success: false, ... }
+    │                                       ├─ settle one TurnReceipt
+    │                                       └─ await Agent::close
+    │                                               ├─ Ok → project the Turn result
+    │                                               └─ Err → unsuccessful result with close error
     │
     └─ return HeadlessResult
 ```
@@ -114,6 +120,9 @@ pub struct HeadlessResult {
 
     /// Output format requested.
     pub format: String,
+
+    /// Whether failure changes the process exit code.
+    pub exit_on_error: bool,
 }
 ```
 
@@ -126,6 +135,31 @@ pub fn exit_code(&self) -> i32
 ```
 
 Returns `0` on success, `1` on failure — suitable for direct use with `std::process::exit()`.
+When `exit_on_error` is `false`, failures still set `success: false` and remain
+visible in `output`, but `exit_code()` returns `0` by explicit caller policy.
+
+Headless execution uses an owned task that awaits `Agent::close` after the Turn
+receipt even when execution failed or was cancelled. If the caller aborts or
+drops the `run_headless` waiter, the wrapper requests Turn cancellation and the
+owned task continues through close. Callers that need to stop waiting, observe
+the same result later, or retry a failed close use `start_headless` and retain
+its `HeadlessRunHandle`:
+
+```rust
+let run = start_headless(config, |builder| builder);
+let result = run.wait().await;
+if !result.success {
+    run.retry_close().await?;
+}
+```
+
+Call `retry_close` only after `wait` publishes the result receipt. It returns a
+phase error while execution is active and becomes idempotent after close has
+succeeded. If the runtime drops the owned task before its first poll, the
+handle publishes a failure receipt and retains the same Agent for close retry.
+
+See
+[ADR 0066](../adr/0066-agent-adapter-close-ownership.md).
 
 #### format_output()
 
@@ -164,6 +198,7 @@ async fn main() {
         exit_on_error: true,
         output_format: "text".into(),
         max_iterations: Some(10),
+        cancel_token: None,
     };
 
     let result = run_headless(config, |builder| builder).await;
@@ -186,6 +221,7 @@ async fn main() {
         exit_on_error: true,
         output_format: "text".into(),
         max_iterations: Some(20),
+        cancel_token: None,
     };
 
     let result = run_headless(config, |builder| {
@@ -216,6 +252,7 @@ async fn main() {
         exit_on_error: true,
         output_format: "json".into(),   // ← JSON envelope
         max_iterations: Some(10),
+        cancel_token: None,
     };
 
     let result = run_headless(config, |builder| builder).await;

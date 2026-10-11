@@ -159,6 +159,48 @@ pub trait ChannelPlugin: Send + Sync {
 
 ## Message Flow
 
+`AgentChannelHandler` drives every inbound message through `AgentTurnDriver`.
+Its standard handler returns a reply only after the receipt reports
+`Completed + Delivered` and contains a final answer; cancellation or a failed
+Turn cannot be mistaken for a successful reply. Framework callers needing
+the exact Turn identity, usage, or cancellation result can call
+`AgentChannelHandler::drive_turn(&message, cancel_token)` and inspect the
+returned `TurnReceipt`. Receipt delivery means event-sink acceptance, while
+the channel's transport generation fence governs outbound network admission.
+`drive_turn_with_sink` accepts a caller-owned Journal or projection sink when
+events must be retained. The default sink is only an in-process acceptance
+boundary and is not a QQ/Feishu delivery acknowledgement. Framework session
+reset passes cancellation to this driven handler and waits for that Turn to
+settle before publishing the replacement reply.
+When an inbound message has attachments, the same Turn carries a typed user
+message: non-empty text first, followed by attachments in their original order.
+Image bytes are identified as PNG, JPEG, GIF, or WebP before being encoded as
+MIME-correct data URLs; unknown image data is rejected before model admission.
+Files retain their bytes as base64 `ContentPart::File` values and use a stable
+generated name when the transport did not supply one. Audio and video have no
+matching core content part and are rejected rather than silently reduced to
+text. Text-only messages retain the existing plain-text path. This preserves
+attachment bytes and part order at the framework projection boundary, but is
+not a promise that every transport metadata field is represented or that every
+provider can read every file: provider adapters may render unsupported binary
+files as name-only placeholders. See
+[ADR 0077](../adr/0077-channel-attachment-projection.md).
+Resource close is a separate boundary: `ChannelManager::stop_all` stops each
+transport before awaiting its retained `MessageHandler::close`. A
+`SessionHandler` then cancels sender generations, waits for active streams and
+delivery leases, and awaits each sender Agent close. Shutdown waits for every
+accepted/polled stream, including legacy/custom handlers that do not publish a
+driven terminal; this is resource lifetime only and does not create another
+Turn terminal. Reset retains its existing driven-only terminal settlement
+policy. Reset or timeout
+replacement closes the previous Agent before publishing the next one. A
+failed or cancelled close keeps the handler/session owner for a later `stop`
+or `close` retry; it does not reopen new message admission. Resourceful custom
+handlers implement `MessageHandler::close`, while stateless handlers use its
+default no-op. See [ADR 0066](../adr/0066-agent-adapter-close-ownership.md).
+Raw `Agent::chat` remains available for lower-level Rust consumers. See
+[ADR 0046](../adr/0046-turn-execution-delivery-settlement.md).
+
 ### InboundMessage —— Received Messages
 
 ```rust
@@ -170,6 +212,7 @@ pub struct InboundMessage {
     pub text: String,
     pub message_id: String,   // Platform message ID (for replies)
     pub timestamp: u64,
+    pub attachments: Vec<MessageAttachment>,
 }
 ```
 
@@ -194,14 +237,17 @@ clones and `SessionEndInfo` observe that rotation, so consumers can retire the
 exact old model/runtime context while keeping journals and task history under a
 stable product conversation ID.
 
-A reset reply and its replacement session are available immediately. If an old
-stream is still active (including an admitted stream that has not been polled),
-the old `SessionEndInfo` cleanup callback runs only after that stream settles.
-This ordering lets a consumer retire the exact old checkpoint after its final
-write instead of allowing the old stream to recreate state after cleanup.
-If consumer callback code panics, `SessionHandler` contains that panic at the
-lifecycle boundary; it does not propagate from stream teardown or poison the
-replacement session.
+A reset retires the old generation and cancels its stream. A chunk already
+accepted by the built-in transport is allowed to settle before reset is
+acknowledged; later chunks from the old generation are rejected before queue or
+network admission. The replacement handler and reset reply are published only
+after that delivery barrier, so stale output cannot appear after the reset
+acknowledgement. An admitted stream that has never been polled still owns its
+receipt, so its `SessionEndInfo` cleanup callback runs when that stream is
+dropped. If consumer callback code panics, `SessionHandler` contains that panic
+at the lifecycle boundary; it does not propagate from stream teardown or poison
+the replacement session. See
+[ADR 0057](../adr/0057-channel-generation-delivery-fence.md).
 
 For custom Agent drivers, carry the stable product ID in
 `AgentInvocationContext.runtime.conversation_id`, and use the instance-derived runtime key for
@@ -224,6 +270,7 @@ pub struct OutboundMessage {
     pub chat_type: ChatType,
     pub text: String,
     pub reply_to: Option<String>,  // Replied message ID
+    // SessionHandler attaches an opaque process-local delivery fence.
 }
 ```
 
@@ -293,6 +340,12 @@ pub struct QqConfig {
 
 Tokens are automatically cached and refreshed 5 minutes before expiration.
 
+`QqConfig` and `FeishuConfig` implement credential-safe `Debug`. Client/app
+secrets, webhook verification tokens, and signing keys are represented as
+`[REDACTED]`. Channel transport logs and returned diagnostics also sanitize
+credential-shaped response text and URLs before formatting them; request and
+connection behavior is unchanged.
+
 ## Feishu
 
 ### Connection Method
@@ -338,11 +391,13 @@ manager.register(Box::new(QqChannel::new(config)?));
 manager.register(Box::new(FeishuChannel::new(config)?));
 
 // Create independent Handler for each channel
-manager.start_all(|channel_id| {
+for started in manager.start_all(|_channel_id| {
     Arc::new(MyHandler::new(llm_client.clone()))
-}).await?;
+}).await {
+    started.result?;
+}
 
-// Stop all
+// Stop transports, drain handlers, and await each sender Agent close.
 manager.stop_all().await?;
 ```
 

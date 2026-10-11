@@ -17,7 +17,7 @@
    ├─ 用户显式/应用调度 ─ BackgroundReviewer ─ ReviewCandidate（提案）
    └─ 已确认/显式记忆证据 ───────────────────────────┤
                                                        ▼
-                                    MemoryLayerManager（热/暖/冷分层）
+                                    MemoryLayerManager（热/暖分层）
                                                        │
                            ┌───────────────┬──────────┴──────────┬───────────────┐
                            ▼               ▼                     ▼               ▼
@@ -48,7 +48,7 @@
 - 应用技能合并、补丁或规则晋升（仅生成提案，由人通过命令应用）
 - 把来自不可信来源（工具输出）的记忆晋升到热层或规则
 
-所有对记忆/技能/规则的变更都写入变更审计日志（`change-log.jsonl`），可查询、可回滚。写入时还会进行密钥扫描与提示注入检测。
+分层记忆变更先写入持久恢复操作，再修改 Store 或 `MEMORY.md`；已提交的业务变更可在 `change-log.jsonl` 查询。canonical 分层记忆支持按已结算 `ChangeId` 或 `BatchId` 事后回滚；Skill 与 Rule 回滚仍由独立契约负责（#54/#94/host owner）。记忆写入还会进行密钥扫描与提示注入检测。
 
 ---
 
@@ -62,8 +62,8 @@
 | **PromptGenerator** | LLM 驱动的提示词改进 | `improve/` |
 | **TrajectorySaver** | 将运行转为 ShareGPT 微调数据 | `improve/` |
 | **TypedMemoryStore** | 带元数据的结构化记忆读写 | `echo-state` |
-| **MemoryLayerManager** | 热/暖/冷三层记忆管理 | `evolution/` |
-| **ChangeLog** | 变更审计与回滚 | `evolution/` |
+| **MemoryLayerManager** | 热/暖两层记忆管理；Archived 留在暖层 | `evolution/` |
+| **ChangeLog** | append-only 业务变更审计；`MemoryLayerManager` 负责带 generation fencing 的记忆事后回滚 | `evolution/` |
 | **TriggerDetector** | 在线对话信号→新记忆 | `evolution/` |
 | **MemoryReviewer** | 陈旧评分、冲突检测、合并、归档（GC） | `evolution/` |
 | **Curator** | 技能生命周期状态机 | `evolution/` |
@@ -173,7 +173,11 @@ let entries = saver.list(Some("2026-05-29")).await?;
 
 每条记忆都带结构化元数据 `MemoryMeta`：类型、置信度、稳定性、风险、状态、来源、主题。向后兼容——未类型化的旧条目读取时自动获得默认元数据。
 
+以下示例展示底层 typed Store API。需要进入运行时召回的记忆必须经由
+`MemoryLayerManager` 写入并审阅激活；直接写 Store 不执行其持久操作、审计和批准流程。
+
 ```rust
+use echo_agent::evolution::layer::WARM_NAMESPACE;
 use echo_agent::memory::typed_store::{TypedMemoryStore, MemoryFilter};
 use echo_agent::prelude::{MemoryMeta, MemorySource, MemoryType, MemoryStatus};
 
@@ -184,14 +188,14 @@ let meta = MemoryMeta::new(MemoryType::ProjectFact, MemorySource::UserCorrection
     .with_confidence(0.9)
     .with_stability(0.8);
 store
-    .put_typed(&["agent", "typed_memories"], "build:java8", "项目用 Java 8", meta)
+    .put_typed(WARM_NAMESPACE, "build:java8", "项目用 Java 8", meta)
     .await?;
 
 // 按条件过滤检索
 let filter = MemoryFilter::new()
     .with_type(MemoryType::ProjectFact)
     .with_min_confidence(0.7);
-let entries = store.list_typed(&["agent", "typed_memories"], &filter).await?;
+let entries = store.list_typed(WARM_NAMESPACE, &filter).await?;
 ```
 
 #### MemoryType 分类
@@ -208,23 +212,24 @@ let entries = store.list_typed(&["agent", "typed_memories"], &filter).await?;
 | `RepeatedWorkflow` | 相同工具序列被观察 ≥3 次 | 0.75 |
 | `AutoExtracted` | AutoMemory 从会话归档提取 | 0.6 |
 
-### 三层记忆管理 — `MemoryLayerManager`
+### 分层记忆管理 — `MemoryLayerManager`
 
-记忆按价值分层，热层始终加载进上下文，暖/冷层按需检索：
+记忆按价值分层，热层始终加载进上下文，暖层按需检索：
 
 - **热层**（`.echo-agent/MEMORY.md`）：最高价值，YAML frontmatter + markdown 正文，上限 ~2000 token，人类与 Agent 都可编辑。
-- **暖层**（Store KV `["agent","typed_memories"]`）：按主题组织，按需加载。
-- **冷层**（Store KV `["agent","cold_memories"]`）：归档旧/低置信度记忆。
+- **暖层**（Store KV `["agent","memories"]`）：统一类型化存储，`Archived` 条目仍在此层并按衰减权重召回。
+- **独立冷存储**（可选常量 `COLD_NAMESPACE = ["agent", "cold_memories"]`）：复用方可以自行实现归档层。`MemoryLayerManager` 不读写或迁移该命名空间；常量和 `MemoryLayer::Cold` 不会自动启用第三层。
 
 ```rust
 use echo_agent::evolution::{MemoryLayerManager, JsonlChangeLog, MemoryMeta, MemorySource, MemoryType};
 use std::path::PathBuf;
 
-let mgr = MemoryLayerManager::new(
+let mgr = MemoryLayerManager::try_new(
     PathBuf::from(".echo-agent"),
     arc_store,
     Box::new(JsonlChangeLog::new(PathBuf::from(".echo-agent/evolution/change-log.jsonl"))?),
-);
+)?;
+mgr.reconcile_pending().await?; // 向独立 Store 读者开放前先恢复
 
 // 写入（自动扫描密钥/注入，并按置信度判断是否进热层）
 let meta = MemoryMeta::new(MemoryType::ProjectFact, MemorySource::ExplicitSave, "deploy")
@@ -232,8 +237,8 @@ let meta = MemoryMeta::new(MemoryType::ProjectFact, MemorySource::ExplicitSave, 
 mgr.write_memory("deploy:prod-script", "部署用 pnpm build", meta).await?;
 
 // 晋升/降级
-mgr.promote("some-key").await?;          // 冷→暖→热
-mgr.demote("some-key", "stale").await?;  // 热→暖→冷
+mgr.promote("some-key").await?;          // 符合条件的暖→热
+mgr.demote("some-key", "stale").await?;  // 热→暖，或暖层原位归档
 
 // 跨层搜索
 let hits = mgr.search_layered("deploy", 10).await?;
@@ -241,7 +246,7 @@ let hits = mgr.search_layered("deploy", 10).await?;
 
 ### 变更审计 — `ChangeLog`
 
-所有对记忆/技能/规则的变更都记录到 append-only JSONL，支持过滤查询：
+已提交的分层记忆变更记录到可过滤查询的 append-only JSONL；其它演化写入分别遵循自身审计合同：
 
 ```rust
 use echo_agent::evolution::{ChangeFilter, ChangeType, EntityType};
@@ -251,6 +256,44 @@ let filter = ChangeFilter::new()
     .with_change_type(ChangeType::Promote)
     .with_limit(50);
 // 日志文件：.echo-agent/evolution/change-log.jsonl
+```
+
+对 `MemoryLayerManager`，`.echo-agent/evolution/memory-operations.jsonl` 是独立的崩溃恢复权威。操作先以 `SyncData` 确认含固定 change ID 和目标值的 prepare，再写 Store/`MEMORY.md` 投影，以同一 ID 幂等写入业务 `ChangeLog`，最后记录 settlement。prepare 后任一步失败都会返回未知完成结果；重启调用 `reconcile_pending().await?` 可补齐且不会重复业务审计。恢复还会核对已结算 key 的最新 journal 目标，修复 Store 因持久化屏障 degraded 而回退的投影。同步热层读在启动恢复前或待恢复时返回错误，manager 的异步读先恢复；直接读取 Store 或文件的调用者仍可能暂见中间态，必须等启动恢复完成。observer 仅在实时提交后触发，不跨重启重放。见 [ADR 0065](../adr/0065-evolution-memory-audit-reconciliation.md)。
+
+含换行或首尾空白的热层内容在 `MEMORY.md` frontmatter 标记 `content_json: true`，正文 bullet 使用单行 JSON 字符串，无损恢复原文；旧的普通 bullet 仍可读取。晋升或降级若基于过期读取，另一 manager 已改同一 key，则在 prepare 前失败，不覆盖较新的值。
+
+### 带证据的 Draft 与激活
+
+`MemorySource` 表示抽取机制；`MemoryProvenance` 单独保存 user、assistant、tool
+的精确原文及据此得到的信任分类。自动写入和分层 `remember` 工具先持久化
+Draft。`write_memory` 不接受调用方传入的 `Active` 或 approval 作为激活依据。
+调用方沿用同一 manager 审阅：
+
+```rust,no_run
+use echo_agent::prelude::MemoryApproval;
+use echo_agent::evolution::MemoryLayerManager;
+
+# async fn review(mgr: &MemoryLayerManager) -> echo_agent::error::Result<()> {
+if let Some(proposal) = mgr.preview_activation("candidate-key").await? {
+    let approval = MemoryApproval::new("review-123", "reviewer", 1_750_000_000);
+    mgr.activate_draft(&proposal, approval).await?;
+}
+# Ok(())
+# }
+```
+
+proposal 绑定准确内容、metadata 和 journal generation；过期内容及 A→B→A
+改写会在 mutation 前失败，同一已结算批准的重试返回幂等结果。失败或取消后的
+journal debt 由 `reconcile_pending` 结算。只有已批准 Active/Archived 记忆可
+召回；缺少 provenance 的旧 typed/hot 记录仍可审阅，但不进入模型 context。
+Recall 计数使用 Store CAS，不能把并发修改过的状态或来源写回。见
+[ADR 0070](../adr/0070-memory-provenance-and-recall-authority.md)。
+
+已批准的 `MemoryMerger` 现在绑定同一 manager：
+
+```rust
+use echo_agent::evolution::MemoryMerger;
+let outcome = MemoryMerger::new(&mgr).merge_group(&reviewed_group).await?;
 ```
 
 ### 记忆审查与确定性维护
@@ -282,7 +325,7 @@ let report = reviewer
 
 ### 带证据的运行回顾 — `BackgroundReviewer`
 
-`BackgroundReviewer` 把 run transcript 当作不可信证据，只接受包含精确引用的严格 JSON，返回结构化 `ReviewCandidate`。默认只提案，不写长期记忆。只有框架复用方显式开启 `auto_persist_user_preferences` 时，才可能把高置信用户偏好写成 Draft memory。单次回顾输出上限为 512 token。
+`BackgroundReviewer` 把 run transcript 当作不可信证据，只接受包含精确引用的严格 JSON，返回结构化 `ReviewCandidate`。默认只提案，不写长期记忆。只有框架复用方显式开启 `auto_persist_user_preferences` 时，才可能把高置信用户偏好写成 Draft memory。review 方法返回惰性的 `BackgroundReviewHandle`；首次 poll 前即可取得 `ReviewIdentity`，它把 run ID 与稳定的 persistence key 绑定。handle 直接由 caller 驱动 operation，framework 不创建 Tokio detached task、receipt registry，也不拥有 shutdown；应用负责 admission、代次 fence、取消、evidence settlement 和 retry reconciliation。单次回顾输出上限为 512 token。
 
 ### 技能生命周期与自创建
 
@@ -292,20 +335,21 @@ let report = reviewer
 Candidate → Draft → Active → Stale → Deprecated → Archived
 ```
 
-`Curator`（位于 `evolution/`）管理这些状态转换：
+`Curator`（位于 `evolution/`）保存生命周期状态；mutation 统一提交给
+`SkillMutationAuthority`，旧的 Curator 直接 mutation 方法不再公开。host 审阅
+exact preview digest 后提供一次性 approval artifact：
 
 ```rust
-use echo_agent::evolution::{Curator, CuratorConfig, SkillLifecycle};
+use echo_agent::evolution::{SkillApprovalArtifact, SkillMutationAuthority};
 
-let curator = Curator::new(
-    CuratorConfig { stale_days: 30, archive_days: 90, enabled: true },
-    "~/.echo-agent/curator_state.json",
+let authority = Arc::new(SkillMutationAuthority::open(
+    curator, change_log.clone(),
+)?);
+let preview = authority.preview(&request)?;
+let approval = SkillApprovalArtifact::new(
+    approval_id, &preview.operation_digest, approver, approved_at,
 );
-curator.register_candidate("cargo-build")?;   // 候选
-curator.promote_to_draft("cargo-build")?;      // → 草稿
-curator.promote_to_active("cargo-build")?;     // → 激活
-curator.pin_skill("critical-skill")?;          // 固定免于自动转换
-let transitions = curator.apply_transitions()?; // 按闲置时间自动转换
+let receipt = authority.apply(request, approval).await?;
 ```
 
 #### 从观察模式自动创建技能
@@ -313,20 +357,48 @@ let transitions = curator.apply_transitions()?; // 按闲置时间自动转换
 1. **`SkillCandidateDetector`** 扫描 `TypedMemoryStore` 中 `WorkflowPattern`/`DebuggingLesson` 记忆；当同一主题 ≥3 条且来源为 `RepeatedWorkflow` → 提出技能候选。
 
    ```rust
-   use echo_agent::evolution::SkillCandidateDetector;
-   let detector = SkillCandidateDetector::new();
+   use echo_agent::evolution::{Curator, CuratorConfig, SkillCandidateDetector};
+   let curator = Curator::new(CuratorConfig::default(), "<application-data>/evolution/curator-state.json");
+   let detector = SkillCandidateDetector::new(curator);
    let report = detector.detect(&typed_store, &change_log).await?;
    // report.new_candidates / report.reinforced
    ```
 
+   create 与 reinforce 共用一个私有 durable operation journal。每次 detect 会先恢复已 prepare
+   的 candidate payload，并用固定 ID 幂等补齐 `ChangeLog`，再开始本轮扫描。只有 settled 后才会
+   发布 report；观察数量没有增长时不写 payload 或 audit。`TypedMemoryStore`、`Curator`、
+   `ChangeLog` 仍分别是 payload、lifecycle 与 append-only audit 权威。Store 与 ChangeLog 的
+   reserved marker 把 journal 绑定到具体权威；Store 投影使用 exact atomic compare-and-put；
+   Curator 在合法 Draft/Active 晋升中保留 candidate authority lineage。不支持原子 CAS 的 Store
+   会被拒绝，不会退回有竞态的 get-then-put；`EmbeddingStore` 的派生向量索引无法与 inner
+   payload 共用一次原子提交，因此明确属于 Unsupported。详见
+   [ADR 0068](../adr/0068-skill-candidate-mutation-audit-reconciliation.md)。
+
 2. **`SkillDraftGenerator`** 从候选用模板生成草稿 `SKILL.md`，保存到消费方传入的 evolution root 下 `skills/_drafts/<name>/SKILL.md`。
 
    ```rust
-   use echo_agent::evolution::SkillDraftGenerator;
-   let gen = SkillDraftGenerator::new("<application-data>".into(), &change_log);
-   let result = gen.generate_from_candidate(&candidate).await?;
+   use echo_agent::evolution::{SkillApprovalArtifact, SkillDraftGenerator};
+   let gen = SkillDraftGenerator::new("<application-data>".into(), authority.clone());
+   let preview = gen.preview_generate_from_candidate(&candidate, request_id).await?;
+   let approval = SkillApprovalArtifact::new(
+       approval_id, &preview.preview.operation_digest, approver, approved_at,
+   );
+   let result = gen.generate_from_preview(preview, approval).await?;
    // result.skill_md_path 指向生成的草稿
    ```
+
+   Draft、Merge 与 Patch 共用同一个 prepare → projection → 幂等 audit → settle
+   owner。later rollback 以 retained change/batch 为目标，对每个文件和 lifecycle
+   identity 做 journal generation fencing，再写入新的 inverse batch。Rule rollback
+   返回 typed `HostOwned`，framework 不从 ChangeLog 猜测 Rule 状态。见
+   [ADR 0069](../adr/0069-skill-lifecycle-mutation-authority.md)。
+
+   一个 authority 永久绑定 business `ChangeLog` 的 canonical durable destination
+   identity；复制到其它路径的 marker 和无法提供该 identity 的 log 都 fail closed。
+   apply/reconcile/rollback 不接受其它 log。SKILL.md 使用 canonical absolute path，`after` bytes
+   必须是 UTF-8。exact bytes 只保存在 private recovery journal；business audit
+   仅记录 path、hash、length 和有界的 secret-redacted summary。Curator 投影按
+   Skill entity 做 merge CAS，因此不会覆盖无关 candidate insert。
 
    embedding application 当前传入 `<application-data>`，因此草稿位于 `<application-data>/skills/_drafts/<name>/SKILL.md`。这一产品路径应以 [embedding application app-core 源码](https://github.com/EchoYue-lp/echo-agent-cli/tree/main/echo-agent-app-core/src) 为准。
 
@@ -363,7 +435,13 @@ for report in monitor.analyze_all_skills().await? {
 - **写入前**：密钥扫描（AWS `AKIA...`、GitHub `ghp_...`、`BEGIN PRIVATE KEY` 等，匹配项替换为 `[REDACTED]`）+ 提示注入检测（如 "ignore previous" 模式）
 - **不可信输入隔离**：工具输出来源的记忆 `risk = High`，未经人工批准不可晋升到热层或规则
 - **速率限制**：每会话最多 50 次记忆写入，每天最多 5 次技能补丁
-- 所有变更经 `ChangeLog` 可回滚
+- `ChangeLog` 保持 append-only 审计。记忆事后回滚由
+  `MemoryLayerManager::preview_rollback` 与 `rollback_memory` 负责：目标可用
+  `ChangeId` 或完整 `BatchId`，所有受影响 key 必须仍处于该批次最新 journal
+  generation，随后写入一个持久 inverse batch。结果区分 `Ready`、`Conflict`
+  和 `HistoryUnavailable`；稳定 request ID 让重试返回原 receipt。append-only
+  audit 记录真实 inverse 类型和精确 before/after warm/hot 投影。merge 成员始终
+  整批回滚。Skill/Rule 回滚仍属于 #54/#94/host owner，不在本记忆契约内。
 
 ---
 
@@ -382,33 +460,26 @@ for report in monitor.analyze_all_skills().await? {
 
 ---
 
-## 文件布局
+## 分层记忆文件
 
 ```
 .echo-agent/
-  MEMORY.md                        # 热层（人类可读，Agent 与人类都可编辑）
-  AGENTS.md                        # 自动晋升的规则
-  project.md / local.md            # 已有的静态提示文件
-  memory/
-    topics/*.md                    # 暖层主题文件
-    archive/                       # 冷层归档
+  MEMORY.md                        # 热层（人类可读）
   evolution/
-    change-log.jsonl               # 变更审计日志
-    skill_candidates/              # 候选提案
-    patches/                       # 技能补丁
-  skills/
-    _drafts/<name>/SKILL.md        # 草稿技能
-  curator_state.json               # Curator 状态
+    memory-operations.jsonl        # MemoryLayerManager 的恢复 journal
+    change-log.jsonl               # MemoryRuntimeIntegrationBuilder 的默认业务审计路径
 ```
 
-框架复用方可以选择其它路径。embedding application 注入 workspace scope，使用 `<application-data>/evolution/evidence-candidates.jsonl` 与 `<application-data>/evolution/curator-state.json`。
+暖层是 `WARM_NAMESPACE` 下的 Store KV，并非 `memory/topics` 或 `memory/archive`
+目录。复用方注入 Store 实现及根路径；change-log 路径可配置。其它产品文件与技能
+产物有各自的 owner。
 
 ## Store 命名空间
 
 | 命名空间 | 用途 |
 |---------|------|
-| `["agent", "typed_memories"]` | 类型化记忆（暖层） |
-| `["agent", "cold_memories"]` | 归档记忆（冷层） |
+| `["agent", "memories"]` | `WARM_NAMESPACE`：统一类型化暖层，包含 `MemoryStatus::Archived` |
+| `["agent", "cold_memories"]` | 可选的 `COLD_NAMESPACE` 常量，供复用方自行实现独立冷层；`MemoryLayerManager` 不读写此层 |
 | `["agent", "skill_candidates"]` | 技能候选提案 |
 | `["agent", "skill_telemetry"]` | 技能遥测 |
 | `["agent", "profile"]` | Agent 配置 |

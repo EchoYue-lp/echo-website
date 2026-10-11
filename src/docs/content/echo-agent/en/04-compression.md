@@ -1,5 +1,33 @@
 # Context Compression
 
+`FrameworkConfig.agent.compress_window: 0` enables a recent token allowance
+of 25% of the live Agent window, capped at 20K tokens. Positive values retain
+the legacy message cap. Rust callers can use `with_recent_token_budget(tokens)`;
+zero restores the legacy constructor behavior. Summary, IncrementalSummary and
+SlidingWindow share one tail selector. Older turns are retained whole; a large
+active turn keeps its exact user request and recent atomic tool blocks while
+older execution work can be summarized. One request can expand the soft recent
+allowance, but input exceeding the hard system/protected-adjusted budget fails
+explicitly. User text is not silently truncated or retained without bounds.
+
+Generated summaries participate in later summaries rather than accumulating as
+canonical system policy. Automatic compaction uses the latest real request as
+focus, excluding projections and runtime notes. The manual API
+`force_compress_context_with_options(focus, cancel)` shares one hook/trace
+lifecycle and passes cancellation to providers. Application journal settlement
+after a successful transform retains its existing owner. Noncontiguous eviction
+does not claim a continuous checkpoint `covered_range`.
+See [ADR 0081](../adr/0081-token-budgeted-compression-tail.md).
+
+Incremental merge reads the accepted summary from input messages; its private
+cache is observation only. After final budget, verification and memory promotion
+succeed, ContextManager invokes `ContextCompressor::context_committed`; restore
+and clear also synchronize it. Hybrid forwards the notification. Standalone
+users explicitly call `context_committed(&output.messages)` after accepting the
+output, before reading `current_summary()`. Failed/cancelled calculation does
+not publish the cache. Runtime-marked Hook/image notes do not become user
+requests, and tool-call IDs close batches across these multimodal notes.
+
 ## What It Is
 
 An LLM's context window is finite. As conversation history accumulates, sending everything verbatim will eventually exceed the token limit (causing request failures) or drive up cost and latency.
@@ -114,7 +142,7 @@ before rewriting history, and always keep call/result groups atomic.
 
 > **New in v0.2.2.** Incremental LLM summarization that reuses previous summaries.
 
-Unlike `SummaryCompressor` which re-summarizes ALL old messages every time, `IncrementalSummaryCompressor` maintains the previous summary and only sends `[previous summary] + [new messages]` to the LLM on subsequent compressions. This dramatically reduces LLM cost and latency for long conversations.
+Unlike `SummaryCompressor` which re-summarizes ALL old messages every time, `IncrementalSummaryCompressor` reads the previous summary from the accepted input messages and only sends `[previous summary] + [new messages]` to the LLM on subsequent compressions. This reduces LLM cost and latency for long conversations. `current_summary()` is an observation cache published by `ContextManager` after it accepts the final transform; failed or cancelled candidates do not update it. Standalone callers publish accepted output with `ContextCompressor::context_committed(&output.messages)`.
 
 ```rust
 use echo_agent::compression::compressor::IncrementalSummaryCompressor;
@@ -125,14 +153,14 @@ let compressor = IncrementalSummaryCompressor::new(llm, 6);
 // Second compression: sends previous summary + new messages only
 // Third compression: same pattern, even cheaper
 
-// Inspect or reset the stored summary:
+// Inspect or reset the observation cache (not the input-history authority):
 println!("Current summary: {:?}", compressor.current_summary());
 compressor.reset();
 ```
 
 **Pros**: Much cheaper for long conversations with repeated compression.
 
-**Cons**: Requires mutable internal state (wrapped in `Mutex`); slightly more complex.
+**Cons**: The observation cache uses a `Mutex`; standalone callers must notify it after accepting output. Resetting the cache does not remove a summary from accepted input messages.
 
 ---
 
@@ -387,13 +415,14 @@ use echo_agent::tokenizer::{CalibratedTokenizer, HeuristicTokenizer, Tokenizer};
 use std::sync::Arc;
 
 let base = Arc::new(HeuristicTokenizer);
+let raw_prompt_tokens = base.count_tokens("some text");
 let calibrated = CalibratedTokenizer::new(base);
 
 // Use like any other tokenizer
 let tokens = calibrated.count_tokens("some text");
 
 // After the LLM API returns actual token counts, feed them back:
-calibrated.calibrate(tokens, api_usage.prompt_tokens);
+calibrated.calibrate(raw_prompt_tokens, api_usage.prompt_tokens);
 
 // The calibration factor converges via exponential moving average (EMA)
 println!("Factor: {:.3}", calibrated.calibration_factor());
@@ -404,6 +433,18 @@ let ctx = ContextManager::builder(4096)
     .tokenizer(Arc::new(calibrated))
     .build();
 ```
+
+`calibrate` takes the **uncalibrated** estimate of the same request reported by
+the provider, not `calibrated.count_tokens(...)`. For a real chat request,
+estimate all messages, exposed tool schemas, and response-format schema together;
+feed back only when the provider reports prompt usage. The ReAct runtime does
+this from the immutable request passed to the client. Provider-specific file
+fallback, image input, and reasoning replay are excluded from calibration
+because provider usage cannot be separated into comparable text and non-text
+costs. Image estimates remain fixed when the text factor changes. Before
+compression, ReAct reserves the current tool and response-format schemas;
+the Draft-memory flush preflight and preparation share that reservation. The
+final request is checked again after interventions and tool visibility changes.
 
 ---
 

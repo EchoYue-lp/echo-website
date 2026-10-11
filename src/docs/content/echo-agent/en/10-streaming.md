@@ -200,11 +200,14 @@ that do not expose an input lifecycle publisher leave the terminal receipt at
 ### Canonical turn receipt
 
 `AgentTurnDriver` returns the sole framework-owned `TurnReceipt` for generic
-turn facts. In addition to the typed terminal, it carries the final answer and
-message identity, provider-reported input/output totals, reported-call count,
-explicit context-compaction count, final envelope sequence, and elapsed time.
-Product sinks may persist or render the same envelopes, but must project these
-fields from the receipt instead of folding a second turn summary from events.
+turn facts. In addition to the typed execution terminal, it carries an
+orthogonal delivery result, the final answer and message identity,
+provider-reported input/output totals, reported-call count, explicit
+context-compaction count, final envelope sequence, and elapsed time. Product
+sinks may persist or render the same envelopes, but must project these fields
+from the receipt instead of folding a second turn summary from events. A turn
+can be execution-completed while delivery failed; callers must inspect both
+results before claiming the result was delivered.
 Product-only facts such as workspace routing, UI retention pins, and webhook
 delivery remain in the application adapter.
 
@@ -252,6 +255,14 @@ and Anthropic Messages use the same SSE
 transport for request startup, cancellation, UTF-8-safe decoding, first/idle/
 overall timeouts, and truncated-event rejection. Provider adapters only
 translate semantic JSON events into `ChatChunk` values.
+
+Each provider also validates its own completion signal before publishing a
+successful finish reason or usage: Chat Completions requires a successful choice
+finish reason followed by `[DONE]`; Responses requires `response.completed`;
+Anthropic Messages requires a successful `message_delta` followed by
+`message_stop`. An EOF before these signals, a non-success stop reason, or a
+malformed final event returns a typed `InvalidResponse`. Partial deltas remain
+available to a live caller, but they are not a completed model response.
 
 This separation is intentional: a healthy long stream can exceed the
 non-streaming request timeout, while a stalled stream still fails at its first

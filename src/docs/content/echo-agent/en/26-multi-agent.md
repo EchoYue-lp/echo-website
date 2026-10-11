@@ -16,6 +16,14 @@ Every mode resolves the target through `SubagentRegistry` and executes through
 `SubagentExecutor`. Direct tool dispatch and programmatic dispatch therefore
 share hooks, cancellation, prompt compilation, isolation, and typed events.
 
+`register_definition` (or `ReactAgent::register_subagent_definition`) stores a
+pending definition for late binding. `get` and `contains` can inspect it, but
+`list_available`, `list_by_tag`, `agent_names`, and the model-facing `agent_tool`
+catalog include only definitions backed by an Agent instance or factory. Once
+the same name is registered with an instance or factory, it enters those
+executable views; removing it clears the views. An explicit programmatic
+dispatch before hydration fails because no Agent exists to run.
+
 Active Subagent messages use `SubagentExecutor::send_message_tracked`. Its
 `SubagentMessageReceipt` contains the exact attempt identity and the nested
 `AgentSteerReceipt`; the nested receipt is the only authority for mailbox
@@ -23,10 +31,11 @@ acceptance, context drain, and owning-turn settlement. A turn ID alone is not a
 delivery-complete result.
 
 `SubagentAttemptIdentity` is a framework-owned, serializable value containing
-only the logical task, physical execution, and attempt number. Persist this
-value directly when a consumer needs to correlate a command or recovery record;
-no product identity mirror is required. Deserialization enforces the same
-non-empty task/execution and positive-attempt invariants as `new`.
+the logical task, opaque physical execution, attempt number, and optional run
+and control-scope identities. Persist this value directly when a consumer needs
+to correlate a command or recovery record; no product identity mirror is
+required. Deserialization enforces the same non-empty task/execution,
+non-empty optional run/scope, and positive-attempt invariants as `new`.
 Unknown identity fields are rejected as well.
 
 `SubagentResult::usage()` returns the serializable `ExecutionUsage`

@@ -196,6 +196,18 @@ while let Some(event) = stream.next().await {
 }
 ```
 
+`NodeError` is a terminal diagnostic event: the stream emits it before ending
+with the same error and never emits `Completed` after a failed node. When a
+parallel branch fails, the workflow cancels and drains its remaining siblings
+so a hung branch cannot mask the failure or outlive caller cancellation.
+Agent nodes forward `AgentEvent::Token` as `WorkflowEvent::Token`; their final
+answer is committed to `SharedState` before `NodeEnd` is emitted.
+
+`run`, `run_until_interrupt`, checkpoint resume, and `run_stream` all delegate
+node routing, path/step accounting, fan-out, errors, and completion to one
+internal execution loop. Streaming is an event projection of that loop, not a
+second executor.
+
 ---
 
 ## Declarative YAML Workflow
@@ -255,7 +267,15 @@ let result = graph.run(state).await?;
 | `Graph` | LangGraph-style with conditional edges, loops | Complex multi-agent orchestration |
 | `SequentialWorkflow` | Simple pipeline, step N output → step N+1 input | ETL pipelines |
 | `ConcurrentWorkflow` | All agents run in parallel, results merged | Parallel analysis |
-| `DagWorkflow` | Topological scheduling, independent nodes parallel | DAG tasks |
+| `DagWorkflow` | Fixed acyclic Agent pipeline; predecessor text output feeds successor nodes | Static pipeline invocation |
+
+These are public Workflow APIs, separate from the revisioned Task graph.
+`Graph` owns conditional routing, shared state and checkpoint continuation;
+`DagWorkflow` owns one fixed topological pipeline invocation and has no Task
+claim or checkpoint contract. Use `RuntimeTaskService` for a dynamic Task DAG.
+If a Workflow is dispatched by a Task, its output is evidence for the Task's
+exact claim settlement, not another Task status authority. See
+[ADR 0059](../adr/0059-task-workflow-dag-authority.md).
 
 ### SequentialWorkflow
 
@@ -308,6 +328,21 @@ let result = graph.run_with_checkpoints(state.clone(), &checkpoint_store).await?
 let checkpoint_id = checkpoint_store.latest()?.id;
 let resumed = graph.resume_from_checkpoint(&checkpoint_store, &checkpoint_id).await?;
 ```
+
+Resume uses the `CheckpointStore` claim lease. A successful continuation is
+acknowledged; a node or restore failure requeues the claim. File-store claims
+remain visible to `load` and `list`; `Graph` renews the exact attempt while a
+long continuation is active, and only a missed heartbeat can make a crashed
+claim discoverable again. Tagging an active claim fails its generation
+compare-and-save instead of resurrecting the continuation. Custom and
+SDK-backed stores must implement renew, acknowledge, requeue, and
+generation-CAS; unsupported settlement fails closed.
+
+Approval of a `BeforeNode` checkpoint skips only that exact interrupt once.
+Any configured interrupt on a subsequent node is still evaluated. Finish nodes
+use the same before/after interrupt semantics as every other executable node;
+resuming an after-finish checkpoint completes the preserved path without
+executing the finish node twice.
 
 ---
 
