@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "1486d2f4a26adbefab393679c58da2804e5f4a75",
+    "revision": "95ec66c6083a8feb17a1c28de0d01e1a24ca8a28",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -1359,7 +1359,7 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "f98f50985c9dbc8aad8c1c7e873a8997fe5024f0",
+    "reviewedRevision": "f57b90a2b0962fa5561f8839a3df70be1f261ffa",
     "status": "reviewed-local-compression-policy",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "sourceFiles": [
@@ -1537,7 +1537,7 @@
       },
       {
         "sourcePath": "docs/en/adr/0043-background-review-owner.md",
-        "sha256": "9638dc8198aa299088c098ef1da01e3801f86e9273ec1e3a4c58a9b62b9f0927"
+        "sha256": "e451da131ab4f00701147a502ff9e014ab345adf54e4b7109a33db5b35386fb8"
       },
       {
         "sourcePath": "docs/en/adr/0044-skill-mutation-integration.md",
@@ -1597,7 +1597,7 @@
       },
       {
         "sourcePath": "docs/en/README.md",
-        "sha256": "a54abbb73c7f87006c06c4d12da45fd00c3f8708ce7b4c0dfd99604a12c94abc"
+        "sha256": "7dfe23c13f0a2b4c05a0db37902ea30c9665426b9be6b1864e5603e40ea2c900"
       },
       {
         "sourcePath": "docs/zh/adr/0001-agent-collaboration.md",
@@ -1773,7 +1773,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0043-background-review-owner.md",
-        "sha256": "ca09cd011703312e0c54870397121a2676226a007f8fd3db5de87b0bf74b8491"
+        "sha256": "d9683ab91fa4665c187000791efa01135cec0cc288f148920cfed08768c43ad8"
       },
       {
         "sourcePath": "docs/zh/adr/0044-skill-mutation-integration.md",
@@ -1833,7 +1833,7 @@
       },
       {
         "sourcePath": "docs/zh/README.md",
-        "sha256": "02e46d03fb4ca6b5a688198dbb2a459a4131dace6acd589c29f2b7ceea47a166"
+        "sha256": "32c8a7dfd700ced264eb050c5d709a96783d21e85b3affd81ee27ece88d85edd"
       }
     ],
     "files": [
