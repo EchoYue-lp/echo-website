@@ -5,3 +5,5 @@ test-results
 upstream
 src/docs/content
 docs-sync-manifest.json
+.echo-semantic/local/
+.echo-semantic/preflight.json
