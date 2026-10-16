@@ -23,6 +23,11 @@ The tool system provides a standardized bridge, enabling the LLM to drive any ex
 
 ## Architecture
 
+Direct adapters can call `tools::execution::validate_tool_input` before invoking
+a tool. It shares ToolManager's JSON Schema and custom input validation without
+adding registry, retry, timeout, or cancellation behavior. Tool definitions stay
+the sole input authority; malformed arguments fail before side effects.
+
 ```
 Tool trait                        ← unified interface all tools implement
     │
@@ -563,12 +568,28 @@ agent.add_tools(vec![
 | `bibtex_generate` | research | Generate BibTeX from paper metadata (requires `research` feature) |
 | `rag_index` | rag | Chunk and vector-index documents (requires `rag` feature) |
 | `rag_search` | rag | Semantic search over indexed documents (requires `rag` feature) |
+| `rag_chunk_document` | rag | Preview document chunks without indexing (requires `rag` feature) |
 | `excel_read` / `excel_write` / ... | media | Excel read/write/profile (6 tools, requires `media` feature) |
 | `data_read` / `data_filter` / ... | data | Polars data analysis (13 tools, requires `data` feature) |
 | `generate_chart` | chart | Chart generation (requires `chart` feature) |
 | `db_query` / `db_schema` | database | SQL database tools (requires `database` feature) |
 
 See: `echo-agent-learning/examples/demo01_tools.rs`, `echo-agent-learning/examples/demo09_file_shell.rs`, `echo-agent-learning/examples/demo13_tool_execution.rs`, `echo-agent-learning/tests/example_contracts/demo64_tool_pipeline.rs`
+
+`rag_chunk_document` uses Unicode scalar values for `chunk_size`, `overlap`, and
+each chunk's `char_count`. Its `preview` contains up to 200 scalars and
+`truncated` is true only when that preview omits scalars. For example,
+`中文😀甲` has `char_count: 4`, and 70 Chinese characters are not truncated even
+though their UTF-8 encoding occupies 210 bytes. This preview operation does not
+modify the RAG index.
+
+`generate_chart` uses width/height unsigned integers in `0..=4294967295`, preserving
+the original `u32` representation without wrapping or clamping. Only omitted
+width/height use defaults 600/400. Supplied null, negative, fractional, string,
+boolean or out-of-range values return explicit errors; zero remains supported.
+The tool schema constrains the numeric range; direct execution additionally
+requires a serde_json integer representation. Floating representations such as
+`1.0` return an explicit error and never use a default.
 
 ---
 
