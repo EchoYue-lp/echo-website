@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "9886502c83d6b1f6fa9212eb221db0e5874deaee",
+    "revision": "6563d26570cc4a8d93c86b7e37443b0559476807",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -663,7 +663,7 @@
       {
         "sourcePath": "docs/adr/0088-subagent-settlement-observation.md",
         "destination": "src/docs/content/echo-agent/en/adr/0088-subagent-settlement-observation.md",
-        "sha256": "7c6ee0c5a6820bc5737ddc15732e749147fd8f33b3d10a0ae58b98d1b6c4e796"
+        "sha256": "c437f5035cbd0eec3bd4f7ab2efa8d940e9b0cc3bb3e753a5c109413966a46e9"
       },
       {
         "sourcePath": "docs/adr/0089-non-yanked-media-dependencies.md",
@@ -713,7 +713,7 @@
       {
         "sourcePath": "docs/en/lifecycles.md",
         "destination": "src/docs/content/echo-agent/en/lifecycles.md",
-        "sha256": "3c8fc3f509aba7a855d353ffcf0318c941fe3b1b6fc9a6593ad72b4f46b4519e"
+        "sha256": "a49e22fdd62a33cadc0ddaa1bd7325bc7156f2ce3abed0efd268c65efc851de1"
       },
       {
         "sourcePath": "docs/en/README.md",
@@ -1388,7 +1388,7 @@
       {
         "sourcePath": "docs/adr/0088-subagent-settlement-observation.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0088-subagent-settlement-observation.md",
-        "sha256": "7c6ee0c5a6820bc5737ddc15732e749147fd8f33b3d10a0ae58b98d1b6c4e796"
+        "sha256": "c437f5035cbd0eec3bd4f7ab2efa8d940e9b0cc3bb3e753a5c109413966a46e9"
       },
       {
         "sourcePath": "docs/adr/0089-non-yanked-media-dependencies.md",
@@ -1438,7 +1438,7 @@
       {
         "sourcePath": "docs/zh/lifecycles.md",
         "destination": "src/docs/content/echo-agent/zh/lifecycles.md",
-        "sha256": "886d0f32c1a694f605312d0cbff263659b9c5cf5782eacb6b5573d3adddd13c7"
+        "sha256": "9724a75be372f82c1239b27ad220528a0b2b924de55d4bcad324882cf3152585"
       },
       {
         "sourcePath": "docs/zh/README.md",
