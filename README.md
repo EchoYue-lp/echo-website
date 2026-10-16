@@ -39,6 +39,7 @@ npm run test:e2e
 
 `npm run verify` runs the same gate in sequence. CI additionally installs Chromium with its Linux
 system dependencies.
+CI runs on pushes to `main`; task branches and pull requests must pass the local gate before merge.
 
 ## Documentation synchronization
 

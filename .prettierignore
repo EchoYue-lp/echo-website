@@ -5,3 +5,4 @@ test-results
 upstream
 src/docs/content
 docs-sync-manifest.json
+.echo-semantic/local/
