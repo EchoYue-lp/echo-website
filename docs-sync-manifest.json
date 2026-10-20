@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "6563d26570cc4a8d93c86b7e37443b0559476807",
+    "revision": "3560812caede84998a1f6f26d7bf3fa81ea0486c",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -183,7 +183,7 @@
       {
         "sourcePath": "docs/en/38-factory-modes.md",
         "destination": "src/docs/content/echo-agent/en/38-factory-modes.md",
-        "sha256": "72178a47465dae26ee0496c6b2ebe88a9267d7f1b6d17be43ae5c05e7718977f"
+        "sha256": "c419b4a8a8804afbd5e4ea22796c6dd21918bcc0e5f586cc9671c80aa2bd2e8b"
       },
       {
         "sourcePath": "docs/en/39-framework-application-boundary.md",
@@ -203,7 +203,7 @@
       {
         "sourcePath": "docs/en/41-persistence-concepts.md",
         "destination": "src/docs/content/echo-agent/en/41-persistence-concepts.md",
-        "sha256": "5630fcf4b92ce8f97e6ab1fe08750f16454f0a6ef6279e7276f79548b6a65c67"
+        "sha256": "ca1019dfe593f4f869afc9cd7395ffeb042bfd5b6fd5a9434cce923941e3f8d1"
       },
       {
         "sourcePath": "docs/en/41-shell-text-tools.md",
@@ -458,7 +458,7 @@
       {
         "sourcePath": "docs/adr/0047-model-facts-freshness-authority.md",
         "destination": "src/docs/content/echo-agent/en/adr/0047-model-facts-freshness-authority.md",
-        "sha256": "86ac4e1bdd58cbe2b2434b7fa010a23b1c84b28a020e2a85f1ea44475c84d645"
+        "sha256": "f3e246bc75f1812c9dd6c2e54e45136948a44ad2b062a21966431ee458bf3b0e"
       },
       {
         "sourcePath": "docs/adr/0049-mcp-transport-close-settlement.md",
@@ -493,7 +493,7 @@
       {
         "sourcePath": "docs/adr/0056-durable-transcript-projection-settlement.md",
         "destination": "src/docs/content/echo-agent/en/adr/0056-durable-transcript-projection-settlement.md",
-        "sha256": "c18a2b083eaa04bf6398fcb130935295ea13a0e1ee970c0f4d50a10016843c03"
+        "sha256": "0d87c0af7f26c19ecf8e4a07a1f6db497c2aa64a93fb996f77df3442894d3094"
       },
       {
         "sourcePath": "docs/adr/0057-channel-generation-delivery-fence.md",
@@ -908,7 +908,7 @@
       {
         "sourcePath": "docs/zh/38-factory-modes.md",
         "destination": "src/docs/content/echo-agent/zh/38-factory-modes.md",
-        "sha256": "3758ab0553501095e12dc1c95b36bcc74ce5e089a7fc275ec14be1bac81642d8"
+        "sha256": "4994f491aeea02b6eca8d3a2a21d1bbe64d0f2c35e1ff3534485fa1652d0b133"
       },
       {
         "sourcePath": "docs/zh/39-framework-application-boundary.md",
@@ -928,7 +928,7 @@
       {
         "sourcePath": "docs/zh/41-persistence-concepts.md",
         "destination": "src/docs/content/echo-agent/zh/41-persistence-concepts.md",
-        "sha256": "e8e5a99f6acbc8f04f9dd61425ec01b3a2576e2e0cba69435418b756d6c52aec"
+        "sha256": "9db764ef471335b84e27efbc780cf80529fe81eb848921471f050a2cbea5cce8"
       },
       {
         "sourcePath": "docs/zh/41-shell-text-tools.md",
@@ -1183,7 +1183,7 @@
       {
         "sourcePath": "docs/adr/0047-model-facts-freshness-authority.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0047-model-facts-freshness-authority.md",
-        "sha256": "86ac4e1bdd58cbe2b2434b7fa010a23b1c84b28a020e2a85f1ea44475c84d645"
+        "sha256": "f3e246bc75f1812c9dd6c2e54e45136948a44ad2b062a21966431ee458bf3b0e"
       },
       {
         "sourcePath": "docs/adr/0049-mcp-transport-close-settlement.md",
@@ -1218,7 +1218,7 @@
       {
         "sourcePath": "docs/adr/0056-durable-transcript-projection-settlement.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0056-durable-transcript-projection-settlement.md",
-        "sha256": "c18a2b083eaa04bf6398fcb130935295ea13a0e1ee970c0f4d50a10016843c03"
+        "sha256": "0d87c0af7f26c19ecf8e4a07a1f6db497c2aa64a93fb996f77df3442894d3094"
       },
       {
         "sourcePath": "docs/adr/0057-channel-generation-delivery-fence.md",
