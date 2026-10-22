@@ -8,7 +8,8 @@ EKO is a local personal AI assistant built on echo-agent. Its TUI, Tauri desktop
 - Use tools, skills, hooks, plugins, and user-configured MCP servers
 - Organize dependent `PlanTask` work and Subagent execution in one revisioned TaskRun graph, with framework `TaskStatus` as execution authority and Todo as a read-only projection
 - Discover, inspect, message, follow up, wait for, and interrupt Conversation Agents and exact Task Subagent attempts through six bounded `agent_*` tools
-- Resume cursor-based Agent waits and TaskRuns across restart, while preserving cold workspace identity and exactly one typed terminal across GUI, TUI, CLI, JSONL, and channels
+- Resume cursor-based Agent waits and TaskRuns across restart, preserving workspace and original TaskRun identity; GUI, TUI, CLI, JSONL, and channels publish a single typed terminal for a settled execution, based on a genuine, durably acknowledged settlement receipt
+- Keep an unsettled execution nonterminal and retain its original owner; an unknown outcome does not authorize replay or duplicate execution
 - Control Skills, prepared Plugin generations, MCP, Hooks, LSP, Browser, and direct-user tool visibility through scoped application authorities
 - Publish generation-bound hot memory once for the primary, existing pooled Agents, and future Agents at the next model safe point
 - Store conversations, memory, task journals, checkpoints, and product projections in local files or memory without requiring SQLite

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "6563d26570cc4a8d93c86b7e37443b0559476807",
+    "revision": "f7bac62eee04a963f92a3e4308b6ea2336e91cc0",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -183,7 +183,7 @@
       {
         "sourcePath": "docs/en/38-factory-modes.md",
         "destination": "src/docs/content/echo-agent/en/38-factory-modes.md",
-        "sha256": "72178a47465dae26ee0496c6b2ebe88a9267d7f1b6d17be43ae5c05e7718977f"
+        "sha256": "c7cd1566e00a4a072608b1d98ff858b6d98af565fdde4cfec54295cc19998cb2"
       },
       {
         "sourcePath": "docs/en/39-framework-application-boundary.md",
@@ -203,7 +203,7 @@
       {
         "sourcePath": "docs/en/41-persistence-concepts.md",
         "destination": "src/docs/content/echo-agent/en/41-persistence-concepts.md",
-        "sha256": "5630fcf4b92ce8f97e6ab1fe08750f16454f0a6ef6279e7276f79548b6a65c67"
+        "sha256": "ca1019dfe593f4f869afc9cd7395ffeb042bfd5b6fd5a9434cce923941e3f8d1"
       },
       {
         "sourcePath": "docs/en/41-shell-text-tools.md",
@@ -228,7 +228,7 @@
       {
         "sourcePath": "docs/adr/0002-sandbox-cancellation-cleanup.md",
         "destination": "src/docs/content/echo-agent/en/adr/0002-sandbox-cancellation-cleanup.md",
-        "sha256": "4bff940eb8556af971c3fa92667d899f4f9d1ef21a2a9763988a4231cd574bd2"
+        "sha256": "56dd249e3853678b13a049133e7d879fec8c7d60d9fc6e53ba1a7ab822b6af01"
       },
       {
         "sourcePath": "docs/adr/0003-tracked-steer-lifecycle.md",
@@ -458,7 +458,7 @@
       {
         "sourcePath": "docs/adr/0047-model-facts-freshness-authority.md",
         "destination": "src/docs/content/echo-agent/en/adr/0047-model-facts-freshness-authority.md",
-        "sha256": "86ac4e1bdd58cbe2b2434b7fa010a23b1c84b28a020e2a85f1ea44475c84d645"
+        "sha256": "33050edc0d47f25c8dde345902c52f6030705e82c059f94923249ed878669c6d"
       },
       {
         "sourcePath": "docs/adr/0049-mcp-transport-close-settlement.md",
@@ -493,7 +493,7 @@
       {
         "sourcePath": "docs/adr/0056-durable-transcript-projection-settlement.md",
         "destination": "src/docs/content/echo-agent/en/adr/0056-durable-transcript-projection-settlement.md",
-        "sha256": "c18a2b083eaa04bf6398fcb130935295ea13a0e1ee970c0f4d50a10016843c03"
+        "sha256": "0d87c0af7f26c19ecf8e4a07a1f6db497c2aa64a93fb996f77df3442894d3094"
       },
       {
         "sourcePath": "docs/adr/0057-channel-generation-delivery-fence.md",
@@ -548,7 +548,7 @@
       {
         "sourcePath": "docs/adr/0066-agent-adapter-close-ownership.md",
         "destination": "src/docs/content/echo-agent/en/adr/0066-agent-adapter-close-ownership.md",
-        "sha256": "8d017a07fa1c47bce9ac5ad89a83774ec4965708e75350dea1c5188b47c64dcb"
+        "sha256": "7ff6491285a2c21ddd1d61c096d170182e79b715b2ce61c8d0a1915e0b8314f1"
       },
       {
         "sourcePath": "docs/adr/0067-mcp-owner-qualified-identity.md",
@@ -908,7 +908,7 @@
       {
         "sourcePath": "docs/zh/38-factory-modes.md",
         "destination": "src/docs/content/echo-agent/zh/38-factory-modes.md",
-        "sha256": "3758ab0553501095e12dc1c95b36bcc74ce5e089a7fc275ec14be1bac81642d8"
+        "sha256": "eb076b377cac431ddf5a42364c8def5509180b3a143577a17bfa6428b797d186"
       },
       {
         "sourcePath": "docs/zh/39-framework-application-boundary.md",
@@ -928,7 +928,7 @@
       {
         "sourcePath": "docs/zh/41-persistence-concepts.md",
         "destination": "src/docs/content/echo-agent/zh/41-persistence-concepts.md",
-        "sha256": "e8e5a99f6acbc8f04f9dd61425ec01b3a2576e2e0cba69435418b756d6c52aec"
+        "sha256": "9db764ef471335b84e27efbc780cf80529fe81eb848921471f050a2cbea5cce8"
       },
       {
         "sourcePath": "docs/zh/41-shell-text-tools.md",
@@ -953,7 +953,7 @@
       {
         "sourcePath": "docs/adr/0002-sandbox-cancellation-cleanup.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0002-sandbox-cancellation-cleanup.md",
-        "sha256": "4bff940eb8556af971c3fa92667d899f4f9d1ef21a2a9763988a4231cd574bd2"
+        "sha256": "56dd249e3853678b13a049133e7d879fec8c7d60d9fc6e53ba1a7ab822b6af01"
       },
       {
         "sourcePath": "docs/adr/0003-tracked-steer-lifecycle.md",
@@ -1183,7 +1183,7 @@
       {
         "sourcePath": "docs/adr/0047-model-facts-freshness-authority.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0047-model-facts-freshness-authority.md",
-        "sha256": "86ac4e1bdd58cbe2b2434b7fa010a23b1c84b28a020e2a85f1ea44475c84d645"
+        "sha256": "33050edc0d47f25c8dde345902c52f6030705e82c059f94923249ed878669c6d"
       },
       {
         "sourcePath": "docs/adr/0049-mcp-transport-close-settlement.md",
@@ -1218,7 +1218,7 @@
       {
         "sourcePath": "docs/adr/0056-durable-transcript-projection-settlement.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0056-durable-transcript-projection-settlement.md",
-        "sha256": "c18a2b083eaa04bf6398fcb130935295ea13a0e1ee970c0f4d50a10016843c03"
+        "sha256": "0d87c0af7f26c19ecf8e4a07a1f6db497c2aa64a93fb996f77df3442894d3094"
       },
       {
         "sourcePath": "docs/adr/0057-channel-generation-delivery-fence.md",
@@ -1273,7 +1273,7 @@
       {
         "sourcePath": "docs/adr/0066-agent-adapter-close-ownership.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0066-agent-adapter-close-ownership.md",
-        "sha256": "8d017a07fa1c47bce9ac5ad89a83774ec4965708e75350dea1c5188b47c64dcb"
+        "sha256": "7ff6491285a2c21ddd1d61c096d170182e79b715b2ce61c8d0a1915e0b8314f1"
       },
       {
         "sourcePath": "docs/adr/0067-mcp-owner-qualified-identity.md",
@@ -1459,7 +1459,7 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "f57b90a2b0962fa5561f8839a3df70be1f261ffa",
+    "reviewedRevision": "0616c6cd25e2496c6940b74c983f4ffa08003518",
     "status": "reviewed-local-compression-policy",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "sourceFiles": [
@@ -1477,7 +1477,7 @@
       },
       {
         "sourcePath": "docs/en/adr/0004-application-lifecycle-supervisor.md",
-        "sha256": "0ffe54fb24d05e00ad318731ba454c5f09a0ce377c4702b177fe1204cefc78f1"
+        "sha256": "00c4bff0072fe1daa302bc23c95adc7f3aa1806708ce572bb8e37a4bbe09506b"
       },
       {
         "sourcePath": "docs/en/adr/0005-foreground-continuation-owner.md",
@@ -1521,7 +1521,7 @@
       },
       {
         "sourcePath": "docs/en/adr/0015-task-graph-status-authority.md",
-        "sha256": "38955ff4a416d3cd3ef72cb49df2aa66cd42a03b351133c71d0da707fc39cfa6"
+        "sha256": "77afbdffadf53b5fc6b495760dd4636dbfe31f0bc10193ce5e65de3d19b7331a"
       },
       {
         "sourcePath": "docs/en/adr/0016-agent-control-tools.md",
@@ -1577,7 +1577,7 @@
       },
       {
         "sourcePath": "docs/en/adr/0029-framework-native-agent-and-model-config.md",
-        "sha256": "1a5e2531f01f2ccfb51a10677ece487ec17289c472ca11ad9277eed90194a0d8"
+        "sha256": "7b023104968fa87fb54f8ca0a82c8d3df6e3fc36fe4c230576181b98a560f355"
       },
       {
         "sourcePath": "docs/en/adr/0030-unified-subagent-prompt-architecture.md",
@@ -1645,7 +1645,7 @@
       },
       {
         "sourcePath": "docs/en/adr/0045-managed-conversation-lifecycle.md",
-        "sha256": "8803ebb10a8f29d7cb785fc0f5f3907a0363e410b96928f14bf6ea65fba5e93c"
+        "sha256": "d3f1ab94c5d80432ccbd12f88bba2d7d8bb0e84d06a259973540d821b31c8957"
       },
       {
         "sourcePath": "docs/en/adr/0046-plugin-generation-fail-closed.md",
@@ -1713,7 +1713,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0004-application-lifecycle-supervisor.md",
-        "sha256": "4b02dc5be09428eb1c8561af8c89bbb60160516839f95171d2c7dd7a93943c6f"
+        "sha256": "2924de8fb584ab0357a8a921bbb6549b9aea5cfa7d4b13fba3afad721edaad8c"
       },
       {
         "sourcePath": "docs/zh/adr/0005-foreground-continuation-owner.md",
@@ -1757,7 +1757,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0015-task-graph-status-authority.md",
-        "sha256": "45c5a0ac1f58ad314d9af4acbc8c7bd4113bc4c0099768b8823641b238b32634"
+        "sha256": "84bf4a25280dd24d09ebf2db19b22766f4c5ccba239c0d1b2495bb919135b675"
       },
       {
         "sourcePath": "docs/zh/adr/0016-agent-control-tools.md",
@@ -1813,7 +1813,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0029-framework-native-agent-and-model-config.md",
-        "sha256": "84c04d0e016cc365c4ba892ce9de2364e818c046162b09764b7d9326d46c1de8"
+        "sha256": "0be527694a12fab98032f0198cb0d3f3a06a8eb745aacb030e268da8a29840ed"
       },
       {
         "sourcePath": "docs/zh/adr/0030-unified-subagent-prompt-architecture.md",
@@ -1881,7 +1881,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0045-managed-conversation-lifecycle.md",
-        "sha256": "5e005dd3e3f6ada37597e3ac3bcbfaf60d3ee1cefffe834f4b039c948e722857"
+        "sha256": "a5a39a9d3378d157c19fde58bfa96612188bb41784f09b20fc3ced5749fd60d2"
       },
       {
         "sourcePath": "docs/zh/adr/0046-plugin-generation-fail-closed.md",
@@ -1939,7 +1939,7 @@
     "files": [
       {
         "destination": "src/docs/content/eko/en/capabilities.md",
-        "sha256": "41ab5c374a8b40ec66bc235da019ed32e19f44de6603ea6fb15386eb97896f4e"
+        "sha256": "e094a245b78a779c974e126e74f46d27a53052db99051ee88bcb74c0de598f51"
       },
       {
         "destination": "src/docs/content/eko/en/getting-started.md",
@@ -1947,15 +1947,15 @@
       },
       {
         "destination": "src/docs/content/eko/en/overview.md",
-        "sha256": "eeb998e81c66819b22d9d08aa3639e262e7e5e30b283c12044eb0653c204e9da"
+        "sha256": "2d5d917d73e813dc6d33df9510d6b53d6541310d9aa4215cf858807cbd30129b"
       },
       {
         "destination": "src/docs/content/eko/en/storage.md",
-        "sha256": "5cf89f363792cd6585d1938fcf6bb45e06807440d14d40e8ee442f11a43073f0"
+        "sha256": "2dc70de1411ee833a214ee0467009f86da133a22ddf5e0b83266b5139f80a863"
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "48f56225a9a22b148cff32b79e95e88e22c63723e240644e8fcefeb0167ddbdf"
+        "sha256": "0a87900bcce41beaae77a0effcd2b5a67ed6d7fd8166397a0035d4d419285e9c"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
@@ -1963,11 +1963,11 @@
       },
       {
         "destination": "src/docs/content/eko/zh/overview.md",
-        "sha256": "268e55d407e178aae10d2672a0af30c81292f13f7f0c4bb1de5926ec55e5a746"
+        "sha256": "ec13832fc14eae11675656680bdf501aa4680b7e8b3f61444a6da0d80ff37656"
       },
       {
         "destination": "src/docs/content/eko/zh/storage.md",
-        "sha256": "8d997b7bf4b05eeb9794ee64dd5467f01352ad2e62288b84c7e020d3fb5b5c14"
+        "sha256": "752ee5036b341d1101686ce71cd1954f3c8bb91ca73771545e65ab1e34c22587"
       }
     ]
   }

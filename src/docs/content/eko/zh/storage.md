@@ -6,6 +6,8 @@ EKO 面向用户自己的机器，产品层使用普通文件或内存保存状�
 
 - `FileConversationStore` 保存用户可见 conversation history；`FileRuntimeStateStore` 保存 framework Agent checkpoint。两者都不拥有 Task graph。
 - TaskRuntime `events.jsonl` 是 turn-run Goal、用户中途约束与正式任务执行状态的事实权威；`checkpoint.json`、`plan.json`、`run-state.json` 以及有界 artifact/review history segment 都是可重建投影或索引。
+- Task journal 保留 canonical 执行事实，包括中断请求以及结果缺省与显式 null 的区别。原 owner 的未结算 intent 跨重启保留，阻止该 run 重复执行，同时允许恢复其它无关 run。
+- 已确认物理执行完成但结算保存失败时，由同一 owner 仅重试结算持久化与确认，不重新运行 Agent 或工具；资源保留到匹配的完成事实获得持久确认。
 - 每个 store-backed turn 都急切绑定 TaskRun。typed execution provenance 区分内部 conversation turn 与 orchestrated run；无 plan conversation run 保留 journal，但不进入任务 UI。
 - 普通 chat 同时使用独立 `ChatEventLog` 保存输入输出交付与 surface 重放。它和 TaskRuntime journal 可以关联同一 turn，但互不替代。
 - 每个 workspace 拥有本地 memory Store、一个 generation-bound `MemoryLayerManager` 和一个在 model safe point 消费的 immutable hot-memory projection。

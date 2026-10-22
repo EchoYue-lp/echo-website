@@ -133,6 +133,44 @@ FinalOnly 后，支持 `tool_choice=none` 的 provider 会收到显式控制；�
 resolver 不内置大规模模型表。快速变化的模型事实应由消费应用或 provider integration
 携带有界过期时间注册。参见 [ADR 0047](../adr/0047-model-facts-freshness-authority.md)。
 
+### 切换已安装模型
+
+`ReactAgent::set_model(name)`、`set_llm_config(config)` 和
+`set_sourced_llm_config(config)` 返回 `Result<()>`。切换模型先构造新的 concrete client，
+成功后一起发布模型名、保留配置与新 profile。同一个 Agent 的下一次 invocation 使用新
+client；已开始的 run 保留自己的 snapshot。endpoint、凭据、协议、显式采样参数与显式
+context limit 继续由调用方决定；隐式预算在下一次 prepare safe point 跟随新模型刷新。
+
+`set_llm_client`、`with_llm_client` 安装 opaque 自定义 client 时清除旧的重建配置。
+
+随后切换到其它模型需要显式提供替换 client 或配置，否则 `set_model` 返回现有
+`ConfigError::MissingConfig`，不修改当前状态。设置已经一致的模型是 no-op；空模型名与
+client 构造失败也不发布任何字段。`with_*llm_config` builder 保持返回 `Self`，安装失败
+仅记录错误；需要接收构造错误时使用 fallible setter 或 `ReactAgentBuilder::build`。
+
+Prepared model generation 在 prepare 中解析并冻结模型事实，commit 只发布已准备好的
+值；丢弃 receipt 保留旧 generation。`AgentHandle` 转换出的 boxed Agent 按既有合同
+保留转换时的字符串快照；查询当前模型应读取同一 live handle。
+
+工厂已经构造好 client 时，可调用
+`ReactAgent::new_with_configured_llm_client(agent_config, client, original_config)`。
+它保留同一个 Arc 和原始重建配置，只查询一次 profile 后走普通 Context 初始化，
+不重建 client，也不将隐式预算变成显式。caller 必须提供构造 client 的原已校验配置；
+任意 client 只能检查非空且相同的模型身份，无法证明 endpoint/凭据关联。
+无效 pair 返回既有 typed 配置错误，不回显配置或凭据。应在应用 custom extensions
+之前构造，后续 opaque client 注入仍清除配置；这个 Rust 构造入口不新增 SDK 远程 API。
+
+工厂还需要共享 Subagent registry、tools、store 等完整 Builder 注入时，使用
+`ReactAgentBuilder::configured_llm_client(client, original_config)`。它复用直接构造器
+的身份校验、一次 profile 准备和纯 publisher，不重建 client。`build` 与 `build_strict`
+在创建 Agent 所有资源前返回无效 pair 错误；后续 `model(...)` 不拆开 pair 的模型身份。
+
+显式 pair 替换此前的 client/config 输入；后续 `llm_client`、`llm_config` 或
+`sourced_llm_config` 替换 pair，opaque 替换不会继承旧重建配置。未使用新入口的普通
+client/config 组合保留既有行为：不论 setter 顺序，最终配置构造覆盖 client 注入。
+运行时后续 opaque 注入仍清除配置。既有 `demo26_provider_factory` 示例通过此路径
+验证构造，不发出模型请求，并由 all-target 编译链路检查。
+
 ## Prompt Templates
 
 `PromptTemplateManager` 提供命名模板注册和变量替换，与模型能力、产品模式相互独立。

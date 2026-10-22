@@ -24,13 +24,15 @@ EKO 是基于 `echo-agent` 构建的本地个人 AI 助理。本页能力均对�
 
 任务关系只有一个权威：revisioned `TaskRun -> PlanTask -> SubagentRun` graph。framework `TaskStatus` 管执行状态，Plan 是可编辑 artifact，Todo 是只读展示投影。同一 run 内的依赖使用 `PlanRevision.tasks[].depends_on`；EKO 不维护第二套跨 run 依赖图。
 
+针对精确 Task Subagent attempt 的中断请求先持久记录，再向原执行发出信号；请求本身不是完成或取消回执。续跑使用既有 TaskRun 身份、Goal、route 与执行配置，并按该身份检查调用方 workspace、conversation 和 root。
+
 ## Context 压缩
 
 EKO 默认通过 `compress_window: 0` 使用模型窗口 25%、至多 20K token 的近期原文预算。压缩保留 canonical 指令与最新用户请求，工具调用与结果成组处理。活跃任务的 goal 和恢复约束从 TaskRuntime 重建，完整历史仍保存在 ConversationStore。CLI、TUI、GUI 与 channel 共用已安装策略和可选压缩重点。显式正数窗口选择旧消息条数上限；adaptive 策略继续使用自己的 L1-L5 配置。
 
 ## Agent 协作与恢复
 
-六个 model-callable `agent_*` 工具对显式 Conversation 或 Task Subagent target 执行 list、inspect、message、follow-up、wait 与 interrupt。查询在 journal 层有界。cursor identity 可跨 router 或 TaskRuntime reopen 恢复，cold address 会按绑定 workspace 校验，五种 surface 重放同一 typed terminal 事实。
+六个 model-callable `agent_*` 工具对显式 Conversation 或 Task Subagent target 执行 list、inspect、message、follow-up、wait 与 interrupt。查询在 journal 层有界。cursor identity 可跨 router 或 TaskRuntime reopen 恢复，cold address 会按绑定 workspace 校验，五种 surface 重放同一真实 typed terminal 事实。未结算观察保持非终态，保留原执行 owner 和资源；停止等待、请求取消或重启应用，都不能证明执行已经结束，也不授权重放。
 
 ## Subagent prompt 编译
 
