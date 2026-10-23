@@ -490,6 +490,22 @@ export const frameworkAdrDocs = [
     filePath: './content/echo-agent/adr/0060-plugin-lifecycle-reconcile-settlement.md',
   },
   {
+    slug: 'adr-0060-task-execution-store-cas-and-local-interruption',
+    title: {
+      zh: 'ADR 0060: Task execution CAS, recoverable results and scoped interruption',
+      en: 'ADR 0060: Task execution CAS, recoverable results and scoped interruption',
+    },
+    filePath: './content/echo-agent/adr/0060-task-execution-store-cas-and-local-interruption.md',
+  },
+  {
+    slug: 'adr-0061-acp-recovered-turn-identity',
+    title: {
+      zh: 'ADR 0061: Recover ACP Turn Allocation Within the Session Authority',
+      en: 'ADR 0061: Recover ACP Turn Allocation Within the Session Authority',
+    },
+    filePath: './content/echo-agent/adr/0061-acp-recovered-turn-identity.md',
+  },
+  {
     slug: 'adr-0064-provider-stream-semantic-terminal',
     title: {
       zh: 'ADR 0064: Provider Stream Semantic Terminal',
@@ -640,5 +656,69 @@ export const frameworkAdrDocs = [
       en: 'ADR 0081: Token-budgeted recent conversation tail',
     },
     filePath: './content/echo-agent/adr/0081-token-budgeted-compression-tail.md',
+  },
+  {
+    slug: 'adr-0082-lsp-response-value-fidelity',
+    title: {
+      zh: 'ADR 0082: Preserve accepted LSP result values at the framework boundary',
+      en: 'ADR 0082: Preserve accepted LSP result values at the framework boundary',
+    },
+    filePath: './content/echo-agent/adr/0082-lsp-response-value-fidelity.md',
+  },
+  {
+    slug: 'adr-0083-shared-tool-input-validation',
+    title: {
+      zh: 'ADR 0083: Share canonical tool input validation with direct adapters',
+      en: 'ADR 0083: Share canonical tool input validation with direct adapters',
+    },
+    filePath: './content/echo-agent/adr/0083-shared-tool-input-validation.md',
+  },
+  {
+    slug: 'adr-0084-acp-turn-steering-identity',
+    title: {
+      zh: 'ADR 0084: Carry the reserved ACP Turn into the original Agent invocation',
+      en: 'ADR 0084: Carry the reserved ACP Turn into the original Agent invocation',
+    },
+    filePath: './content/echo-agent/adr/0084-acp-turn-steering-identity.md',
+  },
+  {
+    slug: 'adr-0084-channel-owned-operations',
+    title: {
+      zh: 'ADR 0084: Own Channel operations independently of registry borrows',
+      en: 'ADR 0084: Own Channel operations independently of registry borrows',
+    },
+    filePath: './content/echo-agent/adr/0084-channel-owned-operations.md',
+  },
+  {
+    slug: 'adr-0085-channel-handler-invocation-ownership',
+    title: {
+      zh: 'ADR 0085: Original Channel Handler Invocation Ownership',
+      en: 'ADR 0085: Original Channel Handler Invocation Ownership',
+    },
+    filePath: './content/echo-agent/adr/0085-channel-handler-invocation-ownership.md',
+  },
+  {
+    slug: 'adr-0087-telemetry-subscriber-composition',
+    title: {
+      zh: 'ADR 0087: Compose process telemetry with an existing subscriber',
+      en: 'ADR 0087: Compose process telemetry with an existing subscriber',
+    },
+    filePath: './content/echo-agent/adr/0087-telemetry-subscriber-composition.md',
+  },
+  {
+    slug: 'adr-0088-subagent-settlement-observation',
+    title: {
+      zh: 'ADR 0088: Cancellation observation does not own physical settlement',
+      en: 'ADR 0088: Cancellation observation does not own physical settlement',
+    },
+    filePath: './content/echo-agent/adr/0088-subagent-settlement-observation.md',
+  },
+  {
+    slug: 'adr-0089-non-yanked-media-dependencies',
+    title: {
+      zh: 'ADR 0089: Keep media builds on a non-yanked ZIP dependency',
+      en: 'ADR 0089: Keep media builds on a non-yanked ZIP dependency',
+    },
+    filePath: './content/echo-agent/adr/0089-non-yanked-media-dependencies.md',
   },
 ];

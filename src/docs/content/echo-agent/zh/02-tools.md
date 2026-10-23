@@ -24,6 +24,10 @@ LLM 本身是纯文本模型，不能直接：
 
 ## 架构
 
+直接适配器可在执行 Tool 前调用 `tools::execution::validate_tool_input`，复用
+ToolManager 的 JSON Schema 与自定义输入校验。该入口不增加注册表、重试、超时或
+取消行为；工具定义仍是唯一输入权威，畸形参数在副作用之前明确失败。
+
 ```
 Tool trait                       ← 所有工具实现的统一接口
     │
@@ -551,12 +555,24 @@ agent.add_tools(vec![
 | `bibtex_generate` | research | 从论文元数据生成 BibTeX（需 `research` feature） |
 | `rag_index` | rag | 文档分块和向量索引（需 `rag` feature） |
 | `rag_search` | rag | 索引文档的语义搜索（需 `rag` feature） |
+| `rag_chunk_document` | rag | 预览文档分块，不写入索引（需 `rag` feature） |
 | `excel_read` / `excel_write` / ... | media | Excel 读写/分析（6 个工具，需 `media` feature） |
 | `data_read` / `data_filter` / ... | data | Polars 数据分析（13 个工具，需 `data` feature） |
 | `generate_chart` | chart | 图表生成（需 `chart` feature） |
 | `db_query` / `db_schema` | database | SQL 数据库工具（需 `database` feature） |
 
 对应示例：`echo-agent-learning/examples/demo01_tools.rs`、`echo-agent-learning/examples/demo09_file_shell.rs`、`echo-agent-learning/examples/demo13_tool_execution.rs`、`echo-agent-learning/tests/example_contracts/demo64_tool_pipeline.rs`
+
+`rag_chunk_document` 的 `chunk_size`、`overlap` 和每个块的 `char_count` 均以 Unicode
+标量值计数。`preview` 最多包含 200 个标量值，仅在省略了字符时 `truncated` 才为 true。
+例如 `中文😀甲` 的 `char_count` 为 4；70 个中文字符虽然占 210 个 UTF-8 字节，预览仍
+完整，`truncated` 为 false。该预览操作不修改 RAG 索引。
+
+`generate_chart` 的 width/height 使用 `0..=4294967295` 范围的无符号整数，保持原
+`u32` 表示，不回绕、不截断。只有缺省才使用 600/400；显式 null、负数、非整数、
+字符串、布尔值和超范围整数返回明确错误，零尺寸仍被支持。原工具 schema 约束数值范围，直接
+执行还要求 serde_json 整数表示；`1.0` 等浮点表示明确报错，不使用默认值。此约束
+不新增资源限额。
 
 ---
 
