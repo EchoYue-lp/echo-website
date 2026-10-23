@@ -3246,14 +3246,15 @@ Source: https://echo-agent.dev/docs/streaming
 
 ## 事件类型
 
+以下仅简化展示主要事件 payload，省略身份 metadata 和其它生命周期变体。
 `execute_stream()` 返回 `BoxStream<'_, Result<AgentEvent>>`，包含以下事件：
 
 ```rust
 pub enum AgentEvent {
     Token(String),                              // LLM 输出的 Token 片段（推理过程 / 最终回答）
-    ToolCall { name: String, args: Value },     // LLM 决定调用某个工具
-    ToolResult { name: String, output: String },// 工具执行完毕，返回结果
-    FinalAnswer(String),                        // 最终答案已生成，流结束
+    ToolCall { invocation: ToolInvocation },    // LLM 决定调用某个工具
+    ToolResult { name: String, result: ToolResult }, // 工具执行完毕，返回结果
+    FinalAnswer(String),                        // 最终答案已生成，之后仍可能清理
 }
 ```
 
@@ -3276,25 +3277,36 @@ async fn main() -> Result<()> {
     // 流式执行
     let mut stream = agent.execute_stream("计算 (3 + 4) * 5 并解释步骤").await?;
 
+    let mut first_error = None;
     while let Some(event) = stream.next().await {
-        match event? {
-            AgentEvent::Token(token) => {
+        match event {
+            Ok(AgentEvent::Token(token)) => {
                 print!("{}", token);          // 实时打印推理/回答文本
                 std::io::Write::flush(&mut std::io::stdout()).ok();
             }
-            AgentEvent::ToolCall { name, args } => {
-                println!("\n[调用工具] {} {:?}", name, args);
+            Ok(AgentEvent::ToolCall { invocation, .. }) => {
+                println!("\n[调用工具] {} {:?}", invocation.name, invocation.args);
             }
-            AgentEvent::ToolResult { name, output } => {
-                println!("[工具结果] {} -> {}", name, output);
+            Ok(AgentEvent::ToolResult { name, result, .. }) => {
+                println!("[工具结果] {} -> {}", name, result.output);
             }
-            AgentEvent::FinalAnswer(answer) => {
+            Ok(AgentEvent::FinalAnswer(answer)) => {
                 println!("\n[最终答案] {}", answer);
-                break;
             }
+            Err(error) => {
+                // 展示每条观察，保留首个错误原值；继续消费同一 source 的清理与 EOF。
+                eprintln!("[流错误 / 观察] {error}");
+                if first_error.is_none() {
+                    first_error = Some(error);
+                }
+            }
+            Ok(event) => println!("[生命周期] {event:?}"),
         }
     }
-    Ok(())
+    match first_error {
+        Some(error) => Err(error),
+        None => Ok(()),
+    }
 }
 ```
 
@@ -3327,7 +3339,10 @@ let answer: String = agent.execute("你好").await?;
 // 流式：实时接收事件
 let mut stream = agent.execute_stream("你好").await?;
 while let Some(event) = stream.next().await {
-    // 处理 Token/ToolCall/ToolResult/FinalAnswer
+    match event {
+        Ok(event) => println!("{event:?}"),
+        Err(error) => eprintln!("[流错误 / 观察] {error}"),
+    }
 }
 ```
 
@@ -3348,15 +3363,37 @@ async fn chat_stream(
     let mut agent = ReactAgent::new(/* config */);
 
     let event_stream = async_stream::stream! {
-        if let Ok(mut agent_stream) = agent.execute_stream(&task).await {
-            while let Some(event) = agent_stream.next().await {
-                let data = match event {
-                    Ok(AgentEvent::Token(t))            => format!("{{\"type\":\"token\",\"data\":\"{}\"}}", t),
-                    Ok(AgentEvent::ToolCall { name, .. }) => format!("{{\"type\":\"tool_call\",\"name\":\"{}\"}}", name),
-                    Ok(AgentEvent::FinalAnswer(a))       => format!("{{\"type\":\"done\",\"data\":\"{}\"}}", a),
-                    _ => continue,
-                };
-                yield Ok(axum::response::sse::Event::default().data(data));
+        match agent.execute_stream(&task).await {
+            Ok(mut agent_stream) => {
+                while let Some(event) = agent_stream.next().await {
+                    let data = match event {
+                        Ok(AgentEvent::Token(text)) => serde_json::json!({
+                            "type": "token", "data": text,
+                        }),
+                        Ok(AgentEvent::ToolCall { invocation, .. }) => serde_json::json!({
+                            "type": "tool_call", "name": invocation.name,
+                        }),
+                        Ok(AgentEvent::FinalAnswer(answer)) => serde_json::json!({
+                            "type": "answer", "data": answer,
+                        }),
+                        Err(error) => {
+                            // 发送错误给接收方，同时继续消费同一原始 producer。
+                            serde_json::json!({
+                                "type": "stream_error_or_observation", "message": error.to_string(),
+                            })
+                        }
+                        Ok(event) => serde_json::json!({
+                            "type": "lifecycle", "event": event,
+                        }),
+                    };
+                    yield Ok(axum::response::sse::Event::default().data(data.to_string()));
+                }
+            }
+            Err(error) => {
+                let data = serde_json::json!({
+                    "type": "setup_error_or_observation", "message": error.to_string(),
+                });
+                yield Ok(axum::response::sse::Event::default().data(data.to_string()));
             }
         }
     };
@@ -3370,8 +3407,12 @@ async fn chat_stream(
 ## 注意事项
 
 1. **工具执行不是流式的**：工具（`execute_tool()`）仍然是阻塞完成后才返回 `ToolResult` 事件，因为工具执行本身不产生增量输出
-2. **`FinalAnswer` 是信号**：收到 `FinalAnswer` 事件后，流理论上已结束，建议 `break` 退出循环
-3. **错误处理**：流中的每个事件都是 `Result<AgentEvent>`，需要处理中途发生的 LLM 或工具错误
+2. **`FinalAnswer` 是业务结果**：继续消费同一原始 source 到物理 EOF；答案之后的生产者清理仍可能失败。默认取消和 invocation 适配器保留首个普通清理错误，同时继续持有并 drain 原始 source。
+3. **错误处理**：每个事件都是 `Result<AgentEvent>`。drain 时保留最早的失败或取消首因，后续清理错误不能覆盖它。`ExecutionNotSettled` 保留原始 run/execution 身份，是独立的非终态观察；仅有 EOF 不能清除该观察。
+
+以上示例展示每个流错误或观察，并继续消费同一 source 到 EOF。返回首个错误时保留其
+原始值，不把 `ExecutionNotSettled` 变成终态失败，也不据此证明物理结算。需要持久化
+执行状态的应用应消费规范化 `AgentTurnDriver` receipt，而非从这些 UI 事件推断。
 
 对应示例：`echo-agent-learning/examples/demo10_streaming.rs`
 
@@ -4643,12 +4684,12 @@ echo-agent 支持三种介入场景：
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│              PermissionService 7 阶段管线                             │
+│                    PermissionService 管线                           │
 │                                                                     │
+│  0. ProtectedPathChecker → 先拒绝受保护路径，再进入权限模式             │
 │  1. BypassPermissions → Allow（若未被管理员禁用）                      │
 │  2. Plan 模式 → 按 permissions 过滤（只读）                           │
 │  3. RuleRegistry → deny-first 评估 (Allow/Deny/Ask)                 │
-│  3.5. ProtectedPathChecker → .git/.env/.ssh 始终受保护               │
 │  4. SessionApprovalCache（带 TTL）→ 缓存命中 = AutoApprove           │
 │  5. DenialTracker → 连续/总拒绝数超限回退                             │
 │  6. 模式分发：                                                       │
@@ -4670,7 +4711,7 @@ echo-agent 支持三种介入场景：
 | `Plan` | 只读模式，禁止 Write/Execute/Sensitive |
 | `Auto` | AI Classifier 自动决策 |
 | `AcceptEdits` | 文件编辑自动通过，其他需确认 |
-| `BypassPermissions` | 跳过所有检查（可被管理员禁用） |
+| `BypassPermissions` | 通过受保护路径检查后跳过后续策略检查（可被管理员禁用） |
 | `DontAsk` | 匹配 allow 规则的直接通过，未匹配的静默拒绝 |
 | `Bubble` | 子 Agent 权限上溯到父级处理 |
 
@@ -4730,7 +4771,13 @@ let cache = SessionApprovalCache::new();
 
 ## 受保护路径检查器
 
-阻止 Agent 操作关键系统路径。所有模式下均生效（包括 Bypass）。
+阻止 Agent 操作关键系统路径。`PermissionService` 在 Bypass、Plan 模式、规则与
+审批缓存之前检查受保护路径，因此所有模式均受此约束。
+
+Agent 对 `PreToolUse` 改写后的实际输入执行检查；`PermissionRequest` 再次改写
+输入时，在接受 Hook 批准前重新检查。审批 handler 改写输入时，权限服务也会在
+签发 approval receipt 或缓存批准前复检。这些路径使用同一个受保护路径检查器，
+Hook 批准不能覆盖其拒绝。
 
 默认受保护模式：`.git`、`.env`、`.env.*`、`.ssh`、`.claude`、`.vscode`、shell 配置文件、SSH 密钥。
 
@@ -4784,10 +4831,6 @@ for entry in recent {
 ```
 
 ### 审计条目字段
-
-受保护路径检查由 `PermissionService` 持有。Agent 在接受 `PreToolUse` 或
-`PermissionRequest` 的 Allow 前，对最终工具输入执行同一项检查；Hook 批准不能
-覆盖受保护路径的拒绝。
 
 | 字段 | 说明 |
 |------|------|
@@ -4948,6 +4991,8 @@ impl HumanLoopProvider for SlackApprovalProvider {
 ```
 Agent 准备执行工具 "delete_file"
     │
+    ├─ 0. 受保护路径 (.git/.env/.ssh)? → 在所有权限模式之前 Deny
+    │
     ├─ 1. BypassPermissions? → Allow（若未被禁用）
     │
     ├─ 2. Plan 模式? → 拒绝写入/执行操作
@@ -4956,8 +5001,6 @@ Agent 准备执行工具 "delete_file"
     │       ├─ Deny 规则匹配 → Deny
     │       ├─ Ask 规则匹配 → Ask
     │       └─ Allow 规则匹配 → Allow
-    │
-    ├─ 3.5. 受保护路径 (.git/.env/.ssh)? → Deny
     │
     ├─ 4. 审批缓存命中（带 TTL）? → Allow
     │
@@ -4971,6 +5014,11 @@ Agent 准备执行工具 "delete_file"
     │
     └─ 7. 后处理：缓存写入、拒绝跟踪、审计记录
 ```
+
+这是 `PermissionService` 的策略顺序。Agent 先应用 `PreToolUse` 改写，并在接受
+Hook Allow 前检查实际输入。`PermissionRequest` 再次改写输入时，在 Hook 批准前
+重新检查。上图每条进入 handler 的分支都在签发 approval receipt 或缓存批准前
+复检改写输入；受保护路径拒绝会终止该分支。
 
 ---
 
@@ -29600,14 +29648,15 @@ Streaming solves:
 
 ## Event Types
 
-`execute_stream()` returns `BoxStream<'_, Result<AgentEvent>>` containing:
+The following is a simplified view of the main event payloads; identity metadata
+and other lifecycle variants are omitted. `execute_stream()` returns `BoxStream<'_, Result<AgentEvent>>` containing:
 
 ```rust
 pub enum AgentEvent {
     Token(String),                               // LLM token fragment (reasoning / final answer)
-    ToolCall { name: String, args: Value },      // LLM decided to call a tool
-    ToolResult { name: String, output: String }, // tool finished, returning result
-    FinalAnswer(String),                         // final answer generated, stream ends
+    ToolCall { invocation: ToolInvocation },     // LLM decided to call a tool
+    ToolResult { name: String, result: ToolResult }, // tool finished, returning result
+    FinalAnswer(String),                         // final answer generated; cleanup can follow
 }
 ```
 
@@ -29629,25 +29678,37 @@ async fn main() -> Result<()> {
 
     let mut stream = agent.execute_stream("Calculate (3 + 4) * 5 and explain each step").await?;
 
+    let mut first_error = None;
     while let Some(event) = stream.next().await {
-        match event? {
-            AgentEvent::Token(token) => {
+        match event {
+            Ok(AgentEvent::Token(token)) => {
                 print!("{}", token);
                 std::io::Write::flush(&mut std::io::stdout()).ok();
             }
-            AgentEvent::ToolCall { name, args } => {
-                println!("\n[Tool call] {} {:?}", name, args);
+            Ok(AgentEvent::ToolCall { invocation, .. }) => {
+                println!("\n[Tool call] {} {:?}", invocation.name, invocation.args);
             }
-            AgentEvent::ToolResult { name, output } => {
-                println!("[Tool result] {} -> {}", name, output);
+            Ok(AgentEvent::ToolResult { name, result, .. }) => {
+                println!("[Tool result] {} -> {}", name, result.output);
             }
-            AgentEvent::FinalAnswer(answer) => {
+            Ok(AgentEvent::FinalAnswer(answer)) => {
                 println!("\n[Final answer] {}", answer);
-                break;
             }
+            Err(error) => {
+                // Report each observation, but retain the first error value.
+                // Continue polling this same source through cleanup and EOF.
+                eprintln!("[Stream error / observation] {error}");
+                if first_error.is_none() {
+                    first_error = Some(error);
+                }
+            }
+            Ok(event) => println!("[Lifecycle] {event:?}"),
         }
     }
-    Ok(())
+    match first_error {
+        Some(error) => Err(error),
+        None => Ok(()),
+    }
 }
 ```
 
@@ -29680,7 +29741,10 @@ let answer: String = agent.execute("Hello").await?;
 // Streaming: receive events in real time
 let mut stream = agent.execute_stream("Hello").await?;
 while let Some(event) = stream.next().await {
-    // handle Token / ToolCall / ToolResult / FinalAnswer
+    match event {
+        Ok(event) => println!("{event:?}"),
+        Err(error) => eprintln!("[Stream error / observation] {error}"),
+    }
 }
 ```
 
@@ -29699,15 +29763,37 @@ async fn chat_sse(task: String) -> Sse<impl futures::Stream<Item = Result<axum::
     let mut agent = ReactAgent::new(/* config */);
 
     let event_stream = async_stream::stream! {
-        if let Ok(mut agent_stream) = agent.execute_stream(&task).await {
-            while let Some(event) = agent_stream.next().await {
-                let data = match event {
-                    Ok(AgentEvent::Token(t))             => format!("{{\"type\":\"token\",\"data\":\"{}\"}}", t),
-                    Ok(AgentEvent::ToolCall { name, .. }) => format!("{{\"type\":\"tool_call\",\"name\":\"{}\"}}", name),
-                    Ok(AgentEvent::FinalAnswer(a))        => format!("{{\"type\":\"done\",\"data\":\"{}\"}}", a),
-                    _ => continue,
-                };
-                yield Ok(axum::response::sse::Event::default().data(data));
+        match agent.execute_stream(&task).await {
+            Ok(mut agent_stream) => {
+                while let Some(event) = agent_stream.next().await {
+                    let data = match event {
+                        Ok(AgentEvent::Token(text)) => serde_json::json!({
+                            "type": "token", "data": text,
+                        }),
+                        Ok(AgentEvent::ToolCall { invocation, .. }) => serde_json::json!({
+                            "type": "tool_call", "name": invocation.name,
+                        }),
+                        Ok(AgentEvent::FinalAnswer(answer)) => serde_json::json!({
+                            "type": "answer", "data": answer,
+                        }),
+                        Err(error) => {
+                            // Emitting an error does not end or replace the original producer.
+                            serde_json::json!({
+                                "type": "stream_error_or_observation", "message": error.to_string(),
+                            })
+                        }
+                        Ok(event) => serde_json::json!({
+                            "type": "lifecycle", "event": event,
+                        }),
+                    };
+                    yield Ok(axum::response::sse::Event::default().data(data.to_string()));
+                }
+            }
+            Err(error) => {
+                let data = serde_json::json!({
+                    "type": "setup_error_or_observation", "message": error.to_string(),
+                });
+                yield Ok(axum::response::sse::Event::default().data(data.to_string()));
             }
         }
     };
@@ -29721,8 +29807,14 @@ async fn chat_sse(task: String) -> Sse<impl futures::Stream<Item = Result<axum::
 ## Notes
 
 1. **Tool execution is not streamed**: `execute_tool()` is still blocking — a `ToolResult` event fires only after the tool completes, because tools themselves don't produce incremental output
-2. **`FinalAnswer` is a sentinel**: Once received, the stream is logically complete — break out of the loop
-3. **Error handling**: Every event in the stream is `Result<AgentEvent>` — handle LLM or tool errors that may occur mid-stream
+2. **`FinalAnswer` is a business result**: Keep consuming the same source to physical EOF; producer cleanup can still fail after the answer. The default cancellation and invocation adapters preserve its first ordinary cleanup error while retaining the original source.
+3. **Error handling**: Every event is `Result<AgentEvent>`. Preserve the first failure or cancellation cause while draining; a later cleanup failure must not replace it. `ExecutionNotSettled` retains its original run/execution identity and remains a separate nonterminal observation. EOF alone does not clear that observation.
+
+The examples above render every stream error or observation and continue the same
+source to EOF. Returning the first error preserves its original value; it does
+not turn `ExecutionNotSettled` into a terminal failure or certify physical
+settlement. Applications that persist execution status should consume the
+canonical `AgentTurnDriver` receipt instead of inferring it from these UI events.
 
 See: `echo-agent-learning/examples/demo10_streaming.rs`
 
@@ -31057,12 +31149,12 @@ echo-agent supports three intervention scenarios:
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│              PermissionService 7-Stage Pipeline                     │
+│                 PermissionService Pipeline                          │
 │                                                                     │
+│  0. ProtectedPathChecker → protected paths denied before any mode    │
 │  1. BypassPermissions → Allow (if not disabled by admin)            │
 │  2. Plan mode → filter by permissions (read-only)                   │
 │  3. RuleRegistry → deny-first evaluation (Allow/Deny/Ask)           │
-│  3.5. ProtectedPathChecker → .git/.env/.ssh always protected        │
 │  4. SessionApprovalCache (with TTL) → cache hit = AutoApprove       │
 │  5. DenialTracker → consecutive/total denial fallback               │
 │  6. Mode dispatch:                                                  │
@@ -31084,7 +31176,7 @@ echo-agent supports three intervention scenarios:
 | `Plan` | Read-only mode, Write/Execute/Sensitive denied |
 | `Auto` | AI Classifier makes decisions automatically |
 | `AcceptEdits` | File edits auto-approved, others need confirmation |
-| `BypassPermissions` | Skip all checks (can be disabled by admin) |
+| `BypassPermissions` | Skip later policy checks after protected-path validation (can be disabled by admin) |
 | `DontAsk` | Matched allow rules pass, unmatched silently denied |
 | `Bubble` | Sub-agent permissions escalate to parent |
 
@@ -31144,7 +31236,15 @@ Three cache scopes:
 
 ## Protected Path Checker
 
-Prevents Agent from operating on critical system paths. Enforced in all modes (including Bypass).
+Prevents Agent from operating on critical system paths. `PermissionService`
+checks protected paths before Bypass, Plan mode, rules, and cached approval, so
+the check applies in every mode.
+
+The Agent also checks the effective input after a `PreToolUse` rewrite and
+rechecks any `PermissionRequest` rewrite before honoring Hook approval. The
+permission service rechecks input rewritten by the approval handler before
+issuing an approval receipt or caching the approval. These paths use the same
+protected-path checker; Hook approval cannot override its denial.
 
 Default protected patterns: `.git`, `.env`, `.env.*`, `.ssh`, `.claude`, `.vscode`, shell configs, SSH keys.
 
@@ -31198,11 +31298,6 @@ for entry in recent {
 ```
 
 ### Audit Entry Fields
-
-`PermissionService` owns the protected-path check. The Agent applies the same
-check to the effective tool input before honoring an Allow from either
-`PreToolUse` or `PermissionRequest`; Hook approval cannot override a protected
-path denial.
 
 | Field | Description |
 |-------|-------------|
@@ -31363,6 +31458,8 @@ impl HumanLoopProvider for SlackApprovalProvider {
 ```
 Agent about to execute tool "delete_file"
     │
+    ├─ 0. Protected path (.git/.env/.ssh)? → Deny before any mode
+    │
     ├─ 1. BypassPermissions? → Allow (if not disabled)
     │
     ├─ 2. Plan mode? → Deny writes/executes
@@ -31371,8 +31468,6 @@ Agent about to execute tool "delete_file"
     │       ├─ Deny rule matches → Deny
     │       ├─ Ask rule matches → Ask
     │       └─ Allow rule matches → Allow
-    │
-    ├─ 3.5. Protected path (.git/.env/.ssh)? → Deny
     │
     ├─ 4. Approval cache hit (with TTL)? → Allow
     │
@@ -31386,6 +31481,12 @@ Agent about to execute tool "delete_file"
     │
     └─ 7. Post-process: cache write, denial tracking, audit
 ```
+
+This is the `PermissionService` policy sequence. The Agent first applies
+`PreToolUse` rewrites and checks their effective input before honoring a Hook
+Allow. A `PermissionRequest` rewrite is checked again before Hook approval.
+At every handler branch above, rewritten input is checked before issuing an
+approval receipt or caching approval; a protected-path denial stops that branch.
 
 ---
 

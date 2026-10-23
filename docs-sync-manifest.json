@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "f7bac62eee04a963f92a3e4308b6ea2336e91cc0",
+    "revision": "51726454985fd6f064b21a7e9c539e22d494c987",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -28,7 +28,7 @@
       {
         "sourcePath": "docs/en/05-human-loop.md",
         "destination": "src/docs/content/echo-agent/en/05-human-loop.md",
-        "sha256": "104fe2e237df76b07d01117bb1a5e761a7a76c47ce57aa3afab0dce68c4e2d91"
+        "sha256": "ada2d3eda7dd57dea5fdee831a64deb47801450fdb4131ff6e195b94a95df3e0"
       },
       {
         "sourcePath": "docs/en/06-subagent.md",
@@ -53,7 +53,7 @@
       {
         "sourcePath": "docs/en/10-streaming.md",
         "destination": "src/docs/content/echo-agent/en/10-streaming.md",
-        "sha256": "fd0be95db49f545ae0db6abc3cbc35b8a312a66f28c4299a40ae3ea74883cfe3"
+        "sha256": "74544dc3deebb0fd65285a4b1aa89ded0b7def87639ee506389a0054a171c9ae"
       },
       {
         "sourcePath": "docs/en/11-structured-output.md",
@@ -753,7 +753,7 @@
       {
         "sourcePath": "docs/zh/05-human-loop.md",
         "destination": "src/docs/content/echo-agent/zh/05-human-loop.md",
-        "sha256": "6552643cf0fcea01264c7a63f0a54d8c644975e56f745ea33206ed0ef1fd701d"
+        "sha256": "150dd16573aeebc5bf31e123c436155b8124d1dc180c3ea8e9c5ee6b5fe2d5c6"
       },
       {
         "sourcePath": "docs/zh/06-subagent.md",
@@ -778,7 +778,7 @@
       {
         "sourcePath": "docs/zh/10-streaming.md",
         "destination": "src/docs/content/echo-agent/zh/10-streaming.md",
-        "sha256": "0578699cf8e09a21cdeea9cb954e015d71193aee7f8697af35062bd2f08b6f5d"
+        "sha256": "baf406fdfa238997cf6b8ed4014752f46c5d3f0fd217eb335f4a6877d8d34fa4"
       },
       {
         "sourcePath": "docs/zh/11-structured-output.md",
@@ -1459,7 +1459,7 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "0616c6cd25e2496c6940b74c983f4ffa08003518",
+    "reviewedRevision": "c262cfed8e77abed38a27c1fff93547997ec9486",
     "status": "reviewed-local-compression-policy",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "sourceFiles": [
@@ -1501,7 +1501,7 @@
       },
       {
         "sourcePath": "docs/en/adr/0010-channel-scope-parity.md",
-        "sha256": "d181cce75a81b375295439c76de5a1366b8aeea8a46c39a1a6a15ec565b85c5d"
+        "sha256": "d737533e8d14799ad166efea97f4a9c6f0c0fb0bc22db256ed3a55691cf4c9b2"
       },
       {
         "sourcePath": "docs/en/adr/0011-boot-inbox-recovery-authority.md",
@@ -1521,7 +1521,7 @@
       },
       {
         "sourcePath": "docs/en/adr/0015-task-graph-status-authority.md",
-        "sha256": "77afbdffadf53b5fc6b495760dd4636dbfe31f0bc10193ce5e65de3d19b7331a"
+        "sha256": "5be3832835f3f0857b907f1c99773650ca08edfb757df9a6a9da75fc61227898"
       },
       {
         "sourcePath": "docs/en/adr/0016-agent-control-tools.md",
@@ -1549,7 +1549,7 @@
       },
       {
         "sourcePath": "docs/en/adr/0022-framework-prepared-plugin-generations.md",
-        "sha256": "04662acb5c07d9e11c738bc19783fbb744f2f488228a5ecb17546c30e5ad78a7"
+        "sha256": "ac67a02771ca5c0fdc3304eff75f1cd3f9f81d50bd05c8e3c79e7edc2011681c"
       },
       {
         "sourcePath": "docs/en/adr/0023-repl-output-surface-pruning.md",
@@ -1637,7 +1637,7 @@
       },
       {
         "sourcePath": "docs/en/adr/0043-background-review-owner.md",
-        "sha256": "e451da131ab4f00701147a502ff9e014ab345adf54e4b7109a33db5b35386fb8"
+        "sha256": "b5951c7bda5a118b6310d4680ca6ceed9f0c308d9eee1356a1e32c44b15a31fb"
       },
       {
         "sourcePath": "docs/en/adr/0044-skill-mutation-integration.md",
@@ -1660,6 +1660,10 @@
         "sha256": "db647c9d6d0b6fcc62ec8991f3aca83ab64b1b19d77f427f689398511a115322"
       },
       {
+        "sourcePath": "docs/en/adr/0049-taskruntime-process-owner-recovery.md",
+        "sha256": "5f30b1ae2261fd3dbeb4a84d09933e57dcb31780fa4e4aadda60a754dd2778d3"
+      },
+      {
         "sourcePath": "docs/en/architecture/overview.md",
         "sha256": "e71202ce433cd285269e70e34f1caabf4f4fc1df037c5268e7c5ffcc4b583955"
       },
@@ -1673,7 +1677,7 @@
       },
       {
         "sourcePath": "docs/en/architecture/runtime.md",
-        "sha256": "4cabb4009e4255e08794e8179ea09e0f3a1ed20b6ae5f87afbd3a42695b737f9"
+        "sha256": "329ff4f1afa436edeaa76ab71ec482ac73b4c7013118a964e9e9a7dac7eca054"
       },
       {
         "sourcePath": "docs/en/configuration.md",
@@ -1737,7 +1741,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0010-channel-scope-parity.md",
-        "sha256": "2659e8cc6725d441dbe0a9f85592ad1ce91bfe9f2ec51b448d1af2d78462fde4"
+        "sha256": "c86a4bbe9b2d1f9ace72d66ce065c63af4aad0813273924bb677a0aa521a8613"
       },
       {
         "sourcePath": "docs/zh/adr/0011-boot-inbox-recovery-authority.md",
@@ -1757,7 +1761,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0015-task-graph-status-authority.md",
-        "sha256": "84bf4a25280dd24d09ebf2db19b22766f4c5ccba239c0d1b2495bb919135b675"
+        "sha256": "d92e879dc3779529749f5cc24a236c3582419180fc06a8e201d5dc586eabe33b"
       },
       {
         "sourcePath": "docs/zh/adr/0016-agent-control-tools.md",
@@ -1785,7 +1789,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0022-framework-prepared-plugin-generations.md",
-        "sha256": "ab49cb6acd6e2f2bfb5b1021fc6f9eb8e3bf3f528aeee05c730247153bce31df"
+        "sha256": "83bfbd1b982d116bcfd6e845e96d05f15a68d0242d84a283051d434abe13bff1"
       },
       {
         "sourcePath": "docs/zh/adr/0023-repl-output-surface-pruning.md",
@@ -1873,7 +1877,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0043-background-review-owner.md",
-        "sha256": "d9683ab91fa4665c187000791efa01135cec0cc288f148920cfed08768c43ad8"
+        "sha256": "d18c7b3161a442585543bfb0255bd26c726598d3909c5b7e9e8b156827d13152"
       },
       {
         "sourcePath": "docs/zh/adr/0044-skill-mutation-integration.md",
@@ -1896,6 +1900,10 @@
         "sha256": "4885c0814ba0b33bfb44c24ee7e636f94cd377ba2de3585be97eb7854cd08dea"
       },
       {
+        "sourcePath": "docs/zh/adr/0049-taskruntime-process-owner-recovery.md",
+        "sha256": "cbfb3b4ccb6bd886953fd0f7ef20067ac7e855dc19fa8370f3cce21d1477f190"
+      },
+      {
         "sourcePath": "docs/zh/architecture/overview.md",
         "sha256": "9d5f7833ee7c91e1f9c5d3f11a321094f54dcadd6397de94e9faafb11035f70f"
       },
@@ -1909,7 +1917,7 @@
       },
       {
         "sourcePath": "docs/zh/architecture/runtime.md",
-        "sha256": "15c8da444f87651d19671fedcdba908859826a6e931deb6d71821d1424508e3d"
+        "sha256": "deb010a5a9349993bb751c5e80f58e0213ca132dc0c7b3b91c775e7c1746eb24"
       },
       {
         "sourcePath": "docs/zh/configuration.md",
