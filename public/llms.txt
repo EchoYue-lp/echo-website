@@ -21,20 +21,20 @@ Every item below corresponds to code and documentation in the echo-agent workspa
 
 # EKO
 One capable agent, built for your own machine.
-EKO is the desktop, terminal, CLI, and channel application built on echo-agent. Its interfaces use the shared application core; capability parity across those interfaces is the product contract.
+EKO is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.
 ## Purpose-built local workspaces
-Coding, data analysis, academic research, biomedical literature research, and long-horizon work are routed through explicit application profiles and inspectable local artifacts.
-- Work profiles: Code · data · research. Each profile binds relevant tools and evidence expectations through the application core.
+In the GUI, a Workspace is a project. New task opens a conversation draft in the selected Workspace without creating a directory. Use the Workspace menu to select an existing local folder, create a folder, or open an SSH device and remote project directory.
+- Workspace: A Workspace is a project. User rules, memory, conversations and journals remain local.
 - Research trail: Sources + artifacts. Research connectors and workspaces keep sources, entities, citations, and outputs visible.
 - Long horizon: Budget + checkpoint + resume. Task runtime state supports scheduled, pausable, and resumable work on the local machine.
 ## Work EKO is designed to carry
 Each capability below is grounded in a production binding in the current application code. Duration and results depend on configuration, models, tools, and source availability.
-- Coding: Work with files, shells, Git, LSP, isolated worktrees, and bounded Subagent runs.
+- Coding: Work with files, shells, Git, isolated worktrees, and bounded Subagent runs.
 - Data processing and analysis: Use data workspaces and Polars-backed tools with reviewable Python or R scripts, manifests, and artifacts.
 - Academic research: Search arXiv and Semantic Scholar, work with Zotero, and retain sources in a research workspace.
 - Biomedical literature research: Search PubMed and Europe PMC and organize biomedical entities and sources for literature synthesis, not diagnosis.
 - Tens-of-hours long-horizon tasks: TaskRuntime, checkpoints, pause and resume, budgets, and scheduling support work designed to continue for hours or tens of hours.
-- Complete local multi-interface agent: TUI, GUI, CLI, and channels use the shared application core; capability parity is the product contract.
+- Local personal AI assistant: EKO is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.
 
 ## Documentation
 - echo-agent 文档: https://echo-agent.dev/docs

@@ -21,20 +21,20 @@ Every item below corresponds to code and documentation in the echo-agent workspa
 
 # EKO
 One capable agent, built for your own machine.
-EKO is the desktop, terminal, CLI, and channel application built on echo-agent. Its interfaces use the shared application core; capability parity across those interfaces is the product contract.
+EKO is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.
 ## Purpose-built local workspaces
-Coding, data analysis, academic research, biomedical literature research, and long-horizon work are routed through explicit application profiles and inspectable local artifacts.
-- Work profiles: Code · data · research. Each profile binds relevant tools and evidence expectations through the application core.
+In the GUI, a Workspace is a project. New task opens a conversation draft in the selected Workspace without creating a directory. Use the Workspace menu to select an existing local folder, create a folder, or open an SSH device and remote project directory.
+- Workspace: A Workspace is a project. User rules, memory, conversations and journals remain local.
 - Research trail: Sources + artifacts. Research connectors and workspaces keep sources, entities, citations, and outputs visible.
 - Long horizon: Budget + checkpoint + resume. Task runtime state supports scheduled, pausable, and resumable work on the local machine.
 ## Work EKO is designed to carry
 Each capability below is grounded in a production binding in the current application code. Duration and results depend on configuration, models, tools, and source availability.
-- Coding: Work with files, shells, Git, LSP, isolated worktrees, and bounded Subagent runs.
+- Coding: Work with files, shells, Git, isolated worktrees, and bounded Subagent runs.
 - Data processing and analysis: Use data workspaces and Polars-backed tools with reviewable Python or R scripts, manifests, and artifacts.
 - Academic research: Search arXiv and Semantic Scholar, work with Zotero, and retain sources in a research workspace.
 - Biomedical literature research: Search PubMed and Europe PMC and organize biomedical entities and sources for literature synthesis, not diagnosis.
 - Tens-of-hours long-horizon tasks: TaskRuntime, checkpoints, pause and resume, budgets, and scheduling support work designed to continue for hours or tens of hours.
-- Complete local multi-interface agent: TUI, GUI, CLI, and channels use the shared application core; capability parity is the product contract.
+- Local personal AI assistant: EKO is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.
 
 ## Documentation
 - echo-agent 文档: https://echo-agent.dev/docs
@@ -28585,7 +28585,9 @@ Source: https://echo-agent.dev/eko/docs/overview
 
 # EKO
 
-EKO 是基于 echo-agent 构建的本地个人 AI 助理。TUI、Tauri 桌面界面、CLI/JSONL 和消息 channel 使用同一套 `echo-agent-app-core` 服务；这些 surface 的能力对等是产品契约。
+EKO 是基于 echo-agent 构建的本地个人 AI 助理，以 GUI 为主入口，保留 IM 消息和 cron 定时任务作为后台触发方式。它们复用同一套会话、TaskRuntime、Subagent、工具、HITL 和记忆服务。
+
+独立 TUI、REPL、CLI/JSONL 入口仍处于待退役的迁移阶段，不能把产品方向当作物理删除已经完成。GUI 内置终端、Agent shell 和独立 SDK Host stdio 不属于该退役范围。
 
 ## 能力边界
 
@@ -28593,11 +28595,17 @@ EKO 是基于 echo-agent 构建的本地个人 AI 助理。TUI、Tauri 桌面界
 - 调用工具、技能、hooks、插件和用户配置的 MCP server
 - 在一个 revisioned TaskRun graph 中组织有依赖的 `PlanTask` 与 Subagent 执行；framework `TaskStatus` 是执行权威，Todo 只是只读投影
 - 通过六个有界 `agent_*` 工具发现、检查、发送消息、follow up、等待与中断 Conversation Agent 或精确的 Task Subagent attempt
-- 跨重启恢复基于 cursor 的 Agent wait 与 TaskRun，保持 workspace 与原 TaskRun 身份；GUI、TUI、CLI、JSONL、channel 依据真实且已持久确认的结算回执，为已结算执行发布单一 typed terminal
+- 在已有本地文件夹、新建文件夹或 SSH 远程项目中工作；工作空间就是项目，任务与会话归属该工作空间
+- 从 GUI 管理已有 IM 渠道和定时任务；个人微信按源码提供扫码、必要数字确认与受限的本人私聊文字入口，实际登录和手机收件须分别验证
+- 跨重启恢复基于 cursor 的 Agent wait 与 TaskRun，保持 workspace 与原 TaskRun 身份；已结算执行以真实且已持久确认的结算回执为准
 - 执行结果尚不确定时保持非终态并保留原 owner；未知结果不授权重放或重复执行
-- 通过 scoped 应用权威控制 Skills、prepared Plugin generation、MCP、Hooks、LSP、Browser 与用户直接设置的工具可见性
+- 通过 scoped 应用权威控制 Skills、prepared Plugin generation、MCP、Hooks、Browser 与用户直接设置的工具可见性；EKO 的 LSP 消费入口已退出
 - 在下一个 model safe point 向 primary、已有 pool Agent 和 future Agent 发布同一个 generation-bound hot memory
 - 用本地文件或内存保存对话、memory、task journal、checkpoint 与产品投影，不要求 SQLite
+
+默认仅主智能体可以派发首层 Subagent，子智能体不能再次派发。GUI 的“最大 Subagent 总层数”默认 1、可选 1—3，对应默认额外嵌套深度 0；新配置不回写已有 TaskRun 的绑定。
+
+“已收到”只确认输入持久接收，不表示已经进入模型上下文、执行或完成。近期四条有界原文投影也不代表完整的持续有效要求管理已经验收。
 
 官网是经过审阅的产品事实投影，不定义 EKO 行为或公共 API。实现与配置以 [EKO 源码仓库](https://github.com/EchoYue-lp/echo-agent-cli)、其中长期维护的文档和 ADR 为准。
 
@@ -28614,7 +28622,7 @@ Source: https://echo-agent.dev/eko/docs/getting-started
 
 - Rust 1.95 或更高版本
 - 至少一个已配置的 LLM provider 与 model
-- GUI 开发需要 Node.js `^20.19.0 || ^22.13.0 || >=24.0.0`、Tauri 2 系统依赖与 Tauri CLI；TUI 和 JSONL 不需要 Node.js
+- GUI 开发需要 Node.js `^20.19.0 || ^22.13.0 || >=24.0.0`、Tauri 2 系统依赖与 Tauri CLI
 
 ## 克隆仓库
 
@@ -28624,15 +28632,7 @@ cd echo-agent-cli
 cargo fetch
 ```
 
-TUI/CLI 用户可以配置 `./eko.yaml` 或 `~/.eko/config.yaml`；GUI 用户可以在设置中配置 provider 与 model。API key 应放在配置引用的环境变量中，不要把 secret 写进配置文件。
-
-## 启动 TUI
-
-```bash
-cargo run --bin echo-agent-cli
-```
-
-常用 runtime selector 包括 `--project /path/to/project`、`--model <provider:model>`、`--continue` 与 `--resume <conversation-id>`。
+在 GUI 设置中配置 provider 与 model，也可以使用 `./eko.yaml` 或 `~/.eko/config.yaml`。API key 应放在配置引用的环境变量中，不要把 secret 写进配置文件。
 
 ## 启动 GUI
 
@@ -28645,17 +28645,23 @@ cargo gui-dev
 
 桌面生产包使用 `cargo gui-bundle`；裸 Rust binary 不包含完整 Tauri 前端与平台 bundle。
 
-## 运行 JSONL 自动化
+## 选择项目与开始任务
 
-```bash
-cargo run --bin echo-agent-cli -- --jsonl "检查当前项目并总结结果"
-```
+工作空间就是项目。通过工作空间菜单选择已有本地文件夹、新建本地文件夹，或填写 SSH 设备和远程项目目录。“新建任务”只在已选工作空间打开会话草稿，不创建项目目录。
 
-JSONL 把 canonical chat envelope 逐行写到 stdout，日志保留在 stderr 或日志文件。
+SSH 登录、远端目录验证与真实文件/命令执行各有独立结果；终端连通不等于远程项目已经验收。项目代码可以在远端，本机产品数据不会因此迁走。
+
+运行中可以继续输入。“已收到”表示输入已经持久保存，不等待当前模型或工具完成，也不表示纠正已经执行。准备或准入失败会保留原输入；迟到回执不能清掉切换任务或编辑后的新草稿。Stop 是独立操作。
+
+## IM 与定时任务
+
+GUI 设置提供已有 IM 渠道和定时任务的管理入口。个人微信使用扫码和必要数字确认，当前范围是单个活动账号、扫码本人私聊文字；渠道 Ready、发送 Accepted 与手机实际收件是不同事实。原生 GUI、真实微信和 SSH 验收不由本页构建命令替代。
+
+独立 TUI、REPL、CLI/JSONL 入口仍保留在迁移期源码中，等待具名退役收口；本页优先介绍 GUI。
 
 ## 本地数据
 
-EKO 默认使用 `~/.eko/`，可通过 `EKO_DATA_DIR` 覆盖。workspace conversation、TaskRuntime journal、memory、artifact 和 trace 位于对应 workspace 的 `.eko/` 目录。EKO 不启用 SQLite。
+EKO 默认使用 `~/.eko/`，可通过 `EKO_DATA_DIR` 覆盖。每个工作空间的 conversation、TaskRuntime journal、memory、artifact 和 trace 属于本机产品数据，与本地或远端的项目代码位置分开。EKO 不启用 SQLite。
 
 更完整的构建、配置与平台打包命令以 [EKO README](https://github.com/EchoYue-lp/echo-agent-cli#readme) 为准。
 
@@ -28666,23 +28672,25 @@ Source: https://echo-agent.dev/eko/docs/capabilities
 
 # EKO 能力边界
 
-EKO 是基于 `echo-agent` 构建的本地个人 AI 助理。本页能力均对应应用核心中的生产绑定，但不构成性能承诺：结果与持续时长取决于模型配置、工具、来源可用性和本机环境。
+EKO 是基于 `echo-agent` 构建的本地个人 AI 助理。以下内容说明当前源码的能力与边界，不构成性能或验收承诺：结果与持续时长取决于模型配置、工具、来源可用性和本机环境。
 
 ## Coding
 
-编码 Profile 绑定文件操作、交互式 Shell、Git、LSP 导航与诊断、隔离 Worktree，以及边界明确的 Subagent 运行。这些是本地开发工具和任务运行时能力，不是远程编码服务。
+编码工作使用文件操作、交互式 Shell、Git、隔离 Worktree 和边界明确的 Subagent。工作空间支持已有本地目录、新建目录与 SSH 项目；项目文件和 Agent 命令使用绑定的同一真实目标。EKO 已退出 LSP 工具、manager、设置和 IPC 消费路径，框架自身的公开能力退役另行处理。
 
 ## Data analysis
 
-数据 Profile 使用独立的数据工作空间和 Polars 工具。分析运行会保留可审阅的 Python 或 R 脚本、清单与产物，使输入、变换和输出都可以检查。
+数据工作台与 Polars 工具可以保留可审阅的 Python/R 脚本、清单和产物，使输入、变换与输出可检查。需要的领域方法与工具应由实际配置提供，不表示默认捆绑某个专业 Profile。
 
 ## Academic research
 
-学术研究绑定包括 arXiv 与 Semantic Scholar 检索、Zotero 集成，以及保留来源和证据的研究工作空间。研究连接器进入同一应用核心工作流，官网不复制一套研究运行时。
+已配置的研究工具可检索 arXiv、Semantic Scholar，连接 Zotero，并在研究工作空间保留来源和证据。连接器进入同一应用核心工作流；工具存在不保证来源可用或研究结果成立。
 
 ## Biomedical literature research
 
-生物医学研究 Profile 可以检索 PubMed 与 Europe PMC，并整理生物医学实体和来源记录以支持文献综合。它只面向医学文献研究，不用于诊断、治疗建议或临床决策。
+已配置的生物医学文献工具可检索 PubMed 与 Europe PMC，并整理实体和来源记录。领域方法由启用的插件声明，不再由旧专业 Profile 名称隐式授权；这些工具用于文献研究，不用于诊断、治疗建议或临床决策。
+
+启用的插件可通过 `domain.yaml` 声明方法、工具、产物和验收要求。未选择领域插件时保持 General；请求中的 `domainPlugin` 沿原输入和 TaskRun 身份绑定，不能用后来的配置替换运行中的规则。
 
 ## Long-horizon tasks
 
@@ -28690,15 +28698,21 @@ EKO 是基于 `echo-agent` 构建的本地个人 AI 助理。本页能力均对�
 
 任务关系只有一个权威：revisioned `TaskRun -> PlanTask -> SubagentRun` graph。framework `TaskStatus` 管执行状态，Plan 是可编辑 artifact，Todo 是只读展示投影。同一 run 内的依赖使用 `PlanRevision.tasks[].depends_on`；EKO 不维护第二套跨 run 依赖图。
 
+默认仅主智能体可派发首层 Subagent，首层不能继续派发，即额外嵌套深度为 0。GUI 以“最大 Subagent 总层数”配置同一规则：默认 1、可选 1—3，主智能体为第 0 层，绝不准入第 4 层。修改只影响新 run/turn；已有 TaskRun、新增任务、重试与恢复继续原绑定。
+
 针对精确 Task Subagent attempt 的中断请求先持久记录，再向原执行发出信号；请求本身不是完成或取消回执。续跑使用既有 TaskRun 身份、Goal、route 与执行配置，并按该身份检查调用方 workspace、conversation 和 root。
 
 ## Context 压缩
 
-EKO 默认通过 `compress_window: 0` 使用模型窗口 25%、至多 20K token 的近期原文预算。压缩保留 canonical 指令与最新用户请求，工具调用与结果成组处理。活跃任务的 goal 和恢复约束从 TaskRuntime 重建，完整历史仍保存在 ConversationStore。CLI、TUI、GUI 与 channel 共用已安装策略和可选压缩重点。显式正数窗口选择旧消息条数上限；adaptive 策略继续使用自己的 L1-L5 配置。
+EKO 默认通过 `compress_window: 0` 使用模型窗口 25%、至多 20K token 的近期原文预算。压缩保留 canonical 指令与最新用户请求，工具调用与结果成组处理。活跃任务的 goal 和恢复约束从 TaskRuntime 重建，完整历史仍保存在 ConversationStore。显式正数窗口选择旧消息条数上限；adaptive 策略继续使用自己的 L1-L5 配置。
+
+“已收到”只是持久接收，和 drain、进入模型上下文、已执行、已完成分别记录。journal 保留完整原文，当前活动投影只覆盖最近四条短文本或 400 字符预览及 SHA 引用；必要原文或 reader 不可用时走原可恢复暂停，不能只凭预览继续。完整来源、显式替换、范围、版本及持续有效要求覆盖仍需后继验收。
 
 ## Agent 协作与恢复
 
-六个 model-callable `agent_*` 工具对显式 Conversation 或 Task Subagent target 执行 list、inspect、message、follow-up、wait 与 interrupt。查询在 journal 层有界。cursor identity 可跨 router 或 TaskRuntime reopen 恢复，cold address 会按绑定 workspace 校验，五种 surface 重放同一真实 typed terminal 事实。未结算观察保持非终态，保留原执行 owner 和资源；停止等待、请求取消或重启应用，都不能证明执行已经结束，也不授权重放。
+六个 model-callable `agent_*` 工具对显式 Conversation 或 Task Subagent target 执行 list、inspect、message、follow-up、wait 与 interrupt。查询在 journal 层有界。cursor identity 可跨 router 或 TaskRuntime reopen 恢复，cold address 会按绑定 workspace 校验。未结算观察保持非终态，保留原执行 owner 和资源；停止等待、请求取消或重启应用，都不能证明执行已经结束，也不授权重放。
+
+协作由 AI 使用原工具和运行时自动组织，GUI 不要求用户手工维护 Agent 组或投递收据。用户可通过 Sidechat/Forkchat 参与探索，结果沿已有对话、任务和 Subagent 视图呈现。
 
 ## Subagent prompt 编译
 
@@ -28710,13 +28724,17 @@ builtin、plugin、direct、planned、fork、teammate、team member 与 primary 
 
 ## Local application core
 
-TUI、GUI、CLI/JSONL 与 channel adapter 使用同一个 `ApplicationServices` composition owner。surface 只保留输入、渲染和 host bridge，不各自装配 task、recovery、pool 或 maintenance runtime。会话与运行时状态使用本机文件或内存；EKO 不需要 SQLite。
+GUI、IM 与 cron 使用共享应用核心，不各自装配另一份 task、recovery、pool 或 maintenance runtime。旧 TUI、REPL、CLI/JSONL 入口仍在迁移期源码中，不能据此继续承诺永久多入口对等，也不能声称已经删除。会话与运行时状态使用本机文件或内存，EKO 不需要 SQLite。
+
+## GUI 渠道与定时任务
+
+设置页提供渠道和定时任务管理，QQ、飞书等现有渠道继续保留。个人微信按源码提供扫码、必要数字确认，当前限制为单个活动账号、扫码本人私聊文字，不承诺群聊或混合媒体自动执行。已配置、Ready、发送 Accepted 与手机收到分别验证；cron 通知保留原冻结目标，Unknown 不自动重发。源码或本地 focused 测试不能代替原生 GUI、真实平台与手机验收。
 
 ## Extension 控制
 
-Skills、Plugins、MCP servers、Hooks、LSP 与 Browser 控制从 GUI、TUI、CLI/JSONL 和 channel 进入同一个应用核心权威。EKO 只消费用户安装到 `~/.eko/skills/` 的独立 Skill、当前项目 `.eko/skills/` 的项目 Skill 与 Plugin generation 提供的 Skill，不再捆绑 catalog、默认启用集、baseline 或 Tauri Skill resource。`enabled-skills.json` version 3 只保存用户 Skill 的 `{enabled}` 选择；项目根到当前工作目录的 `AGENTS.md` 链进入同一 instruction projection。相同名称按项目 Skill、Plugin Skill、用户 Skill 优先。typed receipt 返回 settled 或 degraded，下一次操作、重启或 workspace load 会重新收敛。
+Skills、Plugins、MCP servers、Hooks 与 Browser 控制使用同一个应用核心权威。EKO 只消费用户安装到 `~/.eko/skills/` 的独立 Skill、当前项目 `.eko/skills/` 的项目 Skill 与 Plugin generation 提供的 Skill，不再捆绑 catalog、默认启用集、baseline 或 Tauri Skill resource。`enabled-skills.json` version 3 只保存用户 Skill 的 `{enabled}` 选择；项目根到当前工作目录的 `AGENTS.md` 链进入同一 instruction projection。相同名称按项目 Skill、Plugin Skill、用户 Skill 优先。typed receipt 返回 settled 或 degraded，下一次操作、重启或 workspace load 会重新收敛。
 
-portable Plugin component 只解析一次，形成不可变 framework `PreparedPluginSet`。EKO 捕获精确 workspace target，只增加 executable Subagent、LSP process、scoped monitor、theme 与 output style 产品策略。rollback 使用 prepared generation，不重新读取可能已变化的文件。
+portable Plugin component 只解析一次，形成不可变 framework `PreparedPluginSet`。EKO 捕获精确 workspace target，增加 executable Subagent、scoped monitor、theme 与 output style 产品策略。rollback 使用 prepared generation，不重新读取可能已变化的文件。
 
 ## Memory 与用户工具控制
 
@@ -28743,12 +28761,16 @@ EKO 面向用户自己的机器，产品层使用普通文件或内存保存状�
 - 已确认物理执行完成但结算保存失败时，由同一 owner 仅重试结算持久化与确认，不重新运行 Agent 或工具；资源保留到匹配的完成事实获得持久确认。
 - 每个 store-backed turn 都急切绑定 TaskRun。typed execution provenance 区分内部 conversation turn 与 orchestrated run；无 plan conversation run 保留 journal，但不进入任务 UI。
 - 普通 chat 同时使用独立 `ChatEventLog` 保存输入输出交付与 surface 重放。它和 TaskRuntime journal 可以关联同一 turn，但互不替代。
+- 输入的持久接收、目标 TaskRun 绑定、进入上下文和执行/完成是不同事实。两份原 journal 不被描述为一个事务；durability 未确认时不冒已准入或重新投向另一个目标。
+- journal 保存完整 user steer，当前活动投影有界保留最近四条短文或 400 字符预览与完整 SHA 引用。长原文制品可从 journal 重建，但这不等于完整的持续有效要求模型已经闭合。
 - 每个 workspace 拥有本地 memory Store、一个 generation-bound `MemoryLayerManager` 和一个在 model safe point 消费的 immutable hot-memory projection。
 - `enabled-skills.json` 是用户 Skill 启用状态的唯一持久事实，version 3 只保存 `{enabled}` flat map 并原子写入；当前项目 `.eko/skills/` 的项目 Skill 不写入该文件。EKO 不再捆绑 Skill、生成默认启用集或注入 baseline，运行时 reconcile 只返回即时 target receipt，不保留 generation 或 repair debt。
 - artifact 与 trace 保持 workspace scope；trace 只用于诊断，不能判定 TaskRun 或 PlanTask 是否已提交。
-- TUI、GUI、CLI/JSONL 与 channel 通过同一应用核心访问这些权威。
+- GUI、IM 与 cron 通过同一应用核心访问这些权威；待退役的旧独立入口不新增另一套状态权威。
 
-默认产品数据根目录是 `~/.eko/`，可以用 `EKO_DATA_DIR` 覆盖。workspace 自有的 conversation、task、memory、artifact 与 trace 位于 workspace `.eko/` 下。
+默认产品数据根目录是 `~/.eko/`，可以用 `EKO_DATA_DIR` 覆盖。每个工作空间的 conversation、task、memory、artifact 与 trace 留在本机产品数据目录。
+
+工作空间的项目代码位置可以是已有本地目录、新建目录或 SSH 远程目录。原 Workspace manifest 记录项目位置和验证后的执行身份；本机 `Workspace.root` 产品数据不是远端命令的工作目录。文件、Git/worktree 与 Agent 执行使用同一已捕获项目目标，不能因界面切换自动改投；未知写入也不能当作从未发生后重放。
 
 本页是官网投影，不是 storage schema。EKO persistence 文档与源码仓库仍是权威。
 
@@ -57508,7 +57530,23 @@ Source: https://echo-agent.dev/en/eko/docs/overview
 
 # EKO
 
-EKO is a local personal AI assistant built on echo-agent. Its TUI, Tauri desktop interface, CLI/JSONL, and messaging channels use the same `echo-agent-app-core` services; capability parity across those surfaces is the product contract.
+EKO is a local personal assistant running on the user's machine. The approved
+target has one GUI product entry, with IM messages and cron as retained background
+triggers. GUI terminals, Agent shell tools, desktop launch arguments and the
+independent SDK Host stdio protocol remain valid capabilities.
+
+The current baseline still contains TUI, REPL, CLI/JSONL and channel adapters.
+Their shared services remain authoritative during migration; the old requirement
+to keep expanding all console surfaces has been superseded. Removing console
+entry points must wait for GUI-owned IM lifecycle, cron and recovery acceptance.
+This documentation change does not delete any runtime entry or protocol.
+
+EKO no longer requests the framework LSP feature, registers language-server tools,
+or exposes LSP commands/settings/IPC. Old configuration and plugin declarations
+receive explicit retirement diagnostics without deleting user files. Mixed plugins
+retain legal components and their existing publication/cleanup receipts. Framework
+A2A/LSP APIs still exist pending both consumers' acceptance; console surfaces,
+IM, cron, MCP and Subagent are retained in this consumer-only change.
 
 ## Capability boundary
 
@@ -57518,7 +57556,7 @@ EKO is a local personal AI assistant built on echo-agent. Its TUI, Tauri desktop
 - Discover, inspect, message, follow up, wait for, and interrupt Conversation Agents and exact Task Subagent attempts through six bounded `agent_*` tools
 - Resume cursor-based Agent waits and TaskRuns across restart, preserving workspace and original TaskRun identity; GUI, TUI, CLI, JSONL, and channels publish a single typed terminal for a settled execution, based on a genuine, durably acknowledged settlement receipt
 - Keep an unsettled execution nonterminal and retain its original owner; an unknown outcome does not authorize replay or duplicate execution
-- Control Skills, prepared Plugin generations, MCP, Hooks, LSP, Browser, and direct-user tool visibility through scoped application authorities
+- Control Skills, prepared Plugin generations, MCP, Hooks, Browser, and direct-user tool visibility through scoped application authorities
 - Publish generation-bound hot memory once for the primary, existing pooled Agents, and future Agents at the next model safe point
 - Store conversations, memory, task journals, checkpoints, and product projections in local files or memory without requiring SQLite
 
@@ -57537,7 +57575,7 @@ This page is a reviewed quick-start projection. Use the maintained EKO repositor
 
 - Rust 1.95 or newer
 - At least one configured LLM provider and model
-- GUI development requires Node.js `^20.19.0 || ^22.13.0 || >=24.0.0`, Tauri 2 system dependencies, and the Tauri CLI; TUI and JSONL usage do not require Node.js
+- GUI development requires Node.js `^20.19.0 || ^22.13.0 || >=24.0.0`, Tauri 2 system dependencies, and the Tauri CLI
 
 ## Clone the repository
 
@@ -57547,15 +57585,8 @@ cd echo-agent-cli
 cargo fetch
 ```
 
-TUI/CLI users can configure `./eko.yaml` or `~/.eko/config.yaml`; GUI users can configure providers and models in Settings. Keep API keys in environment variables referenced by the configuration rather than writing secrets into the file.
-
-## Launch the TUI
-
-```bash
-cargo run --bin echo-agent-cli
-```
-
-Useful runtime selectors include `--project /path/to/project`, `--model <provider:model>`, `--continue`, and `--resume <conversation-id>`.
+Create a provider and model in the GUI, or prepare `./eko.yaml` or
+`~/.eko/config.yaml`.
 
 ## Launch the GUI
 
@@ -57568,17 +57599,31 @@ cargo gui-dev
 
 For a packaged desktop application, use `cargo gui-bundle`; a bare Rust binary does not include the complete Tauri frontend and platform bundle.
 
-## Run JSONL automation
+In the GUI, a Workspace is a project. New task opens a conversation draft in
+the selected Workspace without creating a directory. Use the Workspace menu
+to select an existing local folder, create a folder, or open an SSH device and
+remote project directory.
 
-```bash
-cargo run --bin echo-agent-cli -- --jsonl "Inspect this project and summarize the result"
-```
+You can add input while a conversation is running. “Received” means the input
+has been saved; the unchanged submitted text and attachments clear without
+waiting for the model or tools. It does not mean execution or task completion.
+Preparation or admission failure preserves the draft, and late results do not
+clear a newer draft after navigation or editing. Stop remains a separate action.
 
-JSONL writes canonical chat envelopes to stdout and keeps logs on stderr or in log files.
+EKO is a local personal assistant running on the user's machine. The approved
+target has one GUI product entry, with IM messages and cron as retained background
+triggers. GUI terminals, Agent shell tools, desktop launch arguments and the
+independent SDK Host stdio protocol remain valid capabilities.
+
+The current baseline still contains TUI, REPL, CLI/JSONL and channel adapters.
+Their shared services remain authoritative during migration; the old requirement
+to keep expanding all console surfaces has been superseded. Removing console
+entry points must wait for GUI-owned IM lifecycle, cron and recovery acceptance.
+This documentation change does not delete any runtime entry or protocol.
 
 ## Local data
 
-EKO uses `~/.eko/` by default and accepts `EKO_DATA_DIR` as an override. Workspace conversations, TaskRuntime journals, memory, artifacts, and traces live under that workspace's `.eko/` directory. EKO does not enable SQLite.
+EKO uses `~/.eko/` by default and accepts `EKO_DATA_DIR` as an override. User rules, memory, conversations and journals remain local. EKO does not enable SQLite.
 
 Use the [EKO README](https://github.com/EchoYue-lp/echo-agent-cli#readme) as the source of truth for complete build, configuration, and platform packaging commands.
 
@@ -57593,19 +57638,44 @@ EKO is a local personal AI assistant built on `echo-agent`. The capabilities on 
 
 ## Coding
 
-The coding profile binds file operations, an interactive shell, Git, LSP navigation and diagnostics, isolated worktrees, and bounded Subagent runs. These are local developer tools and task-runtime capabilities, not a remote coding service.
+EKO integrates transactional file edits, workspace diff, analytics execution,
+interactive local/system-OpenSSH terminal sessions (source prepared; native/remote
+qualification pending), Browser/Chrome, workflow catalog, structured
+extraction, MCP, Tool output projections, model-driven Agent collaboration controls,
+Hooks/Webhooks, Plugins, and Skills.
 
 ## Data analysis
 
-The data profile uses a dedicated data workspace and Polars-backed tools. Analysis runs produce reviewable Python or R scripts alongside manifests and artifacts so that inputs, transformations, and outputs remain inspectable.
+Data analysis stores scripts, data, charts, and reports as file-backed
+artifacts.
 
 ## Academic research
 
-Academic research bindings include arXiv and Semantic Scholar search, Zotero integration, and a research workspace that retains sources and evidence. Research connectors feed the same application-core workflow instead of a separate website implementation.
+Research supports paper libraries, scholarly search, Zotero, Europe PMC,
+citation audit, and export.
 
 ## Biomedical literature research
 
-The biomedical research profile can search PubMed and Europe PMC and organize biomedical entities and source records for literature synthesis. It is designed for literature research, not diagnosis, treatment recommendations, or clinical decision-making.
+Search PubMed (NCBI) for biomedical literature.
+
+Medical review supports PICO/PECO, screening, RoB, GRADE, PRISMA, and
+applicability risk.
+
+It is designed for literature research, not diagnosis, treatment recommendations, or clinical decision-making.
+
+An enabled plugin may add one package-root `domain.yaml`. It declares
+`schema_version: 1`, nonempty `method`, optional `default_subagent_roles`, and
+explicit `allowed_tools`, `required_artifacts`, `execution_checks`,
+`acceptance_criteria`, `review_checklist` and `inputs` lists. Unknown fields or
+invalid declarations reject the candidate through the original publication
+error path. No declaration means an ordinary plugin, not an implicit domain.
+Manifest name and optional version are not duplicated in this file.
+
+The existing chat/task request accepts optional `domain_plugin` (GUI camelCase
+`domainPlugin`). Omission keeps General. The original input queue stores that
+selection with its payload identity; it cannot change an active run by steering.
+New non-General `domain_profile` requests must select a plugin instead. Historical
+profile names remain readable; they do not authorize new professional execution.
 
 ## Long-horizon tasks
 
@@ -57615,9 +57685,16 @@ Task relationships have one authority: a revisioned `TaskRun -> PlanTask -> Suba
 
 For an exact Task Subagent attempt, the interruption request is recorded before its original execution is signalled; the request itself is not a completion or cancellation receipt. Continuation uses the existing TaskRun identity, Goal, route, and execution profile, with the caller workspace, conversation, and root checked against that identity.
 
+EKO's GUI selects 1, 2 or 3 child layers, defaults to 1, and never admits layer 4.
+Primary is layer 0; the first actual child is layer 1.
+
+Only integers 1, 2 and 3 are accepted; the default is 1. Primary is layer 0. Changes apply to new runs/turns; existing runs, new tasks within them, retries and recovery keep their original binding. Invalid configuration files fail explicitly instead of silently loading defaults.
+
 ## Context compression
 
 EKO defaults to a recent-text token budget of 25% of the model window, capped at 20K tokens, with `compress_window: 0`. Compression preserves canonical instructions and the latest user request, and keeps tool calls and results together. Active task goals and recovery constraints are rebuilt from TaskRuntime; complete conversation history remains in the conversation store. CLI, TUI, GUI, and channels share the installed strategy and optional compression focus. An explicit positive `compress_window` selects the legacy message cap; the adaptive strategy uses its own L1-L5 policy.
+
+Queued additions acknowledge receipt from the original durable `queue_chat_input` result, without waiting for the model, physical tool or mailbox drain. Frontier refresh and tracked-steer observation stay with the original input service and attempt owner. Receipt, drain, context inclusion and terminal outcome are separate facts; receipt does not mean an active tool stopped or the correction executed.
 
 ## Agent collaboration and recovery
 
@@ -57631,15 +57708,35 @@ Built-in, plugin, direct, planned, fork, teammate, team-member, and primary Task
 
 `watch_cell` uses the framework `CommandCellWatcher` to retain one background command, drain its byte cursor, and publish typed terminal truth without dispatching a model or Subagent. EKO adds exact workspace/conversation/root identity, generation idempotency, durable Ready/delivery/ack facts, recovery, and shared surface projection. Interrupting a watch does not stop the underlying command.
 
+## Personal Weixin
+
+The candidate distinguishes configured/authorized, authenticated-poll Ready,
+and a send's Accepted. Saving or starting is not online evidence, and Accepted
+does not establish phone receipt. `-14` requires reauthentication. Forget removes
+local credentials/protocol state without claiming server revocation or deleting
+history or unsettled notifications. One active account accepts only the scanning
+user's direct text into the original Agent/TaskRun/HITL. Account replacement does
+not reuse old context, session or human-request identity. Groups/media/mixed media
+do not execute remaining text. No OpenClaw Gateway or desktop injection is used.
+
 ## Local application core
 
-TUI, GUI, CLI/JSONL, and channel adapters use one `ApplicationServices` composition owner. Surfaces retain input, rendering, and host bridges rather than assembling separate task, recovery, pool, or maintenance runtimes. Conversation and runtime state use file or memory stores on the user's machine; EKO does not require SQLite.
+EKO is a local personal assistant running on the user's machine. The approved
+target has one GUI product entry, with IM messages and cron as retained background
+triggers. GUI terminals, Agent shell tools, desktop launch arguments and the
+independent SDK Host stdio protocol remain valid capabilities.
+
+The current baseline still contains TUI, REPL, CLI/JSONL and channel adapters.
+Their shared services remain authoritative during migration; the old requirement
+to keep expanding all console surfaces has been superseded. Removing console
+entry points must wait for GUI-owned IM lifecycle, cron and recovery acceptance.
+This documentation change does not delete any runtime entry or protocol.
 
 ## Extension control
 
-Skills, Plugins, MCP servers, Hooks, LSP, and Browser controls enter one application-core authority from the GUI, TUI, CLI/JSONL, and channels. EKO consumes independent Skills installed under `~/.eko/skills/`, project Skills under the current project's `.eko/skills/`, and Skills supplied by plugin generations; it no longer bundles a catalog, default active set, baseline, or Tauri Skill resource. Version 3 `enabled-skills.json` stores only user `{enabled}` choices. The project's root-to-working-directory `AGENTS.md` chain enters the same instruction projection. Name collisions use project Skills, plugin Skills, then user Skills as the precedence order. Typed receipts return settled or degraded, and the next operation, restart, or workspace load converges again.
+Skills, Plugins, MCP servers, Hooks, and Browser controls enter one application-core authority from the GUI, TUI, CLI/JSONL, and channels. EKO consumes independent Skills installed under `~/.eko/skills/`, project Skills under the current project's `.eko/skills/`, and Skills supplied by plugin generations; it no longer bundles a catalog, default active set, baseline, or Tauri Skill resource. Version 3 `enabled-skills.json` stores only user `{enabled}` choices. The project's root-to-working-directory `AGENTS.md` chain enters the same instruction projection. Name collisions use project Skills, plugin Skills, then user Skills as the precedence order. Typed receipts return settled or degraded, and the next operation, restart, or workspace load converges again.
 
-Portable Plugin components are parsed once into an immutable framework `PreparedPluginSet`. EKO captures exact workspace targets and adds only product policy for executable Subagents, LSP processes, scoped monitors, themes, and output styles. Rollback uses the prepared generation rather than rereading changed files.
+Portable Plugin components are parsed once into an immutable framework `PreparedPluginSet`. EKO captures exact workspace targets and adds only product policy for executable Subagents, scoped monitors, themes, and output styles. Rollback uses the prepared generation rather than rereading changed files.
 
 ## Memory and direct-user tool control
 
@@ -57669,9 +57766,14 @@ EKO runs on the user's own machine. Its product layer stores state in ordinary f
 - Each workspace owns its local memory Store, one generation-bound `MemoryLayerManager`, and an immutable hot-memory projection consumed at model safe points.
 - `enabled-skills.json` is the sole persistent enablement fact for user Skills. Version 3 stores only the atomically written `{enabled}` flat map; project Skills under the current project's `.eko/skills/` are not written there. EKO no longer bundles Skills, creates a default active set, or injects a baseline; runtime reconciliation returns immediate target receipts and retains no generation or repair debt.
 - Artifacts and traces remain workspace-scoped. Trace data is diagnostic and does not determine whether a TaskRun or PlanTask committed.
-- TUI, GUI, CLI/JSONL, and channels access these authorities through the same application core.
 
-The default product data root is `~/.eko/`, overridable with `EKO_DATA_DIR`. Workspace-owned conversations, tasks, memory, artifacts, and traces live below the workspace `.eko/` directory.
+The default product data root is `~/.eko/`, overridable with `EKO_DATA_DIR`.
+
+A Workspace is a project or engineering workspace; tasks and conversations belong to it, and TaskRun/PlanTask lists contain execution records. Workspace creation selects an existing local folder, creates one new local folder, or opens an SSH project. Creating a task does not create a folder. Code location is separate from local `Workspace.root` product data. Legacy manifests still resolve `project_root`, then `root`, without moving directories. The original manifest and `project_root_revision` own configured location and verified execution identity.
+
+User rules, memory, conversations and journals remain local.
+
+Receipt, drain, context inclusion and terminal outcome are separate facts; receipt does not mean an active tool stopped or the correction executed.
 
 This page is a website projection, not a storage schema. The EKO persistence documentation and source repository remain authoritative.
 

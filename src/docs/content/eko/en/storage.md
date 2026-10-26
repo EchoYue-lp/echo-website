@@ -13,8 +13,13 @@ EKO runs on the user's own machine. Its product layer stores state in ordinary f
 - Each workspace owns its local memory Store, one generation-bound `MemoryLayerManager`, and an immutable hot-memory projection consumed at model safe points.
 - `enabled-skills.json` is the sole persistent enablement fact for user Skills. Version 3 stores only the atomically written `{enabled}` flat map; project Skills under the current project's `.eko/skills/` are not written there. EKO no longer bundles Skills, creates a default active set, or injects a baseline; runtime reconciliation returns immediate target receipts and retains no generation or repair debt.
 - Artifacts and traces remain workspace-scoped. Trace data is diagnostic and does not determine whether a TaskRun or PlanTask committed.
-- TUI, GUI, CLI/JSONL, and channels access these authorities through the same application core.
 
-The default product data root is `~/.eko/`, overridable with `EKO_DATA_DIR`. Workspace-owned conversations, tasks, memory, artifacts, and traces live below the workspace `.eko/` directory.
+The default product data root is `~/.eko/`, overridable with `EKO_DATA_DIR`.
+
+A Workspace is a project or engineering workspace; tasks and conversations belong to it, and TaskRun/PlanTask lists contain execution records. Workspace creation selects an existing local folder, creates one new local folder, or opens an SSH project. Creating a task does not create a folder. Code location is separate from local `Workspace.root` product data. Legacy manifests still resolve `project_root`, then `root`, without moving directories. The original manifest and `project_root_revision` own configured location and verified execution identity.
+
+User rules, memory, conversations and journals remain local.
+
+Receipt, drain, context inclusion and terminal outcome are separate facts; receipt does not mean an active tool stopped or the correction executed.
 
 This page is a website projection, not a storage schema. The EKO persistence documentation and source repository remain authoritative.

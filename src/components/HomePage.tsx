@@ -278,20 +278,19 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
       title: 'EKO',
       tagline: 'One capable agent, built for your own machine.',
       description:
-        'EKO is the desktop, terminal, CLI, and channel application built on echo-agent. Its interfaces use the shared application core; capability parity across those interfaces is the product contract.',
-      command: 'cargo run --bin echo-agent-cli',
+        "EKO is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.",
+      command: 'cargo gui-dev',
       repository: 'https://github.com/EchoYue-lp/echo-agent-cli',
       docsLabel: 'Read EKO docs',
       repositoryLabel: 'Open repository',
       evidenceTitle: 'Purpose-built local workspaces',
       evidenceIntro:
-        'Coding, data analysis, academic research, biomedical literature research, and long-horizon work are routed through explicit application profiles and inspectable local artifacts.',
+        'In the GUI, a Workspace is a project. New task opens a conversation draft in the selected Workspace without creating a directory. Use the Workspace menu to select an existing local folder, create a folder, or open an SSH device and remote project directory.',
       evidence: [
         {
-          label: 'Work profiles',
-          value: 'Code · data · research',
-          detail:
-            'Each profile binds relevant tools and evidence expectations through the application core.',
+          label: 'Workspace',
+          value: 'A Workspace is a project',
+          detail: 'User rules, memory, conversations and journals remain local.',
         },
         {
           label: 'Research trail',
@@ -314,7 +313,7 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
         {
           title: 'Coding',
           description:
-            'Work with files, shells, Git, LSP, isolated worktrees, and bounded Subagent runs.',
+            'Work with files, shells, Git, isolated worktrees, and bounded Subagent runs.',
           icon: Terminal,
           accent: 'text-amber-300',
           href: '/eko/docs/capabilities#coding',
@@ -352,31 +351,35 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
           href: '/eko/docs/capabilities#long-horizon-tasks',
         },
         {
-          title: 'Complete local multi-interface agent',
+          title: 'Local personal AI assistant',
           description:
-            'TUI, GUI, CLI, and channels use the shared application core; capability parity is the product contract.',
+            "EKO is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.",
           icon: Layers3,
           accent: 'text-sky-300',
           href: '/eko/docs/capabilities#local-application-core',
         },
       ],
-      architectureTitle: 'One core, several interfaces',
+      architectureTitle: 'One core',
       architectureIntro:
         'Interface-specific code renders events and captures input. Agent behavior remains in the shared application core.',
       architecture: [
         { label: 'echo-agent-app-core', detail: 'Product policy and shared agent-driving path' },
-        { label: 'TUI', detail: 'Complete terminal interaction' },
+        { label: 'Workspace', detail: 'A Workspace is a project or engineering workspace.' },
         { label: 'Tauri GUI', detail: 'Desktop rendering and native integration' },
-        { label: 'CLI', detail: 'Scriptable command-line access' },
-        { label: 'Channels', detail: 'Remote interaction adapters' },
+        {
+          label: 'TaskRuntime',
+          detail:
+            'Task runtime state supports scheduled, pausable, and resumable work on the local machine.',
+        },
+        { label: 'Channels', detail: 'IM messages and cron' },
         { label: 'File + memory stores', detail: 'Local conversation and runtime state' },
       ],
-      quickStartTitle: 'Start in the terminal',
-      quickStartIntro: 'Clone the EKO repository and run the CLI entry point.',
+      quickStartTitle: 'Run GUI',
+      quickStartIntro: 'Clone the EKO repository.',
       quickStart: [
         'git clone https://github.com/EchoYue-lp/echo-agent-cli.git',
         'cd echo-agent-cli',
-        'cargo run --bin echo-agent-cli',
+        'cargo gui-dev',
       ],
       quickStartNote:
         'Provider credentials are configured locally. Desktop setup is covered in the EKO docs.',
@@ -393,19 +396,19 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
       title: 'EKO',
       tagline: '在自己的机器上，使用一个完整的 Agent。',
       description:
-        'EKO 是基于 echo-agent 构建的桌面、终端、CLI 与渠道应用。各交互界面使用共享应用核心，多模式能力对等是强制产品契约。',
-      command: 'cargo run --bin echo-agent-cli',
+        'EKO 是基于 echo-agent 的本地个人助理，以 GUI 为主入口，保留 IM 消息与定时任务。项目、会话、Subagent、工具和记忆复用同一应用核心；旧独立终端与 CLI 入口仍在迁移期。',
+      command: 'cargo gui-dev',
       repository: 'https://github.com/EchoYue-lp/echo-agent-cli',
       docsLabel: '阅读 EKO 文档',
       repositoryLabel: '打开代码仓库',
       evidenceTitle: '面向真实任务的本地工作空间',
       evidenceIntro:
-        '编码、数据分析、学术研究、医学文献研究和长程任务均由明确的应用 Profile 与可检查的本地产物承载。',
+        '项目可来自已有本地目录、新建目录或 SSH 远程位置。编码、数据与研究工具保留可检查的来源和产物，专业方法由实际配置的领域插件提供。',
       evidence: [
         {
-          label: '工作 Profile',
-          value: '编码 · 数据 · 研究',
-          detail: '每种 Profile 通过应用核心绑定相关工具和证据要求。',
+          label: '项目与方法',
+          value: '本地 · SSH · 领域插件',
+          detail: '未选择领域插件时保持 General；启用的方法、工具和证据要求沿原任务身份绑定。',
         },
         {
           label: '研究轨迹',
@@ -420,12 +423,13 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
       ],
       capabilitiesTitle: 'EKO 面向的核心任务',
       capabilitiesIntro:
-        '以下每项能力都能在当前应用代码中找到生产绑定。持续时长与结果取决于配置、模型、工具和来源可用性。',
+        '以下说明当前源码的能力与边界，持续时长和结果取决于配置、模型、工具与来源；源码接线不代替原生、微信手机或 SSH 验收。',
       capabilityLinkLabel: '查看实现边界',
       capabilities: [
         {
           title: 'Coding 编码',
-          description: '使用文件、Shell、Git、LSP、隔离 Worktree 与边界明确的 Subagent 运行。',
+          description:
+            '使用项目文件、Shell、Git、隔离 Worktree 与 Subagent；EKO 的 LSP 消费入口已退出。',
           icon: Terminal,
           accent: 'text-amber-300',
           href: '/eko/docs/capabilities#coding',
@@ -460,31 +464,36 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
           href: '/eko/docs/capabilities#long-horizon-tasks',
         },
         {
-          title: '本地多界面完整体',
-          description: 'TUI、GUI、CLI 与渠道使用共享应用核心；能力对等是产品契约。',
+          title: 'GUI、IM 与定时任务',
+          description:
+            '在 GUI 管理已有渠道与定时任务；个人微信按单账号、扫码本人私聊文字范围接入，发送接受不等于手机已收到。',
           icon: Layers3,
           accent: 'text-sky-300',
           href: '/eko/docs/capabilities#local-application-core',
         },
       ],
-      architectureTitle: '一个核心，多种界面',
+      architectureTitle: '一个核心，共享任务与会话',
       architectureIntro: '界面代码只负责渲染事件与接收输入，Agent 行为保留在共享应用核心。',
       architecture: [
         { label: 'echo-agent-app-core', detail: '产品策略与共享 Agent 驱动路径' },
-        { label: 'TUI', detail: '完整的终端交互' },
+        { label: '工作空间', detail: '已有目录、新建目录或 SSH 项目；产品数据留在本机' },
         { label: 'Tauri GUI', detail: '桌面渲染与原生集成' },
-        { label: 'CLI', detail: '可脚本化的命令行入口' },
-        { label: '渠道', detail: '远程交互适配器' },
+        {
+          label: 'TaskRuntime',
+          detail: '默认仅主智能体派发首层；子智能体默认不可再派发，总层数可配 1—3',
+        },
+        { label: 'IM 与 cron', detail: '共享会话、HITL、任务和恢复权威' },
         { label: '文件 + 内存存储', detail: '本地会话与运行时状态' },
       ],
-      quickStartTitle: '从终端开始',
-      quickStartIntro: '克隆 EKO 仓库并运行 CLI 入口。',
+      quickStartTitle: '启动 GUI',
+      quickStartIntro: '克隆 EKO 仓库并使用已有桌面开发 alias。',
       quickStart: [
         'git clone https://github.com/EchoYue-lp/echo-agent-cli.git',
         'cd echo-agent-cli',
-        'cargo run --bin echo-agent-cli',
+        'cargo gui-dev',
       ],
-      quickStartNote: '模型凭据保存在本地；桌面端配置请继续阅读 EKO 文档。',
+      quickStartNote:
+        '模型凭据保存在本地；“已收到”只表示持久接收，不表示已执行。旧独立入口的退役与真实平台验收仍需分别收口。',
       docsCta: '浏览全部 EKO 文档',
       scene: [
         'TaskRun { status: Running }',

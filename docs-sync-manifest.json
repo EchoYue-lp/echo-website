@@ -1559,8 +1559,8 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "c262cfed8e77abed38a27c1fff93547997ec9486",
-    "status": "reviewed-local-compression-policy",
+    "reviewedRevision": "612050b42d31b55f6ce04c5b329b04d7114fee8b",
+    "status": "reviewed-gui-product-boundaries",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "sourceFiles": [
       {
@@ -1593,7 +1593,7 @@
       },
       {
         "sourcePath": "docs/en/adr/0008-taskruntime-bounded-query-projections.md",
-        "sha256": "8f9f8618b79f8509148a046efa1fec010865a3ffc2aa3a5069177adba72eeac3"
+        "sha256": "21f1b9906c3eab74e1e880e91d26d6a8cf35fc739bd112306c7badadc97c4124"
       },
       {
         "sourcePath": "docs/en/adr/0009-taskruntime-async-io-and-ipc-boundary.md",
@@ -1697,7 +1697,7 @@
       },
       {
         "sourcePath": "docs/en/adr/0034-full-direction-agent-communication-matrix.md",
-        "sha256": "6d542c5a3a93b1995aa5f8d1dac2ce171fdb193b8b16a7548212cd7b7e2af6c6"
+        "sha256": "243b6531607f9c68a0498c87c1321a10545a098b0733e0fc1d0d75b97b309f3c"
       },
       {
         "sourcePath": "docs/en/adr/0035-conversation-archive-projection.md",
@@ -1721,7 +1721,7 @@
       },
       {
         "sourcePath": "docs/en/adr/0039-unified-agent-conversation-pane.md",
-        "sha256": "ae7089801f59aa12b007ff3b0932743911b27a3c149cfaaf0c0f702fde643f8c"
+        "sha256": "9363563b25648a5240b815994f99d7c06710e1dd3c1718f5e0c33baf6a656749"
       },
       {
         "sourcePath": "docs/en/adr/0040-app-core-subagent-event-projection.md",
@@ -1764,8 +1764,36 @@
         "sha256": "5f30b1ae2261fd3dbeb4a84d09933e57dcb31780fa4e4aadda60a754dd2778d3"
       },
       {
+        "sourcePath": "docs/en/adr/0050-gui-product-convergence.md",
+        "sha256": "3604bece982a93944bcaa38effa6087d89326f008a79db3037539f5ef6956c74"
+      },
+      {
+        "sourcePath": "docs/en/adr/0051-ssh-terminal-sessions.md",
+        "sha256": "ab9859f752d009899f85c0ab3310c68a23eceb7b98a4a63eef83439dc037f2a8"
+      },
+      {
+        "sourcePath": "docs/en/adr/0052-gui-subagent-depth-policy.md",
+        "sha256": "621bb2dd5d4b58522d6ff0c3fc02cd56a1d509b09854060fd27a720639b168b9"
+      },
+      {
+        "sourcePath": "docs/en/adr/0053-im-cron-gui-control.md",
+        "sha256": "a7f9a6973ef276002139d6f10487552efdc1bd694ffa55cdfd1098f20bae6572"
+      },
+      {
+        "sourcePath": "docs/en/adr/0054-task-bound-domain-plugins.md",
+        "sha256": "39c43b2def0cd23f5b606f048be1cb0290271364ebfca981b2b7996f63005dd9"
+      },
+      {
+        "sourcePath": "docs/en/adr/0055-project-workspaces.md",
+        "sha256": "679b92bb1f47555c81275ec150fe47924f4fa264390dd298adaadee5b7d04d9d"
+      },
+      {
+        "sourcePath": "docs/en/adr/0056-personal-weixin-channel.md",
+        "sha256": "f8fd8ea6e3ba5f0096e68e66e47d57961308751b3c0ce848f9f3dd149aa705eb"
+      },
+      {
         "sourcePath": "docs/en/architecture/overview.md",
-        "sha256": "e71202ce433cd285269e70e34f1caabf4f4fc1df037c5268e7c5ffcc4b583955"
+        "sha256": "21e266ed568489578ca9f1471d237c2dd83f940fd28c2afb8b10c6bc83b311f9"
       },
       {
         "sourcePath": "docs/en/architecture/persistence.md",
@@ -1777,19 +1805,27 @@
       },
       {
         "sourcePath": "docs/en/architecture/runtime.md",
-        "sha256": "329ff4f1afa436edeaa76ab71ec482ac73b4c7013118a964e9e9a7dac7eca054"
+        "sha256": "5fcf6cec26f5e7ee167e3a6fc616c1045774e6920a8b3c18a1c345f41512a068"
       },
       {
         "sourcePath": "docs/en/configuration.md",
-        "sha256": "c49643388fc7eb161f1e94265108bf26b1b6236ecac81f93ceb3791c8e23a5d8"
+        "sha256": "dae80867660f316b71cc54be48d30618099f20f642b13787ba0d4e7369a9155d"
       },
       {
         "sourcePath": "docs/en/features.md",
-        "sha256": "7e4bc3b1ab3d390a05ffd5de3f6ed9fb7e6c09ae7ae6fe52e828ffa496c06832"
+        "sha256": "2f3de508cbd0da54a55911b9f0da115c101470f70c7c84811819a91820eac4d5"
       },
       {
         "sourcePath": "docs/en/getting-started.md",
-        "sha256": "2e832e79f81dea14ed567826112663928a505d8f6620cd1bdf2b8910f102141b"
+        "sha256": "7fce8c183189c9c54bd9ba64886c008f66ddb3e0e8ed3063ba1abf5cc14385ca"
+      },
+      {
+        "sourcePath": "docs/en/guides/gui-hitl-dialog.md",
+        "sha256": "931d03b0197347fd0a64179d6330576fe0172f6382a38c8b42a5719983bfdbc7"
+      },
+      {
+        "sourcePath": "docs/en/guides/gui-task-runtime-panel.md",
+        "sha256": "eba4c77fd2923bae59179ec2d46eb13371f6853c65bda379c56692ba2c96fab7"
       },
       {
         "sourcePath": "docs/en/operations/skill-sync.md",
@@ -1833,7 +1869,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0008-taskruntime-bounded-query-projections.md",
-        "sha256": "e49042d1dc952abe2226f78970f10753908143a6f31665e78110fab6169b8400"
+        "sha256": "d4b5332fde44b49fa5fc9cc443078f23dae8ff8052266d9d7fb45ec5b48ca650"
       },
       {
         "sourcePath": "docs/zh/adr/0009-taskruntime-async-io-and-ipc-boundary.md",
@@ -1937,7 +1973,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0034-full-direction-agent-communication-matrix.md",
-        "sha256": "5fadafc89c58fb88a07c16dacec6d841c91aa41b9ced1e00a41ebb1506ada32d"
+        "sha256": "b13f6b1766e565732360b7877707be50d1fe30ffe1e4545a283ad9b7679f91f4"
       },
       {
         "sourcePath": "docs/zh/adr/0035-conversation-archive-projection.md",
@@ -1949,7 +1985,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0037-unified-turn-run-binding.md",
-        "sha256": "30a29a313de80e8ff0873df0e60f964a82c6632b3133f3795d11ca0d0d188d8f"
+        "sha256": "15f811a158eac90904cc8c189f821b17a06cd34a9a79d9718910e19a0a54dfe5"
       },
       {
         "sourcePath": "docs/zh/adr/0038-builtin-creator-skills.md",
@@ -1961,7 +1997,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0039-unified-agent-conversation-pane.md",
-        "sha256": "9d1f5b88296987f2fd50269ef88b6d978819a81af45f228c713f3c497feb690d"
+        "sha256": "72ab20408c720ec0a42559439d4c8556548688bfa00a77adee0ff51208f8053b"
       },
       {
         "sourcePath": "docs/zh/adr/0040-app-core-subagent-event-projection.md",
@@ -1997,15 +2033,43 @@
       },
       {
         "sourcePath": "docs/zh/adr/0048-context-compression-product-policy.md",
-        "sha256": "4885c0814ba0b33bfb44c24ee7e636f94cd377ba2de3585be97eb7854cd08dea"
+        "sha256": "cde449526a58ee9171f8e6ab06a266d6c978eb84896addd3ed4a95f0f07b3a54"
       },
       {
         "sourcePath": "docs/zh/adr/0049-taskruntime-process-owner-recovery.md",
         "sha256": "cbfb3b4ccb6bd886953fd0f7ef20067ac7e855dc19fa8370f3cce21d1477f190"
       },
       {
+        "sourcePath": "docs/zh/adr/0050-gui-product-convergence.md",
+        "sha256": "5b45d12069b2e00be4656ab4752a9c2ec2fdaf6f66c532d986278b72998506da"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0051-ssh-terminal-sessions.md",
+        "sha256": "81068bb141ce57655979239fed12df97d1182a96e58f4a80fad893285110bbf3"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0052-gui-subagent-depth-policy.md",
+        "sha256": "be64101f791dfeba84842a6bf8c62885b8d7f6809fa8a0f86e3565cf92fa3f9c"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0053-im-cron-gui-control.md",
+        "sha256": "1f4e0e06856b1e961825b3ef9e3b1f32cdef5e9bfb17ac6468563b41670c1da1"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0054-task-bound-domain-plugins.md",
+        "sha256": "13008498b84bcd45ba14bae1cad3947122bb5f57787add5128cbde272e1574a2"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0055-project-workspaces.md",
+        "sha256": "48c2f1d5da7789267f6a162ac46294ac1172fee86291a1846353ffe54994cd6b"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0056-personal-weixin-channel.md",
+        "sha256": "05e78fb7344671965576d85edbfa8a00ff0ada58f8032328b4aae8110882c105"
+      },
+      {
         "sourcePath": "docs/zh/architecture/overview.md",
-        "sha256": "9d5f7833ee7c91e1f9c5d3f11a321094f54dcadd6397de94e9faafb11035f70f"
+        "sha256": "b629e413734f82f024546cbb0fb177808ea8f40610ea79761297e289d226fcfb"
       },
       {
         "sourcePath": "docs/zh/architecture/persistence.md",
@@ -2017,19 +2081,27 @@
       },
       {
         "sourcePath": "docs/zh/architecture/runtime.md",
-        "sha256": "deb010a5a9349993bb751c5e80f58e0213ca132dc0c7b3b91c775e7c1746eb24"
+        "sha256": "d8e2157ad20c6128eab3cd35b707835aa46ef5fb86e47dbe8d147f5b6b6d13bf"
       },
       {
         "sourcePath": "docs/zh/configuration.md",
-        "sha256": "9c8c39a989ae3d3f57d705728b39144229234d44191278ccdc21cf2d726c92dc"
+        "sha256": "922625e8470f9248e666339f3a42e0735318a5f063d14391c919a7bf2056fea3"
       },
       {
         "sourcePath": "docs/zh/features.md",
-        "sha256": "31274ef50cdb68bfbf6fa473baf3e06a73f475223864d3871ef366971b4bf88c"
+        "sha256": "c86cf912184e11c5a2ca231f6f2d3d06164fde3de1b45c4fdcc20eba2d94c2f1"
       },
       {
         "sourcePath": "docs/zh/getting-started.md",
-        "sha256": "6bf27b1ac2f1787b9dfa1fb8d0cca717a0f79e8de9bfb0a69b653b7a02d46eed"
+        "sha256": "235333445dbc8f095c1ae1282071608dd1199955a4525259f23a2274dfa19433"
+      },
+      {
+        "sourcePath": "docs/zh/guides/gui-hitl-dialog.md",
+        "sha256": "c74a7d6ae968f295d2cda708d358aa39b2eef4ed7b0756295de4cc557e093c7e"
+      },
+      {
+        "sourcePath": "docs/zh/guides/gui-task-runtime-panel.md",
+        "sha256": "c7f1a8ec7ff04b159ff60b4f2cfabcc3163ee1ea5bc782b173d04b8c80ec4939"
       },
       {
         "sourcePath": "docs/zh/operations/skill-sync.md",
@@ -2037,7 +2109,7 @@
       },
       {
         "sourcePath": "docs/zh/project-status.md",
-        "sha256": "e50153852667a52cf7d06083bcae2be22afd18970fa74532524edbe2f42f036a"
+        "sha256": "441c987cf69bf873f20c400e4b946c9b6f4acfac20451bd44171dd4667dee381"
       },
       {
         "sourcePath": "docs/zh/README.md",
@@ -2047,35 +2119,35 @@
     "files": [
       {
         "destination": "src/docs/content/eko/en/capabilities.md",
-        "sha256": "e094a245b78a779c974e126e74f46d27a53052db99051ee88bcb74c0de598f51"
+        "sha256": "f381904dfa2bccb6e0681a726a462a9e48d40d8bf77cae8f816f75832b7416c1"
       },
       {
         "destination": "src/docs/content/eko/en/getting-started.md",
-        "sha256": "01a7f3af10e49d8989f8f27ac927dea08dfeda33df7508c433c0b35e840691d5"
+        "sha256": "6ab6fa1a3a85f2c264747800956edb8325c2eef17b48384f9e3158b17a258a91"
       },
       {
         "destination": "src/docs/content/eko/en/overview.md",
-        "sha256": "2d5d917d73e813dc6d33df9510d6b53d6541310d9aa4215cf858807cbd30129b"
+        "sha256": "723d002210251add19c4228cdfb376fe9d627fa1116dbe5f92ccb5ae48043c0b"
       },
       {
         "destination": "src/docs/content/eko/en/storage.md",
-        "sha256": "2dc70de1411ee833a214ee0467009f86da133a22ddf5e0b83266b5139f80a863"
+        "sha256": "a24a98075dde7879533c3882e02ef8792689d051079562dff3df3cd1c3777c25"
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "0a87900bcce41beaae77a0effcd2b5a67ed6d7fd8166397a0035d4d419285e9c"
+        "sha256": "2cda715190d3b4d1edf91ec14c88ee36032e89c4898cf8140374766c75150e25"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
-        "sha256": "d554398ecb445c89538807e7af17fb66a7ec8bfeb7781b685efc73ce10b2e059"
+        "sha256": "07872bc4fd3b143b84c1d81984f76cc3b68f4e8babe857d1b2d6062eb49863d2"
       },
       {
         "destination": "src/docs/content/eko/zh/overview.md",
-        "sha256": "ec13832fc14eae11675656680bdf501aa4680b7e8b3f61444a6da0d80ff37656"
+        "sha256": "769ee8c464f34a76ac001f189836986f244df7cdc0afa2d404c3f516c633a643"
       },
       {
         "destination": "src/docs/content/eko/zh/storage.md",
-        "sha256": "752ee5036b341d1101686ce71cd1954f3c8bb91ca73771545e65ab1e34c22587"
+        "sha256": "3d54189f172e8bb9b3aa659289304fa469e89eb7a439b51290ace355b22b9fb9"
       }
     ]
   }
