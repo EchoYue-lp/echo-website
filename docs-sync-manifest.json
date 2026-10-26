@@ -1559,7 +1559,7 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "612050b42d31b55f6ce04c5b329b04d7114fee8b",
+    "reviewedRevision": "18779753b27448ee0752c0aeeac075cba30a0a27",
     "status": "reviewed-gui-product-boundaries",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "sourceFiles": [
@@ -2101,7 +2101,7 @@
       },
       {
         "sourcePath": "docs/zh/guides/gui-task-runtime-panel.md",
-        "sha256": "c7f1a8ec7ff04b159ff60b4f2cfabcc3163ee1ea5bc782b173d04b8c80ec4939"
+        "sha256": "5b3919ebfe7e4ce5fe767a03817efa58c7d79aa97cce051b58a4224d5372d3c2"
       },
       {
         "sourcePath": "docs/zh/operations/skill-sync.md",
