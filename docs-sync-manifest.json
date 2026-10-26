@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "51726454985fd6f064b21a7e9c539e22d494c987",
+    "revision": "f3c5af6443fff36dd7088dcb32a665b5fc173489",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -13,7 +13,7 @@
       {
         "sourcePath": "docs/en/02-tools.md",
         "destination": "src/docs/content/echo-agent/en/02-tools.md",
-        "sha256": "8a734b3ff494eccd88e60d8b92d5d3d11df061f7d15950d242f8576aa2811894"
+        "sha256": "a6e2359801d1856559889e96e83f4aa7dc3eab58a933e8d0c78ee43bee3b6547"
       },
       {
         "sourcePath": "docs/en/03-memory.md",
@@ -28,12 +28,12 @@
       {
         "sourcePath": "docs/en/05-human-loop.md",
         "destination": "src/docs/content/echo-agent/en/05-human-loop.md",
-        "sha256": "ada2d3eda7dd57dea5fdee831a64deb47801450fdb4131ff6e195b94a95df3e0"
+        "sha256": "0221759447ac41a13757ad3d65ad4b52062d8ea6cb3ef4e2f0b483fcb1b24d30"
       },
       {
         "sourcePath": "docs/en/06-subagent.md",
         "destination": "src/docs/content/echo-agent/en/06-subagent.md",
-        "sha256": "96b36f5f2dc6e488cd03d7d4df9eccce4484797fe969f5bdb4851a1f75918620"
+        "sha256": "4391139c4dd9a2309ad95f899c449edb17b9b51612eb9664076c620564cea06f"
       },
       {
         "sourcePath": "docs/en/07-skills.md",
@@ -53,7 +53,7 @@
       {
         "sourcePath": "docs/en/10-streaming.md",
         "destination": "src/docs/content/echo-agent/en/10-streaming.md",
-        "sha256": "74544dc3deebb0fd65285a4b1aa89ded0b7def87639ee506389a0054a171c9ae"
+        "sha256": "50bdfb909ff3bebfe876743a5acbc0ee8105a8bf93b5a46db471a00f0b4de664"
       },
       {
         "sourcePath": "docs/en/11-structured-output.md",
@@ -78,7 +78,7 @@
       {
         "sourcePath": "docs/en/15-im-channels.md",
         "destination": "src/docs/content/echo-agent/en/15-im-channels.md",
-        "sha256": "88c805180d91b50889d3c17210e6283bb12416b3b85527b210e6737dc12c0732"
+        "sha256": "d1d18871b5f94f54141209f669029cbfaffea36e9b6d11adf95f0a727ab145c1"
       },
       {
         "sourcePath": "docs/en/17-graph-workflow.md",
@@ -108,7 +108,7 @@
       {
         "sourcePath": "docs/en/23-hooks.md",
         "destination": "src/docs/content/echo-agent/en/23-hooks.md",
-        "sha256": "80952d270b1373133872fc92c188829589a2f7bd9303f149957016f45f247342"
+        "sha256": "47d564336f79af61cfcb2ad495468891ab479794999961f00560270c1ac44db8"
       },
       {
         "sourcePath": "docs/en/24-eval-system.md",
@@ -138,7 +138,7 @@
       {
         "sourcePath": "docs/en/29-long-running-tasks.md",
         "destination": "src/docs/content/echo-agent/en/29-long-running-tasks.md",
-        "sha256": "abc3a64e66ddcb9036ebdf52e348486254f0c37d8fb9fa522e8f3cdfccd440b1"
+        "sha256": "cc5310b60f849b2e0c6702540f01032dd48bf1003b4585597ef9101e43433a5e"
       },
       {
         "sourcePath": "docs/en/30-react-safety.md",
@@ -153,7 +153,7 @@
       {
         "sourcePath": "docs/en/32-plugin-system.md",
         "destination": "src/docs/content/echo-agent/en/32-plugin-system.md",
-        "sha256": "b14b298bb47f1f533b50119404393caffc117d9600de301c5ef4ac43f5b5d003"
+        "sha256": "0a6d61d0298c500f36ee5b15bcf39a727e57f3d63b3ad11d52470735a5351f29"
       },
       {
         "sourcePath": "docs/en/33-headless-mode.md",
@@ -233,7 +233,7 @@
       {
         "sourcePath": "docs/adr/0003-tracked-steer-lifecycle.md",
         "destination": "src/docs/content/echo-agent/en/adr/0003-tracked-steer-lifecycle.md",
-        "sha256": "6446632f4792360b0411400ca82f15f5a4aa385129a655524e7d976e3984da4e"
+        "sha256": "a85523c0d7488e359cf1a150cf1f58daadd89b34c971b9da0faa81ebf94a6d73"
       },
       {
         "sourcePath": "docs/adr/0004-async-file-store-ownership.md",
@@ -628,7 +628,7 @@
       {
         "sourcePath": "docs/adr/0081-token-budgeted-compression-tail.md",
         "destination": "src/docs/content/echo-agent/en/adr/0081-token-budgeted-compression-tail.md",
-        "sha256": "552ee016cae0af06765dd56e24c2506e2f25402f42141fb1cdf7e8f20ee21497"
+        "sha256": "557247dc92c580911603460da980df5882c5b1abb1939f47598717df03270daf"
       },
       {
         "sourcePath": "docs/adr/0082-lsp-response-value-fidelity.md",
@@ -669,6 +669,56 @@
         "sourcePath": "docs/adr/0089-non-yanked-media-dependencies.md",
         "destination": "src/docs/content/echo-agent/en/adr/0089-non-yanked-media-dependencies.md",
         "sha256": "60135861fcb9120af4c2828e8474b83b7e871966023dd3fc63dc40a8a052dd0c"
+      },
+      {
+        "sourcePath": "docs/adr/0090-a2a-lsp-retirement-contract.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0090-a2a-lsp-retirement-contract.md",
+        "sha256": "9ff9105757c1dadb1751f0a5ac4cc88619aad1e38a9a13a8ca42d2ec3cbead32"
+      },
+      {
+        "sourcePath": "docs/adr/0091-explicit-hook-approval-intent.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0091-explicit-hook-approval-intent.md",
+        "sha256": "f6d46c6986b987fe9648ddc797bcac10e9dcb20450eb5e35cd782bc3481d4c9e"
+      },
+      {
+        "sourcePath": "docs/adr/0092-channel-control-observations.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0092-channel-control-observations.md",
+        "sha256": "2d8c5018a8c49d3dc91c6022a15dfa349e81cb43bffffd5a4a2608df57ba6728"
+      },
+      {
+        "sourcePath": "docs/adr/0093-cron-management-receipts.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0093-cron-management-receipts.md",
+        "sha256": "17485237cfbe2aef326ea8341493bf6f989c613f2271e8a55235a9ffccbbc526"
+      },
+      {
+        "sourcePath": "docs/adr/0094-subagent-tool-boundary-inheritance.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0094-subagent-tool-boundary-inheritance.md",
+        "sha256": "3c740cbf6d757a9c144d11ac66b25647a8452cb60cd3ac84a3f0d7bf2d9c2745"
+      },
+      {
+        "sourcePath": "docs/adr/0095-structured-tool-remote-failures.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0095-structured-tool-remote-failures.md",
+        "sha256": "ab5a1bc33fc18a48a14930b37a9e942cf904486c43cdc74a2f4a95723ad04750"
+      },
+      {
+        "sourcePath": "docs/adr/0096-selective-prepared-plugin-identity.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0096-selective-prepared-plugin-identity.md",
+        "sha256": "f63c1c23dbf7ab2cb3fbc2e23abb0d3c8cf40b7baecd6bf33937c1298ec4cf9a"
+      },
+      {
+        "sourcePath": "docs/adr/0097-subagent-registration-admission.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0097-subagent-registration-admission.md",
+        "sha256": "5c01b4e7f0759e6e3a4fa6564ed406e2abc9abf115418cbb9b7e746b510b2cdb"
+      },
+      {
+        "sourcePath": "docs/adr/0098-project-file-system-adapter.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0098-project-file-system-adapter.md",
+        "sha256": "6cbdfbaf6ee2c61bf97fb7125700073d3c62a2b00c9f787a8e4aa30bf5939e5e"
+      },
+      {
+        "sourcePath": "docs/adr/0099-personal-weixin-channel.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0099-personal-weixin-channel.md",
+        "sha256": "f06a386c59882f96a1311764e3e05531a9eda2c6fe79ec33eb9811a29ee5fddd"
       },
       {
         "sourcePath": "docs/en/architecture.md",
@@ -738,7 +788,7 @@
       {
         "sourcePath": "docs/zh/02-tools.md",
         "destination": "src/docs/content/echo-agent/zh/02-tools.md",
-        "sha256": "cdd6b3eb54186205683159faf54ba0b3b830ef883dfb72e1eaa902972724719d"
+        "sha256": "f87a79ac10d366960854d84bb093ec37a90d1e812fd5d456d8c27474e3748531"
       },
       {
         "sourcePath": "docs/zh/03-memory.md",
@@ -748,17 +798,17 @@
       {
         "sourcePath": "docs/zh/04-compression.md",
         "destination": "src/docs/content/echo-agent/zh/04-compression.md",
-        "sha256": "49315755e968eadcd1424a3cfa0c2e5815d5aabbf584f002a759902f3edc15e4"
+        "sha256": "a3d91c94d51cb2af43c711d012084d19acfe87286ed2083a01e2e7019a60a4b2"
       },
       {
         "sourcePath": "docs/zh/05-human-loop.md",
         "destination": "src/docs/content/echo-agent/zh/05-human-loop.md",
-        "sha256": "150dd16573aeebc5bf31e123c436155b8124d1dc180c3ea8e9c5ee6b5fe2d5c6"
+        "sha256": "3350e3b3e826e4e35a7aaf17a1bdab19dfd6908e34aa1181fa0cb261b1d28bd0"
       },
       {
         "sourcePath": "docs/zh/06-subagent.md",
         "destination": "src/docs/content/echo-agent/zh/06-subagent.md",
-        "sha256": "82bf1af7d7a22458b66d174b007b22a2bc37cfc83f1186dfc8eadb8d01e3a167"
+        "sha256": "8e455df56462aad5c7b7d19ff8f3a49b0f39aa98158d5e3165939b02c8fff77b"
       },
       {
         "sourcePath": "docs/zh/07-skills.md",
@@ -778,7 +828,7 @@
       {
         "sourcePath": "docs/zh/10-streaming.md",
         "destination": "src/docs/content/echo-agent/zh/10-streaming.md",
-        "sha256": "baf406fdfa238997cf6b8ed4014752f46c5d3f0fd217eb335f4a6877d8d34fa4"
+        "sha256": "83995c7dea21d9f0728b59f07a28bd49b1607205294b2dcd72660e700fcdb1c3"
       },
       {
         "sourcePath": "docs/zh/11-structured-output.md",
@@ -803,7 +853,7 @@
       {
         "sourcePath": "docs/zh/15-im-channels.md",
         "destination": "src/docs/content/echo-agent/zh/15-im-channels.md",
-        "sha256": "65ba5df9a2bc9076a3d518b26076b3ddaa9f50d8fed477352bbf3d0e3952f0bb"
+        "sha256": "fa6dd351d72c758dec9ebfad27a6d2df33aea93f4a5b8b69ad9e59c215237f97"
       },
       {
         "sourcePath": "docs/zh/17-graph-workflow.md",
@@ -833,7 +883,7 @@
       {
         "sourcePath": "docs/zh/23-hooks.md",
         "destination": "src/docs/content/echo-agent/zh/23-hooks.md",
-        "sha256": "05f371211d48d18f00448505f3d461b02c6e2f20dc991ba65467ecce593de5a0"
+        "sha256": "9759ebad66529253193c30a535e5aa29e5f9f23db89f8463c4738c5e1a53f097"
       },
       {
         "sourcePath": "docs/zh/24-eval-system.md",
@@ -863,7 +913,7 @@
       {
         "sourcePath": "docs/zh/29-long-running-tasks.md",
         "destination": "src/docs/content/echo-agent/zh/29-long-running-tasks.md",
-        "sha256": "3fcd2669338f3590a354e1f7d9b180f3bee964bd5f73566127363b6d9cbbf4c8"
+        "sha256": "bfdc1f88418ac4acb22dfada3d63c39cd6f778e6cf08cd03bbe50a150e2be4e9"
       },
       {
         "sourcePath": "docs/zh/30-react-safety.md",
@@ -878,7 +928,7 @@
       {
         "sourcePath": "docs/zh/32-plugin-system.md",
         "destination": "src/docs/content/echo-agent/zh/32-plugin-system.md",
-        "sha256": "b7c37b8bef56e07ec59e9733a8610cb73121bb47582cffce64d087d81fe5e33a"
+        "sha256": "85ab0e21b5c838fa50f9f9aea64fd5bd5964d671b40cadca2a6b16f8fbb69ac5"
       },
       {
         "sourcePath": "docs/zh/33-headless-mode.md",
@@ -958,7 +1008,7 @@
       {
         "sourcePath": "docs/adr/0003-tracked-steer-lifecycle.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0003-tracked-steer-lifecycle.md",
-        "sha256": "6446632f4792360b0411400ca82f15f5a4aa385129a655524e7d976e3984da4e"
+        "sha256": "a85523c0d7488e359cf1a150cf1f58daadd89b34c971b9da0faa81ebf94a6d73"
       },
       {
         "sourcePath": "docs/adr/0004-async-file-store-ownership.md",
@@ -1353,7 +1403,7 @@
       {
         "sourcePath": "docs/adr/0081-token-budgeted-compression-tail.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0081-token-budgeted-compression-tail.md",
-        "sha256": "552ee016cae0af06765dd56e24c2506e2f25402f42141fb1cdf7e8f20ee21497"
+        "sha256": "557247dc92c580911603460da980df5882c5b1abb1939f47598717df03270daf"
       },
       {
         "sourcePath": "docs/adr/0082-lsp-response-value-fidelity.md",
@@ -1394,6 +1444,56 @@
         "sourcePath": "docs/adr/0089-non-yanked-media-dependencies.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0089-non-yanked-media-dependencies.md",
         "sha256": "60135861fcb9120af4c2828e8474b83b7e871966023dd3fc63dc40a8a052dd0c"
+      },
+      {
+        "sourcePath": "docs/adr/0090-a2a-lsp-retirement-contract.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0090-a2a-lsp-retirement-contract.md",
+        "sha256": "9ff9105757c1dadb1751f0a5ac4cc88619aad1e38a9a13a8ca42d2ec3cbead32"
+      },
+      {
+        "sourcePath": "docs/adr/0091-explicit-hook-approval-intent.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0091-explicit-hook-approval-intent.md",
+        "sha256": "f6d46c6986b987fe9648ddc797bcac10e9dcb20450eb5e35cd782bc3481d4c9e"
+      },
+      {
+        "sourcePath": "docs/adr/0092-channel-control-observations.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0092-channel-control-observations.md",
+        "sha256": "2d8c5018a8c49d3dc91c6022a15dfa349e81cb43bffffd5a4a2608df57ba6728"
+      },
+      {
+        "sourcePath": "docs/adr/0093-cron-management-receipts.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0093-cron-management-receipts.md",
+        "sha256": "17485237cfbe2aef326ea8341493bf6f989c613f2271e8a55235a9ffccbbc526"
+      },
+      {
+        "sourcePath": "docs/adr/0094-subagent-tool-boundary-inheritance.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0094-subagent-tool-boundary-inheritance.md",
+        "sha256": "3c740cbf6d757a9c144d11ac66b25647a8452cb60cd3ac84a3f0d7bf2d9c2745"
+      },
+      {
+        "sourcePath": "docs/adr/0095-structured-tool-remote-failures.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0095-structured-tool-remote-failures.md",
+        "sha256": "ab5a1bc33fc18a48a14930b37a9e942cf904486c43cdc74a2f4a95723ad04750"
+      },
+      {
+        "sourcePath": "docs/adr/0096-selective-prepared-plugin-identity.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0096-selective-prepared-plugin-identity.md",
+        "sha256": "f63c1c23dbf7ab2cb3fbc2e23abb0d3c8cf40b7baecd6bf33937c1298ec4cf9a"
+      },
+      {
+        "sourcePath": "docs/adr/0097-subagent-registration-admission.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0097-subagent-registration-admission.md",
+        "sha256": "5c01b4e7f0759e6e3a4fa6564ed406e2abc9abf115418cbb9b7e746b510b2cdb"
+      },
+      {
+        "sourcePath": "docs/adr/0098-project-file-system-adapter.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0098-project-file-system-adapter.md",
+        "sha256": "6cbdfbaf6ee2c61bf97fb7125700073d3c62a2b00c9f787a8e4aa30bf5939e5e"
+      },
+      {
+        "sourcePath": "docs/adr/0099-personal-weixin-channel.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0099-personal-weixin-channel.md",
+        "sha256": "f06a386c59882f96a1311764e3e05531a9eda2c6fe79ec33eb9811a29ee5fddd"
       },
       {
         "sourcePath": "docs/zh/architecture.md",

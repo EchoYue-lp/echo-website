@@ -231,6 +231,35 @@ tokens or transcript timing. Hook blocks settle as `Failed`. If the lifecycle
 signal closes abnormally, all receipt clones converge on `Dropped` while
 preserving the last known drain fact.
 
+### Steering before unstarted tools
+
+The shared streaming/non-streaming ReAct loop checks the original mailbox when
+the model returns a tool proposal, and before admitting each existing tool
+execution wave. A correction accepted before the check returns to the model
+before that unstarted work runs. This uses the same turn ID and private
+incarnation as the tracked receipt.
+
+An unpublished tool proposal is discarded without inventing tool results. If
+the assistant's call IDs are already in the transcript, every remaining
+unstarted call receives an explicit not-executed result with no side effects,
+and all call/result pairs are closed before the correction enters context and
+becomes `Drained`. Earlier physical results remain available to the model;
+earlier final-answer candidates are reconsidered.
+
+An admitted wave keeps its original execution futures, parallel peers, results,
+stream readers and resources until actual settlement. Steering received after
+that wave's check waits for the next unstarted boundary. It does not interrupt
+an active model/tool, answer HITL or request Stop. Explicit Stop and timeout
+continue to use their original cancellation and physical-settlement paths;
+uncertain effects are never automatically replayed.
+
+These earlier checks are the behavior selected by this framework. The reviewed
+official Pi loop polls steering after a whole tool batch; it is not evidence of
+a per-tool steering guarantee. See [ADR 0003](../adr/0003-tracked-steer-lifecycle.md)
+for the decision and source comparison. Product draft acknowledgment and durable
+ingress remain application responsibilities; `Accepted` and `Drained` do not
+replace those product facts.
+
 ### Tracked initial input
 
 For a cold turn, call `TurnRequest::with_input_receipt()` before passing the
@@ -315,18 +344,22 @@ flow through the existing retry policy.
 
 ### Tool Output Spill and Truncation
 
-All tool results pass through one output-budget stage. Outputs of at least 1 MiB are
-written to a managed spill file before token truncation, and the model receives a
-preview plus the exact path for `read_file`. Spill is active even when
-`max_tool_output_tokens` is not configured.
+ReAct tool results pass through one output-budget stage. With artifact storage enabled,
+outputs at its configured byte threshold (1 MiB by default), or above the configured
+`max_tool_output_tokens`, are persisted before truncation. The model receives a preview
+and the exact artifact path and SHA-256 for bounded `read_artifact` pages. Byte-threshold
+spill remains active when `max_tool_output_tokens` is not configured.
 
-When a working directory is configured, spill files live under
-`<working_dir>/.echo-agent/spill` so the confined file tools can read them. Without a
-working directory, echo-agent falls back to the system temporary directory. Files older
-than one hour are removed on a best-effort basis when a new spill is created.
+`tool_output_artifacts` owns the artifact root and retention policy. The framework default
+uses the system temporary directory under `echo_agent_artifacts/tool-logs`, with a
+one-hour maximum age; applications can supply their own managed root and retention.
+Passing `None` disables artifact persistence. Working directory alone is not an artifact
+root or a complete-output reading authority.
 
-Smaller output that exceeds `max_tool_output_tokens` uses a UTF-8-safe head+tail view
-with a 70/30 character allocation:
+When persistence is disabled or fails, oversized output uses a UTF-8-safe head+tail view
+with a 70/30 allocation of retained characters. The existing `HeuristicTokenizer` counts
+the entire rendered text, including the truncation notice; mixed ASCII/CJK/emoji output
+stays within the same estimated-token cap:
 
 ```
 Full output:    [────────────────────────────────────────] 10KB
@@ -334,7 +367,10 @@ After truncate: [────── head (70%) ──────][── tail (
                                       ↑ middle omitted
 ```
 
-If spill creation fails, echo-agent applies a conservative fallback token budget instead
-of returning the full oversized result to the model. `ToolResult.truncated` and metadata
-record output handling, while a successful spill is carried by the typed
-`ToolResult.artifact` descriptor.
+Small budgets use a shorter notice or an ellipsis; a zero-token cap returns empty model
+text while `ToolResult.truncated` and metadata still record the truncation. This is an
+estimated-token bound, not a provider billing-token guarantee. If spill creation fails
+without an explicit token cap, the existing 8,000-token fallback applies. Failed spill
+does not create a recoverable artifact: the omitted content is unavailable through
+`read_artifact`. A successful spill is carried by the typed `ToolResult.artifact`
+descriptor; consumers must not reconstruct it from display text or metadata.

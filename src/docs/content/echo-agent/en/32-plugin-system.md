@@ -129,6 +129,33 @@ The remaining components are discovered from fixed root locations:
 
 `scripts/` and `README.md` are package resources rather than automatically executed components. Skills and Hooks may reference scripts explicitly.
 
+## Frozen build-capability diagnostics
+
+When this build does not enable `lsp`, a successfully frozen `lsp.yaml`
+produces a generic preparation Warning with `component() == "lsp"`, the
+plugin ID and source path. This reports the build capability boundary, not an
+application retirement policy or proof that the text is valid LSP YAML.
+Variable substitution, frozen document content and its existing hash remain
+owned by preparation.
+
+Invalid UTF-8 and read failures retain Error severity. Wrong filesystem kinds,
+metadata failures and broken/looping symlinks also receive structured LSP/path
+diagnostics; true absence stays optional. Non-regular inputs are classified
+without reading them, so a FIFO is not opened as a text file. Component errors
+do not discard healthy Skill/Hook/MCP siblings or poison the entire generation.
+
+Read the complete `PreparedPluginSet::diagnostics()` collection, not only the
+Warning projection in an apply receipt. The diagnostics are frozen with that
+set's identity/generation. Cache hits return the same Arc without probing or
+appending again; changed files are captured only after invalidation. Applying
+or rolling back a prepared set still performs no package reads.
+
+Enabling `lsp` keeps the prior behavior. This intermediate diagnostic bridge
+adds no public API and does not remove framework LSP implementation or change
+SDK acceptance/pinning. Applications can map generic component diagnostics to
+their own product messages without calling LSP-specific document accessors or
+rereading files. See [ADR 0090](../adr/0090-a2a-lsp-retirement-contract.md).
+
 ## Framework and application boundary
 
 The reusable framework owns manifest parsing, Skills, MCP, plugin scopes/lifecycle, Hooks, Subagent definitions, and LSP adapter output. An embedding application discovers and converts only its product-specific `monitors.yaml`, `themes/`, and `output-styles/` files. The application integration does not duplicate dependency ordering, component ownership, or reload semantics.
@@ -153,6 +180,38 @@ Subagent/LSP documents. `wire_prepared` and rollback perform no component file r
 become visible only after registry mutation or explicit invalidation. See [ADR 0012](../adr/0012-immutable-plugin-preparation.md).
 Generation ordinals are allocated across all integrators in the process, so independent integrators
 can publish successive snapshots to the same Agent without resetting their order.
+
+### Selective prepared identities
+
+`PreparedPlugin::content_identity() -> &str` returns a SHA-256 for that plugin's
+same-prepare manifest (including its real optional version and dependencies), effective
+configuration/variables, discovered Skill identity documents, Hook/MCP declarations and frozen
+Subagent documents. Object keys and manifest dependency order are canonicalized; relative
+component paths and contents participate. Repreparation and process-local generation counters
+do not change this identity when the inputs are equal. An absent version remains absent: the
+digest is neither a fabricated version nor `latest`.
+
+`PreparedPluginSet::dependency_closure(id) -> Result<Vec<&PreparedPlugin>, String>` returns the
+enabled root and its transitive dependencies in stable dependency-first order. It selects only
+from that immutable applicable set. Original registry preparation still rejects missing or
+disabled dependencies, unsatisfied/invalid version constraints and cycles. An inapplicable set
+or a root not prepared in that set returns an error. Changing an unrelated plugin does not
+change the selected members' identities; changing a necessary dependency does. Inspecting an
+old set does not grant permission to publish it or keep its external resources alive.
+
+The complete `PreparedPluginSet::identity()` remains the aggregate identity for publication,
+not a substitute for this selected closure. Its encoding now aggregates the canonical plugin
+identities; previous hash strings are not a cross-release compatibility promise. Generation,
+publication targets, rollback receipts, cancellation and cleanup ownership are unchanged.
+
+The identity covers the inputs actually frozen by the framework, not an entire package:
+discovered `SKILL.md` identity documents do not freeze every `scripts/` or `references/` file;
+Hook commands and MCP connection declarations do not freeze external implementations or
+services. Product-specific declarations and inputs remain the embedding application's
+responsibility. See [ADR 0096](../adr/0096-selective-prepared-plugin-identity.md).
+The existing `demo56_plugin_system` example selects the actual prepared closure before using
+the same integrator for real coordinator publication. It remains in the workspace examples
+compile/test chain; no separate demonstration target or dependency is added.
 
 Each `ReactAgent` still owns one publication target, but hosts drive complete lifecycle
 transitions through `PluginCoordinator`. Construct it with the durable registry and integrator,

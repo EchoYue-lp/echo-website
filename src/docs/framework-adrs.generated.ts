@@ -721,4 +721,84 @@ export const frameworkAdrDocs = [
     },
     filePath: './content/echo-agent/adr/0089-non-yanked-media-dependencies.md',
   },
+  {
+    slug: 'adr-0090-a2a-lsp-retirement-contract',
+    title: {
+      zh: 'ADR 0090: Retire only A2A and LSP after consumers remove their dependencies',
+      en: 'ADR 0090: Retire only A2A and LSP after consumers remove their dependencies',
+    },
+    filePath: './content/echo-agent/adr/0090-a2a-lsp-retirement-contract.md',
+  },
+  {
+    slug: 'adr-0091-explicit-hook-approval-intent',
+    title: {
+      zh: 'ADR 0091: Preserve explicit hook approval intent through the shared service',
+      en: 'ADR 0091: Preserve explicit hook approval intent through the shared service',
+    },
+    filePath: './content/echo-agent/adr/0091-explicit-hook-approval-intent.md',
+  },
+  {
+    slug: 'adr-0092-channel-control-observations',
+    title: {
+      zh: 'ADR 0092: Observe original channel transports and replace only settled adapters',
+      en: 'ADR 0092: Observe original channel transports and replace only settled adapters',
+    },
+    filePath: './content/echo-agent/adr/0092-channel-control-observations.md',
+  },
+  {
+    slug: 'adr-0093-cron-management-receipts',
+    title: {
+      zh: 'ADR 0093: Cron definition edits and original occurrence observations',
+      en: 'ADR 0093: Cron definition edits and original occurrence observations',
+    },
+    filePath: './content/echo-agent/adr/0093-cron-management-receipts.md',
+  },
+  {
+    slug: 'adr-0094-subagent-tool-boundary-inheritance',
+    title: {
+      zh: 'ADR 0094: Invocation Tool Scope Across Subagent Dispatch',
+      en: 'ADR 0094: Invocation Tool Scope Across Subagent Dispatch',
+    },
+    filePath: './content/echo-agent/adr/0094-subagent-tool-boundary-inheritance.md',
+  },
+  {
+    slug: 'adr-0095-structured-tool-remote-failures',
+    title: {
+      zh: 'ADR 0095: Structured remote Tool failures',
+      en: 'ADR 0095: Structured remote Tool failures',
+    },
+    filePath: './content/echo-agent/adr/0095-structured-tool-remote-failures.md',
+  },
+  {
+    slug: 'adr-0096-selective-prepared-plugin-identity',
+    title: {
+      zh: 'ADR 0096: Selective prepared plugin content identities',
+      en: 'ADR 0096: Selective prepared plugin content identities',
+    },
+    filePath: './content/echo-agent/adr/0096-selective-prepared-plugin-identity.md',
+  },
+  {
+    slug: 'adr-0097-subagent-registration-admission',
+    title: {
+      zh: 'ADR 0097: Admit and Consume One Subagent Registration',
+      en: 'ADR 0097: Admit and Consume One Subagent Registration',
+    },
+    filePath: './content/echo-agent/adr/0097-subagent-registration-admission.md',
+  },
+  {
+    slug: 'adr-0098-project-file-system-adapter',
+    title: {
+      zh: 'ADR 0098: Location-bound file I/O and execution resources',
+      en: 'ADR 0098: Location-bound file I/O and execution resources',
+    },
+    filePath: './content/echo-agent/adr/0098-project-file-system-adapter.md',
+  },
+  {
+    slug: 'adr-0099-personal-weixin-channel',
+    title: {
+      zh: 'ADR 0099: Personal Weixin protocol and durable no-stream admission',
+      en: 'ADR 0099: Personal Weixin protocol and durable no-stream admission',
+    },
+    filePath: './content/echo-agent/adr/0099-personal-weixin-channel.md',
+  },
 ];

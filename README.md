@@ -66,6 +66,16 @@ explicitly.
 Framework synchronization preserves the existing application projection metadata. Pass
 `--application-revision <sha>` only when advancing the independently reviewed EKO projection.
 
+框架文档的同步和带来源检查共用同一份固定 HEAD 文档集合：从 Git 树枚举受控 Markdown，保留原双语
+配对规则，并逐份核对选定 blob 与工作区字节。被忽略或未提交的候选不属于该修订的发布来源；
+清单漏掉受控文档、混入树外文件或来源 HEAD 漂移都会失败。站点自身的全部 Markdown 仍须纳入
+manifest 检查，不能通过同时删掉清单项和镜像文件掩盖遗漏。
+
+未传 `--application-revision` 时，仅同步框架，完整保留既有 EKO 投影对象（包含原审查修订、
+状态、权威、`sourceFiles` 和投影文件摘要），不读取当前 EKO 工作区来更新旧资格。可单独执行
+`node scripts/sync-docs.mjs --check --framework-root ../echo-agent` 检查框架来源；包含
+`--application-root` 的检查仍要求 EKO 真实来源与既有审查修订一致，不代表重新审查过产品页。
+
 The concise EKO pages are code-audited website projections reviewed against the application
 revision recorded in the manifest. They are marked `reviewed-application-source-projection`;
 the application repository remains authoritative and any later source change requires a new review.

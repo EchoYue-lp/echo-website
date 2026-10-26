@@ -125,6 +125,16 @@ Integrator 注入 prepared plugin owner。
 
 `scripts/` 和 `README.md` 是插件资源，不会自动执行；Skill 或 Hook 可以显式引用脚本。
 
+## 冻结的构建能力诊断
+
+当前 build 未启用 `lsp` 时，成功冻结的 `lsp.yaml` 会产生通用 preparation Warning，携带 `component() == "lsp"`、插件身份和来源路径。这只说明构建能力边界，不是应用退役政策，也不证明文本是有效 LSP YAML；变量替换、冻结文本和原有 hash 仍由 prepare 拥有。
+
+Invalid UTF-8 与读失败保留 Error。错误文件种类、metadata 失败、失效/循环链接也产生带 LSP 组件与路径的结构化诊断；真实缺失仍是合法 optional 状态。非普通文件只分类、不读取，避免将 FIFO 作为文本打开。组件 Error 不丢弃健康 Skill/Hook/MCP，也不使整代准备结果失效。
+
+应用须读取完整 `PreparedPluginSet::diagnostics()`，不能只消费 apply receipt 的 Warning 投影。诊断随同一 identity/generation 冻结；cache hit 返回同一 Arc，不重新探测或追加重复项，文件变化只在 invalidate 后重捕获。wire/rollback 仍不读取包文件。
+
+启用 `lsp` 时保持原行为。此中间桥接不新增 public API、不物理删除框架 LSP，也不改 SDK accepted/pin。应用可将通用组件诊断映射为自己的产品说明，无需调用 LSP 专属文档 accessor 或重新读取文件。见 [ADR 0090](../adr/0090-a2a-lsp-retirement-contract.md)。
+
 ## 框架与应用分层
 
 通用框架负责清单解析、Skills、MCP、作用域与生命周期、Hooks、Subagent 定义和 LSP 适配输出。embedding application 只发现并转换产品专属的 `monitors.yaml`、`themes/` 和 `output-styles/`；应用 integration 不重复拥有依赖排序、组件所有权或重载语义。
@@ -149,6 +159,30 @@ Integrator 注入 prepared plugin owner。
 后可见。见 [ADR 0012](../adr/0012-immutable-plugin-preparation.md)。
 generation 序号在同一进程的所有 Integrator 间统一分配，因此两个独立 Integrator 为同一 Agent
 准备的新旧快照仍有可比较的顺序。
+
+### 选择性 prepared 内容身份
+
+`PreparedPlugin::content_identity() -> &str` 返回该插件同次 prepare 输入的 SHA-256，覆盖
+manifest（真实可选 version 与依赖）、有效配置/变量、已发现 Skill 身份文档、Hook/MCP
+声明及冻结的 Subagent 文档。对象键和 manifest 依赖顺序规范化，相对来源路径与内容共同
+参与摘要。同输入重准备或进程内 generation 变化不改变内容身份；未声明 version 继续保持
+None，摘要不冒充版本号或 latest。
+
+`PreparedPluginSet::dependency_closure(id) -> Result<Vec<&PreparedPlugin>, String>` 从本次
+不可变且适用的 Set 选择已启用的根及传递依赖，按稳定的依赖优先顺序返回。缺失/禁用依赖、
+不满足或非法版本条件、环仍由原 registry 在 prepare 时检查；Set 不适用或根未准备时明确
+返回错误。无关插件改变不改变所选成员的内容身份，必要依赖改变会改变对应成员身份。
+读取旧 Set 的闭包不授予发布旧代或继续持有外部资源的资格。
+
+完整 `PreparedPluginSet::identity()` 继续为整批 publication 提供聚合身份，不能代替某任务
+选择的闭包。本次编码改为聚合规范化的单插件身份，不承诺历史摘要字符串跨版本兼容；
+generation、publication target、rollback receipt、取消和清理 owner 的职责均不改变。
+
+摘要只覆盖框架实际冻结的输入，不是完整包归档：已发现 SKILL.md 身份文档不等于整个
+scripts/references 目录；Hook 命令、MCP 连接声明不固定外部实现或服务。产品声明与显式输入
+仍由 embedding application 承接。见 [ADR 0096](../adr/0096-selective-prepared-plugin-identity.md)。
+既有 `demo56_plugin_system` 已在实际 prepared 产物上选择闭包，再以同一 integrator 进入
+coordinator publication，继续纳入 workspace examples 的编译/测试链，不新增演示目标或依赖。
 
 每个 `ReactAgent` 仍拥有唯一 publication target，但 Host 通过 `PluginCoordinator` 驱动完整
 生命周期。用 durable registry 与 integrator 构造 coordinator 后，调用

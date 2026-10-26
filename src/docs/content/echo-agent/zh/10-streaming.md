@@ -229,6 +229,28 @@ let _terminal = receipt.wait_for_turn_settled().await;
 信号异常关闭时，所有 receipt clone 会收敛为 `Dropped`，同时保留最后确认的 drain
 事实。
 
+### 未启动工具之前的纠正
+
+流式与非流式共享的 ReAct 循环会在模型返回工具提议后，以及原有每个工具执行波次
+获准启动前检查同一 mailbox。在检查前已经接收的纠正会先交给原模型重新考虑，
+该批尚未启动的操作不会继续执行。检查与 tracked receipt 使用相同的 turn ID 和
+私有 incarnation，不按当前界面焦点寻找目标。
+
+尚未写入 transcript 的工具提议直接丢弃，不凭空生成工具结果。如果 assistant 的
+call ID 已经写入 transcript，则为余下每个未启动调用写入明确的“未执行、无副作用”
+结果；所有 call/result 配对闭合后，纠正才进入原上下文并变为 `Drained`。此前真实
+完成的结果仍供模型参考，此前的最终答案候选则需要重新考虑。
+
+已经获准启动的波次继续持有原执行 future、并行调用、结果、stream reader 和资源，
+直到真实结算。波次检查后才收到的 Steer 等到下一未启动边界处理，不抢占活动模型
+或工具，不回答 HITL，也不代表 Stop。显式 Stop、超时继续沿原取消与物理结算路径
+处理，不自动重放效果未知的操作。
+
+这些提前检查是本框架选定的响应性增强。已核对的 Pi 官方循环在整批工具完成后
+才消费 Steer，不能据此声称其已有逐工具纠正保证。取舍和参考见
+[ADR 0003](../adr/0003-tracked-steer-lifecycle.md)。草稿确认和持久输入仍由应用
+负责，`Accepted`、`Drained` 不替代这些产品事实。
+
 ### 可跟踪的初始输入
 
 冷启动 turn 应在把请求交给 `AgentTurnDriver` 前调用
@@ -304,16 +326,19 @@ network error 进入既有 retry policy。
 
 ### 工具输出落盘与截断
 
-所有工具结果统一经过输出预算阶段。达到 1 MiB 的输出会先写入受管 spill 文件，
-模型只接收预览、完整文件路径和 `read_file` 回读提示。即使没有配置
-`max_tool_output_tokens`，超大输出仍会落盘。
+ReAct 工具结果统一经过输出预算阶段。启用 artifact 存储时，达到配置的字节阈值
+（框架默认 1 MiB）或超过 `max_tool_output_tokens` 的输出会先持久化。模型只接收预览、
+精确 artifact 路径、SHA-256 和 `read_artifact` 分页读取提示。即使没有配置
+`max_tool_output_tokens`，按字节阈值触发的 spill 仍然生效。
 
-配置 working directory 时，spill 文件写到
-`<working_dir>/.echo-agent/spill`，确保受工作目录约束的文件工具可以回读；未配置时
-回退系统临时目录。每次创建新 spill 时会尽力清理一小时前的旧文件。
+artifact 根目录和保留策略由 `tool_output_artifacts` 配置拥有。框架默认使用系统
+临时目录下的 `echo_agent_artifacts/tool-logs`，最大保留一小时；应用可以提供自己的
+受管根和保留策略。传入 `None` 禁用 artifact 持久化；仅配置 working directory
+不会将它变成 artifact 根或完整输出的读取权威。
 
-未达到 spill 阈值但超过 `max_tool_output_tokens` 的结果使用 UTF-8 安全的 head+tail
-视图，按 70/30 分配保留字符：
+持久化禁用或失败时，超预算输出使用 UTF-8 安全的 head+tail 视图，按 70/30 分配
+保留字符。原 `HeuristicTokenizer` 对“头部＋截断通知＋尾部”整体计数，ASCII、中文、
+emoji 混合输出也不能超过同一个 estimated-token 上限：
 
 ```
 完整输出: [────────────────────────────────────────] 10KB
@@ -321,6 +346,9 @@ network error 进入既有 retry policy。
                               ↑ 省略中间部分
 ```
 
-spill 创建失败时，框架使用保守的 fallback token 预算截断，不会把完整超大结果直接
-塞回模型。`ToolResult.truncated` 和 metadata 记录输出处理方式；spill 成功时，完整引用由
-类型化的 `ToolResult.artifact` descriptor 承载。
+预算很小时使用短通知或省略号；零 token 预算返回空的模型文本，但仍通过
+`ToolResult.truncated` 和 metadata 记录截断。这是估算 token 上限，不是 provider
+计费 token 保证。spill 失败且没有显式 token 配置时，继续采用既有的 8,000-token
+fallback。失败的 spill 不产生可恢复 artifact，被省略内容不能声称可通过
+`read_artifact` 恢复。spill 成功时，完整引用由类型化的 `ToolResult.artifact` descriptor
+承载；消费者不得从展示文字或 metadata 重建该引用。

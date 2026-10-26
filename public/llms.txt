@@ -178,6 +178,16 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0087: Compose process telemetry with an existing subscriber | echo-agent 文档: https://echo-agent.dev/docs/adr-0087-telemetry-subscriber-composition
 - ADR 0088: Cancellation observation does not own physical settlement | echo-agent 文档: https://echo-agent.dev/docs/adr-0088-subagent-settlement-observation
 - ADR 0089: Keep media builds on a non-yanked ZIP dependency | echo-agent 文档: https://echo-agent.dev/docs/adr-0089-non-yanked-media-dependencies
+- ADR 0090: Retire only A2A and LSP after consumers remove their dependencies | echo-agent 文档: https://echo-agent.dev/docs/adr-0090-a2a-lsp-retirement-contract
+- ADR 0091: Preserve explicit hook approval intent through the shared service | echo-agent 文档: https://echo-agent.dev/docs/adr-0091-explicit-hook-approval-intent
+- ADR 0092: Observe original channel transports and replace only settled adapters | echo-agent 文档: https://echo-agent.dev/docs/adr-0092-channel-control-observations
+- ADR 0093: Cron definition edits and original occurrence observations | echo-agent 文档: https://echo-agent.dev/docs/adr-0093-cron-management-receipts
+- ADR 0094: Invocation Tool Scope Across Subagent Dispatch | echo-agent 文档: https://echo-agent.dev/docs/adr-0094-subagent-tool-boundary-inheritance
+- ADR 0095: Structured remote Tool failures | echo-agent 文档: https://echo-agent.dev/docs/adr-0095-structured-tool-remote-failures
+- ADR 0096: Selective prepared plugin content identities | echo-agent 文档: https://echo-agent.dev/docs/adr-0096-selective-prepared-plugin-identity
+- ADR 0097: Admit and Consume One Subagent Registration | echo-agent 文档: https://echo-agent.dev/docs/adr-0097-subagent-registration-admission
+- ADR 0098: Location-bound file I/O and execution resources | echo-agent 文档: https://echo-agent.dev/docs/adr-0098-project-file-system-adapter
+- ADR 0099: Personal Weixin protocol and durable no-stream admission | echo-agent 文档: https://echo-agent.dev/docs/adr-0099-personal-weixin-channel
 - 知识库概述 | echo-agent 文档: https://echo-agent.dev/docs/knowledge-overview
 - Agent 设计模式 | echo-agent 文档: https://echo-agent.dev/docs/agent-patterns
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
@@ -329,6 +339,16 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0087: Compose process telemetry with an existing subscriber | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0087-telemetry-subscriber-composition
 - ADR 0088: Cancellation observation does not own physical settlement | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0088-subagent-settlement-observation
 - ADR 0089: Keep media builds on a non-yanked ZIP dependency | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0089-non-yanked-media-dependencies
+- ADR 0090: Retire only A2A and LSP after consumers remove their dependencies | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0090-a2a-lsp-retirement-contract
+- ADR 0091: Preserve explicit hook approval intent through the shared service | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0091-explicit-hook-approval-intent
+- ADR 0092: Observe original channel transports and replace only settled adapters | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0092-channel-control-observations
+- ADR 0093: Cron definition edits and original occurrence observations | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0093-cron-management-receipts
+- ADR 0094: Invocation Tool Scope Across Subagent Dispatch | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0094-subagent-tool-boundary-inheritance
+- ADR 0095: Structured remote Tool failures | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0095-structured-tool-remote-failures
+- ADR 0096: Selective prepared plugin content identities | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0096-selective-prepared-plugin-identity
+- ADR 0097: Admit and Consume One Subagent Registration | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0097-subagent-registration-admission
+- ADR 0098: Location-bound file I/O and execution resources | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0098-project-file-system-adapter
+- ADR 0099: Personal Weixin protocol and durable no-stream admission | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0099-personal-weixin-channel
 - Knowledge Base Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/knowledge-overview
 - Agent Design Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/agent-patterns
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive
