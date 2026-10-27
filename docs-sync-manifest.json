@@ -1559,7 +1559,7 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "18779753b27448ee0752c0aeeac075cba30a0a27",
+    "reviewedRevision": "1a3551a0dac37463b8dd2848fb73b82d4d9f3c07",
     "status": "reviewed-gui-product-boundaries",
     "authority": "These concise EKO pages were code-audited against the recorded echo-agent-cli revision; echo-agent-cli remains the product behavior authority.",
     "sourceFiles": [
@@ -2085,7 +2085,7 @@
       },
       {
         "sourcePath": "docs/zh/configuration.md",
-        "sha256": "922625e8470f9248e666339f3a42e0735318a5f063d14391c919a7bf2056fea3"
+        "sha256": "59b1df2ae55903874fa58cd3cba6a2e967b96e7afd61745b2efa035495d1cdf1"
       },
       {
         "sourcePath": "docs/zh/features.md",
@@ -2113,7 +2113,7 @@
       },
       {
         "sourcePath": "docs/zh/README.md",
-        "sha256": "32c8a7dfd700ced264eb050c5d709a96783d21e85b3affd81ee27ece88d85edd"
+        "sha256": "c6b4b3550775bd3450633c3c795009e38892e6eb81803b757f428da3d179acd1"
       }
     ],
     "files": [
@@ -2135,11 +2135,11 @@
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "6c63409c156249923df591dd9b2635b4132f07b5606ecb479469c6c42808f14e"
+        "sha256": "0e0e5599874786e7c70c44ebebde4c4cd6f031b88e9b18c277324f30d6b936ce"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
-        "sha256": "79fc3293123c057ff3bda8e108a5b613939f6aad797f9d3830dc496d069aa4ed"
+        "sha256": "58b7826d5c60342b78375ce79198b29c97a343f7cb0d741ac920115fadb90a35"
       },
       {
         "destination": "src/docs/content/eko/zh/overview.md",
