@@ -11,7 +11,7 @@ Eclip 面向用户自己的机器，产品层使用普通文件或内存保存�
 - 每个 store-backed turn 都急切绑定 TaskRun。typed execution provenance 区分内部 conversation turn 与 orchestrated run；无 plan conversation run 保留 journal，但不进入任务 UI。
 - 普通 chat 同时使用独立 `ChatEventLog` 保存输入输出交付与 surface 重放。它和 TaskRuntime journal 可以关联同一 turn，但互不替代。
 - 输入的持久接收、目标 TaskRun 绑定、进入上下文和执行/完成是不同事实。两份原 journal 不被描述为一个事务；durability 未确认时不冒已准入或重新投向另一个目标。
-- journal 保存完整 user steer，当前活动投影有界保留最近四条短文或 400 字符预览与完整 SHA 引用。长原文制品可从 journal 重建，但这不等于完整的持续有效要求模型已经闭合。
+- journal 保存完整 user steer 及来源与投递事实；近期四条短文或 400 字符预览不是完整历史。主模型结合历史理解输入，不另建要求解释器、GoalStore 或强制要求/计划/验收流水线。必要早期原文沿原引用与 `read_artifact` 恢复，canonical Goal 保持自己的 revision/hash；后继完整来源投影与冷重开读取资格仍须独立验证。
 - 每个 workspace 拥有本地 memory Store、一个 generation-bound `MemoryLayerManager` 和一个在 model safe point 消费的 immutable hot-memory projection。
 - `enabled-skills.json` 是用户 Skill 启用状态的唯一持久事实，version 3 只保存 `{enabled}` flat map 并原子写入；当前项目 `.eko/skills/` 的项目 Skill 不写入该文件。Eclip 不再捆绑 Skill、生成默认启用集或注入 baseline，运行时 reconcile 只返回即时 target receipt，不保留 generation 或 repair debt。
 - artifact 与 trace 保持 workspace scope；trace 只用于诊断，不能判定 TaskRun 或 PlanTask 是否已提交。
@@ -22,3 +22,5 @@ Eclip 面向用户自己的机器，产品层使用普通文件或内存保存�
 工作空间的项目代码位置可以是已有本地目录、新建目录或 SSH 远程目录。原 Workspace manifest 记录项目位置和验证后的执行身份；本机 `Workspace.root` 产品数据不是远端命令的工作目录。文件、Git/worktree 与 Agent 执行使用同一已捕获项目目标，不能因界面切换自动改投；未知写入也不能当作从未发生后重放。
 
 本页是官网投影，不是 storage schema。Eclip persistence 文档与源码仓库仍是权威。
+
+性能基线继续覆盖会话列表/搜索、任务列表/筛选、journal 冷恢复、完整记忆写入、GUI 列表及工具 schema/结果开销。测量必须绑定同源数据、源码/锁、规模和冷暖条件；准备就绪或被依赖阻塞的分类不算实测。当前没有据此发布性能保证或存储优化收益。

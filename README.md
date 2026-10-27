@@ -2,7 +2,11 @@
 
 本仓库展示独立的 echo-agent 框架与 **Eclip /ˈɛk.lɪp/** 本地个人助理。Eclip 读作 **EK-lip**，两个音节；标语为「听见你的声音，让想法飞跃。」
 
-本次品牌展示更新沿用 `/eko` 路由，官网、发现索引与文档首页展示新名称和音标。产品页仅更换名称与读音，`docs-sync-manifest.json` 只刷新这八份投影文件的内容哈希；保留原 `reviewedRevision`、`sourceFiles` 与功能审阅身份，不将当前应用工作区冒充为重新完成的源码验收。框架文档镜像保持原样。
+品牌展示沿用 `/eko` 路由，官网、发现索引与文档首页展示新名称和音标。框架文档镜像保持原审阅身份。
+
+2026-10-27 的中文产品页纠正普通 Steer／Goal 文案，并同步已提交首页与聊天呈现。依据是应用提交 `0ebd8984be26affc32a130df7a26b128494d6c65` 中 `docs/zh/adr/0037-unified-turn-run-binding.md`、`docs/zh/adr/0048-context-compression-product-policy.md`、`docs/zh/architecture/runtime.md`、`docs/zh/features.md` 与 `docs/zh/getting-started.md`。普通 Steer 交主模型结合历史理解，已有 Goal 仅用户显式修改或结束；原生消息和后继完整原文恢复保留各自未完成验收。
+
+`docs-sync-manifest.json` 保留上次完整应用审阅的 `reviewedRevision` 与 `sourceFiles`，本次只刷新中文投影摘要，并把状态明确标为 `policy-correction-pending-source-review`。这表示政策纠正已落入页面，完整来源复审仍待源码稳定；不表示 dirty Framework/EKO 来源检查通过。英文页保留原历史投影，本轮不新增英文副本。实现、正式源、原生窗口、SDK pin、main/CI、包发布与网站部署资格分别核验。
 
 官网只负责展示。框架行为以 [`echo-agent`](https://github.com/EchoYue-lp/echo-agent) 为准；
 Eclip 产品行为以 [`echo-agent-cli`](https://github.com/EchoYue-lp/echo-agent-cli) 为准。
@@ -77,9 +81,8 @@ manifest 检查，不能通过同时删掉清单项和镜像文件掩盖遗漏�
 `node scripts/sync-docs.mjs --check --framework-root ../echo-agent` 检查框架来源；包含
 `--application-root` 的检查仍要求 Eclip 真实来源与既有审查修订一致，不代表重新审查过产品页。
 
-The concise Eclip pages are code-audited website projections reviewed against the application
-revision recorded in the manifest. They are marked `reviewed-application-source-projection`;
-the application repository remains authoritative and any later source change requires a new review.
+Eclip 精简页的当前审阅状态以 manifest 的 `applicationProjection.status` 为准。完整来源审阅、
+后继政策纠正与尚待实现的能力分别记录；应用仓库继续拥有产品事实，源变化后须重新审阅。
 
 ## Routes
 
