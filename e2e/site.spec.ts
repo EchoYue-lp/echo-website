@@ -19,9 +19,10 @@ test('product navigation and language survive a direct route', async ({ page }, 
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1, name: 'echo-agent' })).toBeVisible();
 
-  await page.getByRole('tab', { name: 'EKO' }).click();
+  await page.getByRole('tab', { name: 'Eclip' }).click();
   await expect(page).toHaveURL(/\/eko$/);
-  await expect(page.getByRole('heading', { level: 1, name: 'EKO' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Eclip' })).toBeVisible();
+  await expect(page.getByLabel('Eclip pronunciation')).toHaveText('/ˈɛk.lɪp/');
   const structuredData = await page
     .locator('script[type="application/ld+json"]')
     .evaluate((script) => JSON.parse(script.textContent ?? '{}'));
@@ -33,13 +34,13 @@ test('product navigation and language survive a direct route', async ({ page }, 
 
   await page.getByRole('button', { name: '切换到英文' }).click();
   await expect(page).toHaveURL(/\/en\/eko$/);
-  await expect(page.getByText('One capable agent, built for your own machine.')).toBeVisible();
+  await expect(page.getByText('Hear your voice. Let ideas leap.')).toBeVisible();
   await expect(
-    page.getByRole('main').getByRole('link', { name: 'Read EKO docs' }).first(),
+    page.getByRole('main').getByRole('link', { name: 'Read Eclip docs' }).first(),
   ).toHaveAttribute('href', '/en/eko/docs');
-  await expect(page.getByRole('img', { name: 'EKO application icon' })).toHaveAttribute(
+  await expect(page.getByRole('img', { name: 'Eclip application icon' })).toHaveAttribute(
     'src',
-    '/eko-icon.png',
+    '/app-icon.svg',
   );
 
   const pageWidth = await page.evaluate(() => ({
@@ -59,7 +60,7 @@ test('product navigation and language survive a direct route', async ({ page }, 
 test('legacy English query redirects to the independent English path', async ({ page }) => {
   await page.goto('/eko?lang=en');
   await expect(page).toHaveURL(/\/en\/eko$/);
-  await expect(page.getByText('One capable agent, built for your own machine.')).toBeVisible();
+  await expect(page.getByText('Hear your voice. Let ideas leap.')).toBeVisible();
 });
 
 test('language switching preserves documentation query and deep anchor', async ({ page }) => {
@@ -111,12 +112,14 @@ test('framework Markdown links resolve to site slugs and survive refresh', async
   ).toBeVisible();
 });
 
-test('EKO documentation uses the product route without the home footer', async ({ page }) => {
+test('Eclip documentation uses the product route without the home footer', async ({ page }) => {
   await page.goto('/en/eko/docs/getting-started');
-  await expect(page.getByRole('heading', { level: 1, name: 'EKO Getting Started' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Eclip Getting Started' }),
+  ).toBeVisible();
   await expect(page.getByText('cargo gui-dev', { exact: true })).toBeVisible();
   await expect(page.getByRole('contentinfo')).toHaveCount(0);
-  await expect(page.getByRole('tab', { name: 'EKO' })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('tab', { name: 'Eclip' })).toHaveAttribute('aria-selected', 'true');
 });
 
 test('unknown routes and unknown documentation slugs have explicit not-found states', async ({
@@ -151,5 +154,7 @@ test('mobile documentation navigation opens, changes pages, and closes', async (
   await expect(page.getByRole('button', { name: 'Getting Started' })).toBeVisible();
   await page.getByRole('button', { name: 'Getting Started' }).click();
   await expect(page).toHaveURL(/\/en\/eko\/docs\/getting-started$/);
-  await expect(page.getByRole('heading', { level: 1, name: 'EKO Getting Started' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Eclip Getting Started' }),
+  ).toBeVisible();
 });

@@ -1,6 +1,6 @@
-# EKO 快速开始
+# Eclip 快速开始
 
-本页是经过审阅的快速开始投影；精确配置、构建与打包行为以 EKO 仓库长期维护的文档为准。
+本页是经过审阅的快速开始投影；精确配置、构建与打包行为以 Eclip 仓库长期维护的文档为准。
 
 ## 前置条件
 
@@ -45,6 +45,6 @@ GUI 设置提供已有 IM 渠道和定时任务的管理入口。个人微信使
 
 ## 本地数据
 
-EKO 默认使用 `~/.eko/`，可通过 `EKO_DATA_DIR` 覆盖。每个工作空间的 conversation、TaskRuntime journal、memory、artifact 和 trace 属于本机产品数据，与本地或远端的项目代码位置分开。EKO 不启用 SQLite。
+Eclip 默认使用 `~/.eko/`，可通过 `EKO_DATA_DIR` 覆盖。每个工作空间的 conversation、TaskRuntime journal、memory、artifact 和 trace 属于本机产品数据，与本地或远端的项目代码位置分开。Eclip 不启用 SQLite。
 
-更完整的构建、配置与平台打包命令以 [EKO README](https://github.com/EchoYue-lp/echo-agent-cli#readme) 为准。
+更完整的构建、配置与平台打包命令以 [Eclip README](https://github.com/EchoYue-lp/echo-agent-cli#readme) 为准。

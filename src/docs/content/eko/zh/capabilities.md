@@ -1,10 +1,10 @@
-# EKO 能力边界
+# Eclip 能力边界
 
-EKO 是基于 `echo-agent` 构建的本地个人 AI 助理。以下内容说明当前源码的能力与边界，不构成性能或验收承诺：结果与持续时长取决于模型配置、工具、来源可用性和本机环境。
+Eclip 是基于 `echo-agent` 构建的本地个人 AI 助理。以下内容说明当前源码的能力与边界，不构成性能或验收承诺：结果与持续时长取决于模型配置、工具、来源可用性和本机环境。
 
 ## Coding
 
-编码工作使用文件操作、交互式 Shell、Git、隔离 Worktree 和边界明确的 Subagent。工作空间支持已有本地目录、新建目录与 SSH 项目；项目文件和 Agent 命令使用绑定的同一真实目标。EKO 已退出 LSP 工具、manager、设置和 IPC 消费路径，框架自身的公开能力退役另行处理。
+编码工作使用文件操作、交互式 Shell、Git、隔离 Worktree 和边界明确的 Subagent。工作空间支持已有本地目录、新建目录与 SSH 项目；项目文件和 Agent 命令使用绑定的同一真实目标。Eclip 已退出 LSP 工具、manager、设置和 IPC 消费路径，框架自身的公开能力退役另行处理。
 
 ## Data analysis
 
@@ -24,7 +24,7 @@ EKO 是基于 `echo-agent` 构建的本地个人 AI 助理。以下内容说明�
 
 `TaskRuntime`、检查点、暂停与恢复、执行预算和调度支持设计为持续数小时到数十小时的工作。运行时保留可检查的状态和续跑点，但不承诺固定完成时间或成功率。
 
-任务关系只有一个权威：revisioned `TaskRun -> PlanTask -> SubagentRun` graph。framework `TaskStatus` 管执行状态，Plan 是可编辑 artifact，Todo 是只读展示投影。同一 run 内的依赖使用 `PlanRevision.tasks[].depends_on`；EKO 不维护第二套跨 run 依赖图。
+任务关系只有一个权威：revisioned `TaskRun -> PlanTask -> SubagentRun` graph。framework `TaskStatus` 管执行状态，Plan 是可编辑 artifact，Todo 是只读展示投影。同一 run 内的依赖使用 `PlanRevision.tasks[].depends_on`；Eclip 不维护第二套跨 run 依赖图。
 
 默认仅主智能体可派发首层 Subagent，首层不能继续派发，即额外嵌套深度为 0。GUI 以“最大 Subagent 总层数”配置同一规则：默认 1、可选 1—3，主智能体为第 0 层，绝不准入第 4 层。修改只影响新 run/turn；已有 TaskRun、新增任务、重试与恢复继续原绑定。
 
@@ -32,7 +32,7 @@ EKO 是基于 `echo-agent` 构建的本地个人 AI 助理。以下内容说明�
 
 ## Context 压缩
 
-EKO 默认通过 `compress_window: 0` 使用模型窗口 25%、至多 20K token 的近期原文预算。压缩保留 canonical 指令与最新用户请求，工具调用与结果成组处理。活跃任务的 goal 和恢复约束从 TaskRuntime 重建，完整历史仍保存在 ConversationStore。显式正数窗口选择旧消息条数上限；adaptive 策略继续使用自己的 L1-L5 配置。
+Eclip 默认通过 `compress_window: 0` 使用模型窗口 25%、至多 20K token 的近期原文预算。压缩保留 canonical 指令与最新用户请求，工具调用与结果成组处理。活跃任务的 goal 和恢复约束从 TaskRuntime 重建，完整历史仍保存在 ConversationStore。显式正数窗口选择旧消息条数上限；adaptive 策略继续使用自己的 L1-L5 配置。
 
 “已收到”只是持久接收，和 drain、进入模型上下文、已执行、已完成分别记录。journal 保留完整原文，当前活动投影只覆盖最近四条短文本或 400 字符预览及 SHA 引用；必要原文或 reader 不可用时走原可恢复暂停，不能只凭预览继续。完整来源、显式替换、范围、版本及持续有效要求覆盖仍需后继验收。
 
@@ -48,11 +48,11 @@ builtin、plugin、direct、planned、fork、teammate、team member 与 primary 
 
 ## 确定性 CommandCell watch
 
-`watch_cell` 使用 framework `CommandCellWatcher` retained 一个后台 command、drain byte cursor，并在不派发 model 或 Subagent 的前提下发布 typed terminal truth。EKO 只增加 exact workspace/conversation/root identity、generation 幂等、durable Ready/delivery/ack fact、恢复与共享 surface projection。interrupt watch 不会停止底层 command。
+`watch_cell` 使用 framework `CommandCellWatcher` retained 一个后台 command、drain byte cursor，并在不派发 model 或 Subagent 的前提下发布 typed terminal truth。Eclip 只增加 exact workspace/conversation/root identity、generation 幂等、durable Ready/delivery/ack fact、恢复与共享 surface projection。interrupt watch 不会停止底层 command。
 
 ## Local application core
 
-GUI、IM 与 cron 使用共享应用核心，不各自装配另一份 task、recovery、pool 或 maintenance runtime。旧 TUI、REPL、CLI/JSONL 入口仍在迁移期源码中，不能据此继续承诺永久多入口对等，也不能声称已经删除。会话与运行时状态使用本机文件或内存，EKO 不需要 SQLite。
+GUI、IM 与 cron 使用共享应用核心，不各自装配另一份 task、recovery、pool 或 maintenance runtime。旧 TUI、REPL、CLI/JSONL 入口仍在迁移期源码中，不能据此继续承诺永久多入口对等，也不能声称已经删除。会话与运行时状态使用本机文件或内存，Eclip 不需要 SQLite。
 
 ## GUI 渠道与定时任务
 
@@ -60,9 +60,9 @@ GUI、IM 与 cron 使用共享应用核心，不各自装配另一份 task、rec
 
 ## Extension 控制
 
-Skills、Plugins、MCP servers、Hooks 与 Browser 控制使用同一个应用核心权威。EKO 只消费用户安装到 `~/.eko/skills/` 的独立 Skill、当前项目 `.eko/skills/` 的项目 Skill 与 Plugin generation 提供的 Skill，不再捆绑 catalog、默认启用集、baseline 或 Tauri Skill resource。`enabled-skills.json` version 3 只保存用户 Skill 的 `{enabled}` 选择；项目根到当前工作目录的 `AGENTS.md` 链进入同一 instruction projection。相同名称按项目 Skill、Plugin Skill、用户 Skill 优先。typed receipt 返回 settled 或 degraded，下一次操作、重启或 workspace load 会重新收敛。
+Skills、Plugins、MCP servers、Hooks 与 Browser 控制使用同一个应用核心权威。Eclip 只消费用户安装到 `~/.eko/skills/` 的独立 Skill、当前项目 `.eko/skills/` 的项目 Skill 与 Plugin generation 提供的 Skill，不再捆绑 catalog、默认启用集、baseline 或 Tauri Skill resource。`enabled-skills.json` version 3 只保存用户 Skill 的 `{enabled}` 选择；项目根到当前工作目录的 `AGENTS.md` 链进入同一 instruction projection。相同名称按项目 Skill、Plugin Skill、用户 Skill 优先。typed receipt 返回 settled 或 degraded，下一次操作、重启或 workspace load 会重新收敛。
 
-portable Plugin component 只解析一次，形成不可变 framework `PreparedPluginSet`。EKO 捕获精确 workspace target，增加 executable Subagent、scoped monitor、theme 与 output style 产品策略。rollback 使用 prepared generation，不重新读取可能已变化的文件。
+portable Plugin component 只解析一次，形成不可变 framework `PreparedPluginSet`。Eclip 捕获精确 workspace target，增加 executable Subagent、scoped monitor、theme 与 output style 产品策略。rollback 使用 prepared generation，不重新读取可能已变化的文件。
 
 ## Memory 与用户工具控制
 
@@ -70,4 +70,4 @@ portable Plugin component 只解析一次，形成不可变 framework `PreparedP
 
 用户直接设置的工具可见性是独立应用 policy，通过 framework disabled-tools snapshot 发布；它不是 approval mode，也不受 agent 自动执行 permission mode 限制。
 
-以上内容是经过审阅的源码行为摘要；精确配置、命令与合同仍以 EKO 仓库为准。
+以上内容是经过审阅的源码行为摘要；精确配置、命令与合同仍以 Eclip 仓库为准。

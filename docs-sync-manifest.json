@@ -2119,35 +2119,35 @@
     "files": [
       {
         "destination": "src/docs/content/eko/en/capabilities.md",
-        "sha256": "f381904dfa2bccb6e0681a726a462a9e48d40d8bf77cae8f816f75832b7416c1"
+        "sha256": "7e21dada75a97c5fe3cb8e8f6c9a9f9f28a2ed44eb5dbc94594e7273ac687bad"
       },
       {
         "destination": "src/docs/content/eko/en/getting-started.md",
-        "sha256": "6ab6fa1a3a85f2c264747800956edb8325c2eef17b48384f9e3158b17a258a91"
+        "sha256": "d889837f65f121f30bcec9aa5b3c7bd7020100e247174ef5fbecc5de0cd8d8b6"
       },
       {
         "destination": "src/docs/content/eko/en/overview.md",
-        "sha256": "723d002210251add19c4228cdfb376fe9d627fa1116dbe5f92ccb5ae48043c0b"
+        "sha256": "eb864425b48fe678460896d07732af7d8419d2f1cf23b0a1dd0eabd989314dc9"
       },
       {
         "destination": "src/docs/content/eko/en/storage.md",
-        "sha256": "a24a98075dde7879533c3882e02ef8792689d051079562dff3df3cd1c3777c25"
+        "sha256": "6b8b14f83e1f43ce60c1900adca04f2a73b544952dee23f550f9cc2ed4b8a4a3"
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "2cda715190d3b4d1edf91ec14c88ee36032e89c4898cf8140374766c75150e25"
+        "sha256": "6c63409c156249923df591dd9b2635b4132f07b5606ecb479469c6c42808f14e"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
-        "sha256": "07872bc4fd3b143b84c1d81984f76cc3b68f4e8babe857d1b2d6062eb49863d2"
+        "sha256": "79fc3293123c057ff3bda8e108a5b613939f6aad797f9d3830dc496d069aa4ed"
       },
       {
         "destination": "src/docs/content/eko/zh/overview.md",
-        "sha256": "769ee8c464f34a76ac001f189836986f244df7cdc0afa2d404c3f516c633a643"
+        "sha256": "ea75cf3172d3a28d79439e6f0f1df5ce727e3d170a6c67fea42a3d81474bd223"
       },
       {
         "destination": "src/docs/content/eko/zh/storage.md",
-        "sha256": "3d54189f172e8bb9b3aa659289304fa469e89eb7a439b51290ace355b22b9fb9"
+        "sha256": "4a03a63d881618bf5598f9ea9f04a5bd153b42b4e1b1ca910ea64e4a122fbd38"
       }
     ]
   }

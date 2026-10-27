@@ -1,14 +1,14 @@
 {
   "name": "Echo Agent",
   "short_name": "Echo",
-  "description": "echo-agent framework and EKO local personal assistant",
+  "description": "echo-agent framework and Eclip local personal assistant",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0b0d0c",
   "theme_color": "#0b0d0c",
   "icons": [
     {
-      "src": "/eko-icon.png",
+      "src": "/app-icon.png",
       "sizes": "256x256",
       "type": "image/png",
       "purpose": "any"

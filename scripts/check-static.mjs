@@ -91,7 +91,7 @@ try {
       throw new Error(`Invalid documentation landing JSON-LD: ${route.path}`);
     }
     if (route.product === 'eko' && route.view === 'home' && !types.has('SoftwareApplication')) {
-      throw new Error('Missing EKO SoftwareApplication JSON-LD');
+      throw new Error('Missing Eclip SoftwareApplication JSON-LD');
     }
     if (
       route.product === 'echo-agent' &&
@@ -137,7 +137,7 @@ try {
     'Biomedical literature research',
     'Tens-of-hours long-horizon tasks',
   ]) {
-    if (!ekoHtml.includes(fact)) throw new Error(`Static EKO homepage is missing: ${fact}`);
+    if (!ekoHtml.includes(fact)) throw new Error(`Static Eclip homepage is missing: ${fact}`);
   }
   const capabilityHtml = await readFile(fileFor('/en/eko/docs/capabilities'), 'utf8');
   for (const fact of ['PubMed', 'Europe PMC', 'not diagnosis', 'TaskRuntime']) {
@@ -179,7 +179,7 @@ try {
   ) {
     throw new Error('robots.txt must allow crawlers and name the sitemap');
   }
-  for (const fact of ['echo-agent', 'EKO', '/en/eko/docs/capabilities']) {
+  for (const fact of ['echo-agent', 'Eclip', '/en/eko/docs/capabilities']) {
     if (!llms.includes(fact) || !llmsFull.includes(fact)) {
       throw new Error(`LLM discovery files are missing ${fact}`);
     }

@@ -275,13 +275,13 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
   eko: {
     en: {
       eyebrow: 'Local personal AI assistant',
-      title: 'EKO',
-      tagline: 'One capable agent, built for your own machine.',
+      title: 'Eclip',
+      tagline: 'Hear your voice. Let ideas leap.',
       description:
-        "EKO is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.",
+        "Eclip is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.",
       command: 'cargo gui-dev',
       repository: 'https://github.com/EchoYue-lp/echo-agent-cli',
-      docsLabel: 'Read EKO docs',
+      docsLabel: 'Read Eclip docs',
       repositoryLabel: 'Open repository',
       evidenceTitle: 'Purpose-built local workspaces',
       evidenceIntro:
@@ -305,7 +305,7 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
             'Task runtime state supports scheduled, pausable, and resumable work on the local machine.',
         },
       ],
-      capabilitiesTitle: 'Work EKO is designed to carry',
+      capabilitiesTitle: 'Work Eclip is designed to carry',
       capabilitiesIntro:
         'Each capability below is grounded in a production binding in the current application code. Duration and results depend on configuration, models, tools, and source availability.',
       capabilityLinkLabel: 'See implementation scope',
@@ -353,7 +353,7 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
         {
           title: 'Local personal AI assistant',
           description:
-            "EKO is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.",
+            "Eclip is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.",
           icon: Layers3,
           accent: 'text-sky-300',
           href: '/eko/docs/capabilities#local-application-core',
@@ -375,15 +375,15 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
         { label: 'File + memory stores', detail: 'Local conversation and runtime state' },
       ],
       quickStartTitle: 'Run GUI',
-      quickStartIntro: 'Clone the EKO repository.',
+      quickStartIntro: 'Clone the Eclip repository.',
       quickStart: [
         'git clone https://github.com/EchoYue-lp/echo-agent-cli.git',
         'cd echo-agent-cli',
         'cargo gui-dev',
       ],
       quickStartNote:
-        'Provider credentials are configured locally. Desktop setup is covered in the EKO docs.',
-      docsCta: 'Browse all EKO documentation',
+        'Provider credentials are configured locally. Desktop setup is covered in the Eclip docs.',
+      docsCta: 'Browse all Eclip documentation',
       scene: [
         'TaskRun { status: Running }',
         'PlanTask { dependencies: [] }',
@@ -393,13 +393,13 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
     },
     zh: {
       eyebrow: '本地个人超级智能助理',
-      title: 'EKO',
-      tagline: '在自己的机器上，使用一个完整的 Agent。',
+      title: 'Eclip',
+      tagline: '听见你的声音，让想法飞跃。',
       description:
-        'EKO 是基于 echo-agent 的本地个人助理，以 GUI 为主入口，保留 IM 消息与定时任务。项目、会话、Subagent、工具和记忆复用同一应用核心；旧独立终端与 CLI 入口仍在迁移期。',
+        'Eclip 是基于 echo-agent 的本地个人助理，以 GUI 为主入口，保留 IM 消息与定时任务。项目、会话、Subagent、工具和记忆复用同一应用核心；旧独立终端与 CLI 入口仍在迁移期。',
       command: 'cargo gui-dev',
       repository: 'https://github.com/EchoYue-lp/echo-agent-cli',
-      docsLabel: '阅读 EKO 文档',
+      docsLabel: '阅读 Eclip 文档',
       repositoryLabel: '打开代码仓库',
       evidenceTitle: '面向真实任务的本地工作空间',
       evidenceIntro:
@@ -421,7 +421,7 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
           detail: '任务运行时状态支持在本机调度、暂停并恢复工作。',
         },
       ],
-      capabilitiesTitle: 'EKO 面向的核心任务',
+      capabilitiesTitle: 'Eclip 面向的核心任务',
       capabilitiesIntro:
         '以下说明当前源码的能力与边界，持续时长和结果取决于配置、模型、工具与来源；源码接线不代替原生、微信手机或 SSH 验收。',
       capabilityLinkLabel: '查看实现边界',
@@ -429,7 +429,7 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
         {
           title: 'Coding 编码',
           description:
-            '使用项目文件、Shell、Git、隔离 Worktree 与 Subagent；EKO 的 LSP 消费入口已退出。',
+            '使用项目文件、Shell、Git、隔离 Worktree 与 Subagent；Eclip 的 LSP 消费入口已退出。',
           icon: Terminal,
           accent: 'text-amber-300',
           href: '/eko/docs/capabilities#coding',
@@ -486,7 +486,7 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
         { label: '文件 + 内存存储', detail: '本地会话与运行时状态' },
       ],
       quickStartTitle: '启动 GUI',
-      quickStartIntro: '克隆 EKO 仓库并使用已有桌面开发 alias。',
+      quickStartIntro: '克隆 Eclip 仓库并使用已有桌面开发 alias。',
       quickStart: [
         'git clone https://github.com/EchoYue-lp/echo-agent-cli.git',
         'cd echo-agent-cli',
@@ -494,7 +494,7 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
       ],
       quickStartNote:
         '模型凭据保存在本地；“已收到”只表示持久接收，不表示已执行。旧独立入口的退役与真实平台验收仍需分别收口。',
-      docsCta: '浏览全部 EKO 文档',
+      docsCta: '浏览全部 Eclip 文档',
       scene: [
         'TaskRun { status: Running }',
         'PlanTask { dependencies: [] }',
@@ -545,10 +545,10 @@ export default function HomePage({ language, product }: { language: Language; pr
             <div className="mb-5 flex items-center gap-3 text-xs font-semibold text-zinc-400 uppercase">
               {product === 'eko' ? (
                 <img
-                  src="/eko-icon.png"
+                  src="/app-icon.svg"
                   width="40"
                   height="40"
-                  alt="EKO application icon"
+                  alt="Eclip application icon"
                   className="size-10 rounded-md"
                 />
               ) : (
@@ -558,9 +558,19 @@ export default function HomePage({ language, product }: { language: Language; pr
               )}
               <span>{copy.eyebrow}</span>
             </div>
-            <h1 className="text-5xl leading-none font-semibold text-white sm:text-7xl">
-              {copy.title}
-            </h1>
+            <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+              <h1 className="text-5xl leading-none font-semibold text-white sm:text-7xl">
+                {copy.title}
+              </h1>
+              {product === 'eko' && (
+                <span
+                  className="text-lg font-normal text-zinc-400"
+                  aria-label="Eclip pronunciation"
+                >
+                  /ˈɛk.lɪp/
+                </span>
+              )}
+            </div>
             <p className="mt-5 max-w-2xl text-xl leading-tight font-medium text-zinc-200 sm:text-3xl">
               {copy.tagline}
             </p>
@@ -602,7 +612,7 @@ export default function HomePage({ language, product }: { language: Language; pr
         <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
           <div className="max-w-3xl">
             <p className="text-xs font-bold text-emerald-800 uppercase">
-              {product === 'eko' ? 'EKO / application' : 'echo-agent / framework'}
+              {product === 'eko' ? 'Eclip / application' : 'echo-agent / framework'}
             </p>
             <h2 id="product-evidence-heading" className="mt-3 text-3xl font-semibold sm:text-4xl">
               {copy.evidenceTitle}
@@ -736,7 +746,7 @@ export default function HomePage({ language, product }: { language: Language; pr
           <div className="flex items-center gap-3">
             {product === 'eko' ? (
               <img
-                src="/eko-icon.png"
+                src="/app-icon.svg"
                 width="28"
                 height="28"
                 alt=""

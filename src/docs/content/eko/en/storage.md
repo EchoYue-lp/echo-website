@@ -1,6 +1,6 @@
-# EKO Local Data
+# Eclip Local Data
 
-EKO runs on the user's own machine. Its product layer stores state in ordinary files or memory and does not enable SQLite. Framework Store implementations available to other consumers are a separate concern.
+Eclip runs on the user's own machine. Its product layer stores state in ordinary files or memory and does not enable SQLite. Framework Store implementations available to other consumers are a separate concern.
 
 ## Data responsibilities
 
@@ -11,7 +11,7 @@ EKO runs on the user's own machine. Its product layer stores state in ordinary f
 - Every store-backed turn eagerly owns a TaskRun. Typed execution provenance distinguishes an internal conversation turn from an orchestrated run; a planless conversation run keeps its journal but stays out of the task UI.
 - Ordinary chat also uses its own `ChatEventLog` for input/output delivery and surface replay. It can correlate with the TaskRuntime journal for the same turn, but neither journal replaces the other.
 - Each workspace owns its local memory Store, one generation-bound `MemoryLayerManager`, and an immutable hot-memory projection consumed at model safe points.
-- `enabled-skills.json` is the sole persistent enablement fact for user Skills. Version 3 stores only the atomically written `{enabled}` flat map; project Skills under the current project's `.eko/skills/` are not written there. EKO no longer bundles Skills, creates a default active set, or injects a baseline; runtime reconciliation returns immediate target receipts and retains no generation or repair debt.
+- `enabled-skills.json` is the sole persistent enablement fact for user Skills. Version 3 stores only the atomically written `{enabled}` flat map; project Skills under the current project's `.eko/skills/` are not written there. Eclip no longer bundles Skills, creates a default active set, or injects a baseline; runtime reconciliation returns immediate target receipts and retains no generation or repair debt.
 - Artifacts and traces remain workspace-scoped. Trace data is diagnostic and does not determine whether a TaskRun or PlanTask committed.
 
 The default product data root is `~/.eko/`, overridable with `EKO_DATA_DIR`.
@@ -22,4 +22,4 @@ User rules, memory, conversations and journals remain local.
 
 Receipt, drain, context inclusion and terminal outcome are separate facts; receipt does not mean an active tool stopped or the correction executed.
 
-This page is a website projection, not a storage schema. The EKO persistence documentation and source repository remain authoritative.
+This page is a website projection, not a storage schema. The Eclip persistence documentation and source repository remain authoritative.

@@ -1,6 +1,6 @@
-# EKO Getting Started
+# Eclip Getting Started
 
-This page is a reviewed quick-start projection. Use the maintained EKO repository docs as the authority for exact configuration, build, and packaging behavior.
+This page is a reviewed quick-start projection. Use the maintained Eclip repository docs as the authority for exact configuration, build, and packaging behavior.
 
 ## Prerequisites
 
@@ -41,7 +41,7 @@ waiting for the model or tools. It does not mean execution or task completion.
 Preparation or admission failure preserves the draft, and late results do not
 clear a newer draft after navigation or editing. Stop remains a separate action.
 
-EKO is a local personal assistant running on the user's machine. The approved
+Eclip is a local personal assistant running on the user's machine. The approved
 target has one GUI product entry, with IM messages and cron as retained background
 triggers. GUI terminals, Agent shell tools, desktop launch arguments and the
 independent SDK Host stdio protocol remain valid capabilities.
@@ -54,6 +54,6 @@ This documentation change does not delete any runtime entry or protocol.
 
 ## Local data
 
-EKO uses `~/.eko/` by default and accepts `EKO_DATA_DIR` as an override. User rules, memory, conversations and journals remain local. EKO does not enable SQLite.
+Eclip uses `~/.eko/` by default and accepts `EKO_DATA_DIR` as an override. User rules, memory, conversations and journals remain local. Eclip does not enable SQLite.
 
-Use the [EKO README](https://github.com/EchoYue-lp/echo-agent-cli#readme) as the source of truth for complete build, configuration, and platform packaging commands.
+Use the [Eclip README](https://github.com/EchoYue-lp/echo-agent-cli#readme) as the source of truth for complete build, configuration, and platform packaging commands.

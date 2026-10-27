@@ -357,7 +357,7 @@ export const frameworkDocCategories: DocCategory[] = [
 
 export const ekoDocCategories: DocCategory[] = [
   {
-    title: { zh: 'EKO', en: 'EKO' },
+    title: { zh: 'Eclip', en: 'Eclip' },
     icon: 'monitor',
     docs: [
       {

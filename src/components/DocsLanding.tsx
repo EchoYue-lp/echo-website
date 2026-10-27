@@ -12,17 +12,18 @@ export default function DocsLanding({
   onNavigate?: (slug: string) => void;
 }) {
   const categories = getDocCategories(product);
-  const productName = product === 'eko' ? 'EKO' : 'echo-agent';
+  const productName = product === 'eko' ? 'Eclip' : 'echo-agent';
   return (
     <main className="max-w-5xl px-4 py-8 lg:px-8 lg:py-10">
       <BookOpen aria-hidden="true" className="size-6 text-emerald-300" />
       <h1 className="mt-5 text-3xl font-semibold text-white sm:text-4xl">
         {language === 'zh' ? `${productName} 文档` : `${productName} Documentation`}
       </h1>
+      {product === 'eko' && <p className="mt-3 text-sm text-zinc-400">/ˈɛk.lɪp/ · EK-lip</p>}
       <p className="mt-4 max-w-3xl text-sm leading-7 text-zinc-400 sm:text-base">
         {language === 'zh'
-          ? '从快速开始进入，再按核心概念、工具、任务与参考主题查阅。框架文档由权威源码同步，EKO 文档只描述应用层产品行为。'
-          : 'Start with onboarding, then browse concepts, tools, tasks, and references. Framework documentation is synchronized from its authoritative sources; EKO documentation describes application behavior only.'}
+          ? '从快速开始进入，再按核心概念、工具、任务与参考主题查阅。框架文档由权威源码同步，Eclip 文档只描述应用层产品行为。'
+          : 'Start with onboarding, then browse concepts, tools, tasks, and references. Framework documentation is synchronized from its authoritative sources; Eclip documentation describes application behavior only.'}
       </p>
       <div className="mt-10 divide-y divide-white/10 border-y border-white/10">
         {categories.map((category) => (

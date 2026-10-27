@@ -23,7 +23,8 @@ describe('applyPageMetadata', () => {
   it('sets product and route-specific canonical metadata', () => {
     applyPageMetadata('eko', 'docs', 'en', '/en/eko/docs/getting-started');
 
-    expect(document.title).toBe('EKO Documentation');
+    expect(document.title).toBe('Eclip Documentation');
+    expect(document.querySelector('link[rel="icon"]')).toHaveAttribute('href', '/app-icon.svg');
     expect(document.documentElement.lang).toBe('en');
     expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute(
       'href',
@@ -73,6 +74,7 @@ describe('applyPageMetadata', () => {
       'content',
       'index, follow',
     );
+    expect(document.querySelector('link[rel="icon"]')).toHaveAttribute('href', '/favicon.svg');
     expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute(
       'href',
       'https://echo-agent.dev/en',

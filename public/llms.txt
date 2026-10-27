@@ -1,6 +1,6 @@
 # Echo Agent
 
-> Official discovery index for echo-agent and EKO. Chinese routes are the default; English routes use `/en`.
+> Official discovery index for echo-agent and Eclip. Chinese routes are the default; English routes use `/en`.
 
 # echo-agent
 Build agents from explicit, composable runtime parts.
@@ -19,22 +19,22 @@ Every item below corresponds to code and documentation in the echo-agent workspa
 - Tasks and Subagents: Model task graphs and delegate bounded work through one Subagent vocabulary.
 - Open integration boundaries: Connect MCP, LSP, channels, hooks, and tracing through optional adapters.
 
-# EKO
-One capable agent, built for your own machine.
-EKO is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.
+# Eclip
+Hear your voice. Let ideas leap.
+Eclip is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.
 ## Purpose-built local workspaces
 In the GUI, a Workspace is a project. New task opens a conversation draft in the selected Workspace without creating a directory. Use the Workspace menu to select an existing local folder, create a folder, or open an SSH device and remote project directory.
 - Workspace: A Workspace is a project. User rules, memory, conversations and journals remain local.
 - Research trail: Sources + artifacts. Research connectors and workspaces keep sources, entities, citations, and outputs visible.
 - Long horizon: Budget + checkpoint + resume. Task runtime state supports scheduled, pausable, and resumable work on the local machine.
-## Work EKO is designed to carry
+## Work Eclip is designed to carry
 Each capability below is grounded in a production binding in the current application code. Duration and results depend on configuration, models, tools, and source availability.
 - Coding: Work with files, shells, Git, isolated worktrees, and bounded Subagent runs.
 - Data processing and analysis: Use data workspaces and Polars-backed tools with reviewable Python or R scripts, manifests, and artifacts.
 - Academic research: Search arXiv and Semantic Scholar, work with Zotero, and retain sources in a research workspace.
 - Biomedical literature research: Search PubMed and Europe PMC and organize biomedical entities and sources for literature synthesis, not diagnosis.
 - Tens-of-hours long-horizon tasks: TaskRuntime, checkpoints, pause and resume, budgets, and scheduling support work designed to continue for hours or tens of hours.
-- Local personal AI assistant: EKO is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.
+- Local personal AI assistant: Eclip is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.
 
 ## Documentation
 - echo-agent 文档: https://echo-agent.dev/docs
@@ -193,11 +193,11 @@ Each capability below is grounded in a production binding in the current applica
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
 - 技能系统指南 | echo-agent 文档: https://echo-agent.dev/docs/skill-system-guide
 - A2A 协议 | echo-agent 文档: https://echo-agent.dev/docs/a2a-protocol
-- EKO 文档: https://echo-agent.dev/eko/docs
-- 产品概述 | EKO 文档: https://echo-agent.dev/eko/docs/overview
-- 快速开始 | EKO 文档: https://echo-agent.dev/eko/docs/getting-started
-- 能力边界 | EKO 文档: https://echo-agent.dev/eko/docs/capabilities
-- 本地数据 | EKO 文档: https://echo-agent.dev/eko/docs/storage
+- Eclip 文档: https://echo-agent.dev/eko/docs
+- 产品概述 | Eclip 文档: https://echo-agent.dev/eko/docs/overview
+- 快速开始 | Eclip 文档: https://echo-agent.dev/eko/docs/getting-started
+- 能力边界 | Eclip 文档: https://echo-agent.dev/eko/docs/capabilities
+- 本地数据 | Eclip 文档: https://echo-agent.dev/eko/docs/storage
 - echo-agent Documentation: https://echo-agent.dev/en/docs
 - Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/overview
 - Getting Started | echo-agent Documentation: https://echo-agent.dev/en/docs/getting-started
@@ -354,8 +354,8 @@ Each capability below is grounded in a production binding in the current applica
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive
 - Skill System Guide | echo-agent Documentation: https://echo-agent.dev/en/docs/skill-system-guide
 - A2A Protocol | echo-agent Documentation: https://echo-agent.dev/en/docs/a2a-protocol
-- EKO Documentation: https://echo-agent.dev/en/eko/docs
-- Overview | EKO Documentation: https://echo-agent.dev/en/eko/docs/overview
-- Getting Started | EKO Documentation: https://echo-agent.dev/en/eko/docs/getting-started
-- Capability Scope | EKO Documentation: https://echo-agent.dev/en/eko/docs/capabilities
-- Local Data | EKO Documentation: https://echo-agent.dev/en/eko/docs/storage
+- Eclip Documentation: https://echo-agent.dev/en/eko/docs
+- Overview | Eclip Documentation: https://echo-agent.dev/en/eko/docs/overview
+- Getting Started | Eclip Documentation: https://echo-agent.dev/en/eko/docs/getting-started
+- Capability Scope | Eclip Documentation: https://echo-agent.dev/en/eko/docs/capabilities
+- Local Data | Eclip Documentation: https://echo-agent.dev/en/eko/docs/storage

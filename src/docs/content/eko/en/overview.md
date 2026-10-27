@@ -1,6 +1,8 @@
-# EKO
+# Eclip
 
-EKO is a local personal assistant running on the user's machine. The approved
+**/ˈɛk.lɪp/** · **EK-lip**
+
+Eclip is a local personal assistant running on the user's machine. The approved
 target has one GUI product entry, with IM messages and cron as retained background
 triggers. GUI terminals, Agent shell tools, desktop launch arguments and the
 independent SDK Host stdio protocol remain valid capabilities.
@@ -11,7 +13,7 @@ to keep expanding all console surfaces has been superseded. Removing console
 entry points must wait for GUI-owned IM lifecycle, cron and recovery acceptance.
 This documentation change does not delete any runtime entry or protocol.
 
-EKO no longer requests the framework LSP feature, registers language-server tools,
+Eclip no longer requests the framework LSP feature, registers language-server tools,
 or exposes LSP commands/settings/IPC. Old configuration and plugin declarations
 receive explicit retirement diagnostics without deleting user files. Mixed plugins
 retain legal components and their existing publication/cleanup receipts. Framework
@@ -30,4 +32,4 @@ IM, cron, MCP and Subagent are retained in this consumer-only change.
 - Publish generation-bound hot memory once for the primary, existing pooled Agents, and future Agents at the next model safe point
 - Store conversations, memory, task journals, checkpoints, and product projections in local files or memory without requiring SQLite
 
-This website is a reviewed projection of product facts; it does not define EKO behavior or public APIs. The [EKO source repository](https://github.com/EchoYue-lp/echo-agent-cli), its maintained docs, and its ADRs remain authoritative for implementation and configuration.
+This website is a reviewed projection of product facts; it does not define Eclip behavior or public APIs. The [Eclip source repository](https://github.com/EchoYue-lp/echo-agent-cli), its maintained docs, and its ADRs remain authoritative for implementation and configuration.

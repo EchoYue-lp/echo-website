@@ -89,7 +89,7 @@ export default function Navbar({
             className={productClass(product === 'eko')}
             onClick={() => onSwitchProduct('eko')}
           >
-            EKO
+            Eclip
           </button>
         </div>
 

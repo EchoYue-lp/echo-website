@@ -1,6 +1,6 @@
 # Echo Agent
 
-> Official discovery index for echo-agent and EKO. Chinese routes are the default; English routes use `/en`.
+> Official discovery index for echo-agent and Eclip. Chinese routes are the default; English routes use `/en`.
 
 # echo-agent
 Build agents from explicit, composable runtime parts.
@@ -19,22 +19,22 @@ Every item below corresponds to code and documentation in the echo-agent workspa
 - Tasks and Subagents: Model task graphs and delegate bounded work through one Subagent vocabulary.
 - Open integration boundaries: Connect MCP, LSP, channels, hooks, and tracing through optional adapters.
 
-# EKO
-One capable agent, built for your own machine.
-EKO is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.
+# Eclip
+Hear your voice. Let ideas leap.
+Eclip is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.
 ## Purpose-built local workspaces
 In the GUI, a Workspace is a project. New task opens a conversation draft in the selected Workspace without creating a directory. Use the Workspace menu to select an existing local folder, create a folder, or open an SSH device and remote project directory.
 - Workspace: A Workspace is a project. User rules, memory, conversations and journals remain local.
 - Research trail: Sources + artifacts. Research connectors and workspaces keep sources, entities, citations, and outputs visible.
 - Long horizon: Budget + checkpoint + resume. Task runtime state supports scheduled, pausable, and resumable work on the local machine.
-## Work EKO is designed to carry
+## Work Eclip is designed to carry
 Each capability below is grounded in a production binding in the current application code. Duration and results depend on configuration, models, tools, and source availability.
 - Coding: Work with files, shells, Git, isolated worktrees, and bounded Subagent runs.
 - Data processing and analysis: Use data workspaces and Polars-backed tools with reviewable Python or R scripts, manifests, and artifacts.
 - Academic research: Search arXiv and Semantic Scholar, work with Zotero, and retain sources in a research workspace.
 - Biomedical literature research: Search PubMed and Europe PMC and organize biomedical entities and sources for literature synthesis, not diagnosis.
 - Tens-of-hours long-horizon tasks: TaskRuntime, checkpoints, pause and resume, budgets, and scheduling support work designed to continue for hours or tens of hours.
-- Local personal AI assistant: EKO is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.
+- Local personal AI assistant: Eclip is a local personal assistant running on the user's machine. The approved target has one GUI product entry, with IM messages and cron as retained background triggers. GUI terminals, Agent shell tools, desktop launch arguments and the independent SDK Host stdio protocol remain valid capabilities.
 
 ## Documentation
 - echo-agent 文档: https://echo-agent.dev/docs
@@ -193,11 +193,11 @@ Each capability below is grounded in a production binding in the current applica
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
 - 技能系统指南 | echo-agent 文档: https://echo-agent.dev/docs/skill-system-guide
 - A2A 协议 | echo-agent 文档: https://echo-agent.dev/docs/a2a-protocol
-- EKO 文档: https://echo-agent.dev/eko/docs
-- 产品概述 | EKO 文档: https://echo-agent.dev/eko/docs/overview
-- 快速开始 | EKO 文档: https://echo-agent.dev/eko/docs/getting-started
-- 能力边界 | EKO 文档: https://echo-agent.dev/eko/docs/capabilities
-- 本地数据 | EKO 文档: https://echo-agent.dev/eko/docs/storage
+- Eclip 文档: https://echo-agent.dev/eko/docs
+- 产品概述 | Eclip 文档: https://echo-agent.dev/eko/docs/overview
+- 快速开始 | Eclip 文档: https://echo-agent.dev/eko/docs/getting-started
+- 能力边界 | Eclip 文档: https://echo-agent.dev/eko/docs/capabilities
+- 本地数据 | Eclip 文档: https://echo-agent.dev/eko/docs/storage
 - echo-agent Documentation: https://echo-agent.dev/en/docs
 - Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/overview
 - Getting Started | echo-agent Documentation: https://echo-agent.dev/en/docs/getting-started
@@ -354,11 +354,11 @@ Each capability below is grounded in a production binding in the current applica
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive
 - Skill System Guide | echo-agent Documentation: https://echo-agent.dev/en/docs/skill-system-guide
 - A2A Protocol | echo-agent Documentation: https://echo-agent.dev/en/docs/a2a-protocol
-- EKO Documentation: https://echo-agent.dev/en/eko/docs
-- Overview | EKO Documentation: https://echo-agent.dev/en/eko/docs/overview
-- Getting Started | EKO Documentation: https://echo-agent.dev/en/eko/docs/getting-started
-- Capability Scope | EKO Documentation: https://echo-agent.dev/en/eko/docs/capabilities
-- Local Data | EKO Documentation: https://echo-agent.dev/en/eko/docs/storage
+- Eclip Documentation: https://echo-agent.dev/en/eko/docs
+- Overview | Eclip Documentation: https://echo-agent.dev/en/eko/docs/overview
+- Getting Started | Eclip Documentation: https://echo-agent.dev/en/eko/docs/getting-started
+- Capability Scope | Eclip Documentation: https://echo-agent.dev/en/eko/docs/capabilities
+- Local Data | Eclip Documentation: https://echo-agent.dev/en/eko/docs/storage
 
 ---
 
@@ -28583,9 +28583,11 @@ let result = a2a_client.send_task("分析数据").await?;
 
 Source: https://echo-agent.dev/eko/docs/overview
 
-# EKO
+# Eclip
 
-EKO 是基于 echo-agent 构建的本地个人 AI 助理，以 GUI 为主入口，保留 IM 消息和 cron 定时任务作为后台触发方式。它们复用同一套会话、TaskRuntime、Subagent、工具、HITL 和记忆服务。
+**/ˈɛk.lɪp/** · **EK-lip**
+
+Eclip 是基于 echo-agent 构建的本地个人 AI 助理，以 GUI 为主入口，保留 IM 消息和 cron 定时任务作为后台触发方式。它们复用同一套会话、TaskRuntime、Subagent、工具、HITL 和记忆服务。
 
 独立 TUI、REPL、CLI/JSONL 入口仍处于待退役的迁移阶段，不能把产品方向当作物理删除已经完成。GUI 内置终端、Agent shell 和独立 SDK Host stdio 不属于该退役范围。
 
@@ -28599,7 +28601,7 @@ EKO 是基于 echo-agent 构建的本地个人 AI 助理，以 GUI 为主入口�
 - 从 GUI 管理已有 IM 渠道和定时任务；个人微信按源码提供扫码、必要数字确认与受限的本人私聊文字入口，实际登录和手机收件须分别验证
 - 跨重启恢复基于 cursor 的 Agent wait 与 TaskRun，保持 workspace 与原 TaskRun 身份；已结算执行以真实且已持久确认的结算回执为准
 - 执行结果尚不确定时保持非终态并保留原 owner；未知结果不授权重放或重复执行
-- 通过 scoped 应用权威控制 Skills、prepared Plugin generation、MCP、Hooks、Browser 与用户直接设置的工具可见性；EKO 的 LSP 消费入口已退出
+- 通过 scoped 应用权威控制 Skills、prepared Plugin generation、MCP、Hooks、Browser 与用户直接设置的工具可见性；Eclip 的 LSP 消费入口已退出
 - 在下一个 model safe point 向 primary、已有 pool Agent 和 future Agent 发布同一个 generation-bound hot memory
 - 用本地文件或内存保存对话、memory、task journal、checkpoint 与产品投影，不要求 SQLite
 
@@ -28607,16 +28609,16 @@ EKO 是基于 echo-agent 构建的本地个人 AI 助理，以 GUI 为主入口�
 
 “已收到”只确认输入持久接收，不表示已经进入模型上下文、执行或完成。近期四条有界原文投影也不代表完整的持续有效要求管理已经验收。
 
-官网是经过审阅的产品事实投影，不定义 EKO 行为或公共 API。实现与配置以 [EKO 源码仓库](https://github.com/EchoYue-lp/echo-agent-cli)、其中长期维护的文档和 ADR 为准。
+官网是经过审阅的产品事实投影，不定义 Eclip 行为或公共 API。实现与配置以 [Eclip 源码仓库](https://github.com/EchoYue-lp/echo-agent-cli)、其中长期维护的文档和 ADR 为准。
 
 
 ---
 
 Source: https://echo-agent.dev/eko/docs/getting-started
 
-# EKO 快速开始
+# Eclip 快速开始
 
-本页是经过审阅的快速开始投影；精确配置、构建与打包行为以 EKO 仓库长期维护的文档为准。
+本页是经过审阅的快速开始投影；精确配置、构建与打包行为以 Eclip 仓库长期维护的文档为准。
 
 ## 前置条件
 
@@ -28661,22 +28663,22 @@ GUI 设置提供已有 IM 渠道和定时任务的管理入口。个人微信使
 
 ## 本地数据
 
-EKO 默认使用 `~/.eko/`，可通过 `EKO_DATA_DIR` 覆盖。每个工作空间的 conversation、TaskRuntime journal、memory、artifact 和 trace 属于本机产品数据，与本地或远端的项目代码位置分开。EKO 不启用 SQLite。
+Eclip 默认使用 `~/.eko/`，可通过 `EKO_DATA_DIR` 覆盖。每个工作空间的 conversation、TaskRuntime journal、memory、artifact 和 trace 属于本机产品数据，与本地或远端的项目代码位置分开。Eclip 不启用 SQLite。
 
-更完整的构建、配置与平台打包命令以 [EKO README](https://github.com/EchoYue-lp/echo-agent-cli#readme) 为准。
+更完整的构建、配置与平台打包命令以 [Eclip README](https://github.com/EchoYue-lp/echo-agent-cli#readme) 为准。
 
 
 ---
 
 Source: https://echo-agent.dev/eko/docs/capabilities
 
-# EKO 能力边界
+# Eclip 能力边界
 
-EKO 是基于 `echo-agent` 构建的本地个人 AI 助理。以下内容说明当前源码的能力与边界，不构成性能或验收承诺：结果与持续时长取决于模型配置、工具、来源可用性和本机环境。
+Eclip 是基于 `echo-agent` 构建的本地个人 AI 助理。以下内容说明当前源码的能力与边界，不构成性能或验收承诺：结果与持续时长取决于模型配置、工具、来源可用性和本机环境。
 
 ## Coding
 
-编码工作使用文件操作、交互式 Shell、Git、隔离 Worktree 和边界明确的 Subagent。工作空间支持已有本地目录、新建目录与 SSH 项目；项目文件和 Agent 命令使用绑定的同一真实目标。EKO 已退出 LSP 工具、manager、设置和 IPC 消费路径，框架自身的公开能力退役另行处理。
+编码工作使用文件操作、交互式 Shell、Git、隔离 Worktree 和边界明确的 Subagent。工作空间支持已有本地目录、新建目录与 SSH 项目；项目文件和 Agent 命令使用绑定的同一真实目标。Eclip 已退出 LSP 工具、manager、设置和 IPC 消费路径，框架自身的公开能力退役另行处理。
 
 ## Data analysis
 
@@ -28696,7 +28698,7 @@ EKO 是基于 `echo-agent` 构建的本地个人 AI 助理。以下内容说明�
 
 `TaskRuntime`、检查点、暂停与恢复、执行预算和调度支持设计为持续数小时到数十小时的工作。运行时保留可检查的状态和续跑点，但不承诺固定完成时间或成功率。
 
-任务关系只有一个权威：revisioned `TaskRun -> PlanTask -> SubagentRun` graph。framework `TaskStatus` 管执行状态，Plan 是可编辑 artifact，Todo 是只读展示投影。同一 run 内的依赖使用 `PlanRevision.tasks[].depends_on`；EKO 不维护第二套跨 run 依赖图。
+任务关系只有一个权威：revisioned `TaskRun -> PlanTask -> SubagentRun` graph。framework `TaskStatus` 管执行状态，Plan 是可编辑 artifact，Todo 是只读展示投影。同一 run 内的依赖使用 `PlanRevision.tasks[].depends_on`；Eclip 不维护第二套跨 run 依赖图。
 
 默认仅主智能体可派发首层 Subagent，首层不能继续派发，即额外嵌套深度为 0。GUI 以“最大 Subagent 总层数”配置同一规则：默认 1、可选 1—3，主智能体为第 0 层，绝不准入第 4 层。修改只影响新 run/turn；已有 TaskRun、新增任务、重试与恢复继续原绑定。
 
@@ -28704,7 +28706,7 @@ EKO 是基于 `echo-agent` 构建的本地个人 AI 助理。以下内容说明�
 
 ## Context 压缩
 
-EKO 默认通过 `compress_window: 0` 使用模型窗口 25%、至多 20K token 的近期原文预算。压缩保留 canonical 指令与最新用户请求，工具调用与结果成组处理。活跃任务的 goal 和恢复约束从 TaskRuntime 重建，完整历史仍保存在 ConversationStore。显式正数窗口选择旧消息条数上限；adaptive 策略继续使用自己的 L1-L5 配置。
+Eclip 默认通过 `compress_window: 0` 使用模型窗口 25%、至多 20K token 的近期原文预算。压缩保留 canonical 指令与最新用户请求，工具调用与结果成组处理。活跃任务的 goal 和恢复约束从 TaskRuntime 重建，完整历史仍保存在 ConversationStore。显式正数窗口选择旧消息条数上限；adaptive 策略继续使用自己的 L1-L5 配置。
 
 “已收到”只是持久接收，和 drain、进入模型上下文、已执行、已完成分别记录。journal 保留完整原文，当前活动投影只覆盖最近四条短文本或 400 字符预览及 SHA 引用；必要原文或 reader 不可用时走原可恢复暂停，不能只凭预览继续。完整来源、显式替换、范围、版本及持续有效要求覆盖仍需后继验收。
 
@@ -28720,11 +28722,11 @@ builtin、plugin、direct、planned、fork、teammate、team member 与 primary 
 
 ## 确定性 CommandCell watch
 
-`watch_cell` 使用 framework `CommandCellWatcher` retained 一个后台 command、drain byte cursor，并在不派发 model 或 Subagent 的前提下发布 typed terminal truth。EKO 只增加 exact workspace/conversation/root identity、generation 幂等、durable Ready/delivery/ack fact、恢复与共享 surface projection。interrupt watch 不会停止底层 command。
+`watch_cell` 使用 framework `CommandCellWatcher` retained 一个后台 command、drain byte cursor，并在不派发 model 或 Subagent 的前提下发布 typed terminal truth。Eclip 只增加 exact workspace/conversation/root identity、generation 幂等、durable Ready/delivery/ack fact、恢复与共享 surface projection。interrupt watch 不会停止底层 command。
 
 ## Local application core
 
-GUI、IM 与 cron 使用共享应用核心，不各自装配另一份 task、recovery、pool 或 maintenance runtime。旧 TUI、REPL、CLI/JSONL 入口仍在迁移期源码中，不能据此继续承诺永久多入口对等，也不能声称已经删除。会话与运行时状态使用本机文件或内存，EKO 不需要 SQLite。
+GUI、IM 与 cron 使用共享应用核心，不各自装配另一份 task、recovery、pool 或 maintenance runtime。旧 TUI、REPL、CLI/JSONL 入口仍在迁移期源码中，不能据此继续承诺永久多入口对等，也不能声称已经删除。会话与运行时状态使用本机文件或内存，Eclip 不需要 SQLite。
 
 ## GUI 渠道与定时任务
 
@@ -28732,9 +28734,9 @@ GUI、IM 与 cron 使用共享应用核心，不各自装配另一份 task、rec
 
 ## Extension 控制
 
-Skills、Plugins、MCP servers、Hooks 与 Browser 控制使用同一个应用核心权威。EKO 只消费用户安装到 `~/.eko/skills/` 的独立 Skill、当前项目 `.eko/skills/` 的项目 Skill 与 Plugin generation 提供的 Skill，不再捆绑 catalog、默认启用集、baseline 或 Tauri Skill resource。`enabled-skills.json` version 3 只保存用户 Skill 的 `{enabled}` 选择；项目根到当前工作目录的 `AGENTS.md` 链进入同一 instruction projection。相同名称按项目 Skill、Plugin Skill、用户 Skill 优先。typed receipt 返回 settled 或 degraded，下一次操作、重启或 workspace load 会重新收敛。
+Skills、Plugins、MCP servers、Hooks 与 Browser 控制使用同一个应用核心权威。Eclip 只消费用户安装到 `~/.eko/skills/` 的独立 Skill、当前项目 `.eko/skills/` 的项目 Skill 与 Plugin generation 提供的 Skill，不再捆绑 catalog、默认启用集、baseline 或 Tauri Skill resource。`enabled-skills.json` version 3 只保存用户 Skill 的 `{enabled}` 选择；项目根到当前工作目录的 `AGENTS.md` 链进入同一 instruction projection。相同名称按项目 Skill、Plugin Skill、用户 Skill 优先。typed receipt 返回 settled 或 degraded，下一次操作、重启或 workspace load 会重新收敛。
 
-portable Plugin component 只解析一次，形成不可变 framework `PreparedPluginSet`。EKO 捕获精确 workspace target，增加 executable Subagent、scoped monitor、theme 与 output style 产品策略。rollback 使用 prepared generation，不重新读取可能已变化的文件。
+portable Plugin component 只解析一次，形成不可变 framework `PreparedPluginSet`。Eclip 捕获精确 workspace target，增加 executable Subagent、scoped monitor、theme 与 output style 产品策略。rollback 使用 prepared generation，不重新读取可能已变化的文件。
 
 ## Memory 与用户工具控制
 
@@ -28742,16 +28744,16 @@ portable Plugin component 只解析一次，形成不可变 framework `PreparedP
 
 用户直接设置的工具可见性是独立应用 policy，通过 framework disabled-tools snapshot 发布；它不是 approval mode，也不受 agent 自动执行 permission mode 限制。
 
-以上内容是经过审阅的源码行为摘要；精确配置、命令与合同仍以 EKO 仓库为准。
+以上内容是经过审阅的源码行为摘要；精确配置、命令与合同仍以 Eclip 仓库为准。
 
 
 ---
 
 Source: https://echo-agent.dev/eko/docs/storage
 
-# EKO 本地数据
+# Eclip 本地数据
 
-EKO 面向用户自己的机器，产品层使用普通文件或内存保存状态，不启用 SQLite。framework 为其它消费者提供的 Store 实现是独立问题。
+Eclip 面向用户自己的机器，产品层使用普通文件或内存保存状态，不启用 SQLite。framework 为其它消费者提供的 Store 实现是独立问题。
 
 ## 数据职责
 
@@ -28764,7 +28766,7 @@ EKO 面向用户自己的机器，产品层使用普通文件或内存保存状�
 - 输入的持久接收、目标 TaskRun 绑定、进入上下文和执行/完成是不同事实。两份原 journal 不被描述为一个事务；durability 未确认时不冒已准入或重新投向另一个目标。
 - journal 保存完整 user steer，当前活动投影有界保留最近四条短文或 400 字符预览与完整 SHA 引用。长原文制品可从 journal 重建，但这不等于完整的持续有效要求模型已经闭合。
 - 每个 workspace 拥有本地 memory Store、一个 generation-bound `MemoryLayerManager` 和一个在 model safe point 消费的 immutable hot-memory projection。
-- `enabled-skills.json` 是用户 Skill 启用状态的唯一持久事实，version 3 只保存 `{enabled}` flat map 并原子写入；当前项目 `.eko/skills/` 的项目 Skill 不写入该文件。EKO 不再捆绑 Skill、生成默认启用集或注入 baseline，运行时 reconcile 只返回即时 target receipt，不保留 generation 或 repair debt。
+- `enabled-skills.json` 是用户 Skill 启用状态的唯一持久事实，version 3 只保存 `{enabled}` flat map 并原子写入；当前项目 `.eko/skills/` 的项目 Skill 不写入该文件。Eclip 不再捆绑 Skill、生成默认启用集或注入 baseline，运行时 reconcile 只返回即时 target receipt，不保留 generation 或 repair debt。
 - artifact 与 trace 保持 workspace scope；trace 只用于诊断，不能判定 TaskRun 或 PlanTask 是否已提交。
 - GUI、IM 与 cron 通过同一应用核心访问这些权威；待退役的旧独立入口不新增另一套状态权威。
 
@@ -28772,7 +28774,7 @@ EKO 面向用户自己的机器，产品层使用普通文件或内存保存状�
 
 工作空间的项目代码位置可以是已有本地目录、新建目录或 SSH 远程目录。原 Workspace manifest 记录项目位置和验证后的执行身份；本机 `Workspace.root` 产品数据不是远端命令的工作目录。文件、Git/worktree 与 Agent 执行使用同一已捕获项目目标，不能因界面切换自动改投；未知写入也不能当作从未发生后重放。
 
-本页是官网投影，不是 storage schema。EKO persistence 文档与源码仓库仍是权威。
+本页是官网投影，不是 storage schema。Eclip persistence 文档与源码仓库仍是权威。
 
 
 ---
@@ -57528,9 +57530,11 @@ let result = a2a_client.send_task("Analyze data").await?;
 
 Source: https://echo-agent.dev/en/eko/docs/overview
 
-# EKO
+# Eclip
 
-EKO is a local personal assistant running on the user's machine. The approved
+**/ˈɛk.lɪp/** · **EK-lip**
+
+Eclip is a local personal assistant running on the user's machine. The approved
 target has one GUI product entry, with IM messages and cron as retained background
 triggers. GUI terminals, Agent shell tools, desktop launch arguments and the
 independent SDK Host stdio protocol remain valid capabilities.
@@ -57541,7 +57545,7 @@ to keep expanding all console surfaces has been superseded. Removing console
 entry points must wait for GUI-owned IM lifecycle, cron and recovery acceptance.
 This documentation change does not delete any runtime entry or protocol.
 
-EKO no longer requests the framework LSP feature, registers language-server tools,
+Eclip no longer requests the framework LSP feature, registers language-server tools,
 or exposes LSP commands/settings/IPC. Old configuration and plugin declarations
 receive explicit retirement diagnostics without deleting user files. Mixed plugins
 retain legal components and their existing publication/cleanup receipts. Framework
@@ -57560,16 +57564,16 @@ IM, cron, MCP and Subagent are retained in this consumer-only change.
 - Publish generation-bound hot memory once for the primary, existing pooled Agents, and future Agents at the next model safe point
 - Store conversations, memory, task journals, checkpoints, and product projections in local files or memory without requiring SQLite
 
-This website is a reviewed projection of product facts; it does not define EKO behavior or public APIs. The [EKO source repository](https://github.com/EchoYue-lp/echo-agent-cli), its maintained docs, and its ADRs remain authoritative for implementation and configuration.
+This website is a reviewed projection of product facts; it does not define Eclip behavior or public APIs. The [Eclip source repository](https://github.com/EchoYue-lp/echo-agent-cli), its maintained docs, and its ADRs remain authoritative for implementation and configuration.
 
 
 ---
 
 Source: https://echo-agent.dev/en/eko/docs/getting-started
 
-# EKO Getting Started
+# Eclip Getting Started
 
-This page is a reviewed quick-start projection. Use the maintained EKO repository docs as the authority for exact configuration, build, and packaging behavior.
+This page is a reviewed quick-start projection. Use the maintained Eclip repository docs as the authority for exact configuration, build, and packaging behavior.
 
 ## Prerequisites
 
@@ -57610,7 +57614,7 @@ waiting for the model or tools. It does not mean execution or task completion.
 Preparation or admission failure preserves the draft, and late results do not
 clear a newer draft after navigation or editing. Stop remains a separate action.
 
-EKO is a local personal assistant running on the user's machine. The approved
+Eclip is a local personal assistant running on the user's machine. The approved
 target has one GUI product entry, with IM messages and cron as retained background
 triggers. GUI terminals, Agent shell tools, desktop launch arguments and the
 independent SDK Host stdio protocol remain valid capabilities.
@@ -57623,22 +57627,22 @@ This documentation change does not delete any runtime entry or protocol.
 
 ## Local data
 
-EKO uses `~/.eko/` by default and accepts `EKO_DATA_DIR` as an override. User rules, memory, conversations and journals remain local. EKO does not enable SQLite.
+Eclip uses `~/.eko/` by default and accepts `EKO_DATA_DIR` as an override. User rules, memory, conversations and journals remain local. Eclip does not enable SQLite.
 
-Use the [EKO README](https://github.com/EchoYue-lp/echo-agent-cli#readme) as the source of truth for complete build, configuration, and platform packaging commands.
+Use the [Eclip README](https://github.com/EchoYue-lp/echo-agent-cli#readme) as the source of truth for complete build, configuration, and platform packaging commands.
 
 
 ---
 
 Source: https://echo-agent.dev/en/eko/docs/capabilities
 
-# EKO capability scope
+# Eclip capability scope
 
-EKO is a local personal AI assistant built on `echo-agent`. The capabilities on this page reflect production bindings in the application core. They are not performance guarantees: results and duration depend on the configured model, tools, source availability, and local machine.
+Eclip is a local personal AI assistant built on `echo-agent`. The capabilities on this page reflect production bindings in the application core. They are not performance guarantees: results and duration depend on the configured model, tools, source availability, and local machine.
 
 ## Coding
 
-EKO integrates transactional file edits, workspace diff, analytics execution,
+Eclip integrates transactional file edits, workspace diff, analytics execution,
 interactive local/system-OpenSSH terminal sessions (source prepared; native/remote
 qualification pending), Browser/Chrome, workflow catalog, structured
 extraction, MCP, Tool output projections, model-driven Agent collaboration controls,
@@ -57681,18 +57685,18 @@ profile names remain readable; they do not authorize new professional execution.
 
 `TaskRuntime`, checkpoints, pause and resume, execution budgets, and scheduling support work designed to continue for hours or tens of hours. The runtime preserves inspectable state and continuation points; it does not promise a fixed completion time or success rate.
 
-Task relationships have one authority: a revisioned `TaskRun -> PlanTask -> SubagentRun` graph. Framework `TaskStatus` owns execution state, Plan is an editable artifact, and Todo is a read-only display projection. Same-run dependencies use `PlanRevision.tasks[].depends_on`; EKO does not maintain a second cross-run dependency graph.
+Task relationships have one authority: a revisioned `TaskRun -> PlanTask -> SubagentRun` graph. Framework `TaskStatus` owns execution state, Plan is an editable artifact, and Todo is a read-only display projection. Same-run dependencies use `PlanRevision.tasks[].depends_on`; Eclip does not maintain a second cross-run dependency graph.
 
 For an exact Task Subagent attempt, the interruption request is recorded before its original execution is signalled; the request itself is not a completion or cancellation receipt. Continuation uses the existing TaskRun identity, Goal, route, and execution profile, with the caller workspace, conversation, and root checked against that identity.
 
-EKO's GUI selects 1, 2 or 3 child layers, defaults to 1, and never admits layer 4.
+Eclip's GUI selects 1, 2 or 3 child layers, defaults to 1, and never admits layer 4.
 Primary is layer 0; the first actual child is layer 1.
 
 Only integers 1, 2 and 3 are accepted; the default is 1. Primary is layer 0. Changes apply to new runs/turns; existing runs, new tasks within them, retries and recovery keep their original binding. Invalid configuration files fail explicitly instead of silently loading defaults.
 
 ## Context compression
 
-EKO defaults to a recent-text token budget of 25% of the model window, capped at 20K tokens, with `compress_window: 0`. Compression preserves canonical instructions and the latest user request, and keeps tool calls and results together. Active task goals and recovery constraints are rebuilt from TaskRuntime; complete conversation history remains in the conversation store. CLI, TUI, GUI, and channels share the installed strategy and optional compression focus. An explicit positive `compress_window` selects the legacy message cap; the adaptive strategy uses its own L1-L5 policy.
+Eclip defaults to a recent-text token budget of 25% of the model window, capped at 20K tokens, with `compress_window: 0`. Compression preserves canonical instructions and the latest user request, and keeps tool calls and results together. Active task goals and recovery constraints are rebuilt from TaskRuntime; complete conversation history remains in the conversation store. CLI, TUI, GUI, and channels share the installed strategy and optional compression focus. An explicit positive `compress_window` selects the legacy message cap; the adaptive strategy uses its own L1-L5 policy.
 
 Queued additions acknowledge receipt from the original durable `queue_chat_input` result, without waiting for the model, physical tool or mailbox drain. Frontier refresh and tracked-steer observation stay with the original input service and attempt owner. Receipt, drain, context inclusion and terminal outcome are separate facts; receipt does not mean an active tool stopped or the correction executed.
 
@@ -57706,7 +57710,7 @@ Built-in, plugin, direct, planned, fork, teammate, team-member, and primary Task
 
 ## Deterministic command-cell watch
 
-`watch_cell` uses the framework `CommandCellWatcher` to retain one background command, drain its byte cursor, and publish typed terminal truth without dispatching a model or Subagent. EKO adds exact workspace/conversation/root identity, generation idempotency, durable Ready/delivery/ack facts, recovery, and shared surface projection. Interrupting a watch does not stop the underlying command.
+`watch_cell` uses the framework `CommandCellWatcher` to retain one background command, drain its byte cursor, and publish typed terminal truth without dispatching a model or Subagent. Eclip adds exact workspace/conversation/root identity, generation idempotency, durable Ready/delivery/ack facts, recovery, and shared surface projection. Interrupting a watch does not stop the underlying command.
 
 ## Personal Weixin
 
@@ -57721,7 +57725,7 @@ do not execute remaining text. No OpenClaw Gateway or desktop injection is used.
 
 ## Local application core
 
-EKO is a local personal assistant running on the user's machine. The approved
+Eclip is a local personal assistant running on the user's machine. The approved
 target has one GUI product entry, with IM messages and cron as retained background
 triggers. GUI terminals, Agent shell tools, desktop launch arguments and the
 independent SDK Host stdio protocol remain valid capabilities.
@@ -57734,9 +57738,9 @@ This documentation change does not delete any runtime entry or protocol.
 
 ## Extension control
 
-Skills, Plugins, MCP servers, Hooks, and Browser controls enter one application-core authority from the GUI, TUI, CLI/JSONL, and channels. EKO consumes independent Skills installed under `~/.eko/skills/`, project Skills under the current project's `.eko/skills/`, and Skills supplied by plugin generations; it no longer bundles a catalog, default active set, baseline, or Tauri Skill resource. Version 3 `enabled-skills.json` stores only user `{enabled}` choices. The project's root-to-working-directory `AGENTS.md` chain enters the same instruction projection. Name collisions use project Skills, plugin Skills, then user Skills as the precedence order. Typed receipts return settled or degraded, and the next operation, restart, or workspace load converges again.
+Skills, Plugins, MCP servers, Hooks, and Browser controls enter one application-core authority from the GUI, TUI, CLI/JSONL, and channels. Eclip consumes independent Skills installed under `~/.eko/skills/`, project Skills under the current project's `.eko/skills/`, and Skills supplied by plugin generations; it no longer bundles a catalog, default active set, baseline, or Tauri Skill resource. Version 3 `enabled-skills.json` stores only user `{enabled}` choices. The project's root-to-working-directory `AGENTS.md` chain enters the same instruction projection. Name collisions use project Skills, plugin Skills, then user Skills as the precedence order. Typed receipts return settled or degraded, and the next operation, restart, or workspace load converges again.
 
-Portable Plugin components are parsed once into an immutable framework `PreparedPluginSet`. EKO captures exact workspace targets and adds only product policy for executable Subagents, scoped monitors, themes, and output styles. Rollback uses the prepared generation rather than rereading changed files.
+Portable Plugin components are parsed once into an immutable framework `PreparedPluginSet`. Eclip captures exact workspace targets and adds only product policy for executable Subagents, scoped monitors, themes, and output styles. Rollback uses the prepared generation rather than rereading changed files.
 
 ## Memory and direct-user tool control
 
@@ -57744,16 +57748,16 @@ Each workspace memory generation shares one `MemoryLayerManager`. A successful m
 
 Direct-user tool visibility is a separate application policy projected through the framework's disabled-tools snapshot. It is not an approval mode and is not gated by automated-agent permission settings.
 
-These statements summarize reviewed source behavior. The EKO repository remains the authority for exact configuration, commands, and contracts.
+These statements summarize reviewed source behavior. The Eclip repository remains the authority for exact configuration, commands, and contracts.
 
 
 ---
 
 Source: https://echo-agent.dev/en/eko/docs/storage
 
-# EKO Local Data
+# Eclip Local Data
 
-EKO runs on the user's own machine. Its product layer stores state in ordinary files or memory and does not enable SQLite. Framework Store implementations available to other consumers are a separate concern.
+Eclip runs on the user's own machine. Its product layer stores state in ordinary files or memory and does not enable SQLite. Framework Store implementations available to other consumers are a separate concern.
 
 ## Data responsibilities
 
@@ -57764,7 +57768,7 @@ EKO runs on the user's own machine. Its product layer stores state in ordinary f
 - Every store-backed turn eagerly owns a TaskRun. Typed execution provenance distinguishes an internal conversation turn from an orchestrated run; a planless conversation run keeps its journal but stays out of the task UI.
 - Ordinary chat also uses its own `ChatEventLog` for input/output delivery and surface replay. It can correlate with the TaskRuntime journal for the same turn, but neither journal replaces the other.
 - Each workspace owns its local memory Store, one generation-bound `MemoryLayerManager`, and an immutable hot-memory projection consumed at model safe points.
-- `enabled-skills.json` is the sole persistent enablement fact for user Skills. Version 3 stores only the atomically written `{enabled}` flat map; project Skills under the current project's `.eko/skills/` are not written there. EKO no longer bundles Skills, creates a default active set, or injects a baseline; runtime reconciliation returns immediate target receipts and retains no generation or repair debt.
+- `enabled-skills.json` is the sole persistent enablement fact for user Skills. Version 3 stores only the atomically written `{enabled}` flat map; project Skills under the current project's `.eko/skills/` are not written there. Eclip no longer bundles Skills, creates a default active set, or injects a baseline; runtime reconciliation returns immediate target receipts and retains no generation or repair debt.
 - Artifacts and traces remain workspace-scoped. Trace data is diagnostic and does not determine whether a TaskRun or PlanTask committed.
 
 The default product data root is `~/.eko/`, overridable with `EKO_DATA_DIR`.
@@ -57775,5 +57779,5 @@ User rules, memory, conversations and journals remain local.
 
 Receipt, drain, context inclusion and terminal outcome are separate facts; receipt does not mean an active tool stopped or the correction executed.
 
-This page is a website projection, not a storage schema. The EKO persistence documentation and source repository remain authoritative.
+This page is a website projection, not a storage schema. The Eclip persistence documentation and source repository remain authoritative.
 
