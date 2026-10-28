@@ -181,12 +181,6 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/mcp" />
   </url>
   <url>
-    <loc>https://echo-agent.dev/docs/lsp</loc>
-    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/lsp" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/lsp" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/lsp" />
-  </url>
-  <url>
     <loc>https://echo-agent.dev/docs/web-tools</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/web-tools" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/web-tools" />
@@ -937,6 +931,12 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/skill-system-guide" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/docs/lsp</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/lsp" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/lsp" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/lsp" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/docs/a2a-protocol</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/a2a-protocol" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/a2a-protocol" />
@@ -1157,12 +1157,6 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/mcp" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/mcp" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/mcp" />
-  </url>
-  <url>
-    <loc>https://echo-agent.dev/en/docs/lsp</loc>
-    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/lsp" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/lsp" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/lsp" />
   </url>
   <url>
     <loc>https://echo-agent.dev/en/docs/web-tools</loc>
@@ -1913,6 +1907,12 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/skill-system-guide" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/skill-system-guide" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/skill-system-guide" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/lsp</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/lsp" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/lsp" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/lsp" />
   </url>
   <url>
     <loc>https://echo-agent.dev/en/docs/a2a-protocol</loc>

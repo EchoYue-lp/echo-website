@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getAvailableDocs, loadDocContent, localizedDocPath } from './loader';
 import { frameworkAdrDocs } from './framework-adrs.generated';
-import { getDocCategories, getAllSlugs } from './registry';
+import { getDocCategories, getAllSlugs, findDocBySlug } from './registry';
 
 describe('documentation registry', () => {
   it.each(['echo-agent', 'eko'] as const)('uses unique slugs for %s', (product) => {
@@ -43,5 +43,19 @@ describe('documentation registry', () => {
       .sort();
     expect(frameworkAdrDocs.length).toBeGreaterThanOrEqual(12);
     expect(availableAdrs).toEqual(registeredAdrs);
+  });
+  it('将具名退役页置于历史分组并保留原入站slug', () => {
+    const categories = getDocCategories('echo-agent');
+    const retired = categories.find((category) => category.title.zh === '退役与历史');
+    expect(retired?.docs.map((doc) => doc.slug).sort()).toEqual(['a2a-protocol', 'lsp']);
+    for (const category of categories.filter((entry) => entry !== retired)) {
+      expect(category.docs.some((doc) => ['a2a-protocol', 'lsp'].includes(doc.slug))).toBe(false);
+    }
+    expect(findDocBySlug('echo-agent', 'lsp')?.filePath).toBe(
+      './content/echo-agent/31-lsp-integration.md',
+    );
+    expect(findDocBySlug('echo-agent', 'a2a-protocol')?.filePath).toBe(
+      './content/echo-agent/knowledge/a2a-protocol.md',
+    );
   });
 });

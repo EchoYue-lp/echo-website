@@ -17,7 +17,7 @@ Every item below corresponds to code and documentation in the echo-agent workspa
 - Fast feedback for iteration: Focused crates, feature flags, typed events, examples, and tests keep changes bounded.
 - Bilingual documentation: Follow English and Chinese onboarding, concepts, references, and knowledge guides.
 - Tasks and Subagents: Model task graphs and delegate bounded work through one Subagent vocabulary.
-- Open integration boundaries: Connect MCP, LSP, channels, hooks, and tracing through optional adapters.
+- Open integration boundaries: Connect MCP, channels, hooks, and tracing through optional adapters.
 
 # Eclip
 Hear your voice. Let ideas leap.
@@ -66,7 +66,6 @@ Each capability below is grounded in a production binding in the current applica
 - Graph 工作流 | echo-agent 文档: https://echo-agent.dev/docs/graph-workflow
 - 工厂模式 | echo-agent 文档: https://echo-agent.dev/docs/factory-modes
 - MCP 协议 | echo-agent 文档: https://echo-agent.dev/docs/mcp
-- LSP 集成 | echo-agent 文档: https://echo-agent.dev/docs/lsp
 - Web 工具 | echo-agent 文档: https://echo-agent.dev/docs/web-tools
 - 常用工具 | echo-agent 文档: https://echo-agent.dev/docs/common-tools
 - 研究工具 | echo-agent 文档: https://echo-agent.dev/docs/research-tools
@@ -192,7 +191,8 @@ Each capability below is grounded in a production binding in the current applica
 - Agent 设计模式 | echo-agent 文档: https://echo-agent.dev/docs/agent-patterns
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
 - 技能系统指南 | echo-agent 文档: https://echo-agent.dev/docs/skill-system-guide
-- A2A 协议 | echo-agent 文档: https://echo-agent.dev/docs/a2a-protocol
+- LSP退役与历史恢复 | echo-agent 文档: https://echo-agent.dev/docs/lsp
+- A2A退役与历史恢复 | echo-agent 文档: https://echo-agent.dev/docs/a2a-protocol
 - Eclip 文档: https://echo-agent.dev/eko/docs
 - 产品概述 | Eclip 文档: https://echo-agent.dev/eko/docs/overview
 - 快速开始 | Eclip 文档: https://echo-agent.dev/eko/docs/getting-started
@@ -227,7 +227,6 @@ Each capability below is grounded in a production binding in the current applica
 - Graph Workflow | echo-agent Documentation: https://echo-agent.dev/en/docs/graph-workflow
 - Factory Modes | echo-agent Documentation: https://echo-agent.dev/en/docs/factory-modes
 - MCP Protocol | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp
-- LSP Integration | echo-agent Documentation: https://echo-agent.dev/en/docs/lsp
 - Web Tools | echo-agent Documentation: https://echo-agent.dev/en/docs/web-tools
 - Common Tools | echo-agent Documentation: https://echo-agent.dev/en/docs/common-tools
 - Research Tools | echo-agent Documentation: https://echo-agent.dev/en/docs/research-tools
@@ -353,7 +352,8 @@ Each capability below is grounded in a production binding in the current applica
 - Agent Design Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/agent-patterns
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive
 - Skill System Guide | echo-agent Documentation: https://echo-agent.dev/en/docs/skill-system-guide
-- A2A Protocol | echo-agent Documentation: https://echo-agent.dev/en/docs/a2a-protocol
+- LSP退役与历史恢复 | echo-agent Documentation: https://echo-agent.dev/en/docs/lsp
+- A2A退役与历史恢复 | echo-agent Documentation: https://echo-agent.dev/en/docs/a2a-protocol
 - Eclip Documentation: https://echo-agent.dev/en/eko/docs
 - Overview | Eclip Documentation: https://echo-agent.dev/en/eko/docs/overview
 - Getting Started | Eclip Documentation: https://echo-agent.dev/en/eko/docs/getting-started
