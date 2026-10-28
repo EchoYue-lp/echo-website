@@ -46,6 +46,20 @@ npm run test:e2e
 system dependencies.
 CI runs on pushes to `main`; task branches and pull requests must pass the local gate before merge.
 
+## 本轮原生消息文档的同步范围
+
+原生消息、实际工具调用与运行时最终结算的统一路线正在跨仓实现和本地验证。
+ThinkTool／FinalAnswerTool 及工具前强制 CoT 的具名退役，只按真实调用链和上游示例编译／审查验收；
+官网不解析 Rust 或中文语义，也不因注释、字符串、`rust,ignore` 旧版展示或同名自定义工具中出现这些名字而拒绝同步。
+
+当前 API 使用说明及可执行示例由所属上游验证；官网沿原 clean Git 树／revision／逐文件 SHA
+同步正文和 manifest，不直接手补生成镜像或把未提交源标为新发布快照。历史 ADR、迁移说明与合法自定义工具保留原文。
+
+当前镜像仍绑定 manifest 中的原 Framework 修订；上游新文档尚未形成最终可同步来源，完整 source-aware 检查继续待闭合。
+后继仅有中文的原生合同沿原 Markdown 来源回链访问，不为形式新建英文副本；正式来源落定前不授新链接的发布资格。
+assistant phase、reasoning、工具事实、最终发布与 TaskRun／Goal 完成分别验收；本地测试或站点构建不代表真实原生窗口已通过。
+SDK 的正式 pin 仍按其独立来源核准，官网不宣称已更新；网站没有部署。
+
 ## Documentation synchronization
 
 Framework documentation with matching English and Chinese source paths is vendored from

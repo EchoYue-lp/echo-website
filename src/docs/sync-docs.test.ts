@@ -215,4 +215,87 @@ describe('文档同步的固定 Git 来源', () => {
     write(join(f.site, 'src/docs/content/eko/en/untracked.md'), '# 清单外\n');
     expect(f.run('--check').status).not.toBe(0);
   });
+  it('保留原生reasoning、phase、callback、自定义同名工具及历史ADR原文', () => {
+    const f = fixture();
+    const current =
+      '# 当前合同\nThinkingConfig/signature/redacted/opaque 保留。\nphase=final_answer是消息事实，不等于Goal完成。\nfn on_final_answer() {}\n#[tool(name="final_answer")]\n#[tool(name="think")]\n';
+    write(join(f.framework, 'docs/zh/intro.md'), current);
+    write(
+      join(f.framework, 'docs/adr/0002-legacy.md'),
+      '# 历史原件\n旧时调用 .enable_cot(true) 和 .disable_cot()。\n',
+    );
+    commit(f.framework);
+    expect(f.run().status).toBe(0);
+    expect(readFileSync(join(f.site, 'src/docs/content/echo-agent/zh/intro.md'), 'utf8')).toBe(
+      current,
+    );
+    expect(
+      readFileSync(join(f.site, 'src/docs/content/echo-agent/zh/adr/0002-legacy.md'), 'utf8'),
+    ).toContain('.enable_cot(true)');
+    expect(f.run('--check').status).toBe(0);
+  });
+  it.each([
+    '| final_answer | 内置控制工具已退役，不再自动注册 |',
+    '| final_answer | 用户自定义工具；由用户扩展工厂自动注册 |',
+    '旧的 `.enable_cot(true)` 已删除；使用 ThinkingConfig。',
+  ])('允许否定说明、自定义工厂与迁移文字: %s', (valid) => {
+    const f = fixture();
+    write(join(f.framework, 'docs/zh/intro.md'), `# 正确说明\n${valid}\n`);
+    commit(f.framework);
+    expect(f.run().status).toBe(0);
+    expect(f.run('--check').status).toBe(0);
+  });
+  it.each([
+    [
+      'line-comment',
+      [
+        '```rust',
+        '// .enable_cot(true) 已移除，现用原生 thinking 配置。',
+        'let description = "old .disable_cot() is unavailable";',
+        '```',
+      ].join('\n'),
+    ],
+    [
+      'block-comment',
+      ['```rust', '/*', '.enable_cot(true) 旧示例只作迁移说明', '*/', '```'].join('\n'),
+    ],
+    [
+      'ignored-history',
+      ['旧版历史片段，仅用于迁移对照：', '```rust,ignore', '.enable_cot(true)', '```'].join('\n'),
+    ],
+  ])('保留Rust注释与显式非执行历史展示: %s', (_kind, valid) => {
+    const f = fixture();
+    write(join(f.framework, 'docs/zh/intro.md'), `# 迁移说明\n${valid}\n`);
+    commit(f.framework);
+    expect(f.run().status).toBe(0);
+    expect(f.run('--check').status).toBe(0);
+  });
+
+  it('后继原生文档仅从新已提交Git快照生成，并绑定逐字节镜像与manifest', () => {
+    const f = fixture();
+    const old = '# 历史使用说明\n```rust\n.enable_cot(true)\n```\n';
+    write(join(f.framework, 'docs/zh/intro.md'), old);
+    const oldRevision = commit(f.framework);
+    expect(f.run().status).toBe(0);
+    expect(f.manifest().framework.revision).toBe(oldRevision);
+    const current =
+      '# 原生消息合同\nreasoning、assistant phase和runtime结算分别保留。\n内置控制工具已退役；最终候选仍经Guard/Critic/Stop及持久化结算。\n';
+    write(join(f.framework, 'docs/zh/intro.md'), current);
+    const newRevision = commit(f.framework);
+    // 旧镜像自洽不代表后继源已同步；先保真实check失败，再由原同步入口生成。
+    expect(f.run('--check', '--framework-root', f.framework).status).not.toBe(0);
+    expect(readFileSync(join(f.site, 'src/docs/content/echo-agent/zh/intro.md'), 'utf8')).toBe(old);
+    expect(f.run().status).toBe(0);
+    expect(f.manifest().framework.revision).toBe(newRevision);
+    const mirrored = readFileSync(join(f.site, 'src/docs/content/echo-agent/zh/intro.md'), 'utf8');
+    expect(mirrored).toBe(current);
+    expect(
+      f
+        .manifest()
+        .framework.files.find(
+          (record: { sourcePath: string }) => record.sourcePath === 'docs/zh/intro.md',
+        )?.sha256,
+    ).toBe(digest(current));
+    expect(f.run('--check', '--framework-root', f.framework).status).toBe(0);
+  });
 });

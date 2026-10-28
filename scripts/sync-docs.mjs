@@ -243,6 +243,9 @@ function frameworkSnapshot(repositoryRoot) {
   if (adrPaths.length === 0) {
     throw new Error('Framework documentation contains no ADR files.');
   }
+  // 当前API用法由上游真实示例编译和文档审查确认；这里仅证明固定Git来源与逐字节镜像。
+  // 不从Rust fence、注释、字符串或迁移说明中的名称推断可执行性，以免阻断合法源同步。
+  // 历史ADR、旧版对照及自定义工具均保持来源原文，后继内容只能随合格上游快照更新。
   const documents = new Map();
   const files = [];
   for (const language of ['en', 'zh']) {
