@@ -1,5 +1,8 @@
 # Eclip Local Data
 
+> **历史英文参考**
+> 本页保留旧版产品说明；当前产品请阅读[中文说明](/eko/docs/storage)。下文不是当前中文主维护文档的同步译文。
+
 Eclip runs on the user's own machine. Its product layer stores state in ordinary files or memory and does not enable SQLite. Framework Store implementations available to other consumers are a separate concern.
 
 ## Data responsibilities

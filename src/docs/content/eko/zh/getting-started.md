@@ -21,7 +21,10 @@ cargo fetch
 ## 启动 GUI
 
 ```bash
-npm install -g @tauri-apps/cli
+cargo install tauri-cli --version '=2.12.4' --locked
+cd web-frontend
+npm ci
+cd ..
 cargo gui-dev
 ```
 
@@ -45,7 +48,7 @@ SSH 登录、远端目录验证与真实文件/命令执行各有独立结果；
 
 从侧栏“IM 渠道”独立管理 QQ、飞书与个人微信，定时任务继续使用原管理入口。个人微信使用扫码和必要数字确认，当前范围是单个活动账号、扫码本人私聊文字；渠道 Ready、发送 Accepted 与手机实际收件是不同事实。原生 GUI、真实微信和 SSH 验收不由本页构建命令替代。
 
-独立 TUI、REPL、CLI/JSONL 入口仍保留在迁移期源码中，等待具名退役收口；本页优先介绍 GUI。
+当前源码以 GUI 为唯一产品主入口，已退出独立 TUI、REPL、CLI/JSONL 入口。GUI 内置终端与 Agent shell 继续可用；独立 SDK Host 的 stdio 协议仍由 SDK 仓库维护。新版安装包仍须分别完成构建、安装与原生运行验收。
 
 ## 本地数据
 

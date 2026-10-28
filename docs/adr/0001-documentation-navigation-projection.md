@@ -35,3 +35,19 @@
 验证复用现有 registry 回归测试、格式、lint、类型、docs/site 检查，以及正常 preflight record/check、task source 和显式完成验证。正式 Asset/Evidence 引用真实 registry、同步脚本、生成器、派生文件及文档源；本地产物仅在 Evidence 正文标明原件位置和限制。
 
 需要撤回时，恢复导航源和对应生成结果，再同步调整本记录与语义对象；不改原上游来源身份，也不触碰 native App、用户数据或历史快照。
+
+## 2026-10-29：页面纠正与完整来源复审分开
+
+完整来源尚未复审时，中文页面仍需纠正已批准且能从当前源码核实的入口和控制工具退役事实。
+继续手改 manifest 摘要会产生第二个生成入口；直接推进产品修订则会把有限的页面纠正冒作完整审阅。
+因此扩展原 `applicationProjection`：仅在显式 `--refresh-application-projection` 时刷新页面摘要，
+固定使用 `source-correction-pending-source-review`，保留历史审阅修订、sourceFiles 与权威。
+没有历史审阅身份、混用完整审阅参数或 check 模式均拒绝，且在写入 manifest 前失败。
+
+默认 Framework 同步仍完整保留原产品投影。Framework clean Git/blob/revision、产品完整审阅的
+clean-source/parity 检查和 source-aware 拒绝逻辑均不变；不引入 schema、第二份 store 或运行时状态。
+对应回归覆盖页面摘要、历史身份保留、脏产品来源不被采纳及非法组合不写 manifest。
+
+Framework 正文按 clean `684ad1d9…` 同步，中文产品页只更新可核的退役事实，不新增英文产品副本。
+旧历史/迁移文档、原生 reasoning、最终运行时通知及自定义同名工具保持其来源语义。
+本切片不证明 SDK 新 pin、完整消费者反向状态、App、手机、SSH、完整矩阵或 main CI／发布。

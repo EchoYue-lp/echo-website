@@ -801,4 +801,28 @@ export const frameworkAdrDocs = [
     },
     filePath: './content/echo-agent/adr/0099-personal-weixin-channel.md',
   },
+  {
+    slug: 'adr-0100-zstd-safe-chain-vendoring',
+    title: {
+      zh: 'ADR 0100：由 Framework 维护 Polars 的 zstd 安全依赖补丁',
+      en: 'ADR 0100：由 Framework 维护 Polars 的 zstd 安全依赖补丁',
+    },
+    filePath: './content/echo-agent/adr/0100-zstd-safe-chain-vendoring.md',
+  },
+  {
+    slug: 'adr-0101-native-message-execution',
+    title: {
+      zh: 'ADR 0101：Framework 原生消息与统一执行终态',
+      en: 'ADR 0101：Framework 原生消息与统一执行终态',
+    },
+    filePath: './content/echo-agent/adr/0101-native-message-execution.md',
+  },
+  {
+    slug: 'adr-0102-canonical-agent-consumers',
+    title: {
+      zh: 'ADR 0102：现有消费者采用唯一原生 Agent 输出',
+      en: 'ADR 0102：现有消费者采用唯一原生 Agent 输出',
+    },
+    filePath: './content/echo-agent/adr/0102-canonical-agent-consumers.md',
+  },
 ];

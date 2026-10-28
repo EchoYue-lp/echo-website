@@ -2,11 +2,20 @@
 
 本仓库展示独立的 echo-agent 框架与 **Eclip /ˈɛk.lɪp/** 本地个人助理。Eclip 读作 **EK-lip**，两个音节；标语为「听见你的声音，让想法飞跃。」
 
-品牌展示沿用 `/eko` 路由，官网、发现索引与文档首页展示新名称和音标。框架文档镜像保持原审阅身份。
+品牌展示沿用 `/eko` 路由，官网、发现索引与文档首页展示新名称和音标。框架镜像与产品投影分别记录其真实来源身份。
+
+2026-10-29 当前产品来源：中文页已经对照 clean 应用提交
+`a71a7542d1e6b84b78300fa50ca985860b07190f` 的完整来源差异、直接实现和页面承诺完成独立源码复审，
+再由原同步器正常生成 `reviewedRevision`、148 项 `sourceFiles`（79中文、69历史英文）及页面摘要。
+状态为 `source-reviewed-with-execution-limitations`。现存四个英文产品页明确标为历史参考并链接当前中文；
+不新增英文副本，也不把历史英文声明为当前中文的同步译文。旧 `1a3551a0…`／138项审阅身份和原失败保留在Git与原日志。
+
+源码复审不合并原31／47／13定向验证和两条fresh精确风险门禁的范围，也不代替新版App、手机、SSH、性能、
+全矩阵、SDK正式pin、main CI、包发布或网站部署。
 
 2026-10-27 的中文产品页纠正普通 Steer／Goal 文案，并同步已提交首页与聊天呈现。依据是应用提交 `0ebd8984be26affc32a130df7a26b128494d6c65` 中 `docs/zh/adr/0037-unified-turn-run-binding.md`、`docs/zh/adr/0048-context-compression-product-policy.md`、`docs/zh/architecture/runtime.md`、`docs/zh/features.md` 与 `docs/zh/getting-started.md`。普通 Steer 交主模型结合历史理解，已有 Goal 仅用户显式修改或结束；原生消息和后继完整原文恢复保留各自未完成验收。
 
-`docs-sync-manifest.json` 保留上次完整应用审阅的 `reviewedRevision` 与 `sourceFiles`，本次只刷新中文投影摘要，并把状态明确标为 `policy-correction-pending-source-review`。这表示政策纠正已落入页面，完整来源复审仍待源码稳定；不表示 dirty Framework/EKO 来源检查通过。英文页保留原历史投影，本轮不新增英文副本。实现、正式源、原生窗口、SDK pin、main/CI、包发布与网站部署资格分别核验。
+当时 `docs-sync-manifest.json` 保留旧完整应用审阅的 `reviewedRevision` 与 `sourceFiles`，只刷新中文投影摘要，状态为 `policy-correction-pending-source-review`。后继退役纠正使用 `source-correction-pending-source-review`；这两次页面纠正均不代表dirty来源通过。它们与原失败作为历史保留，当前资格以上述clean A71的实际复审和正常生成结果为准。
 
 官网只负责展示。框架行为以 [`echo-agent`](https://github.com/EchoYue-lp/echo-agent) 为准；
 Eclip 产品行为以 [`echo-agent-cli`](https://github.com/EchoYue-lp/echo-agent-cli) 为准。
@@ -48,6 +57,14 @@ CI runs on pushes to `main`; task branches and pull requests must pass the local
 
 ## 本轮原生消息文档的同步范围
 
+2026-10-29 切片使用 Framework 已保存的 `684ad1d9d0de9bff57e27e4c04f04232c6af9f1f`
+clean Git 来源，沿原同步器生成框架正文、ADR 索引和摘要。Eclip 中文页依据应用
+`df405760208fbf88fffd2304d72dd5e00a88902c` 的入口配置、README 和 features 完成最初纠正；
+当前再以clean A71完成上述完整源码复审。页面说明
+独立终端入口已退出的说明；原生控制工具退役与强制分析退出以 Framework 同源文档和实现为准。
+普通 Steer 不自动改写 Goal、不调用独立意图模型的现有说明保持；SDK 正式 pin、完整消费者切换、
+真实 App／手机／SSH、完整矩阵、main CI 与发布仍未由本切片验证。Exa 仍是本地未发布工作，不新增官网承诺。
+
 原生消息、实际工具调用与运行时最终结算的统一路线正在跨仓实现和本地验证。
 ThinkTool／FinalAnswerTool 及工具前强制 CoT 的具名退役，只按真实调用链和上游示例编译／审查验收；
 官网不解析 Rust 或中文语义，也不因注释、字符串、`rust,ignore` 旧版展示或同名自定义工具中出现这些名字而拒绝同步。
@@ -55,8 +72,8 @@ ThinkTool／FinalAnswerTool 及工具前强制 CoT 的具名退役，只按真�
 当前 API 使用说明及可执行示例由所属上游验证；官网沿原 clean Git 树／revision／逐文件 SHA
 同步正文和 manifest，不直接手补生成镜像或把未提交源标为新发布快照。历史 ADR、迁移说明与合法自定义工具保留原文。
 
-当前镜像仍绑定 manifest 中的原 Framework 修订；上游新文档尚未形成最终可同步来源，完整 source-aware 检查继续待闭合。
-后继仅有中文的原生合同沿原 Markdown 来源回链访问，不为形式新建英文副本；正式来源落定前不授新链接的发布资格。
+Framework 镜像继续绑定clean `684ad1d9…`，产品投影绑定上述clean A71；完整source-aware检查沿原入口核对两者。
+仅有中文的原生合同沿原 Markdown 来源回链访问，不为形式新建英文副本；本地源码审阅不授已发布资格。
 assistant phase、reasoning、工具事实、最终发布与 TaskRun／Goal 完成分别验收；本地测试或站点构建不代表真实原生窗口已通过。
 SDK 的正式 pin 仍按其独立来源核准，官网不宣称已更新；网站没有部署。
 
@@ -94,6 +111,18 @@ manifest 检查，不能通过同时删掉清单项和镜像文件掩盖遗漏�
 状态、权威、`sourceFiles` 和投影文件摘要），不读取当前 Eclip 工作区来更新旧资格。可单独执行
 `node scripts/sync-docs.mjs --check --framework-root ../echo-agent` 检查框架来源；包含
 `--application-root` 的检查仍要求 Eclip 真实来源与既有审查修订一致，不代表重新审查过产品页。
+
+当中文页面需纠正已批准且可核实的产品事实，而完整 Eclip 来源尚未复审时，显式执行：
+
+```bash
+node scripts/sync-docs.mjs --framework-root ../echo-agent --refresh-application-projection
+```
+
+该模式复用原生成器，仅刷新现有产品页面摘要并固定标记
+`source-correction-pending-source-review`；完整保留原 `reviewedRevision`、`sourceFiles`
+和来源权威，不读取活跃 Eclip 源树，也不能与产品修订、审阅状态或权威变更参数混用。
+默认同步行为不变。完整来源复审仍须沿原 `--application-revision`、clean-source 与 parity 门禁；
+内部 `docs:check` 通过不表示当前 Eclip source-aware 检查通过。
 
 Eclip 精简页的当前审阅状态以 manifest 的 `applicationProjection.status` 为准。完整来源审阅、
 后继政策纠正与尚待实现的能力分别记录；应用仓库继续拥有产品事实，源变化后须重新审阅。

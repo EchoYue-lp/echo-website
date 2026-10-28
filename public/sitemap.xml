@@ -907,6 +907,24 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0099-personal-weixin-channel" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/docs/adr-0100-zstd-safe-chain-vendoring</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0100-zstd-safe-chain-vendoring" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0100-zstd-safe-chain-vendoring" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0100-zstd-safe-chain-vendoring" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0101-native-message-execution</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0101-native-message-execution" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0101-native-message-execution" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0101-native-message-execution" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0102-canonical-agent-consumers</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0102-canonical-agent-consumers" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0102-canonical-agent-consumers" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0102-canonical-agent-consumers" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/docs/knowledge-overview</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/knowledge-overview" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/knowledge-overview" />
@@ -1883,6 +1901,24 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0099-personal-weixin-channel" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0099-personal-weixin-channel" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0099-personal-weixin-channel" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0100-zstd-safe-chain-vendoring</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0100-zstd-safe-chain-vendoring" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0100-zstd-safe-chain-vendoring" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0100-zstd-safe-chain-vendoring" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0101-native-message-execution</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0101-native-message-execution" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0101-native-message-execution" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0101-native-message-execution" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0102-canonical-agent-consumers</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0102-canonical-agent-consumers" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0102-canonical-agent-consumers" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0102-canonical-agent-consumers" />
   </url>
   <url>
     <loc>https://echo-agent.dev/en/docs/knowledge-overview</loc>

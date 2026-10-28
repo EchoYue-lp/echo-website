@@ -328,12 +328,24 @@ function applicationProjection(
   applicationRevision,
   applicationStatus,
   applicationAuthority,
+  refreshApplicationProjection,
 ) {
   const existingManifest = existsSync(manifestPath)
     ? JSON.parse(readFileSync(manifestPath, 'utf8'))
     : undefined;
   const existingProjection = existingManifest?.applicationProjection;
   // 未明确审查新产品修订时，整个既有投影（含 sourceFiles）都是原审查身份的一部分。
+  if (refreshApplicationProjection) {
+    if (!existingProjection?.reviewedRevision) {
+      throw new Error('Projection corrections require an existing reviewed application identity.');
+    }
+    // 页面纠正不是重新审查：旧来源身份原样保留，只生成当前站点正文摘要并明确待复审。
+    return {
+      ...existingProjection,
+      status: 'source-correction-pending-source-review',
+      files: projectionFiles(),
+    };
+  }
   if (!applicationRevision && existingProjection) return existingProjection;
   const reviewedRevision = applicationRevision ?? existingProjection?.reviewedRevision;
   if (!reviewedRevision) {
@@ -361,6 +373,7 @@ function syncFramework(
   applicationRevision,
   applicationStatus,
   applicationAuthority,
+  refreshApplicationProjection,
 ) {
   const resolvedRoot = resolve(frameworkRoot);
   for (const required of [
@@ -381,6 +394,7 @@ function syncFramework(
     applicationRevision,
     applicationStatus,
     applicationAuthority,
+    refreshApplicationProjection,
   );
   const destinationRoot = join(contentRoot, 'echo-agent');
   rmSync(destinationRoot, { recursive: true, force: true });
@@ -512,6 +526,17 @@ const applicationRootArgument = argumentValue('--application-root');
 const applicationRevision = argumentValue('--application-revision');
 const applicationStatus = argumentValue('--application-status');
 const applicationAuthority = argumentValue('--application-authority');
+const refreshApplicationProjection = process.argv.includes('--refresh-application-projection');
+if (
+  refreshApplicationProjection &&
+  ['--check', '--application-revision', '--application-status', '--application-authority'].some(
+    (option) => process.argv.includes(option),
+  )
+) {
+  throw new Error(
+    'Projection corrections cannot be combined with check or application review metadata changes.',
+  );
+}
 const frameworkRoot =
   frameworkRootArgument === 'auto' ? discoverFrameworkRoot() : frameworkRootArgument;
 const applicationRoot =
@@ -543,6 +568,7 @@ if (process.argv.includes('--check')) {
     applicationRevision,
     applicationStatus,
     applicationAuthority,
+    refreshApplicationProjection,
   );
   checkManifest(frameworkRoot, applicationRevision ? requiredApplicationRoot : undefined);
 }

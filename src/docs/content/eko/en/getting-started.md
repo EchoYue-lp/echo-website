@@ -1,5 +1,8 @@
 # Eclip Getting Started
 
+> **历史英文参考**
+> 本页保留旧版产品说明；当前产品请阅读[中文说明](/eko/docs/getting-started)。下文不是当前中文主维护文档的同步译文。
+
 This page is a reviewed quick-start projection. Use the maintained Eclip repository docs as the authority for exact configuration, build, and packaging behavior.
 
 ## Prerequisites
@@ -46,7 +49,7 @@ target has one GUI product entry, with IM messages and cron as retained backgrou
 triggers. GUI terminals, Agent shell tools, desktop launch arguments and the
 independent SDK Host stdio protocol remain valid capabilities.
 
-The current baseline still contains TUI, REPL, CLI/JSONL and channel adapters.
+The historical baseline described here contained TUI, REPL, CLI/JSONL and channel adapters.
 Their shared services remain authoritative during migration; the old requirement
 to keep expanding all console surfaces has been superseded. Removing console
 entry points must wait for GUI-owned IM lifecycle, cron and recovery acceptance.

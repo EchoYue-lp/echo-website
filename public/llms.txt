@@ -187,6 +187,9 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0097: Admit and Consume One Subagent Registration | echo-agent 文档: https://echo-agent.dev/docs/adr-0097-subagent-registration-admission
 - ADR 0098: Location-bound file I/O and execution resources | echo-agent 文档: https://echo-agent.dev/docs/adr-0098-project-file-system-adapter
 - ADR 0099: Personal Weixin protocol and durable no-stream admission | echo-agent 文档: https://echo-agent.dev/docs/adr-0099-personal-weixin-channel
+- ADR 0100：由 Framework 维护 Polars 的 zstd 安全依赖补丁 | echo-agent 文档: https://echo-agent.dev/docs/adr-0100-zstd-safe-chain-vendoring
+- ADR 0101：Framework 原生消息与统一执行终态 | echo-agent 文档: https://echo-agent.dev/docs/adr-0101-native-message-execution
+- ADR 0102：现有消费者采用唯一原生 Agent 输出 | echo-agent 文档: https://echo-agent.dev/docs/adr-0102-canonical-agent-consumers
 - 知识库概述 | echo-agent 文档: https://echo-agent.dev/docs/knowledge-overview
 - Agent 设计模式 | echo-agent 文档: https://echo-agent.dev/docs/agent-patterns
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
@@ -348,6 +351,9 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0097: Admit and Consume One Subagent Registration | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0097-subagent-registration-admission
 - ADR 0098: Location-bound file I/O and execution resources | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0098-project-file-system-adapter
 - ADR 0099: Personal Weixin protocol and durable no-stream admission | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0099-personal-weixin-channel
+- ADR 0100：由 Framework 维护 Polars 的 zstd 安全依赖补丁 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0100-zstd-safe-chain-vendoring
+- ADR 0101：Framework 原生消息与统一执行终态 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0101-native-message-execution
+- ADR 0102：现有消费者采用唯一原生 Agent 输出 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0102-canonical-agent-consumers
 - Knowledge Base Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/knowledge-overview
 - Agent Design Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/agent-patterns
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive

@@ -1,5 +1,8 @@
 # Eclip capability scope
 
+> **历史英文参考**
+> 本页保留旧版产品说明；当前产品请阅读[中文说明](/eko/docs/capabilities)。下文不是当前中文主维护文档的同步译文。
+
 Eclip is a local personal AI assistant built on `echo-agent`. The capabilities on this page reflect production bindings in the application core. They are not performance guarantees: results and duration depend on the configured model, tools, source availability, and local machine.
 
 ## Coding
@@ -92,7 +95,7 @@ target has one GUI product entry, with IM messages and cron as retained backgrou
 triggers. GUI terminals, Agent shell tools, desktop launch arguments and the
 independent SDK Host stdio protocol remain valid capabilities.
 
-The current baseline still contains TUI, REPL, CLI/JSONL and channel adapters.
+The historical baseline described here contained TUI, REPL, CLI/JSONL and channel adapters.
 Their shared services remain authoritative during migration; the old requirement
 to keep expanding all console surfaces has been superseded. Removing console
 entry points must wait for GUI-owned IM lifecycle, cron and recovery acceptance.

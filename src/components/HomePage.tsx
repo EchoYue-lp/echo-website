@@ -169,7 +169,12 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
       ],
       quickStartNote: 'The repository documentation covers provider setup and additional examples.',
       docsCta: 'Browse all framework documentation',
-      scene: ['ThinkStart', 'ToolCall { invocation }', 'ToolResult { result }', 'FinalAnswer'],
+      scene: [
+        'AssistantMessage { reasoning }',
+        'ToolCall { invocation }',
+        'ToolResult { result }',
+        'ExecutionStatus { settled }',
+      ],
     },
     zh: {
       eyebrow: '可复用的 Rust Agent 框架',
@@ -269,7 +274,12 @@ export const content: Record<Product, Record<Language, ProductContent>> = {
       ],
       quickStartNote: '代码仓库文档包含模型提供方配置和更多示例。',
       docsCta: '浏览全部框架文档',
-      scene: ['ThinkStart', 'ToolCall { invocation }', 'ToolResult { result }', 'FinalAnswer'],
+      scene: [
+        'AssistantMessage { reasoning }',
+        'ToolCall { invocation }',
+        'ToolResult { result }',
+        'ExecutionStatus { settled }',
+      ],
     },
   },
   eko: {

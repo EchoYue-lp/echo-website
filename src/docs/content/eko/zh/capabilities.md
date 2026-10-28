@@ -40,9 +40,9 @@ Eclip 默认通过 `compress_window: 0` 使用模型窗口 25%、至多 20K toke
 
 ## 原生消息与完成资格
 
-原生消息改造已纳入本轮交付目标，仍在实现和验收中。它要求分别保留 reasoning、助手进度或部分回答、工具调用及结果、运行时执行状态；进度或一段文字结束不等于整个执行完成。最终候选仍须经过已配置校验、Stop Hook、持久化与真实结算，才可发布成功；Agent 执行结束与整个 TaskRun 目标完成分别判断。
+当前源码分别保留 reasoning、助手正文、工具调用及结果和运行时执行状态；进度或一段文字结束不等于整个执行完成。最终候选仍须经过已配置校验、Stop Hook、持久化与真实结算，才可发布成功；Agent 执行结束与整个 TaskRun 目标完成分别判断。
 
-内置 Think/FinalAnswer 控制工具的具名退役须随 provider、流式与非流式路径、Subagent、GUI、IM、cron 和 SDK 消费者一起验收。本页不宣称已完成全链路切换、60 秒进度策略或新版原生窗口验收。
+框架当前源码不再注册内置 `think` / `final_answer` 控制工具，也不再要求工具调用前输出强制分析。模型的原生 reasoning、普通助手正文和运行时最终通知继续保留。各消费者的完整切换、60 秒进度策略、新版原生窗口、SDK 正式依赖修订和发布仍须分别验收。
 
 ## Agent 协作与恢复
 
@@ -60,7 +60,7 @@ builtin、plugin、direct、planned、fork、teammate、team member 与 primary 
 
 ## Local application core
 
-GUI、IM 与 cron 使用共享应用核心，不各自装配另一份 task、recovery、pool 或 maintenance runtime。旧 TUI、REPL、CLI/JSONL 入口仍在迁移期源码中，不能据此继续承诺永久多入口对等，也不能声称已经删除。会话与运行时状态使用本机文件或内存，Eclip 不需要 SQLite。
+GUI、IM 与 cron 使用共享应用核心，不各自装配另一份 task、recovery、pool 或 maintenance runtime。当前源码已退出独立 TUI、REPL、CLI/JSONL 产品入口，保留 GUI 内置终端、Agent shell、MCP 和独立 SDK Host stdio。会话与运行时状态使用本机文件或内存，Eclip 不需要 SQLite。
 
 ## GUI 渠道与定时任务
 

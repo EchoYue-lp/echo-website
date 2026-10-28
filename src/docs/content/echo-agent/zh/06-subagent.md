@@ -187,6 +187,26 @@ helper（含 exact-attempt 变体）同样保留
 其中当前层数一致，冲突在派发前报错。没有完整 runtime policy 的独立旧调用保留
 原 `policy_from_depth` 行为，不借此更改框架默认上限或引入应用产品常量。
 
+### Run 与下一次尝试指导
+
+复用同一个 Agent/registry 的不同运行可以使用相同的 task ID 和 attempt。
+调用方应从既有 `SubagentCommandIdentity.attempt_identity()` 投影 exact attempt，
+保留 `run_id` 与 `control_scope_id`；`for_run` 以 Run 同时作为默认 control scope，
+显式嵌套运行仍可使用既有 `for_runtime_scope`。同一 scope/Run/task/attempt 的重复
+执行继续拒绝，完成后的有界去重记录不因开始新运行而清空。
+
+在未来 attempt 尚未有 execution ID 时，使用
+`SubagentExecutor::queue_guidance_scoped(scope, run, task, attempt, instruction)`
+把指导加入同一个原 control queue。准入只领取该 scope/Run/task/attempt 的指导一次；
+其它 Run、其它 control scope 和旧的无 scope 队列互不消费。scope、Run、task 不得为空，
+attempt 不得为零，指导不得为空。同一逻辑 attempt 已 active 或 settled 时拒绝追加。
+
+原 `queue_guidance(task, attempt, instruction)` 保持无 scope 的独立调用语义；它不猜测
+当前 Run，也不能给有 scope 的准入提供指导。两种入口共用原队列、锁与准入检查。
+revision、command 幂等及 durable journal 继续由调用方核验，活消息和 interrupt 仍定位
+真实 execution/attempt；排队成功不等于模型已消费或应用了指导。参见
+[ADR 0058](../adr/0058-task-claim-subagent-attempt-control.md)。
+
 所有路径都会先调用配置的 `SubagentPromptCompiler`：
 
 - 具体 Subagent 的工具面完成后调用 `compile_system`，能力说明来自实际注册定义、description
@@ -302,3 +322,11 @@ dispatch 身份，使 consumer 能以准确地址持久化 gap。
 `SubagentEventReplay::gap` 会明确报告保留后缀不连续；高频 thinking/token
 delta 可能在 gap 后缺失，但保留的 lifecycle/tool 边界与 `terminal` 可用于恢复状态和最终输出。
 该能力是进程内恢复窗口，不是永久存储；应用仍负责自己的 durable projection。
+
+## 调用级只读委派
+
+只读 Agent 可以继续向声明为只读的 Subagent 委派。框架在原装配时使用受限 dispatcher，普通 dispatcher 的写能力声明不变。每次调用的 `tool_access` 使用现有 `ToolAccess`：同一目标声明的 ReadOnly 与任一上游 ReadOnly 都继续收窄后代；它与父工具正向上界共同作用，Fresh 或空历史也不会丢失。
+
+真实可用集由锁后快照计算，模型 schema、tool_search 和强制工具调用采用相同限制。只读角色若错误装有写工具，实际调用仍被阻止；同名工具替换、晚注册、Team 写成员、后台和子调用声明 Mutating 都不能提升能力。受限工具缺少有效 ToolContext/visibility 或工具硬交集为空时明确失败，不靠角色名、prompt 或全局把 agent_tool 标只读。
+
+自定义 Agent 若仅实现旧 execute/chat，默认 invocation 回退会拒绝新的 ReadOnly 请求，避免静默忽略约束；None 保留原行为。新增公开字段的完整 literal 需显式补值，SDK 不自动继承。泛用框架合法深度与 EKO 产品层数分别配置和验收。详细取舍见 [ADR0094](../adr/0094-subagent-tool-boundary-inheritance.md)。

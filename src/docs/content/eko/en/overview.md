@@ -1,5 +1,8 @@
 # Eclip
 
+> **历史英文参考**
+> 本页保留旧版产品说明；当前产品请阅读[中文说明](/eko/docs/overview)。下文不是当前中文主维护文档的同步译文。
+
 **/ˈɛk.lɪp/** · **EK-lip**
 
 Eclip is a local personal assistant running on the user's machine. The approved
@@ -7,7 +10,7 @@ target has one GUI product entry, with IM messages and cron as retained backgrou
 triggers. GUI terminals, Agent shell tools, desktop launch arguments and the
 independent SDK Host stdio protocol remain valid capabilities.
 
-The current baseline still contains TUI, REPL, CLI/JSONL and channel adapters.
+The historical baseline described here contained TUI, REPL, CLI/JSONL and channel adapters.
 Their shared services remain authoritative during migration; the old requirement
 to keep expanding all console surfaces has been superseded. Removing console
 entry points must wait for GUI-owned IM lifecycle, cron and recovery acceptance.

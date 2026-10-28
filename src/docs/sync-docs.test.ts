@@ -149,6 +149,57 @@ describe('文档同步的固定 Git 来源', () => {
     expect(f.manifest().applicationProjection).toEqual(f.projection);
   });
 
+  it('显式页面纠正只刷新摘要和待复审状态，不读取或晋升脏产品来源', () => {
+    const f = fixture();
+    const destination = 'src/docs/content/eko/zh/intro.md';
+    const correction = '# 已批准退役的当前产品说明\n';
+    write(join(f.site, destination), correction);
+    write(join(f.application, 'docs/zh/intro.md'), '# 未经完整复审的并行源码\n');
+    expect(
+      f.run('--refresh-application-projection', '--application-root', f.application).status,
+    ).toBe(0);
+    const projection = f.manifest().applicationProjection;
+    expect(projection).toEqual({
+      ...f.projection,
+      status: 'source-correction-pending-source-review',
+      files: f.projection.files.map((record) =>
+        record.destination === destination ? { ...record, sha256: digest(correction) } : record,
+      ),
+    });
+    expect(f.run('--check').status).toBe(0);
+    expect(f.run('--check', '--application-root', f.application).status).not.toBe(0);
+  });
+
+  it('页面纠正不能同时推进产品修订或自行指定审阅状态', () => {
+    const f = fixture();
+    const before = readFileSync(join(f.site, 'docs-sync-manifest.json'), 'utf8');
+    for (const args of [
+      ['--application-revision', git(f.application, 'rev-parse', 'HEAD')],
+      ['--application-status', 'reviewed'],
+      ['--application-authority', 'new authority'],
+      ['--application-revision', ''],
+      ['--application-status', ''],
+      ['--application-authority', ''],
+      ['--application-revision'],
+      ['--application-status'],
+      ['--application-authority'],
+      ['--check'],
+    ]) {
+      expect(f.run('--refresh-application-projection', ...args).status).not.toBe(0);
+      expect(readFileSync(join(f.site, 'docs-sync-manifest.json'), 'utf8')).toBe(before);
+    }
+  });
+
+  it('没有历史产品审阅身份时拒绝仅刷新页面摘要', () => {
+    const f = fixture();
+    const manifest = f.manifest();
+    delete manifest.applicationProjection;
+    const before = JSON.stringify(manifest);
+    write(join(f.site, 'docs-sync-manifest.json'), before);
+    expect(f.run('--refresh-application-projection').status).not.toBe(0);
+    expect(readFileSync(join(f.site, 'docs-sync-manifest.json'), 'utf8')).toBe(before);
+  });
+
   it('check 拒绝伪造的 ignored 来源记录，即使摘要和站点文件一致', () => {
     const f = fixture();
     expect(f.run().status).toBe(0);

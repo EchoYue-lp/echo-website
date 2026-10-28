@@ -15,7 +15,7 @@ Eclip 面向用户自己的机器，产品层使用普通文件或内存保存�
 - 每个 workspace 拥有本地 memory Store、一个 generation-bound `MemoryLayerManager` 和一个在 model safe point 消费的 immutable hot-memory projection。
 - `enabled-skills.json` 是用户 Skill 启用状态的唯一持久事实，version 3 只保存 `{enabled}` flat map 并原子写入；当前项目 `.eko/skills/` 的项目 Skill 不写入该文件。Eclip 不再捆绑 Skill、生成默认启用集或注入 baseline，运行时 reconcile 只返回即时 target receipt，不保留 generation 或 repair debt。
 - artifact 与 trace 保持 workspace scope；trace 只用于诊断，不能判定 TaskRun 或 PlanTask 是否已提交。
-- GUI、IM 与 cron 通过同一应用核心访问这些权威；待退役的旧独立入口不新增另一套状态权威。
+- GUI、IM 与 cron 通过同一应用核心访问这些权威。独立 TUI、REPL、CLI/JSONL 产品入口已退出；GUI 内置终端、Agent shell、MCP 与共享恢复继续保留，未新增另一套状态权威。
 
 默认产品数据根目录是 `~/.eko/`，可以用 `EKO_DATA_DIR` 覆盖。每个工作空间的 conversation、task、memory、artifact 与 trace 留在本机产品数据目录。
 
