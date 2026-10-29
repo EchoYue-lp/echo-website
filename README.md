@@ -60,8 +60,8 @@ CI runs on pushes to `main`; task branches and pull requests must pass the local
 2026-10-29 切片使用 Framework 已保存的 `684ad1d9d0de9bff57e27e4c04f04232c6af9f1f`
 clean Git 来源，沿原同步器生成框架正文、ADR 索引和摘要。Eclip 中文页依据应用
 `df405760208fbf88fffd2304d72dd5e00a88902c` 的入口配置、README 和 features 完成最初纠正；
-当前再以clean A71完成上述完整源码复审。页面说明
-独立终端入口已退出的说明；原生控制工具退役与强制分析退出以 Framework 同源文档和实现为准。
+当前再以clean A71完成上述完整源码复审，并说明独立终端入口已退出；
+原生控制工具退役与强制分析退出以 Framework 同源文档和实现为准。
 普通 Steer 不自动改写 Goal、不调用独立意图模型的现有说明保持；SDK 正式 pin、完整消费者切换、
 真实 App／手机／SSH、完整矩阵、main CI 与发布仍未由本切片验证。Exa 仍是本地未发布工作，不新增官网承诺。
 
@@ -76,6 +76,11 @@ Framework 镜像继续绑定clean `684ad1d9…`，产品投影绑定上述clean 
 仅有中文的原生合同沿原 Markdown 来源回链访问，不为形式新建英文副本；本地源码审阅不授已发布资格。
 assistant phase、reasoning、工具事实、最终发布与 TaskRun／Goal 完成分别验收；本地测试或站点构建不代表真实原生窗口已通过。
 SDK 的正式 pin 仍按其独立来源核准，官网不宣称已更新；网站没有部署。
+
+后继中文能力说明沿同一 A71／F684 正式来源补充六个工具功能组、可选开关／系统必需限制和长任务安全点进度提醒，
+并纠正 A2A／LSP 尚待源码退役的旧措辞。分类不授予执行权限，提醒不承诺固定频率或成功回执。
+本次不改变运行时、公共 API、ADR 决策、框架镜像或英文历史页；所属仓库已有正式 ADR 和示例链路继续作为权威，
+无需为官网文字补充再新增一份架构或可执行示例。跨仓发行／Issue 与尚未采用来源的差异在本线工程材料中分别对账。
 
 ## Documentation synchronization
 

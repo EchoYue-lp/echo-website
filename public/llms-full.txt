@@ -28274,7 +28274,7 @@ Eclip 是基于 `echo-agent` 构建的本地个人 AI 助理。以下内容说�
 
 ## Coding
 
-编码工作使用文件操作、交互式 Shell、Git、隔离 Worktree 和边界明确的 Subagent。工作空间支持已有本地目录、新建目录与 SSH 项目；项目文件和 Agent 命令使用绑定的同一真实目标。Eclip 已退出 LSP 工具、manager、设置和 IPC 消费路径，框架自身的公开能力退役另行处理。
+编码工作使用文件操作、交互式 Shell、Git、隔离 Worktree 和边界明确的 Subagent。工作空间支持已有本地目录、新建目录与 SSH 项目；项目文件和 Agent 命令使用绑定的同一真实目标。Eclip 的 LSP 消费入口及框架的 A2A/LSP 实现已从当前源码退役；MCP、IM、cron、GUI 内置终端、Agent shell 和独立 SDK Host stdio 继续保留。源码退出与各消费者、原生宿主和发布验收分别核对，历史说明见 [LSP 退役与恢复](/docs/lsp)和 [A2A 退役与恢复](/docs/a2a-protocol)。
 
 ## Data analysis
 
@@ -28293,6 +28293,8 @@ Eclip 是基于 `echo-agent` 构建的本地个人 AI 助理。以下内容说�
 ## Long-horizon tasks
 
 `TaskRuntime`、检查点、暂停与恢复、执行预算和调度支持设计为持续数小时到数十小时的工作。运行时保留可检查的状态和续跑点，但不承诺固定完成时间或成功率。
+
+长任务在首次工具操作前及关键发现、计划变化、阻塞或验证结果变化时报告进展。超过 60 秒没有新的自然语言进展时，当前源码在下一模型安全点提醒主模型汇报；长时间工具或模型调用不会为凑固定频率而被打断，也不会另开模型循环。界面的操作、耗时和最后事件时间属于执行观察，不替代助手汇报或完成回执；新版原生窗口仍须单独验收。
 
 任务关系只有一个权威：revisioned `TaskRun -> PlanTask -> SubagentRun` graph。framework `TaskStatus` 管执行状态，Plan 是可编辑 artifact，Todo 是只读展示投影。同一 run 内的依赖使用 `PlanRevision.tasks[].depends_on`；Eclip 不维护第二套跨 run 依赖图。
 
@@ -28347,6 +28349,10 @@ portable Plugin component 只解析一次，形成不可变 framework `PreparedP
 每个 workspace memory generation 共享一个 `MemoryLayerManager`。成功 mutation 只读取一次 hot memory，并在下一个 model safe point 向 primary、已有 pool Agent 与 future Agent 发布同一个 immutable snapshot。`/reflect`、remember/forget、evidence review、TaskRuntime、Dreaming 和模型工具使用同一 settlement contract。
 
 用户直接设置的工具可见性是独立应用 policy，通过 framework disabled-tools snapshot 发布；它不是 approval mode，也不受 agent 自动执行 permission mode 限制。
+
+工具页按“任务与协作、文件与代码、命令与运行、搜索与浏览、数据与文档、记忆与技能”六组展示。功能分类与来源分别呈现；没有分类或来源信息时明确显示“未分类”或“来源未提供”，不按名称猜来源或权限。
+
+类别开关只操作当前目录中的可选工具；系统必需工具显示锁定原因，直接调用关闭接口也会被后端拒绝。分类和必需标记不扩大只读或允许工具范围。选择只影响后续运行，当前运行保持已捕获的工具快照；批量操作逐项反馈，部分失败会保留，不承诺原子完成或跨重启保存。用户主动打开终端或连接 MCP 继续沿原交互入口处理。
 
 以上内容是经过审阅的源码行为摘要；精确配置、命令与合同仍以 Eclip 仓库为准。
 
