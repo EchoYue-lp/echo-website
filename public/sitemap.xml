@@ -925,6 +925,24 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0102-canonical-agent-consumers" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/docs/adr-0103-current-storage-records</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0103-current-storage-records" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0103-current-storage-records" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0103-current-storage-records" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0104-canonical-agent-runtime-kernel</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0104-canonical-agent-runtime-kernel" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0104-canonical-agent-runtime-kernel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0104-canonical-agent-runtime-kernel" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0105-current-config-and-plugin-inputs</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0105-current-config-and-plugin-inputs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0105-current-config-and-plugin-inputs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0105-current-config-and-plugin-inputs" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/docs/knowledge-overview</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/knowledge-overview" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/knowledge-overview" />
@@ -1919,6 +1937,24 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0102-canonical-agent-consumers" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0102-canonical-agent-consumers" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0102-canonical-agent-consumers" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0103-current-storage-records</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0103-current-storage-records" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0103-current-storage-records" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0103-current-storage-records" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0104-canonical-agent-runtime-kernel</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0104-canonical-agent-runtime-kernel" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0104-canonical-agent-runtime-kernel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0104-canonical-agent-runtime-kernel" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0105-current-config-and-plugin-inputs</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0105-current-config-and-plugin-inputs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0105-current-config-and-plugin-inputs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0105-current-config-and-plugin-inputs" />
   </url>
   <url>
     <loc>https://echo-agent.dev/en/docs/knowledge-overview</loc>

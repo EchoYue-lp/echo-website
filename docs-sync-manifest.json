@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "684ad1d9d0de9bff57e27e4c04f04232c6af9f1f",
+    "revision": "340993201cc937fc8e4783b66be399ef9f14e3d5",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
         "sourcePath": "docs/en/01-react-agent.md",
         "destination": "src/docs/content/echo-agent/en/01-react-agent.md",
-        "sha256": "679f5fdf6726da1d3610c5143c0ed2dbdd6137b43a2cd821b3ff26ccdcb4c601"
+        "sha256": "ff56ef54d0df26aa4b9bdde2be810c95dceac2e78123dde67da7e76b596014e3"
       },
       {
         "sourcePath": "docs/en/02-tools.md",
@@ -18,7 +18,7 @@
       {
         "sourcePath": "docs/en/03-memory.md",
         "destination": "src/docs/content/echo-agent/en/03-memory.md",
-        "sha256": "c7caa2f4eff29c3acd305c424b902529732c66def77fe7961f75500d0bded275"
+        "sha256": "896eaf90120cb08ccfab1cc9dfe5b917fb8b2f797171f0812cd51c3cc335f406"
       },
       {
         "sourcePath": "docs/en/04-compression.md",
@@ -53,7 +53,7 @@
       {
         "sourcePath": "docs/en/10-streaming.md",
         "destination": "src/docs/content/echo-agent/en/10-streaming.md",
-        "sha256": "4f1ffcff2db84e5d7b2624604336ac6bd65da96d56063ab501ade5de06eb468e"
+        "sha256": "5e67caf68f2f4f3ce4f5a88bec5b340366479e7d4397c221ad3ccc14caaddc77"
       },
       {
         "sourcePath": "docs/en/11-structured-output.md",
@@ -68,7 +68,7 @@
       {
         "sourcePath": "docs/en/13-chat.md",
         "destination": "src/docs/content/echo-agent/en/13-chat.md",
-        "sha256": "8c5de53bd5bfee9a99788507314a14bd1737e0e5b74ea465aa23c1c68aa9cc45"
+        "sha256": "97489120a1684ef3a27a4d97bf3530f8d63aa8041ace4cb184517024a787e0ca"
       },
       {
         "sourcePath": "docs/en/14-semantic-search.md",
@@ -83,7 +83,7 @@
       {
         "sourcePath": "docs/en/17-graph-workflow.md",
         "destination": "src/docs/content/echo-agent/en/17-graph-workflow.md",
-        "sha256": "9d1a3765523c6ee0f0976a028b7955d9af07ddadb59083b079920b77ec32e6d3"
+        "sha256": "a147dde4af57811018da8053f68ce241180ecf409854fbe254d7980f0c83cced"
       },
       {
         "sourcePath": "docs/en/18-guard-system.md",
@@ -183,7 +183,7 @@
       {
         "sourcePath": "docs/en/38-factory-modes.md",
         "destination": "src/docs/content/echo-agent/en/38-factory-modes.md",
-        "sha256": "c7cd1566e00a4a072608b1d98ff858b6d98af565fdde4cfec54295cc19998cb2"
+        "sha256": "698bb2402c928c129c4b88a33233d524d3b3098540895610e14c5e7cc2951e4e"
       },
       {
         "sourcePath": "docs/en/39-framework-application-boundary.md",
@@ -203,7 +203,7 @@
       {
         "sourcePath": "docs/en/41-persistence-concepts.md",
         "destination": "src/docs/content/echo-agent/en/41-persistence-concepts.md",
-        "sha256": "ca1019dfe593f4f869afc9cd7395ffeb042bfd5b6fd5a9434cce923941e3f8d1"
+        "sha256": "b938e692c3d0799cd0f1f81b27d64c448e1737767b9bd38a011557874132d51d"
       },
       {
         "sourcePath": "docs/en/41-shell-text-tools.md",
@@ -393,7 +393,7 @@
       {
         "sourcePath": "docs/adr/0035-owned-tool-registry-handles.md",
         "destination": "src/docs/content/echo-agent/en/adr/0035-owned-tool-registry-handles.md",
-        "sha256": "3fc93abce5b37050ed2cb674f81c1fecc677c6b52bf1dc405c624bd25dde9f68"
+        "sha256": "df13fc39d169c467f3eae73af649833144ff7825b890e3c8c9773da2a812eef7"
       },
       {
         "sourcePath": "docs/adr/0036-eval-workspace-generation-lifecycle.md",
@@ -408,7 +408,7 @@
       {
         "sourcePath": "docs/adr/0038-eval-trace-correlation-identity.md",
         "destination": "src/docs/content/echo-agent/en/adr/0038-eval-trace-correlation-identity.md",
-        "sha256": "609e4ec5d1edb91d04272bf55e0a57874155352ff26f628d92de67258eb8837f"
+        "sha256": "eefbea17931fd3b760771cc77e3e0145010e9cf7909270f3465749da7e0c49af"
       },
       {
         "sourcePath": "docs/adr/0039-background-task-terminal-authority.md",
@@ -573,7 +573,7 @@
       {
         "sourcePath": "docs/adr/0070-memory-provenance-and-recall-authority.md",
         "destination": "src/docs/content/echo-agent/en/adr/0070-memory-provenance-and-recall-authority.md",
-        "sha256": "1b1e81f509f6a1904bd0db2460bd36032793e44b4295f6ecf684b519b8b18038"
+        "sha256": "29f4bb62441deec0ce345e33dbd6730fec1c4951991142b294fd992d92bba1f1"
       },
       {
         "sourcePath": "docs/adr/0071-protected-path-and-readonly-tool-boundary.md",
@@ -713,7 +713,7 @@
       {
         "sourcePath": "docs/adr/0098-project-file-system-adapter.md",
         "destination": "src/docs/content/echo-agent/en/adr/0098-project-file-system-adapter.md",
-        "sha256": "6cbdfbaf6ee2c61bf97fb7125700073d3c62a2b00c9f787a8e4aa30bf5939e5e"
+        "sha256": "b122a81b386e0717c26bb19bdbf5c112c2e29dc5115f41ca8f96db3788818fe7"
       },
       {
         "sourcePath": "docs/adr/0099-personal-weixin-channel.md",
@@ -728,7 +728,7 @@
       {
         "sourcePath": "docs/adr/0101-native-message-execution.md",
         "destination": "src/docs/content/echo-agent/en/adr/0101-native-message-execution.md",
-        "sha256": "35c6df14ffcc76096b72171a14d918906000cc77b3bf6d48b3c82fbefe69085e"
+        "sha256": "0b59174833ee86809025b2ad40170fd58b3bc391ec4078023889a2881ac65147"
       },
       {
         "sourcePath": "docs/adr/0102-canonical-agent-consumers.md",
@@ -736,9 +736,24 @@
         "sha256": "029b146da14807671a0f45d3f30f8ac4baf24dcfd8489b3dab8533f455537dd3"
       },
       {
+        "sourcePath": "docs/adr/0103-current-storage-records.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0103-current-storage-records.md",
+        "sha256": "f60164e56d67b7984a648ddec88ee19eda3b2a0f9fc898b6c2d9e55887c95bb6"
+      },
+      {
+        "sourcePath": "docs/adr/0104-canonical-agent-runtime-kernel.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0104-canonical-agent-runtime-kernel.md",
+        "sha256": "bb2935f391c89cc1d35100426e6e27adf5cf901e2f449b2537164cdfa4e11014"
+      },
+      {
+        "sourcePath": "docs/adr/0105-current-config-and-plugin-inputs.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0105-current-config-and-plugin-inputs.md",
+        "sha256": "1287219ce45d9604c6718e79683f0f7ea558c57b9ca2b007e9b8d51a4f250150"
+      },
+      {
         "sourcePath": "docs/en/architecture.md",
         "destination": "src/docs/content/echo-agent/en/architecture.md",
-        "sha256": "4b9bef4eed2355a7b62338ba21698b24882f175d11f8e36ef8baaf476b60db66"
+        "sha256": "c07080846b2956f818bebeb22ebb1906c31cd4f300016baec983d2eabd7b0161"
       },
       {
         "sourcePath": "docs/en/concepts.md",
@@ -748,7 +763,7 @@
       {
         "sourcePath": "docs/en/getting-started.md",
         "destination": "src/docs/content/echo-agent/en/getting-started.md",
-        "sha256": "d1976dc3f6a9457079d63b13c76883f33832d3e373ae91518e60dac64651768c"
+        "sha256": "7d0e03fcd35c6f6edacb3614b23475602c8e11226c62608e4912b993e561d724"
       },
       {
         "sourcePath": "docs/internal/knowledge/en/a2a-protocol.md",
@@ -778,12 +793,12 @@
       {
         "sourcePath": "docs/en/lifecycles.md",
         "destination": "src/docs/content/echo-agent/en/lifecycles.md",
-        "sha256": "33098ee7330fe903da584acd70b13127203e17e247e44f425d710900664a4775"
+        "sha256": "6ddfbd8473375bcc4f977cc880b9c7d1b475112cc361d622bd6e5155b1637a1c"
       },
       {
         "sourcePath": "docs/en/README.md",
         "destination": "src/docs/content/echo-agent/en/README.md",
-        "sha256": "86b6fbe53f272dd54fb75d1632c1757a827a80386df2756e481152e96839ab61"
+        "sha256": "ee8710ba25617e0a6c014fd58aae814012146a138f8c69b18cffbd7c8def281b"
       },
       {
         "sourcePath": "docs/en/security.md",
@@ -798,7 +813,7 @@
       {
         "sourcePath": "docs/zh/01-react-agent.md",
         "destination": "src/docs/content/echo-agent/zh/01-react-agent.md",
-        "sha256": "355af6f2a44c473496738a1db35e426ecd93edc437688eee93cb39e7bdc34a1e"
+        "sha256": "60202f5b5d7bbf16fae1cdb1d215725b7743f756d2b1c5abdc9d862749afc593"
       },
       {
         "sourcePath": "docs/zh/02-tools.md",
@@ -808,7 +823,7 @@
       {
         "sourcePath": "docs/zh/03-memory.md",
         "destination": "src/docs/content/echo-agent/zh/03-memory.md",
-        "sha256": "6c2a0591cc75d199b41f2d32d0dbbd6c3904ada99279ceb6b5a42d93ae79131e"
+        "sha256": "61790b95f3e7d2d4854866fec833fc06368f3743a21cee0b4b0588c5ec6175bc"
       },
       {
         "sourcePath": "docs/zh/04-compression.md",
@@ -833,7 +848,7 @@
       {
         "sourcePath": "docs/zh/08-mcp.md",
         "destination": "src/docs/content/echo-agent/zh/08-mcp.md",
-        "sha256": "4432c5887a0f2329a4efa22e15c01ed5b39d6842fcc75309a817aebfa7d67073"
+        "sha256": "4cc382b1b7e12ca85d98b06064e8ed20fc10ccaff0ca96ea5e4bb3d7c18b02f1"
       },
       {
         "sourcePath": "docs/zh/09-tasks.md",
@@ -843,7 +858,7 @@
       {
         "sourcePath": "docs/zh/10-streaming.md",
         "destination": "src/docs/content/echo-agent/zh/10-streaming.md",
-        "sha256": "68bace377ec65b0cbba8194db49e22e6c1baf15682e633d95aa131465abe608a"
+        "sha256": "62282abade7152d4599271a2ba67a3cec3f589376b4ca503810551b68219024f"
       },
       {
         "sourcePath": "docs/zh/11-structured-output.md",
@@ -858,12 +873,12 @@
       {
         "sourcePath": "docs/zh/13-chat.md",
         "destination": "src/docs/content/echo-agent/zh/13-chat.md",
-        "sha256": "0570c67adb16e0f766b89fd1aed74a9a69be9e895fc47c5c892319fd4fb212e9"
+        "sha256": "35f54bc592c789cf2d31cc078714e1f36ad689b959e66640efcb42d8b81a4c94"
       },
       {
         "sourcePath": "docs/zh/14-semantic-search.md",
         "destination": "src/docs/content/echo-agent/zh/14-semantic-search.md",
-        "sha256": "6f33da6f68d6a460fb9a545536e7054cfffd342b208585688d9d8677963721ce"
+        "sha256": "e8866e921c5a33daee001a6ca4da26c95de33d5c58fbbedebb0cb9d6fd0096a2"
       },
       {
         "sourcePath": "docs/zh/15-im-channels.md",
@@ -873,7 +888,7 @@
       {
         "sourcePath": "docs/zh/17-graph-workflow.md",
         "destination": "src/docs/content/echo-agent/zh/17-graph-workflow.md",
-        "sha256": "3ada35cbc5e780368b8c4d409fe50d52e8f98b1f258fd66d949875796f1e59a5"
+        "sha256": "3139461802c3ababebfe8c475eb3538eb3f2502894e360e5a38fa7393e40460a"
       },
       {
         "sourcePath": "docs/zh/18-guard-system.md",
@@ -973,7 +988,7 @@
       {
         "sourcePath": "docs/zh/38-factory-modes.md",
         "destination": "src/docs/content/echo-agent/zh/38-factory-modes.md",
-        "sha256": "eb076b377cac431ddf5a42364c8def5509180b3a143577a17bfa6428b797d186"
+        "sha256": "5d830c6ef84fc45e2788e95942c6bf1730d808224f72b8643835f05e10441ecc"
       },
       {
         "sourcePath": "docs/zh/39-framework-application-boundary.md",
@@ -993,7 +1008,7 @@
       {
         "sourcePath": "docs/zh/41-persistence-concepts.md",
         "destination": "src/docs/content/echo-agent/zh/41-persistence-concepts.md",
-        "sha256": "416760f2da950d476bb8b26e11269cfc2e6e37250bd27fa6e510e24e8977820f"
+        "sha256": "34d2acdd71ecc2ee2fc6640bc034579da9fdb28fd65f4262e55aa541d903c283"
       },
       {
         "sourcePath": "docs/zh/41-shell-text-tools.md",
@@ -1183,7 +1198,7 @@
       {
         "sourcePath": "docs/adr/0035-owned-tool-registry-handles.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0035-owned-tool-registry-handles.md",
-        "sha256": "3fc93abce5b37050ed2cb674f81c1fecc677c6b52bf1dc405c624bd25dde9f68"
+        "sha256": "df13fc39d169c467f3eae73af649833144ff7825b890e3c8c9773da2a812eef7"
       },
       {
         "sourcePath": "docs/adr/0036-eval-workspace-generation-lifecycle.md",
@@ -1198,7 +1213,7 @@
       {
         "sourcePath": "docs/adr/0038-eval-trace-correlation-identity.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0038-eval-trace-correlation-identity.md",
-        "sha256": "609e4ec5d1edb91d04272bf55e0a57874155352ff26f628d92de67258eb8837f"
+        "sha256": "eefbea17931fd3b760771cc77e3e0145010e9cf7909270f3465749da7e0c49af"
       },
       {
         "sourcePath": "docs/adr/0039-background-task-terminal-authority.md",
@@ -1363,7 +1378,7 @@
       {
         "sourcePath": "docs/adr/0070-memory-provenance-and-recall-authority.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0070-memory-provenance-and-recall-authority.md",
-        "sha256": "1b1e81f509f6a1904bd0db2460bd36032793e44b4295f6ecf684b519b8b18038"
+        "sha256": "29f4bb62441deec0ce345e33dbd6730fec1c4951991142b294fd992d92bba1f1"
       },
       {
         "sourcePath": "docs/adr/0071-protected-path-and-readonly-tool-boundary.md",
@@ -1503,7 +1518,7 @@
       {
         "sourcePath": "docs/adr/0098-project-file-system-adapter.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0098-project-file-system-adapter.md",
-        "sha256": "6cbdfbaf6ee2c61bf97fb7125700073d3c62a2b00c9f787a8e4aa30bf5939e5e"
+        "sha256": "b122a81b386e0717c26bb19bdbf5c112c2e29dc5115f41ca8f96db3788818fe7"
       },
       {
         "sourcePath": "docs/adr/0099-personal-weixin-channel.md",
@@ -1518,7 +1533,7 @@
       {
         "sourcePath": "docs/adr/0101-native-message-execution.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0101-native-message-execution.md",
-        "sha256": "35c6df14ffcc76096b72171a14d918906000cc77b3bf6d48b3c82fbefe69085e"
+        "sha256": "0b59174833ee86809025b2ad40170fd58b3bc391ec4078023889a2881ac65147"
       },
       {
         "sourcePath": "docs/adr/0102-canonical-agent-consumers.md",
@@ -1526,9 +1541,24 @@
         "sha256": "029b146da14807671a0f45d3f30f8ac4baf24dcfd8489b3dab8533f455537dd3"
       },
       {
+        "sourcePath": "docs/adr/0103-current-storage-records.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0103-current-storage-records.md",
+        "sha256": "f60164e56d67b7984a648ddec88ee19eda3b2a0f9fc898b6c2d9e55887c95bb6"
+      },
+      {
+        "sourcePath": "docs/adr/0104-canonical-agent-runtime-kernel.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0104-canonical-agent-runtime-kernel.md",
+        "sha256": "bb2935f391c89cc1d35100426e6e27adf5cf901e2f449b2537164cdfa4e11014"
+      },
+      {
+        "sourcePath": "docs/adr/0105-current-config-and-plugin-inputs.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0105-current-config-and-plugin-inputs.md",
+        "sha256": "1287219ce45d9604c6718e79683f0f7ea558c57b9ca2b007e9b8d51a4f250150"
+      },
+      {
         "sourcePath": "docs/zh/architecture.md",
         "destination": "src/docs/content/echo-agent/zh/architecture.md",
-        "sha256": "bad113e0261cf79a76baec4a44914343ccf282b35224324d7a6a6f40b49720c8"
+        "sha256": "065c644ed590e9ed522a1efaba0c812a72beebf21572c0e6c620227c5e965e8b"
       },
       {
         "sourcePath": "docs/zh/concepts.md",
@@ -1538,7 +1568,7 @@
       {
         "sourcePath": "docs/zh/getting-started.md",
         "destination": "src/docs/content/echo-agent/zh/getting-started.md",
-        "sha256": "345acb0ba19ff7e4641468da3d13eaa29d7751724f09c6873ca27fc969b5bd84"
+        "sha256": "d033e3ca9159ae1f4396898460fbb18e59015d07cc0d6ea8c04f2710ec2b483f"
       },
       {
         "sourcePath": "docs/internal/knowledge/zh/a2a-protocol.md",
@@ -1568,12 +1598,12 @@
       {
         "sourcePath": "docs/zh/lifecycles.md",
         "destination": "src/docs/content/echo-agent/zh/lifecycles.md",
-        "sha256": "8611b0cf4ee0069b46d954b18d08c4a28ea12211dde5404f4e143dd5e0b636d4"
+        "sha256": "6b0213436af37683de730f94f9671bff1fe174ab434447e990ed892b83ab5b0a"
       },
       {
         "sourcePath": "docs/zh/README.md",
         "destination": "src/docs/content/echo-agent/zh/README.md",
-        "sha256": "d85a98db5c3746bfe1110d56c7540e267d1627a350a4659c54b2385a3ce3b1ef"
+        "sha256": "3ae840a0eacfac70de4aac65e284f6abdcdad597f326bcfcf18339d5f0e0eb9f"
       },
       {
         "sourcePath": "docs/zh/security.md",

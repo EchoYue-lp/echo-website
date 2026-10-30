@@ -72,7 +72,15 @@ ThinkTool／FinalAnswerTool 及工具前强制 CoT 的具名退役，只按真�
 当前 API 使用说明及可执行示例由所属上游验证；官网沿原 clean Git 树／revision／逐文件 SHA
 同步正文和 manifest，不直接手补生成镜像或把未提交源标为新发布快照。历史 ADR、迁移说明与合法自定义工具保留原文。
 
-Framework 镜像继续绑定clean `684ad1d9…`，产品投影绑定上述clean A71；完整source-aware检查沿原入口核对两者。
+2026-10-30 当前 Framework 镜像已沿原同步器更新至本地 clean 提交
+`340993201cc937fc8e4783b66be399ef9f14e3d5`：322 份镜像中更新34份既有文稿，新增ADR0103–0105的6份路由镜像。
+本次带入原生消息／完整源EOF与结算、当前存储格式／恢复、Store安装的Result与来源约束、工具代次及配置说明；
+ADR和旧验证段落按上游原文保留，具名历史快照不改绑为新执行票。原24工程、task source／final的本地资格
+只取Framework原回执，不代替SDK正式pin、下游消费者、真实native、精确main CI或发布。
+
+本次命令仅指定Framework来源，完整保留上述A71产品投影对象、148项来源及8份页面摘要；
+没有将当前EKO后继脏树晋升为已审来源。`node scripts/sync-docs.mjs --check --framework-root ../echo-agent`
+核对本次Framework来源；同时指定EKO的完整source-aware检查仍待其独立clean来源复审。
 仅有中文的原生合同沿原 Markdown 来源回链访问，不为形式新建英文副本；本地源码审阅不授已发布资格。
 assistant phase、reasoning、工具事实、最终发布与 TaskRun／Goal 完成分别验收；本地测试或站点构建不代表真实原生窗口已通过。
 SDK 的正式 pin 仍按其独立来源核准，官网不宣称已更新；网站没有部署。

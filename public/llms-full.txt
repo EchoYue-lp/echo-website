@@ -190,6 +190,9 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0100：由 Framework 维护 Polars 的 zstd 安全依赖补丁 | echo-agent 文档: https://echo-agent.dev/docs/adr-0100-zstd-safe-chain-vendoring
 - ADR 0101：Framework 原生消息与统一执行终态 | echo-agent 文档: https://echo-agent.dev/docs/adr-0101-native-message-execution
 - ADR 0102：现有消费者采用唯一原生 Agent 输出 | echo-agent 文档: https://echo-agent.dev/docs/adr-0102-canonical-agent-consumers
+- ADR 0103：统一当前存储格式，取消旧记录和推断恢复 | echo-agent 文档: https://echo-agent.dev/docs/adr-0103-current-storage-records
+- ADR 0104：Agent完整typed输入与单一原生结算边界 | echo-agent 文档: https://echo-agent.dev/docs/adr-0104-canonical-agent-runtime-kernel
+- ADR 0105：当前配置形状与插件输入边界 | echo-agent 文档: https://echo-agent.dev/docs/adr-0105-current-config-and-plugin-inputs
 - 知识库概述 | echo-agent 文档: https://echo-agent.dev/docs/knowledge-overview
 - Agent 设计模式 | echo-agent 文档: https://echo-agent.dev/docs/agent-patterns
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
@@ -354,6 +357,9 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0100：由 Framework 维护 Polars 的 zstd 安全依赖补丁 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0100-zstd-safe-chain-vendoring
 - ADR 0101：Framework 原生消息与统一执行终态 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0101-native-message-execution
 - ADR 0102：现有消费者采用唯一原生 Agent 输出 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0102-canonical-agent-consumers
+- ADR 0103：统一当前存储格式，取消旧记录和推断恢复 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0103-current-storage-records
+- ADR 0104：Agent完整typed输入与单一原生结算边界 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0104-canonical-agent-runtime-kernel
+- ADR 0105：当前配置形状与插件输入边界 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0105-current-config-and-plugin-inputs
 - Knowledge Base Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/knowledge-overview
 - Agent Design Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/agent-patterns
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive
@@ -374,7 +380,7 @@ Source: https://echo-agent.dev/docs/overview
 
 > 具名退役：当前源码移除 A2A／LSP 的实现、feature、公开出口和专属示例；
 > ACP、MCP、channels、Task/Subagent、通用工具和存储菜单继续保留。
-> 旧插件 `lsp.yaml` 由原 prepare owner 冻结并明确诊断，不启动服务，也不删除用户文件。
+> 旧插件 `lsp.yaml` 仅保留用户原件；当前prepare不probe、读取、冻结、hash或缓存它，不纳入generation身份、不生成LSP专属诊断，也不启动服务。见[ADR0105](../adr/0105-current-config-and-plugin-inputs.md)。
 > 源码同步不代表删后构建、最终锁、SDK正式新Git来源、native或发布资格已通过。
 > 边界和恢复锚点见[ADR0090](../adr/0090-a2a-lsp-retirement-contract.md)。
 
@@ -697,7 +703,7 @@ cd my-agent
 
 ```toml
 [dependencies]
-echo-agent = "0.2.0"
+echo_agent = "0.2.0"
 tokio = { version = "1", features = ["full"] }
 ```
 
@@ -707,7 +713,7 @@ tokio = { version = "1", features = ["full"] }
 
 编辑 `src/main.rs`：
 
-```rust
+```rust,no_run
 use echo_agent::prelude::*;
 
 #[tokio::main]
@@ -734,7 +740,7 @@ cargo run
 
 Agent 的真正威力来自工具调用。用 `#[tool]` 宏定义工具，一行注解自动生成 JSON Schema：
 
-```rust
+```rust,no_run
 use echo_agent::prelude::*;
 use echo_agent::{agent, tool};
 
@@ -785,21 +791,18 @@ OPENAI_API_KEY=sk-... cargo run
 
 ## 第四步：理解执行流程
 
-Agent 内部运行的是 ReAct 循环：
+执行循环不要求模型调用 think/final 控制工具，也不强制公开私有推理。真实流程是：
 
-```
-用户输入: "计算 (3 + 4) * 5"
-  │
-  ├─ Thought: 需要先算 3+4
-  ├─ Action:  add(3, 4) → 7
-  │
-  ├─ Thought: 再乘以 5
-  ├─ Action:  multiply(7, 5) → 35
-  │
-  └─ Final Answer: (3 + 4) * 5 = 35
+```text
+用户 Message
+  -> provider 原生正文 / reasoning / 工具提议
+  -> 有工具则执行并回填真实 ToolResult，再继续同一执行
+  -> 最终候选经过配置的 Guard/Critic、Stop 与持久化
+  -> 当前 runtime FinalAnswer 通知与真实 ExecutionStatus
+  -> 原 source 物理 EOF 后才向调用方返回成功
 ```
 
-每一轮都是 **思考 → 行动 → 观测**，直到 LLM 判断任务完成。
+工具提议同响应中的 Final 文字不能跳过工具。reasoning-only、截断或异常断流不构成成功。
 
 ---
 
@@ -807,7 +810,7 @@ Agent 内部运行的是 ReAct 循环：
 
 让 Agent 跨会话记住信息，只需一行代码：
 
-```rust
+```rust,no_run
 use echo_agent::prelude::*;
 use std::sync::Arc;
 
@@ -832,39 +835,153 @@ async fn main() -> Result<()> {
 
 ---
 
-## 第六步：流式输出
+## 第六步：原生流与返回形式
 
-实时逐 token 输出，适合构建聊天界面：
+String/event 返回形式与模型 HTTP streaming 是两个独立选择。下面显式设置
+`model_streaming(false)`，展示完整模型响应仍进入同一原生事件、Guard 和 EOF 路径；
+省略这一行时默认 true，执行与结束规则不变。
 
-```rust
+```rust,no_run
+use echo_agent::agent::{Agent, AgentEvent, AgentOutputProjection, AssistantPhase, ExecutionStatusKind};
+use echo_agent::error::{AgentError, AgentTerminalKind, ReactError};
 use echo_agent::prelude::*;
 use futures::StreamExt;
+use std::io::Write;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let agent = ReactAgentBuilder::new()
         .model("deepseek-v4-flash")
-        .system_prompt("你是一个有帮助的助手")
+        .system_prompt("你是一个有帮助的助手，请用中文回答。")
+        .model_streaming(false) // 显式使用完整模型响应，仍返回同一原生事件流。
         .build()?;
+    let mut stream = agent.execute_stream("解释 Rust 的异步编程").await?;
+    let owner_run = agent.current_run_id();
+    let mut output = AgentOutputProjection::default();
+    let mut first_error = None;
+    let mut unresolved = None::<ReactError>;
+    let same_source = |error: &ReactError, projection: &AgentOutputProjection| {
+        matches!(error, ReactError::ExecutionNotSettled { run_id, execution_id }
+            if owner_run.as_deref() == Some(run_id.as_str())
+                && execution_id.as_deref().is_some()
+                && execution_id.as_deref() == projection.execution_id())
+    };
 
-    let mut stream = agent.execute_stream("解释量子计算").await?;
+    // 持续读取同一原 source 到真实 EOF，再判断是否成功。
     while let Some(event) = stream.next().await {
-        match event? {
-            AgentEvent::Token(t) => print!("{t}"),
-            AgentEvent::FinalAnswer(a) => { println!("\n{a}"); break; }
-            _ => {}
+        let observed = match event {
+            Err(error @ ReactError::ExecutionNotSettled { .. }) => {
+                // 未结算观察不是终态；foreign 观察不会被这条 source 的完成覆盖。
+                if unresolved
+                    .as_ref()
+                    .is_none_or(|prior| same_source(prior, &output))
+                {
+                    unresolved = Some(error);
+                }
+                Ok(())
+            }
+            Ok(AgentEvent::ExecutionStatus(status)) => {
+                output.observe_status(&status).map(|changed| {
+                    if changed
+                        && matches!(
+                            status.status,
+                            ExecutionStatusKind::Settled
+                                | ExecutionStatusKind::Failed
+                                | ExecutionStatusKind::Cancelled
+                        )
+                        && unresolved
+                            .as_ref()
+                            .is_some_and(|prior| same_source(prior, &output))
+                    {
+                        unresolved = None;
+                    }
+                    if let Some(error) = output.terminal_failure() {
+                        first_error.get_or_insert(error);
+                    }
+                })
+            }
+            Ok(AgentEvent::AssistantMessage { block }) => {
+                output.observe_block(&block).map(|delta| {
+                    if let Some(delta) = delta {
+                        // 只显示投影后的可见文本；签名、密文和重放载体不直接输出。
+                        match delta.block.phase {
+                            AssistantPhase::Reasoning if !delta.text.is_empty() => {
+                                println!("\n[推理] {}", delta.text)
+                            }
+                            AssistantPhase::Commentary if !delta.text.is_empty() => {
+                                println!("\n[进度] {}", delta.text)
+                            }
+                            AssistantPhase::Reasoning | AssistantPhase::Commentary => {}
+                            _ => {
+                                print!("{}", delta.text);
+                                std::io::stdout().flush().ok();
+                            }
+                        }
+                    }
+                })
+            }
+            Ok(AgentEvent::LlmUsage {
+                model,
+                prompt_tokens,
+                completion_tokens,
+                total_tokens,
+                usage_reported,
+                ..
+            }) => {
+                if usage_reported {
+                    println!(
+                        "\n[LLM 用量] model={model}, prompt={prompt_tokens}, completion={completion_tokens}, total={total_tokens}"
+                    );
+                } else {
+                    println!("\n[LLM 用量] model={model}，上游未报告用量");
+                }
+                Ok(())
+            }
+            Ok(AgentEvent::FinalAnswer(answer)) => output.confirm_answer(&answer),
+            Ok(AgentEvent::Error { failure, .. }) => Err(match failure.terminal_kind {
+                AgentTerminalKind::Cancelled => AgentError::Cancelled(failure.message).into(),
+                AgentTerminalKind::TimedOut => AgentError::Timeout(failure.message).into(),
+                AgentTerminalKind::PermissionDenied => {
+                    AgentError::PermissionDenied(failure.message).into()
+                }
+                _ => ReactError::Other(failure.message),
+            }),
+            Ok(AgentEvent::Cancelled) => {
+                Err(AgentError::Cancelled("原生 Agent source 已取消".into()).into())
+            }
+            Err(error) => Err(error),
+            _ => Ok(()),
+        };
+        if let Err(error) = observed {
+            first_error.get_or_insert(error);
         }
+    }
+    if let Some(error) = unresolved {
+        return Err(error);
+    }
+    if let Some(error) = first_error {
+        return Err(error);
+    }
+    let final_answer = output.finish()?;
+    // 原 source EOF 后只补尚未展示的安全最终正文，确认通知本身不重印。
+    if let Some(missing) = output.take_final_presentation()? {
+        print!("{missing}");
+        std::io::stdout().flush().ok();
+    }
+    if final_answer.trim().is_empty() {
+        return Err(ReactError::Other(
+            "流式示例返回空答案".into(),
+        ));
     }
     Ok(())
 }
 ```
 
-需要额外依赖：
-
-```toml
-[dependencies]
-futures = "0.3"
-```
+增加依赖 `futures = "0.3"`。示例只使用 public facade，没有从旧正文补 Started/
+settlement，也没有在最终通知上提前 break。Reasoning 的可见文本和普通正文分开，
+签名/密文不直接打印。完整多轮示例见
+[demo17_chat.rs](../../echo-agent-learning/examples/demo17_chat.rs)，事件与投递边界见
+[10-streaming.md](./10-streaming.md)。本轮只做文本与源码核对，没有执行片段编译或模型验收。
 
 ---
 
@@ -887,11 +1004,18 @@ futures = "0.3"
 ```bash
 cargo run -p echo-agent-learning --example demo01_tools          # 自定义工具
 cargo run -p echo-agent-learning --example demo10_streaming      # 流式输出
-cargo run -p echo-agent-learning --example demo04_subagent       # 多 Agent 编排
-cargo run -p echo-agent-learning --example demo06_mcp            # MCP 协议集成
+cargo run -p echo-agent-learning --example demo04_subagent --features subagent # 多 Agent 编排
+cargo run -p echo-agent-learning --example demo06_mcp --features mcp # MCP 协议集成
 ```
 
 完整示例列表见 [echo-agent-learning/examples/](../../echo-agent-learning/examples/) 目录。
+
+
+本页当前源码示例已接入workspace-only `echo-agent-learning` 的rustdoc编译入口，
+本地 `scripts/verify.sh` 显式执行 `cargo test -p echo-agent-learning --doc --all-features --locked`，
+CI learning 组按既有默认 feature 执行 `cargo test -p echo-agent-learning --doc --locked`；片段的实际通过资格
+按准确源码与运行回执记录。网络／模型示例均为 `no_run`；完整流式源码
+还纳入现有 `demo17_chat` example编译链，文档、编译与运行资格分别记录。
 
 
 ---
@@ -947,7 +1071,7 @@ execute(task)
           ├─ 并行执行所有工具调用：
           │     ├─ 人工审批检查（若该工具已标记）
           │     ├─ ToolManager.execute_tool()
-          │     └─ 触发 on_tool_start / on_tool_end 回调
+          │     └─ 触发 on_tool_start_with_id / on_tool_end_with_id 回调
           │
           ├─ 原生最终候选 → 校验/Stop/持久化/结算后返回
           │
@@ -1042,16 +1166,16 @@ impl AgentCallback for MyCallback {
         })
     }
 
-    fn on_tool_start<'a>(&'a self, agent: &'a str, tool: &'a str, args: &'a Value) -> BoxFuture<'a, ()> {
+    fn on_tool_start_with_id<'a>(&'a self, agent: &'a str, call_id: &'a str, tool: &'a str, args: &'a Value) -> BoxFuture<'a, ()> {
         Box::pin(async move {
-            println!("[{}] 调用工具: {} {:?}", agent, tool, args);
+            println!("[{}] 调用工具: {} call_id={call_id} {:?}", agent, tool, args);
         })
     }
 
-    fn on_tool_end<'a>(&'a self, agent: &'a str, tool: &'a str, result: &'a str) -> BoxFuture<'a, ()> {
+    fn on_tool_end_with_id<'a>(&'a self, agent: &'a str, call_id: &'a str, tool: &'a str, result: &'a str) -> BoxFuture<'a, ()> {
         Box::pin(async move {
             let preview: String = result.chars().take(80).collect();
-            println!("[{}] 工具结果: {} -> {}", agent, tool, preview);
+            println!("[{}] 工具结果: {} call_id={call_id} -> {}", agent, tool, preview);
         })
     }
 
@@ -1092,10 +1216,10 @@ use std::sync::Arc;
 
 struct LogCallback;
 
-#[async_trait::async_trait]
-impl AgentCallback for LogCallback {
-    async fn on_tool_start(&self, agent: &str, tool: &str, args: &serde_json::Value) {
-        println!("  [{}] 调用工具 {} args={}", agent, tool, args);
+#[echo_agent::callback]
+impl LogCallback {
+    async fn on_tool_start_with_id(&self, agent: &str, call_id: &str, tool: &str, args: &serde_json::Value) {
+        println!("  [{}] 调用工具 {} call_id={call_id} args={}", agent, tool, args);
     }
     async fn on_final_answer(&self, _agent: &str, answer: &str) {
         println!("最终答案: {}", answer);
@@ -1246,8 +1370,9 @@ Protocol adapter 也是边界而非 owner。ACP、Channels、Headless 和外部 
 
 ## 具名退役与保留owner
 
-A2A／LSP 的生产模块、feature 和出口退出；原 registry／prepare 仅冻结旧声明并给通用诊断，
-不再拥有语言服务进程。ProjectRoot、Instruction、scope、MCP/ACP、Task/Subagent、取消、
+A2A／LSP 的生产模块、feature 和出口退出；旧 `lsp.yaml` 仅保留用户原件，当前 registry／prepare
+不专门读取、冻结、hash、缓存或生成LSP诊断，不将它纳入generation身份，也不启动语言服务。
+当前边界见[ADR0105](../adr/0105-current-config-and-plugin-inputs.md)。ProjectRoot、Instruction、scope、MCP/ACP、Task/Subagent、取消、
 持久化和恢复沿原 owner。没有因 EKO 未使用而扩大删除其它合理公共 API。
 源码结构与文档同步不等于删后构建、锁、SDK正式 Git 来源、native或发布完成。
 
@@ -2117,29 +2242,24 @@ echo-agent 的记忆系统包含三个正交层次，每层解决不同的"记�
 
 LLM 的上下文窗口在每次请求结束后就消失了，进程也可能在循环中途崩溃。没有运行时检查点，长任务被中断就需要从头开始；用户想在明天继续昨天的对话也只能重新输入。
 
-`RuntimeStateStore` 在 run 推进过程中持续保存 `AgentCheckpoint` 的运行时字段（消息 + 激活技能 + 阻塞原因 + 时间戳）。下次使用同一 `conversation_id` 启动时，运行时自动恢复先前状态，实现**线程连续性**。公开的 `current_plan` 字段仍可读取旧 checkpoint，但 ReactAgent 不把它恢复成任务计划，也不会将它写入新 checkpoint。
+`RuntimeStateStore` 保存 `AgentCheckpoint` 的当前运行字段（消息、激活技能、blocked reason、working directory 与时间戳）。同一 runtime-state 身份可以恢复当前合法格式，实现线程连续性；计划与依赖图由 `TaskRevisionService` 持有，checkpoint 不保存计划副本。raw Store CRUD仍独立保留，旧格式拒绝不构成删除用户原件或迁移数据的许可。
 
 ### 工作原理
 
+```text
+产品 conversation_id
+        │  可由 invocation 显式拆分 runtime_state_id
+        ▼
+FileRuntimeStateStore/runtime_state/_runtime_owners/<编码身份>.json
+  owner：版本2 + 显式 RuntimeStateVersion（Unmanaged/Managed/Retired）
+  checkpoint：schema3 消息payload + active_skills/blocked_reason/working_dir/timestamp
+  managed：保原 epoch/revision/pending effect/ack 证明
+  scope/index：仍为当前版本1
 ```
-conversation_id: "user-123-chat-5"
-                │
-                ▼
-FileRuntimeStateStore (./agent-data/runtime_state/_runtime_owners/):
-<编码后的-runtime-id>.json
-{
-  "runtime_state_id": "user-123-chat-5",
-  "scope_id": "user-123-chat-5",
-  "phase": "active",
-  "checkpoint": {
-    "messages_json":  "...完整消息历史...",
-    "current_plan":   null,
-    "active_skills":  ["doc-writing"],
-    "blocked_reason": null,
-    "timestamp":      "2026-06-14T..."
-  }
-}
-```
+
+上图是字段职责示意，不是可直接写入的记录。当前runtime payload不猜旧数组/缺版本，
+无cursor的runtime-only用途仍合法；会话log manifest和当前message marker也按各自合同
+校验。完整格式、raw与managed边界见ADR0103。
 
 ### 使用方式
 
@@ -2508,9 +2628,15 @@ Checkpoint:   journal=A, state@7
 
 ### AgentCheckpoint
 
-`AgentCheckpoint` 是另一种 checkpoint：它保存 ReAct 继续运行所需的消息、激活技能、blocked reason、working directory 和时间戳，并由 `RuntimeStateStore` 持久化。公开的 `current_plan` 字段为旧记录和 Store 读写保留；ReactAgent 恢复时忽略历史值，新 safe point 写入 `None`。版本化任务图与计划 artifact 由 `TaskRevisionService` 持有。
+`AgentCheckpoint` 保存 ReAct 继续运行所需的消息、激活技能、blocked reason、working directory 和时间戳，由 `RuntimeStateStore` 持久化。它不承载计划副本；版本化任务图与计划 artifact 由 `TaskRevisionService` 持有。当前payload统一显式schema3，合法无cursor的runtime-only/raw用途仍保留；旧裸数组、缺版本与旧迁移恢复义务退出，不能据此删除通用Store或当前CAS/恢复能力。
 
 恢复前会校验 assistant tool call 与 tool result 是否成对，避免恢复出 provider 无法接受的上下文，或重复执行已经完成的副作用。
+
+当前 `Message.provider_response` 通过同一 canonical Message、projection metadata 和摘要
+保存供应商响应观察，缺字段与显式 null 保持区分。它不拥有 runtime 完成或正文批准资格。
+失败时完整 partial 只在直接 LlmClient 的 typed error 中供检查；ReAct 可保存的
+metadata-only assistant 记录没有未执行工具片段或正文，冷开／Fork／import 后仍从
+模型输入整条排除，不新增 Store、第二份消息历史或恢复 owner。
 
 `AgentCheckpoint` 只拥有 ReAct runtime state，不拥有任务 DAG 或其它应用领域状态。它也不是 `ConversationStore` 中面向用户展示的 transcript。启用 transcript projection 时，其私有 versioned payload 可以保存一条完整的 `PendingTranscriptProjection`；在 ConversationStore receipt 确认提交前，它只是 durable intent，不是 transcript fact。
 
@@ -2526,7 +2652,8 @@ pre-compaction transcript 已落盘后重新对齐 cursor。
 `context_only` 位置/digest 绑定标明派生项；完整 messages 与绑定通过同一次 runtime CAS
 保存。存在 pending 时，当前消息视图校验针对 cursor-after，原 cursor-before 的形状和
 lineage 约束保留。后续同文新 turn 仍分配新 ordinal，清空活跃视图也不倒退 append frontier。
-version 1/2 继续按缺少派生来源证明的 legacy 路径读取，旧 framework reader 会拒绝 version 3。
+当前 reader 只接纳显式 schema version 3；version 1/2、缺版本和旧裸数组明确拒绝，
+不自动迁移或推断缺失来源。该版本限定不取消合法的 runtime-only/raw 保存用途。
 
 Managed 压缩在 Store I/O 期间释放 Context 锁，让只读回调读取一致的 pre-view；候选 observer
 和 cache 只在 checkpoint CAS 成功后接受。失败或取消恢复的是 volatile view，后续 managed
@@ -2552,26 +2679,26 @@ checkpoint 写入前再次校验，因此不会持久化出恢复端必然拒绝
 framework 会在模型准备前精确 reset/restore；只有相同 ID 才复用 warm context。运行时显式记录
 当前 hydrated ID：任何可取消的状态修改前先写 `Hydrating(target)`，restore hook 完整结算后才
 提交 `Hydrated(target)`；非 exact 状态一律重建。identity 切换还会清空 rollback snapshots。
-restore/save 使用相同优先级：显式 invocation runtime ID、invocation 产品 conversation、legacy
-external conversation、configured conversation。因此 A -> B -> A 不会把 A 的消息写入 B。
+restore/save 使用相同优先级：显式 invocation runtime ID、invocation 产品 conversation、
+configured conversation。旧 external setter 入口已退役，因此 A -> B -> A 不会把 A 的消息写入 B。
 
 轮换 `runtime_state_id` 会创建干净的模型上下文，但不会删除稳定产品会话。
 `save_checkpoint_for_scope` 把每个 runtime ID 持久索引到产品 scope。关闭 admission 并完成旧 owner
 结算后，reset 通过 `clear_persisted_runtime_incarnation` 先结清 durable pending projection，再精确
-退役旧 runtime checkpoint，并保留 transcript 数据。只有 legacy unmanaged Store pair 会顺带删除
-incarnation-keyed transcript；managed 清理在会话重建后无法安全推断稳定 delete identity。managed 产品删除
+退役旧 runtime checkpoint，并保留 transcript 数据。该协调入口要求 managed Store pair，
+不会顺带删除同名 transcript；合法 raw CRUD 由调用方显式调用。产品删除
 必须由调用方保留稳定的 `ManagedConversationDelete` request，并调用
 `delete_persisted_conversation_managed`；timeout、重启、回执丢失以及会话后来以新 epoch 重建时，都复用
-同一个 request identity。`delete_persisted_conversation` 仅保留给 legacy unmanaged Store pair；managed
-pair 会失败关闭，因为该便捷入口无法判断一次调用是在重试旧删除，还是要删除后来重建的新 epoch。
+同一个 request identity。缺稳定 identity 的旧 `delete_persisted_conversation` 入口已退役，
+不能由便捷调用推断是在重试旧删除，还是要删除后来重建的新 epoch。
 managed generation 使用 revision CAS 与 retirement tombstone；产品删除先持久化完整 scope manifest、
 全部 dropped operation identity，再取得带 epoch fence 的 ConversationStore receipt。详见
 [ADR 0006](../adr/0006-runtime-state-scope-lineage.md) 和
 [ADR 0056](../adr/0056-durable-transcript-projection-settlement.md)。
 
-managed clear/delete helper 提供 context-aware 变体，把调用方 absolute deadline 贯穿整个 saga。
-legacy unmanaged Store 的原始 trait 没有 context 参数，因此兼容 helper 保留历史上的无界合同；其
-context-aware 变体会返回 Unsupported，不会伪装成无法兑现的 deadline 保证。
+managed clear/delete helper 的 context-aware 变体把调用方 absolute deadline 贯穿整个 saga；
+便利入口也使用既有有界操作期限。没有 managed／deadline 能力的 Store pair 明确返回
+Unsupported；不保留无界兼容清理路径，也不影响显式 raw Store CRUD。
 
 ### Transcript 投影坐标与应用扩展元数据
 
@@ -2595,29 +2722,23 @@ Managed import／projection batch 的操作身份及 Store ordinal digest 仍覆
 opaque payload 及多模态 Parts 继续通过规范字段持久化。此处只保证数据保存，不使
 应用呈现 provenance 成为 Framework 的成功终态或执行许可。
 
-### 已核旧控制历史的恢复后继
+### 当前typed恢复与context-view派生
 
-`RuntimeStateStore::inspect_runtime_state_for_recovery_with_context` 是显式纯读合同，默认
-`Unsupported`；普通 load 允许 owner-first reconcile 写入，不能作为纯读默认实现。
-`ReactAgent::prepare_pending_control_checkpoint` 只准备原 snapshot、已核来源、历史副本
-和待原 owner 处理的真实调用，不执行工具、模型或签发成功。
+新执行及显式Resume沿原RuntimeStateStore严格load/reconcile、tool配对、cursor与pending
+transcript检查；没有旧控制工具来源getter、宽松inspection、pending-control归一或
+专用recovery commit。旧think/final日志与恢复原件不迁移/改写，不从旧参数补成功。
 
-自动恢复与显式 Resume 先等待 normal load；只有配对或结构 `SerializationError` 才考虑
-旧控制归一，原 typed unknown、取消、deadline、IO 不进入 fallback。若当前 checkpoint
-本来严格合法，保持原 normal error，不提交恢复。调用方必须传播同一个绝对 deadline。
+当前File CAS仍使用同scope/runtime锁、expected revision、epoch、replay/conflict与
+普通pending transition内核。`derive_context_view_checkpoint`继续为runtime-only新
+context view保原cursor lineage，不把未交付内容变成transcript事实。
 
-`RuntimeCheckpointRecoveryRequest` 经 `commit_checkpoint_recovery_with_context` 复用
-File Store 原 CAS kernel、scope/runtime 锁与 expected version。原始 owner 的完整 bytes、
-SHA/size 和 snapshot 先保存在 `_recovery_sources` 并回读核准，再提交正常后继版本；该目录
-不参与正常 runtime 扫描。旧 checkpoint、cursor 和日志保持原件，不能通过改旧 digest
-放行恢复。重试仍核原 bytes，owner-first crash cut 沿原 replay/reconcile 处理。
+同一React准备owner在当前Store已准入的Load/保存等待中持有原lease、execution mutex
+与资源束；typedunknown或丢失等待者不等于物理结算，不能释放owner或重放真实工具。
+原截止时间传播到实际Store，迟到结算后仍按原期限拒新写，不延长期限或另建Store。
 
-真实 pending effect、未结算投递及未知/custom 来源不由归一化重放。runtime-only 后继
-保存仍以实际 hydrated base 做 CAS，不能用 fresh expected 覆盖新输入；丢失等待者或到期
-不代表物理结算，原 close authority 继续保留 admission、execution mutex 与资源 guard。
-
-显式 Resume 与 stream 一样，在等待 execution mutex 前捕获原外部调用上下文；排队期间
-清除或替换共享 context 不改变该调用的身份与资源，锁后两个 snapshot 都复用同一捕获值。
+旧兼容专用测试义务随人类新裁决retire，不新增skip、不记matched/pass；当前cursor
+损坏拒绝、CAS幂等与stale hydrate、context lineage、deadline与资源保有继续由新
+正常managed记录测试覆盖。
 
 ### 其它同名 checkpoint
 
@@ -2674,6 +2795,14 @@ Trace 与 Journal 都可能包含按时间排列的事件，但职责不同：
 - Trace `Run` / `RunEvent` / `RunStore`：`src/trace/mod.rs`
 
 延伸阅读：[记忆系统](03-memory.md)、[上下文压缩](04-compression.md)、[追踪系统](27-tracing.md)、[Git 隔离](34-git-isolation.md)。
+
+## 工具结果错误观察的 canonical 投影
+
+`Message.tool_result_is_error: Option<bool>` 保持工具调用结果的原始观察：None 表示没有该事实，Some(false) 表示真实工具调用成功，Some(true) 表示真实调用失败。它与 TaskRun 的 Completed/Cancelled/Paused/Failed、Agent execution status 及最终发布是不同维度，不能靠正文前缀推测，也不能把一条成功查询得到的失败任务状态改成工具调用失败。
+
+该字段随 Message 手写 serde、既有 MessageProjectionMeta、FileConversationStore、managed import 和冷恢复一起保留；工具 ID/name 必须显式存在且与投影相等。没有该字段不恢复旧控制工具兼容，不放宽当前 canonical marker 校验。snapshot 和请求重建仍使用同一 Message，不新建错误观察 store。
+
+Provider 只在原生支持的边界转换错误位，不能把它或服务同名 execution_status 扩展升级为运行时结束权威。SDK 基础字段与三语言消费由其独立 owner/consumers 组合，不能由框架局部测试推断消费者已验收。
 
 
 ---
@@ -3391,188 +3520,206 @@ ContextCompressor (唯一的压缩策略扩展点)
 
 Source: https://echo-agent.dev/docs/streaming
 
-# 流式输出（Streaming）
+# 流式输出与原生执行
 
-## 是什么
+## 当前入口
 
-流式输出（Streaming）让 Agent 在 LLM 生成内容的同时，以typed消息块、真实工具和运行状态向调用方传递事实。明确进度和工具事实能持续展示；最终候选在配置校验与结算前按合同缓冲。
+`execute()` / `chat()` 返回 `String`，对应的流式入口返回
+`BoxStream<'_, Result<AgentEvent>>`。两种返回形式共用原 typed producer、ReAct、
+校验、取消与物理收尾；String 便利方法读取同一原流至 EOF 后投影最终结果。
+`chat` 保留多轮上下文，不能因为请求的是 String 就换成 fresh execute。
 
----
+返回形式不决定模型 HTTP 传输。`model_streaming(true)` 是默认值；显式
+`model_streaming(false)` 让同一执行调用 `LlmClient::chat`，完整响应仍保留原生块、
+工具来源、reasoning 与实际 usage，随后走同一候选校验和结算路径。它不是第二套执行器。
 
-## 解决什么问题
+## 当前事件
 
-阻塞式调用的问题：
-- **长等待**：复杂任务推理时间长，用户界面冻结数十秒
-- **无反馈**：用户不知道 Agent 在"想什么"
-- **体验割裂**：与现代 AI 对话产品（ChatGPT、Claude）的流畅体验差距明显
+| 事件 | 含义 |
+| --- | --- |
+| `AssistantMessage { block }` | 保留请求、块身份、序号、明确阶段与增量；缺阶段保持 Unknown |
+| `ExecutionStatus` | 原 source 的 Started/运行观察及真正终态，不由展示文本推断 |
+| `ToolCall` / `ToolResult` | 保留 call_id、真实调用与完整结果/资源引用 |
+| `LlmUsage` | 每次模型响应的实际报告；未报告时不能把零当成已知用量 |
+| `FinalAnswer(String)` | 当前运行时批准的最终正文通知；不代表原 source 已读到 EOF |
 
-流式输出解决了：
-- 及时展示已经允许公开的消息块、真实工具与等待状态；不承诺固定首字延迟
-- provider reasoning/公开摘要独立于普通正文与工具显示
-- 可以在生成过程中提前终止
+Core 的旧 AgentEvent Token/ThinkStart/ThinkEnd 和旧 String source fallback 已退役。
+provider 原生 reasoning wire、签名/加密回放块及真实 `on_think_*` 回调继续保留。
+显示推理时只取投影后的可见文字，不直接打印完整 block、签名或密文。
 
----
+## 读取同一原流到 EOF
 
-## 事件类型
+下面沿用当前 [demo17_chat.rs](../../echo-agent-learning/examples/demo17_chat.rs) 的
+原生投影模式，改为一次 fresh execute。首因和未结算观察保留原值，所有事件都继续
+从同一 source 读取。只有投影接受的同 run/execution 新终态才能解除匹配观察，
+foreign 状态或正文不能解除它。每段正文只展示一次；EOF 后补同 request 尚未显示的
+安全最终正文，FinalAnswer 通知本身不重复打印。
 
-以下仅简化展示主要事件 payload，省略身份 metadata 和其它生命周期变体。
-`execute_stream()` 返回 `BoxStream<'_, Result<AgentEvent>>`，包含以下事件：
-
-```rust
-pub enum AgentEvent {
-    AssistantMessage { block: AssistantMessageBlock }, // 原生身份/阶段/增量
-    ExecutionStatus(ExecutionStatus),              // 最后runtime结算事实
-    ToolCall { invocation: ToolInvocation },    // LLM 决定调用某个工具
-    ToolResult { name: String, result: ToolResult }, // 工具执行完毕，返回结果
-    FinalAnswer(String),                        // 受检最终正文确认；最后status仍须消费
-}
-```
-
----
-
-## 使用方式
-
-```rust
+```rust,no_run
+use echo_agent::agent::{Agent, AgentEvent, AgentOutputProjection, AssistantPhase, ExecutionStatusKind};
+use echo_agent::error::{AgentError, AgentTerminalKind, ReactError};
 use echo_agent::prelude::*;
 use futures::StreamExt;
+use std::io::Write;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let config = AgentConfig::new("qwen3-max", "assistant", "你是一个助手")
-        .enable_tool(true);
-
-    let mut agent = ReactAgent::new(config);
-    agent.add_tool(Box::new(CalculatorTool));
-
-    // 流式执行
-    let mut stream = agent.execute_stream("计算 (3 + 4) * 5 并解释步骤").await?;
-
+    let agent = ReactAgentBuilder::new()
+        .model("qwen3-max")
+        .system_prompt("你是一个有帮助的助手，请用中文回答。")
+        .build()?;
+    let mut stream = agent.execute_stream("解释 Rust 的异步编程").await?;
+    let owner_run = agent.current_run_id();
+    let mut output = AgentOutputProjection::default();
     let mut first_error = None;
-    while let Some(event) = stream.next().await {
-        match event {
-            Ok(AgentEvent::AssistantMessage { block }) => {
-                print!("[{:?}] {}", block.phase, block.delta); // 教学追踪事件；业务正文按批准投影呈现
-                std::io::Write::flush(&mut std::io::stdout()).ok();
-            }
-            Ok(AgentEvent::ToolCall { invocation, .. }) => {
-                println!("\n[调用工具] {} {:?}", invocation.name, invocation.args);
-            }
-            Ok(AgentEvent::ToolResult { name, result, .. }) => {
-                println!("[工具结果] {} -> {}", name, result.output);
-            }
-            Ok(AgentEvent::FinalAnswer(answer)) => {
-                println!("\n[最终答案] {}", answer);
-            }
-            Err(error) => {
-                // 展示每条观察，保留首个错误原值；继续消费同一 source 的清理与 EOF。
-                eprintln!("[流错误 / 观察] {error}");
-                if first_error.is_none() {
-                    first_error = Some(error);
-                }
-            }
-            Ok(event) => println!("[生命周期] {event:?}"),
-        }
-    }
-    match first_error {
-        Some(error) => Err(error),
-        None => Ok(()),
-    }
-}
-```
-
----
-
-## 原生块与执行终态
-
-新执行仅以 `AssistantMessage` 的明确 phase/身份/增量区分 reasoning、普通进度与正文，不再双发 Token/ThinkStart/ThinkEnd 副本。块 complete 只结束块；最终候选经 Guard/Critic/Stop、持久化、原 EOF 和 owner Join 后才发布，最后单次 `ExecutionStatus(Settled)` 才提供运行时完成事实。旧变体保留给历史读取与合理公开 custom Agent。应用不能把确认事件再次拼进已经呈现的正文。
-
-详细字段、恢复呈现资格与 TaskRun 边界见[原生消息合同](../zh/43-native-message-execution.md)。
-
-## 阻塞式 vs 流式对比
-
-```rust
-// 阻塞式：等待完整响应
-let answer: String = agent.execute("你好").await?;
-
-// 流式：实时接收事件
-let mut stream = agent.execute_stream("你好").await?;
-while let Some(event) = stream.next().await {
-    match event {
-        Ok(event) => println!("{event:?}"),
-        Err(error) => eprintln!("[流错误 / 观察] {error}"),
-    }
-}
-```
-
-两种方式的执行逻辑完全相同，仅输出方式不同。`execute()` 内部实际上是将流式事件聚合后返回最终 `FinalAnswer`。
-
----
-
-## 在 Web 服务中使用（Server-Sent Events）
-
-```rust
-use axum::{Router, response::Sse};
-use futures::stream::StreamExt;
-use echo_agent::prelude::*;
-
-async fn chat_stream(
-    task: String,
-) -> Sse<impl futures::Stream<Item = Result<axum::response::sse::Event, std::convert::Infallible>>> {
-    let mut agent = ReactAgent::new(/* config */);
-
-    let event_stream = async_stream::stream! {
-        match agent.execute_stream(&task).await {
-            Ok(mut agent_stream) => {
-                while let Some(event) = agent_stream.next().await {
-                    let data = match event {
-                        Ok(AgentEvent::Token(text)) => serde_json::json!({
-                            "type": "token", "data": text,
-                        }),
-                        Ok(AgentEvent::ToolCall { invocation, .. }) => serde_json::json!({
-                            "type": "tool_call", "name": invocation.name,
-                        }),
-                        Ok(AgentEvent::FinalAnswer(answer)) => serde_json::json!({
-                            "type": "answer", "data": answer,
-                        }),
-                        Err(error) => {
-                            // 发送错误给接收方，同时继续消费同一原始 producer。
-                            serde_json::json!({
-                                "type": "stream_error_or_observation", "message": error.to_string(),
-                            })
-                        }
-                        Ok(event) => serde_json::json!({
-                            "type": "lifecycle", "event": event,
-                        }),
-                    };
-                    yield Ok(axum::response::sse::Event::default().data(data.to_string()));
-                }
-            }
-            Err(error) => {
-                let data = serde_json::json!({
-                    "type": "setup_error_or_observation", "message": error.to_string(),
-                });
-                yield Ok(axum::response::sse::Event::default().data(data.to_string()));
-            }
-        }
+    let mut unresolved = None::<ReactError>;
+    let same_source = |error: &ReactError, projection: &AgentOutputProjection| {
+        matches!(error, ReactError::ExecutionNotSettled { run_id, execution_id }
+            if owner_run.as_deref() == Some(run_id.as_str())
+                && execution_id.as_deref().is_some()
+                && execution_id.as_deref() == projection.execution_id())
     };
 
-    Sse::new(event_stream)
+    // 持续读取同一原 source 到真实 EOF，再判断是否成功。
+    while let Some(event) = stream.next().await {
+        let observed = match event {
+            Err(error @ ReactError::ExecutionNotSettled { .. }) => {
+                // 未结算观察不是终态；foreign 观察不会被这条 source 的完成覆盖。
+                if unresolved
+                    .as_ref()
+                    .is_none_or(|prior| same_source(prior, &output))
+                {
+                    unresolved = Some(error);
+                }
+                Ok(())
+            }
+            Ok(AgentEvent::ExecutionStatus(status)) => {
+                output.observe_status(&status).map(|changed| {
+                    if changed
+                        && matches!(
+                            status.status,
+                            ExecutionStatusKind::Settled
+                                | ExecutionStatusKind::Failed
+                                | ExecutionStatusKind::Cancelled
+                        )
+                        && unresolved
+                            .as_ref()
+                            .is_some_and(|prior| same_source(prior, &output))
+                    {
+                        unresolved = None;
+                    }
+                    if let Some(error) = output.terminal_failure() {
+                        first_error.get_or_insert(error);
+                    }
+                })
+            }
+            Ok(AgentEvent::AssistantMessage { block }) => {
+                output.observe_block(&block).map(|delta| {
+                    if let Some(delta) = delta {
+                        // 只显示投影后的可见文本；签名、密文和重放载体不直接输出。
+                        match delta.block.phase {
+                            AssistantPhase::Reasoning if !delta.text.is_empty() => {
+                                println!("\n[推理] {}", delta.text)
+                            }
+                            AssistantPhase::Commentary if !delta.text.is_empty() => {
+                                println!("\n[进度] {}", delta.text)
+                            }
+                            AssistantPhase::Reasoning | AssistantPhase::Commentary => {}
+                            _ => {
+                                print!("{}", delta.text);
+                                std::io::stdout().flush().ok();
+                            }
+                        }
+                    }
+                })
+            }
+            Ok(AgentEvent::LlmUsage {
+                model,
+                prompt_tokens,
+                completion_tokens,
+                total_tokens,
+                usage_reported,
+                ..
+            }) => {
+                if usage_reported {
+                    println!(
+                        "\n[LLM 用量] model={model}, prompt={prompt_tokens}, completion={completion_tokens}, total={total_tokens}"
+                    );
+                } else {
+                    println!("\n[LLM 用量] model={model}，上游未报告用量");
+                }
+                Ok(())
+            }
+            Ok(AgentEvent::FinalAnswer(answer)) => output.confirm_answer(&answer),
+            Ok(AgentEvent::Error { failure, .. }) => Err(match failure.terminal_kind {
+                AgentTerminalKind::Cancelled => AgentError::Cancelled(failure.message).into(),
+                AgentTerminalKind::TimedOut => AgentError::Timeout(failure.message).into(),
+                AgentTerminalKind::PermissionDenied => {
+                    AgentError::PermissionDenied(failure.message).into()
+                }
+                _ => ReactError::Other(failure.message),
+            }),
+            Ok(AgentEvent::Cancelled) => {
+                Err(AgentError::Cancelled("原生 Agent source 已取消".into()).into())
+            }
+            Err(error) => Err(error),
+            _ => Ok(()),
+        };
+        if let Err(error) = observed {
+            first_error.get_or_insert(error);
+        }
+    }
+    if let Some(error) = unresolved {
+        return Err(error);
+    }
+    if let Some(error) = first_error {
+        return Err(error);
+    }
+    let final_answer = output.finish()?;
+    // 原 source EOF 后只补尚未展示的安全最终正文，确认通知本身不重印。
+    if let Some(missing) = output.take_final_presentation()? {
+        print!("{missing}");
+        std::io::stdout().flush().ok();
+    }
+    if final_answer.trim().is_empty() {
+        return Err(ReactError::Other(
+            "流式示例返回空答案".into(),
+        ));
+    }
+    Ok(())
 }
 ```
 
----
+这段代码按当前源码接口整理，本轮没有执行片段编译、模型调用或原生宿主验收。
+完整进度、工具和回调示例见 [demo11_callbacks.rs](../../echo-agent-learning/examples/demo11_callbacks.rs)，
+多轮入口见 [13-chat.md](./13-chat.md)。
 
-## 注意事项
+## 自定义 Agent 与完整调用值
 
-1. **工具执行不是流式的**：工具（`execute_tool()`）仍然是阻塞完成后才返回 `ToolResult` 事件，因为工具执行本身不产生增量输出
-2. **`FinalAnswer` 是业务结果**：继续消费同一原始 source 到物理 EOF；答案之后的生产者清理仍可能失败。默认取消和 invocation 适配器保留首个普通清理错误，同时继续持有并 drain 原始 source。
-3. **错误处理**：每个事件都是 `Result<AgentEvent>`。drain 时保留最早的失败或取消首因，后续清理错误不能覆盖它。`ExecutionNotSettled` 保留原始 run/execution 身份，是独立的非终态观察；仅有 EOF 不能清除该观察。
+自定义实现应接纳 `execute_stream_message_with_invocation_context` 和/或
+`chat_stream_message_with_invocation_context`，按实际支持能力实现各自 typed producer。
+Message、history、取消、资源、工作目录及工具上界按值进入同一次调用。未实现的入口
+在 source admission 前明确拒绝：当前默认错误分别为 `canonical typed execute invocation`
+和 `canonical typed chat invocation`；不会调用旧 String 方法补正文、猜 Started 或补成功。
+只有 fresh execute 的自定义 Agent 不会自动获得多轮 chat 能力。
 
-以上示例展示每个流错误或观察，并继续消费同一 source 到 EOF。返回首个错误时保留其
-原始值，不把 `ExecutionNotSettled` 变成终态失败，也不据此证明物理结算。需要持久化
-执行状态的应用应消费规范化 `AgentTurnDriver` receipt，而非从这些 UI 事件推断。
+## 在 SSE 或其它事件接收端中使用
 
-对应示例：`echo-agent-learning/examples/demo10_streaming.rs`
+接收端可序列化原生消息块、工具事实和运行观察，或显示同一投影产生的可见文字。
+`FinalAnswer` 是确认通知，不能被命名为“已关闭”或追加到已经显示的正文。
+投递失败/接收端断开是 delivery 结果，不能代替 producer 的执行/物理结算。
+需要规范化 turn receipt 的宿主使用现有 `AgentTurnDriver`，保留原 source 到 EOF；
+执行结果与投递结果分别判断，不为 UI 新建另一份执行 owner 或 turn summary。
+
+## 完成、失败与取消
+
+- 单块 `complete`、provider 的 `phase=final_answer` 和普通文字均不能证明执行完成。
+- 最终候选继续经过配置的 Guard/Critic、Stop、持久化和原 owner 的实际收尾；
+  只有真实 native status 与原 EOF 满足后才返回成功，尾部错误仍可阻止成功。
+- `ExecutionNotSettled` 是非终态观察；原 run/execution 不能被新身份或 foreign 状态替换。
+- 普通工具还可以发布进度与资源事件，不能把某个工具返回或工具日志当作 Agent 终态。
+
+完整字段与持久化约束见[原生消息与执行结算](../zh/43-native-message-execution.md)。
 
 ---
 
@@ -4163,6 +4310,9 @@ agent.chat("你记得我的名字吗？").await?;
 
 ---
 
+fresh execute 不追加上一轮 chat；显式传入 history 或恢复运行时上下文时，仍由当前
+typed producer 按既有身份与持久化合同处理。多轮可用历史受预算和压缩策略约束。
+
 ## 核心差异
 
 | | `execute()` / `execute_stream()` | `chat()` / `chat_stream()` |
@@ -4201,7 +4351,7 @@ async fn main() -> Result<()> {
     println!("Agent: {r3}");
 
     // 清除历史，开启新一轮对话
-    agent.reset();
+    agent.reset().await;
 
     Ok(())
 }
@@ -4209,38 +4359,152 @@ async fn main() -> Result<()> {
 
 ### 流式多轮对话
 
-```rust
+```rust,no_run
+use echo_agent::agent::{Agent, AgentEvent, AgentOutputProjection, AssistantPhase, ExecutionStatusKind};
+use echo_agent::error::{AgentError, AgentTerminalKind, ReactError};
 use echo_agent::prelude::*;
 use futures::StreamExt;
 use std::io::Write;
 
 #[tokio::main]
-async fn main() -> Result<()> {
-    let config = AgentConfig::new("qwen3-max", "assistant", "你是一个有帮助的助手");
-    let mut agent = ReactAgent::new(config);
+async fn main() -> echo_agent::error::Result<()> {
+    println!("  使用 chat_stream() 进行流式多轮对话\n");
+
+    // 使用 AgentBuilder 创建 Agent
+    let agent = ReactAgentBuilder::new()
+        .model("qwen3-max")
+        .name("stream_chat_agent")
+        .system_prompt("你是一个助手，用中文回答，不超过三句话。")
+        .max_iterations(3)
+        .build()?;
 
     let messages = [
-        "我在学习 Rust 的异步编程。",
+        "我在学习 Rust，想了解异步编程。",
         "能给我一个 async/await 的简单例子吗？",
-        "基于我刚才的问题，你觉得我下一步应该学什么？",
     ];
 
     for msg in &messages {
-        println!("用户: {msg}");
-        print!("Agent: ");
+        println!("  👤 用户: {msg}");
+        print!("  🤖 Agent: ");
         std::io::stdout().flush().ok();
 
         let mut stream = agent.chat_stream(msg).await?;
+        let owner_run = agent.current_run_id();
+        let mut output = AgentOutputProjection::default();
+        let mut first_error = None;
+        let mut unresolved = None::<ReactError>;
+        let same_source = |error: &ReactError, projection: &AgentOutputProjection| {
+            matches!(error, ReactError::ExecutionNotSettled { run_id, execution_id }
+                if owner_run.as_deref() == Some(run_id.as_str())
+                    && execution_id.as_deref().is_some()
+                    && execution_id.as_deref() == projection.execution_id())
+        };
 
+        // 每轮读取同一 chat source 到真实 EOF，下一轮才复用会话上下文。
         while let Some(event) = stream.next().await {
-            match event? {
-                AgentEvent::Token(token) => {
-                    print!("{token}");
-                    std::io::stdout().flush().ok();
+            let observed = match event {
+                Err(error @ ReactError::ExecutionNotSettled { .. }) => {
+                    // 未结算观察不是终态；foreign 观察不会被这条 source 的完成覆盖。
+                    if unresolved
+                        .as_ref()
+                        .is_none_or(|prior| same_source(prior, &output))
+                    {
+                        unresolved = Some(error);
+                    }
+                    Ok(())
                 }
-                AgentEvent::FinalAnswer(_) => break,
-                _ => {}
+                Ok(AgentEvent::ExecutionStatus(status)) => {
+                    output.observe_status(&status).map(|changed| {
+                        if changed
+                            && matches!(
+                                status.status,
+                                ExecutionStatusKind::Settled
+                                    | ExecutionStatusKind::Failed
+                                    | ExecutionStatusKind::Cancelled
+                            )
+                            && unresolved
+                                .as_ref()
+                                .is_some_and(|prior| same_source(prior, &output))
+                        {
+                            unresolved = None;
+                        }
+                        if let Some(error) = output.terminal_failure() {
+                            first_error.get_or_insert(error);
+                        }
+                    })
+                }
+                Ok(AgentEvent::AssistantMessage { block }) => {
+                    output.observe_block(&block).map(|delta| {
+                        if let Some(delta) = delta {
+                            // 只显示投影后的可见文本；签名、密文和重放载体不直接输出。
+                            match delta.block.phase {
+                                AssistantPhase::Reasoning if !delta.text.is_empty() => {
+                                    println!("\n[推理] {}", delta.text)
+                                }
+                                AssistantPhase::Commentary if !delta.text.is_empty() => {
+                                    println!("\n[进度] {}", delta.text)
+                                }
+                                AssistantPhase::Reasoning | AssistantPhase::Commentary => {}
+                                _ => {
+                                    print!("{}", delta.text);
+                                    std::io::stdout().flush().ok();
+                                }
+                            }
+                        }
+                    })
+                }
+                Ok(AgentEvent::LlmUsage {
+                    model,
+                    prompt_tokens,
+                    completion_tokens,
+                    total_tokens,
+                    usage_reported,
+                    ..
+                }) => {
+                    if usage_reported {
+                        println!(
+                            "\n[LLM 用量] model={model}, prompt={prompt_tokens}, completion={completion_tokens}, total={total_tokens}"
+                        );
+                    } else {
+                        println!("\n[LLM 用量] model={model}，上游未报告用量");
+                    }
+                    Ok(())
+                }
+                Ok(AgentEvent::FinalAnswer(answer)) => output.confirm_answer(&answer),
+                Ok(AgentEvent::Error { failure, .. }) => Err(match failure.terminal_kind {
+                    AgentTerminalKind::Cancelled => AgentError::Cancelled(failure.message).into(),
+                    AgentTerminalKind::TimedOut => AgentError::Timeout(failure.message).into(),
+                    AgentTerminalKind::PermissionDenied => {
+                        AgentError::PermissionDenied(failure.message).into()
+                    }
+                    _ => ReactError::Other(failure.message),
+                }),
+                Ok(AgentEvent::Cancelled) => {
+                    Err(AgentError::Cancelled("原生 Agent source 已取消".into()).into())
+                }
+                Err(error) => Err(error),
+                _ => Ok(()),
+            };
+            if let Err(error) = observed {
+                first_error.get_or_insert(error);
             }
+        }
+        if let Some(error) = unresolved {
+            return Err(error);
+        }
+        if let Some(error) = first_error {
+            return Err(error);
+        }
+        let final_answer = output.finish()?;
+        // 原 source EOF 后只补尚未展示的安全最终正文，确认通知本身不重印。
+        if let Some(missing) = output.take_final_presentation()? {
+            print!("{missing}");
+            std::io::stdout().flush().ok();
+        }
+        if final_answer.trim().is_empty() {
+            return Err(ReactError::Other(
+                "demo17 验收失败：流式对话返回空答案".into(),
+            ));
         }
         println!("\n");
     }
@@ -4291,7 +4555,7 @@ async fn main() -> Result<()> {
 
 ```rust
 // 返回 (消息条数, 估算 token 数)；ReactAgent 专有方法
-let (msg_count, token_est) = agent.context_stats();
+let (msg_count, token_est) = agent.context_stats().await;
 println!("当前上下文：{msg_count} 条消息，估算 ~{token_est} tokens");
 ```
 
@@ -4301,18 +4565,23 @@ println!("当前上下文：{msg_count} 条消息，估算 ~{token_est} tokens")
 
 ```rust
 // 直接调用（具体类型）
-agent.reset();
+agent.reset().await;
 
 // 通过 trait 对象调用
 let mut agent: Box<dyn Agent> = Box::new(ReactAgent::new(config));
 agent.chat("第一轮：你好，我叫张三").await?;
-agent.reset();                               // ← trait 方法，清除上下文
+agent.reset().await;                               // ← trait 方法，清除上下文
 agent.chat("第二轮：我是谁？").await?;       // Agent 不再记得"张三"
 ```
 
 ### 结合 RuntimeStateStore 跨进程续接
 
-`chat()` 的多轮历史可以通过 [`RuntimeStateStore`](../../src/state/mod.rs) 持久化（`SqliteRuntimeStateStore` 实现保存包含消息、激活技能和阻塞原因的 `AgentCheckpoint`）。下次启动时，使用相同的 `conversation_id` 即可由运行时恢复这些字段。任务计划归版本化任务图持有，不从 ReAct checkpoint 恢复。完整示例参见 [03-memory.md](./03-memory.md)。
+当前会话可以配置 RuntimeStateStore 保存运行时上下文；恢复仍需严格匹配
+checkpoint 身份、transcript generation 与当前 Message/history。不能只靠相同
+conversation_id 接受任意旧断点、缺失字段或重放已完成副作用。任务计划仍归版本化
+任务图，不从 ReAct checkpoint 恢复。Store 配对与冷恢复边界见
+[41-persistence-concepts.md](./41-persistence-concepts.md)，记忆能力见
+[03-memory.md](./03-memory.md)。
 
 ---
 
@@ -4329,7 +4598,7 @@ let config = AgentConfig::new("qwen3-max", "assistant", "你是一个助手")
 let mut agent = ReactAgent::new(config);
 
 // 配置滑动窗口压缩（仅保留最近 20 条消息）
-agent.set_compressor(SlidingWindowCompressor::new(20));
+agent.set_compressor(SlidingWindowCompressor::new(20)).await;
 
 // 此后 chat() 调用会在 token 超限时自动触发压缩
 agent.chat("第一条消息").await?;
@@ -4338,104 +4607,62 @@ agent.chat("第一条消息").await?;
 
 ---
 
-## Agent Trait 设计
+流式例子的循环与当前 demo17 保持一致；本轮只核对源码和文档，未执行片段编译或模型验收。
 
-`Agent` trait 包含完整的对话生命周期接口：
+## 当前 Agent typed 合同
 
-```rust
-#[async_trait]
-pub trait Agent: Send + Sync {
-    fn name(&self) -> &str;
-    fn model_name(&self) -> &str;
-    fn system_prompt(&self) -> &str;
+String 与 raw-event 便利入口委托给对应 typed producer；接口使用 `&self` 和
+`BoxFuture`，不使用旧的 `async_trait`/`&mut self` 定义。下面仅列签名关系：
 
-    /// 阻塞执行，每次调用重置上下文（单轮模式）。连续对话请用 `chat()`。
-    async fn execute(&mut self, task: &str) -> Result<String>;
-
-    /// 流式执行，每次调用重置上下文（单轮模式）。连续对话请用 `chat_stream()`。
-    async fn execute_stream(&mut self, task: &str) -> Result<BoxStream<'_, Result<AgentEvent>>>;
-
-    /// 多轮对话（阻塞）。追加到现有上下文，历史跨轮保留。
-    /// 用 `reset()` 开启新会话；默认回退到 `execute()`。
-    async fn chat(&mut self, message: &str) -> Result<String> {
-        self.execute(message).await
-    }
-
-    /// 多轮对话（流式）。追加到现有上下文，历史跨轮保留。
-    /// 用 `reset()` 开启新会话；默认回退到 `execute_stream()`。
-    async fn chat_stream(&mut self, message: &str) -> Result<BoxStream<'_, Result<AgentEvent>>> {
-        self.execute_stream(message).await
-    }
-
-    /// 清除对话历史，开启新会话。不影响 `execute()`（它自行重置）。
-    /// 默认 no-op；维护对话状态的实现类应覆盖此方法。
-    fn reset(&mut self) {}
-}
+```text
+execute / execute_stream
+  -> execute_stream_message_with_invocation_context(Message, CancellationToken, AgentInvocationContext)
+chat / chat_stream
+  -> chat_stream_message_with_invocation_context(Message, CancellationToken, AgentInvocationContext)
+reset(&self) -> Future<Output = ()>
 ```
 
-**各实现类的行为对比：**
+两个 typed 入口独立声明能力，完整 Message、history、invocation 与资源不能先压成
+String 再回补。实现未提供该入口时，当前默认明确返回 `ReactError::Other`，消息为
+`canonical typed execute invocation` 或 `canonical typed chat invocation`。
+它不是成功响应，也不 fallback 到另一个入口。原生 source 自己提供稳定的
+Started、真实终态及原 EOF；读取方不能根据 FinalAnswer 文本制造这些事实。
 
-| 实现 | `chat()` | `reset()` |
-|------|---------|---------|
-| `ReactAgent` | 保留完整上下文 | 清空历史，仅保留 system prompt |
-| `MockAgent` | 记录调用、消费响应队列 | 清空调用历史 |
-| `FailingMockAgent` | 总是返回错误 | 清空调用历史 |
-| 其他自定义 Agent | 默认回退到 `execute()` | 默认 no-op |
+| 实现 | 多轮入口 | reset |
+| --- | --- | --- |
+| ReactAgent | 原上下文上的 typed chat；预算压缩/恢复仍按当前 owner | 异步清除会话消息，必须 await |
+| MockAgent | 显式 typed chat 使用配置响应，保完整调用记录与原生状态 | 清除调用历史 |
+| FailingMockAgent | 保留原 typed setup/脚本错误，不合成成功 | 清除调用历史 |
+| 自定义 Agent | 实现自己支持的 typed 入口；缺失入口明确拒绝 | 默认空操作；有会话状态时自行实现 |
 
 ---
 
-## 在 Web 服务中使用（Chatbot API）
+## 在宿主或 Web 接口中使用
 
-```rust
-use axum::{Json, extract::State};
-use echo_agent::prelude::*;
-use std::sync::Arc;
-use tokio::sync::Mutex;
+每个需要独立上下文的会话持有自己的 Agent，或由宿主串行驱动同一会话。
+`Agent: Send + Sync` 不意味着可把同一实例的多轮上下文任意并发写入。
+接收完整 Message 与 history 时使用对应 typed chat 入口；调用级工作目录、工具上界、
+取消和资源放入 `AgentInvocationContext`，不经旧 mutable setter/source fallback 传递。
 
-// 共享 Agent 状态（单用户场景示例）
-type AgentState = Arc<Mutex<ReactAgent>>;
-
-async fn chat_handler(
-    State(agent): State<AgentState>,
-    Json(req): Json<ChatRequest>,
-) -> Json<ChatResponse> {
-    let mut agent = agent.lock().await;
-    let answer = agent.chat(&req.message).await.unwrap_or_default();
-    Json(ChatResponse { answer })
-}
-
-// 流式版本（SSE）
-async fn chat_stream_handler(
-    State(agent): State<AgentState>,
-    Json(req): Json<ChatRequest>,
-) -> axum::response::Sse<impl futures::Stream<Item = Result<axum::response::sse::Event, std::convert::Infallible>>> {
-    let event_stream = async_stream::stream! {
-        let mut agent = agent.lock().await;
-        if let Ok(mut stream) = agent.chat_stream(&req.message).await {
-            while let Some(event) = stream.next().await {
-                let data = match event {
-                    Ok(AgentEvent::Token(t))      => format!("{{\"type\":\"token\",\"data\":\"{t}\"}}"),
-                    Ok(AgentEvent::FinalAnswer(a)) => format!("{{\"type\":\"done\",\"data\":\"{a}\"}}"),
-                    _ => continue,
-                };
-                yield Ok(axum::response::sse::Event::default().data(data));
-            }
-        }
-    };
-    axum::response::Sse::new(event_stream)
-}
-```
+SSE 只负责运输事实；若接收端断开，投递结果与原执行结果分开记录，原 source 仍须由
+原 owner 收尾。宿主需要持久 turn receipt 时使用既有 `AgentTurnDriver`。
+原生字段与投影示例见 [10-streaming.md](./10-streaming.md)，不把 FinalAnswer 通知
+重命名为物理关闭，不把 transport flush 当成 producer EOF。
 
 ---
 
-## 注意事项
+## 使用约束
 
-1. **多用户场景下需要独立 Agent 实例**：`ReactAgent` 不是线程安全的，每个用户会话应有独立实例（或用 `Arc<Mutex<ReactAgent>>`）
-2. **reset() 清除的是内存中的历史**：`RuntimeStateStore` 中已持久化的运行时状态不受影响，下次调用 `execute()` 时仍会恢复
-3. **上下文增长**：长时间对话会累积大量 token，建议配合 `set_compressor()` 使用
-4. **`execute()` 不影响 `chat()` 的历史**：混用 `execute()` 和 `chat()` 时，`execute()` 每次调用都会重置历史，之前 `chat()` 积累的上下文会丢失
+1. `reset().await`、`context_stats().await`、`set_compressor(...).await` 都必须等待完成。
+2. Store 恢复、transcript generation 和严格 checkpoint 配对按当前持久化合同处理，
+   不能只凭相同 conversation_id 声称任意旧断点都会自动恢复；见 [41-persistence-concepts.md](./41-persistence-concepts.md)。
+3. 上下文受 token 预算与压缩策略约束；多轮不代表保留无限历史。
+4. fresh execute 与 chat 语义分开；不要用 execute 替代下一轮 chat，也不要在原 stream
+   的最终通知处提前关流后立即写入下一轮。
+5. String/event 返回形式和 `model_streaming(bool)` 是两个独立选择。显式 false 仍走
+   同一 typed 入口、原生校验与 EOF 规则，默认 true 不变。
 
-对应示例：`echo-agent-learning/examples/demo17_chat.rs`
+实际完整示例：[demo17_chat.rs](../../echo-agent-learning/examples/demo17_chat.rs)。
 
 
 ---
@@ -8163,42 +8390,66 @@ let graph = GraphBuilder::new("parallel_processing")
 
 ---
 
-## 流式事件
+## 流式事件与原 source EOF
 
 ```rust
-let mut stream = graph.run_stream(state).await?;
+use echo_agent::error::ReactError;
+use echo_agent::workflow::WorkflowEvent;
+use futures::StreamExt;
 
+let mut stream = graph.run_stream(state).await?;
+let mut first_error = None;
+let mut unresolved = None;
+let mut completed = None;
 while let Some(event) = stream.next().await {
-    match event? {
-        WorkflowEvent::NodeStart { node_name, step_index } => {
-            println!("▶ 开始节点: {} (步骤 {})", node_name, step_index);
+    match event {
+        Ok(WorkflowEvent::NodeStart { node_name, step_index }) => {
+            println!("▶ 开始节点: {node_name} (步骤 {step_index})");
         }
-        WorkflowEvent::NodeEnd { node_name, step_index, elapsed } => {
-            println!("✓ 完成: {} 耗时 {:?}", node_name, elapsed);
+        Ok(WorkflowEvent::NodeEnd { node_name, elapsed, .. }) => {
+            println!("✓ 完成节点: {node_name} 耗时 {elapsed:?}");
         }
-        WorkflowEvent::Token { node_name, token } => {
-            print!("{}", token);  // 流式输出 agent 节点的 token
+        Ok(WorkflowEvent::Token { token, .. }) => print!("{token}"),
+        Ok(WorkflowEvent::NodeError { node_name, error }) => {
+            eprintln!("✗ 节点错误 {node_name}: {error}");
         }
-        WorkflowEvent::NodeError { node_name, error } => {
-            eprintln!("✗ 错误 {}: {}", node_name, error);
+        Ok(WorkflowEvent::Completed { result, total_steps, elapsed }) => {
+            completed = Some((result, total_steps, elapsed));
         }
-        WorkflowEvent::Completed { result, total_steps, elapsed } => {
-            println!("\n=== 工作流完成，耗时 {:?} ===", elapsed);
-            println!("结果: {}", result);
+        Err(error @ ReactError::ExecutionNotSettled { .. }) => {
+            unresolved.get_or_insert(error);
         }
+        Err(error) => { first_error.get_or_insert(error); }
     }
 }
+if let Some(error) = unresolved { return Err(error); }
+if let Some(error) = first_error { return Err(error); }
+let (_result, total_steps, elapsed) = completed.ok_or_else(|| {
+    ReactError::Other("工作流原流 EOF 前没有成功完成事实".into())
+})?;
+// 节点正文已通过 Token 投影展示，不再次把完整 result 追加到正文。
+println!("\n工作流完成：{total_steps} 步，耗时 {elapsed:?}");
 ```
 
-`NodeError` 是失败终态的诊断事件：流会先发出该事件，随后以同一个错误结束，
-不会再发出 `Completed`。并行分支遇到首个失败时会取消并排空其余 sibling，避免
-挂起节点遮蔽错误或在调用方取消后继续产生副作用。
-Agent 节点会把 `AgentEvent::Token` 转发为 `WorkflowEvent::Token`，并在发出
-`NodeEnd` 前把最终答案提交到 `SharedState`。
+`WorkflowEvent::Token` 保留为当前工作流的派生 UI 文本投影，并不是已退役的
+AgentEvent Token。Agent 节点接纳完整 typed Message/Invocation，读取当前
+`AssistantMessage`，由既有 `AgentOutputProjection` 区分 reasoning 和可见正文；
+Reasoning 不折成工作流答案。它核验同 source 的真实 `ExecutionStatus`、保留 typed
+未结算观察和首因，并继续读取原 Agent source 到物理 EOF。只有 finish 成功后才把
+完整安全最终答案写入 `SharedState`，再由原节点路径发出 `NodeEnd`；缺失、合成或
+foreign 终态不能通过。runtime FinalAnswer 通知只确认结果，不能触发提前提交。
 
-`run`、`run_until_interrupt`、checkpoint resume 和 `run_stream` 的节点路由、
-path/step 计数、fan-out、错误和完成结算全部委托给同一条内部执行循环。流式入口只是
-该循环的事件投影，不是第二个执行器。
+最终正文缺口由原投影补齐，不能把确认通知再拼入已经发出的 WorkflowEvent Token。
+如果 UI 选择只在末尾显示完整 `Completed.result`，则可以省略逐段 Token 的显示；
+两种呈现方式不能同时把同一正文追加两次。
+
+`NodeError` 是诊断事件，后续保留原 typed Err；不从诊断字符串重造第一个失败。
+普通失败不会再生成 Completed；并行分支失败后取消并排空 sibling，保留实际物理收尾。
+外层工作流 UI 事件不能为未知 source 补身份或清除未结算观察。
+
+`run`、`run_until_interrupt`、checkpoint resume 与 `run_stream` 共用既有执行循环。
+状态提交、path/step、fan-out、保护 claim 和结算不因增加流式呈现而出现第二套权威。
+此片段使用上文已构造的 graph/state；本轮未执行 Rust 片段编译或工作流验收。
 
 ---
 
@@ -8484,12 +8735,13 @@ Provider adapter 或应用发现精确模型事实时使用 `register_exact_mode
 `register_provider_default`、`register_exact` 和三参数 `resolve` 继续作为兼容入口，但会立即
 转换为带 provenance 的记录并进入同一 resolver。
 
-`ModelFactInputs` 是既有 `LlmConfig` 与 `ModelConfig` 的可序列化 sidecar。
-`SourcedLlmConfig` 和 `SourcedModelConfig` 保留 provider、exact-model 与有序 caller records，
-同时不改变原公开 config struct 形状。旧的 `ModelConfig::context_window` 会转换为带来源的 caller
-override。具体 client 通过 `protocol_capabilities` 发布 adapter 固有的 wire baseline，可配置
-provider 名称不能改变该协议事实；原有 `capabilities` 方法返回 freshness 解析后的 profile，
-而不是 wire baseline。
+`ModelFactInputs` 是 provider、exact-model 与有序 caller 来源事实的序列化值。当前
+`ModelConfig.facts` 直接保存这些事实；`SourcedLlmConfig` 继续服务原 client 构建与刷新。
+`ModelConfig` 新增 `facts` 字段，旧 `SourcedModelConfig { config, facts }` 侧车形状退役。
+当前 `ModelConfig::context_window` 仍转换为带原 provenance 的 caller override；清除
+直接覆盖不抹去 facts，清除 facts 不抹去直接覆盖。具体 client 通过 `protocol_capabilities`
+发布 adapter 固有 wire baseline，可配置 provider 名称不能改变该协议事实；`capabilities`
+仍返回 freshness 解析后的 profile，不是 wire baseline。
 
 通过 `ReactAgentBuilder::sourced_llm_config` 安装 LLM sidecar。每个 run snapshot 都会重新解析当前 client，并保留
 `model_fact_sources`、`ignored_model_facts`，因此过期记录不能继续隐藏在 budget、compression、thinking
@@ -9106,6 +9358,19 @@ if let Some(client) = mcp.get_client("filesystem") {
 | Google Maps | `npx -y @modelcontextprotocol/server-google-maps` | 地理编码、路线规划 |
 
 > 完整列表见 [MCP 服务端目录](https://github.com/modelcontextprotocol/servers)
+
+---
+
+## 按完整来源读取连接
+
+`ReactAgent::mcp_clients_by_id()` 在 `mcp` feature 下返回以 `McpServerId` 为键的
+当前连接快照。Direct 服务与不同插件可以拥有相同的本地服务名；需要保留来源时，
+直接使用快照中的 owner 与原 `Arc<McpClient>`，不要从本地名称重建连接身份。
+
+该方法复用原 `McpManager::get_clients_by_id()`，不新建连接、注册表或持久状态。
+连接断开后新快照会移除对应身份；已经捕获的快照仍保留原键与客户端引用。
+它描述连接归属，不证明自定义同名工具替换后的注册实例来源，也不授予额外执行能力。
+原 `mcp_client(name)` 继续只查询 Direct 服务。
 
 ---
 
@@ -10256,11 +10521,14 @@ pub trait Embedder: Send + Sync {
 
 | 方法 | 作用 |
 |------|------|
-| `agent.set_store(store)` | 仅替换自动注入通道（不更新工具）|
+| `agent.set_store(store)?` / `agent.install_store(store).await?` | 仅替换自动注入通道（不更新工具），显式传播身份不符或同步锁忙错误 |
 | `agent.set_memory_store(store)` | 替换自动注入通道并注册已批准记忆的 `recall` / `search_memory`；已安装 manager 时还提供经过 journal 的 `remember` / `forget` |
 
-安装 layer manager 前可用 `set_memory_store()` 更换 Store；安装后由 manager 持有
-Store，传入另一 Store 会返回错误。
+安装 layer manager 前，四个 Store 安装 API 均允许更换 Store；安装后由 manager
+持有 Store，四个入口传入另一 Store 都返回错误。同一 Arc 克隆仍可安装。
+同步入口在 context 锁忙时返回错误，异步入口等待锁期间不发布变化；失败或
+取消等待都保留原有 Store、promoter 和工具。raw setter 不重注册工具，
+`set_memory_store()` / `install_memory_store()` 继续负责 approved-memory 工具安装。
 
 ---
 
@@ -12608,8 +12876,9 @@ Agent 或 Task 终态的第二权威。见 [ADR 0060](../adr/0060-task-execution
 
 ## 退役后生命周期边界
 
-旧LSP声明不再启动manager；原prepare仍持有同generation的完整冻结文本、identity与诊断，
-缓存不重读，失效后重建。Skill/Hook/MCP/Subagent的publication、rollback和cleanup receipt
+旧LSP文件保留为用户原件；当前prepare不probe、读取、冻结、hash或缓存它，不产生专属诊断，
+其内容不参与generation身份，也不恢复语言服务；见[ADR0105](../adr/0105-current-config-and-plugin-inputs.md)。
+通用当前subagent文档冻结继续保留，Skill/Hook/MCP/Subagent的publication、rollback和cleanup receipt
 不因删除组件而丢失。原生reasoning签名、普通assistant phase、最终校验、Stop继续、持久化
 与物理结算仍沿原运行owner；运行时结束不等于EKO TaskRun／Goal完成。
 
@@ -17931,9 +18200,9 @@ Choose option 4.
 - A lookup racing with mutation may receive either the complete old or complete
   new generation. An old generation already in flight may finish normally;
   removal is not redefined as cancellation.
-- Plan 12's result-cache epoch is observed before lookup. Every successful
-  registry mutation advances that epoch and clears the cache, so a displaced
-  Arc cannot publish a result under the replacement generation.
+- 工具owned Arc与结果缓存epoch在原registration_lock内同步取出；所有注册、批量注册、
+  替换和移除沿同一把锁完成发布与cache失效。锁在任何validator、permit或执行await前释放。
+  缓存读取在原cache锁内核对该epoch；原store回填fence继续阻止旧结果进入新代缓存。
 
 ## Framework And Application Boundary
 
@@ -17984,6 +18253,52 @@ timeout, cancellation, and drain tests remain green. The dynamic Tool example,
 Rust public inventory generator, SDK contract checks, independent feature
 checks, Clippy, semantic snapshot/change evidence, and Issue reconciliation are
 also required.
+
+## 2026-10-30：许可与同一工具代次绑定
+
+父Asset的独立源码审查发现：PermissionStage以工具A求值后，START callback可把同名
+工具换成B；原ExecuteStage再次lookup B，仅重核readonly，可能将A的许可误用于B。
+该问题在本地桌面也成立，修复防框架热替换误执行，不为GUI直接终端／MCP增加权限闸。
+
+候选方案是每次异步重新审批、另建generation登记册，或复用原owned Arc。选择最后一项：
+permission与Hook批准持有同一Arc，参数／streaming分类沿相同实例。原两个checked
+draining入口显式接收expected Arc，原get_tool后、validation await／cache／effect前
+同步比较同实例；变化则拒绝本次调用，不能自动给新实现沿用旧许可。已经选中A再
+replace时A仍可正常结束，非checked调用仍是caller-owned执行原语。
+
+这是两项公开Rust签名增量；没有第二工具catalog／executor／审批循环，没有新增
+wire或ToolContext字段。原cache key、write失效和旧结果回填fence不变。
+owned选择与cache epoch同步配对，cache读取另核对同一epoch，约束见下节。
+SDK accepted与Rust inventory的实际影响由后继唯一完整producer列出，不自动新增
+跨语言能力。验证要求保留原permission rewrite／protected path、Plan／readonly与
+物理Join控制，并增加确定性START替换stream／non-stream反例和已选中A继续完成正控。
+
+本段记录批准的修复方向及验收要求，不声明编译、运行或消费者已通过；各票须绑定
+当时精确源码。回滚若恢复不同代许可缺口不可只留下metadata或测试通过声明。
+## 2026-10-30：缓存结果与读取来源保持同代
+
+来源绑定后，成功read结果中的FileRead会作为已授权owned工具的读取事实。仅防止旧结果
+回填不足以保护该事实：A的validator挂起时B替换并填入新缓存，A恢复不能取B的effects；
+反向也不能在B已发布、epoch尚未更新的窗口把旧A缓存记成B来源。
+
+保留原catalog、registration_lock和cache epoch，选择private tuple getter在原注册锁内
+同步取owned Arc与epoch；所有mutator使用同一注册锁。随后释放注册锁／DashMap引用，
+再进入validator、cache、permit、retry与物理执行。原cache读取在与失效／回填相同的
+临界区检查expected epoch，不一致则实际执行已经选中的原工具。已选中A仍允许完成，
+不增加重审批、重试、generation counter、cache key或第二registry。单独提前epoch bump
+会形成反向窗口，因此不选；仅在lookup比epoch无法覆盖发布窗口，也不选。
+
+锁序为mutator的registration→短DashMap→cache；tuple getter是registration→短DashMap，
+cache lookup／store与write失效只取cache，均不反向取得registration。公开get_tool仍返回
+owned Arc，permission与实际Manager通过原expected Arc核对衔接；同步锁不跨await。
+
+验收分层：原方向由实际pipeline、独立A/B provider、写入字节与两个stream模式断言；
+反向由echo_execution自身cfg(test)的单Manager publication observer，真实replace发布后
+暂停，调用原checked stream／nonstream，核B实际读取、完整ToolResult/FileRead与新B缓存。
+跨crate的cfg(test)不传播，反向测试不宣称跑了完整pipeline；不为测试增加公开API、feature、
+生产状态或循环dev-dependency。两个层级共同覆盖源码不变量，后续全量门禁与消费者另验。
+
+本段不代替对应冻结源的实际RED／GREEN、独立复审或全量门禁回执。
 
 
 ---
@@ -18392,6 +18707,12 @@ exact candidates, list/load failure, and dangling summary. Existing unsettled
 timeout tests count both list and load operations and require zero. Eval,
 ReactAgent, TurnDriver, bilingual documentation, SDK zero-diff, semantic,
 Issue, and independent review gates remain required.
+
+## 2026-10-29 当前调用值收敛补记
+
+本段覆盖上文关于共享legacy setter/current trace缓存的当前实现描述；历史验证与回执继续保全。旧set/clear external context已按人类NoCompat裁决退役，当前Eval与工具调用通过既有AgentInvocationContext传值。业务run id仍与trace id分离；current_run_id只观察现有ActiveTurn同incarnation的原runtime.run_id，无active或原值None即None。它不回填trace/turn/conversation，也不能被Eval当作RunStore主键。
+
+当前trace只由start_scoped_trace_run返回值写入对应snapshot，恢复/压缩/失败隔离沿该值。原“安装legacy产品run且运行后共享值仍保留”的测试义务已取消；当前invocation字段、config conversation fallback、runNone、cold/Execute/standalone恢复与typed unknown不伪终结仍须验收。最新ignored候选仅获有限源码/格式/补丁应用资格，尚无本轮编译、测试、SDK/Host/MainCI接受结论。SDK公开shape与方法的当前差异以ADR0104及对应owner窄审为准，上文零API变化声明属于原历史修复。
 
 
 ---
@@ -22953,6 +23274,25 @@ The framework owns evidence validation, durable status transitions, and recall
 eligibility. The embedding host owns who may issue an approval; the framework
 cannot authenticate a self-described reviewer string. `MemoryApproval` is an
 explicit caller receipt, not a permission grant inferred from LLM confidence.
+
+## 2026-10-30：四个公开 Store 安装入口共用原权威约束
+
+`set_store`、`install_store`、`set_memory_store`、`install_memory_store`
+都复用 manager Store 的同一 `Arc` 身份检查。安装 manager 后，另一 Store
+返回既有 `ReactError::Other`，公开 Store、manager、压缩 promoter、自动
+recall 和层级工具保持原后端。同步入口先检查身份并取得 context 锁，锁忙
+返回错误；异步入口等待锁前不发布状态，取得锁后到发布结束之间没有 await。
+
+`set_store` 与 `install_store` 返回既有 `Result<()>`，只调整自动注入
+Store 和 promoter，不注册或替换任何记忆工具；另两个安全入口继续负责
+approved-memory recall/search 与已安装 manager 的层级工具。没有 manager
+时允许真实 A→B 替换，同一 manager Store 的 Arc 克隆也仍合法，不自动
+更换 manager、复制数据或改变应用策略。原始 Store KV 仍为独立调用能力。
+
+`set_store` 属于 SDK 已接受的 external_contract；其 source operation、
+alias 和三语言 raw Store 能力继续保留。Host 必须消费框架错误后才返回成功，
+SDK 错误传播、真实三语言正反控制及 EKO 调用点适配为交付依赖，不能归为
+非阻断遥测。`install_store` 保留原有 async 边界；不新增操作或 wire 合同。
 No second Store, SQLite migration, task state, or approval UI is introduced.
 
 An external writer holding a raw Store can still bypass the layered manager's
@@ -26272,6 +26612,45 @@ providers or a terminal login cannot establish that acceptance. The website
 must mirror the finally qualified framework source, not invent a source pin for
 this uncommitted candidate.
 
+## 2026-10-30：read-before-edit沿实际owned工具提供路径事实
+
+独立源码复核发现两个相邻缺口：成功target read effect被host canonicalize重新解释，
+以及snapshot cwd与合法工具with_base_dir优先级不同。只给snapshot加provider getter
+仍会在cwd=A、tool base=B时核错目标；不能删除base_dir能力或用host同名路径补证。
+
+选择在原Tool trait提供一项同步default方法resolve_file_tracking_path，接该次最终
+parameters／ToolContext，返回原FileSystem Arc及其namespace内路径。缺能力默认明确
+Unsupported；既有文件工具只调用自身原resolve_path，ApplyPatch沿原root／action
+resolver，不建立第二路径validator或来源表。调用在原blocking模式保留资源guard并
+等待真实Join，map锁不跨await。该通用身份机制不依赖EKO的SSH／项目UI策略。
+
+成功FileRead effect路径是已经报告的事实：ReadFileTool只把它绑定自身provider，不再
+事后host／target canonicalize改写。原read-map扩为路径对应source／时间观察，未知
+source只保诊断而不能授权。native按paths_are_native明确声明同一进程namespace，
+non-native仅认同一保留Arc。30分钟TTL与每次prepare清空保持原规则，不新增registry。
+
+公开record_file_read显式接source，这是Rust签名变化；FileReadHistory是原map值的
+非序列化Rust类型别名，不是新wire DTO。ToolContext原16个accepted字段不增，三语言
+既有FileRead／FileEdit String path和ToolResult effects保留。flag关闭不调用新hook，
+成功effect即使来源证明缺失也不被抹掉或改成工具失败；guard开启时没有正确write
+proof须依原Unavailable工具拒绝通道返回，不能猜host／snapshot或新增自动重试。
+真实provider I/O错误保typed原首因，不泛吞成“未读”。
+
+验证包括host／target双向alias、source相同路径隔离、base_dir A/B正反控制、相对／
+绝对cwd、provider失败不落host、flag关闭和默认Unsupported的custom effects保真，
+以及原TTL、资源与Join；真实SSH／SDK／native资格单列。本段是当前方案说明，不
+以源码或结构校验替代同源实测与消费者复审，也不自动把新trait方法接受为语言路由。
+
+## 目录范围合同补充（2026-10-30）
+
+FileSystem 的不可变 namespace 决定读取哪一个目标；工具的显式目录根决定该目标内哪些路径属于本次读取范围，两者不能互相替代。Glob、RepoMap、CodeSearch 的 construction-time `with_base_dir` 继续作为上界；runtime `working_dir` 只作相对路径基准。Grep 保留原 base、working_dir 与 native artifact-root 的允许根集合，non-native provider 不纳入本机 artifact 根；没有任何根时保留无约束读取。
+
+入口及递归实际读取目录项均使用被选 provider 的 canonicalize，复用现有路径 resolver 与 Grep 的原根集合，不新增 validator、权限模式或注册表。根内链接和同根 alias 继续有效；明确越界时整次调用返回范围错误，不返回已累积的部分成功结果。Glob、RepoMap 保留原逻辑路径用于 matcher、显示与分页身份。该检查沿用现有 pathname API，不声称能够原子防止检查后由外部并发替换 symlink；没有新增文件描述符身份或写入机制。
+
+路径校验必须解析实际 I/O 的原路径，不在 provider canonicalize 前折叠 `symlink/..`；已展开的递归目录项不再次拼接相对 base。缺失写目标沿同 provider 解析已有祖先再重建后缀；普通无显式根仍保原 best-effort 行为。保留原忽略构建目录和悬空条目跳过规则，typed provider 故障继续传播。
+
+验收覆盖原工具API的parent path、根/child链接、合法alias、相对base、symlink/..、Grep多根及目标namespace反例，并与旧生产代码使用同一断言；既有full/Glob matcher通过票不能替代目录范围验证。不新增公开API或产品配置，现成示例及官网工具用法保持，采用时由原作者核对对应说明。
+
 
 ---
 
@@ -26504,6 +26883,18 @@ Source: https://echo-agent.dev/docs/adr-0101-native-message-execution
 
 # ADR 0101：Framework 原生消息与统一执行终态
 
+## 2026-10-29：响应观察和不完整响应承载
+
+Root 已按完整原生消息目标批准 D1/D2，准确字段、空值与失败合同见所属框架[响应观察设计](../supreme/specs/provider-response-observation/design.md)。现有 `raw.extra` 和 output block 坐标都不能替代 response 级耐久观察。
+
+在现 Message／DeltaMessage 各增加同一可选 `provider_response` 固定记录；ChatResponse／ChatChunk 不再重复挂载。记录只含真实协议／provider／request、model、stop、status、incomplete_details 和原生 usage。可空原件缺失与显式 null 区分；同请求增量是完整观察快照，usage 不双计、跨请求不串。现 projection、摘要和 File／checkpoint/Fork/import 沿同一消息保留，模型历史 wire 剥该观察并保必要 reasoning 回放。
+
+`LlmError::IncompleteResponse { partial: Box<Message> }` 仅承载失败观察；不把 partial 当批准正文、成功 chunk、HTTP／ProviderError 或完成事实。Display 不输出部分正文，原 retry=false、Core AgentFailure 六字段和 SDK 有界投影不扩 raw。真实 provider error、HTTP、取消／资源／EOF 与 AgentEvent 结束权威不变；不新增 executor、Store、总线或状态机。该公共合同已批准，实际实现和各协议／消费者验收分别记录，本文不预授通过。
+
+Chat 不完整工具片段即使尚无原生响应 ID，也必须保留原始稀疏 index。复用现 Source String 与 output_index：只在 D2 partial ToolCall 坐标中用空 request_id 表示未知原生 ID，响应观察仍保 None；实际 ID 后到时回填原请求全部坐标。候选的 Option 字段变更会连带所有 Source／SDK codec，而现有 String 与消费者已经能表达该未知值，故不改变公开形状或新增平行 index。空值不能充当 runtime／跨请求 owner 或成功回放身份；Responses 原空 ID 拒绝不变，依据与范围见响应观察设计。
+
+> 当前范围说明：本页“旧变体暂留”、“默认wrapper”及“无runtime旧source兼容读取”的描述，均为已被ADR0104取代的迁移阶段记录；当前组合不再提供这些兼容路径。原机制/旧运行证据保留，当前切片按ADR0103/0104/0105执行。
+
 ## 状态
 
 已接受，按用户 2026-10-27 明确指令实施；实现与全链路验收未完成。
@@ -26539,12 +26930,10 @@ usage，复用原 ReAct、Guard/Critic/Stop 和 Managed 物理结算，不增加
 String 入口不再另持执行锁、租约或提前结算；execute 独立上下文、chat 历史语义保持。
 回调沿同一 canonical 数据解释，不恢复旧 Token/Think 事件或普通文字 Thought。
 
-旧历史来源由既有 `PreModelContextProjector::recovered_tool_origins` 空默认方法提供，
-新增运行期 `RecoveredToolKind/RecoveredToolOrigin`。EKO 的旧工厂判断留应用；框架仅验证
-来源与参数合同并归一模型副本。原恢复/reconcile、checkpoint、cursor/CAS 和日志保持
-权威，成对旧控制结果保为历史说明，不据旧参数重新发布 final。已核来源的旧 pending
-控制按下述同一恢复路径派生后继；无法结算的真实调用继续暂停，不补结果、不重放副作用。本轮真实归档没有旧控制调用，
-它只证明正常旧 managed 恢复，不能替代 pending 控制正控。
+2026-10-28 用户最新 Goal 明确开发期不承担旧版本兼容。旧内置 think/final 历史
+来源 getter、旧控制断点归一与专用 File recovery CAS adapter 已随本切片退役；
+不再根据旧消息参数、旧工厂版本或来源 hash 生成新的模型历史/最终候选。旧记录、
+日志、固定 tag 与既有恢复包保持原件，不为旧资料缺字段新增解析、迁移或补成功。
 
 以上是实际 Rust 公共 API 增量，包括 RuntimeConfig 的模型传输字段和 compression 类型
 再导出；无新增 Message/Checkpoint serialized 字段或自动三语言合同。SDK 须单独核验
@@ -26565,23 +26954,36 @@ source 默认适配生成的状态为 true；它不授予完成或副作用许�
 枚举的最大 variant 决定其整体大小。此次只调整间接存放，不宣称已测性能收益。
 内部 `ThinkOutcome` 与 mock 响应的同类大载体也只作装箱/解引用，不改变原消息或分支。
 
-## 已知旧控制断点的恢复后继
+响应观察加入后，私有 `IterOutcome::FinalText` 的观察以 `Option<Box<ProviderResponseMetadata>>`
+间接存放，构造后仅在原 driver 交付前解箱；Message／Delta 的公开字段及九字段序列化形状不变。
+公开 testing `StreamChunk::Delta` 直接 Rust 构造改为 `Box<DeltaMessage>`，例如
+`StreamChunk::Delta(Box::new(delta))`；全部合法 delta 原样保留，mock 消费时立即解箱。
+这是真实 Rust 构造签名变化，消费者与 inventory须如实同步；同一已接受字段的值保持无损，
+不新增 testing family、JSON 包装层或独立跨语言目录承诺。原 owner、停止、usage 和失败路径不变。
 
-严格 normal load 先沿原 Store 完成；只有结构或配对的 `SerializationError` 才进入
-纯读检查。原 typed unknown、取消、deadline、IO 错误保持原样；当前记录本来严格合法
-时也保留原错误，不用恢复 CAS 覆盖它。`inspect_runtime_state_for_recovery_with_context`
-默认 `Unsupported`，只有能够保证不 reconcile 写入的后端或薄 adapter 才显式实现。
+## 当前 typed 恢复与 context-view 派生
 
-`prepare_pending_control_checkpoint` 只返回已核来源的只读准备值。自动 stream 与显式
-Resume 在原 admission、execution mutex 和 close authority 下，按原 scope/version/cursor
-核准来源；旧 final 参数仅为历史候选说明，当前模型输出仍经过原 Guard/Critic/Stop、
-持久化与物理结算。真实 pending effect、投递债务、未知或 custom 来源继续由原 owner 处理。
+新执行与显式 Resume 均只沿原 RuntimeStateStore load/reconcile、严格 typed payload
+解码、tool-call/result 配对与必要输入投影进入原 ReAct。无旧 pending-control fallback，
+不会从历史 final 参数产生新候选，来源不明不降级猜测；runtime FinalAnswer 事件和
+on_final_answer 回调仍由原 Guard/结构化/Critic/Stop/持久化/物理结算权威生成。
 
-`RuntimeCheckpointRecoveryRequest` 经 `commit_checkpoint_recovery_with_context` 进入
-原 File Store 的同一 CAS kernel，保留 expected revision、epoch、锁、replay/conflict 语义。
-覆盖前保全并核对完整原始 bytes、SHA/size 和 snapshot；`_recovery_sources` 只作不可变
-恢复原件，不参与正常 runtime 扫描或执行。派生 checkpoint 是正常后继版本，旧 cursor、
-digest 和 journal 不回写。取消或超时观察不得释放仍未知的原 admission 与资源。
+原 File CAS kernel、scope/runtime 锁、expected revision、epoch、replay/conflict 与
+耐久 transcript apply/ack 不变。删除的只有历史来源检查、专用 recovery request/commit
+及新建 _recovery_sources 迁移包的执行分支；已经保存的所有旧恢复原件保持，既有
+路径不会因代码退役而被运行时删除、改写或自动迁移。
+
+`derive_context_view_checkpoint` 从当前严格 payload 派生 context-only view/cursor，
+保原 generation、transcript ordinal 和 context lineage。它由当前 runtime-only 保存
+主路径继续使用，不是旧控制工具兼容机制，不可随旧模块整删。当前恢复仍拒绝真实
+未配对 tool effect、投递债务和 stale hydrated base；取消/超时不代替真实物理结算。原React准备owner覆盖普通Store Load/Guard/准备
+await，并将同一owner转交producer；旧归一化移除不允许caller drop释放仍active的
+mutex/资源束。
+
+原兼容专用成功测试随人类裁决 retire，不写 matched/pass，也不新增 ignore/skip。
+旧模块中当前仍成立的严格配对、cursor损坏拒绝、context lineage、CAS replay、旧
+hydrated revision保护、绝对deadline和typed unknown资源保有断言改由新正常managed
+fixture覆盖。用户新注册同名think/final_answer普通工具仍保正控，不因所在旧模块误退役。源码候选与实际编译/运行验收分开，本ADR不预报新测试通过。
 
 ## 工具资源随同一 canonical 消息保留
 
@@ -26634,6 +27036,64 @@ verifier 是否开启。JSON Object/Schema 的 Unknown 原文、Guard 拒绝或�
 正文已公开而 Critic/Stop/最终确认尚未发生，再检查原工具结果回填、下一主请求与单次
 最终结算。关闭 verifier、晚到 Final、明确 continue、JSON、Guard、Critic 拒绝/错误、
 Stop 继续和 Reasoning 均为相邻反控；不使用额外模型或把 prompt 提醒当作发布证据。
+
+
+## 2026-10-28：有效 SSE 上游错误的统一运行期分类
+
+用户已明确选择仅扩展一个 `LlmError::ProviderError` 变体，保存 provider、error_type、
+原 `code: Option<Value>`、message 与 retryable。code 缺字段和显式 null 分别保留，未知
+type／code 不按 message 措辞归类。它是运行期 Rust 公共增量，不是新的错误 bus、loop 或 Store。
+
+不采用将 HTTP200 流内错误包装为 ApiError529、ToolError 或 InvalidResponse 的方案：前者
+伪造传输事实，后两者丢失供应商明确失败与协议损坏的区别。Malformed payload 仍可沿原
+解析错误拒绝；有效 Chat／Anthropic／Responses SSE error 和 response.failed 明确 error
+走 typed cause，先于 pending finish／usage 处理，不能被后续 DONE 成功覆盖。
+
+本次所有 provider 适配器一律 `retryable=false`。固定官方 SDK 只支持保 body 并 raise，
+不能据此给 overloaded／rate-limit／api_error 自动重试许可。真实 HTTP429／5xx 仍按原
+实际 status 和 retry kernel 处理；ProviderError 分类接原 predicate，不改变次数、退避、
+取消或 circuit permit，不在已开始的流内重新请求模型。截断、停止原因和 runtime 最终
+回答规则保持原义。
+
+AgentFailure／SDK 仍用既有有界投影，不新增 rawValue/provider_code 等 wire 字段；
+http_status 为 None，normalized cause code 为 llm_provider，原 type/code/message 只按原
+预算呈现，不承诺运行期 Value 端到端公开。SDK 外层 operation Retryability 仍 Never，
+可重试 cause 也不能授权重做已经可能产生副作用的 operation。EKO 沿原有限 RunTurn
+失败路径，不另起重试循环。
+
+采用后须分别验证 Core、真实 provider HTTP/SSE、ReAct 原 retry／流收尾、Subagent／
+Workflow 实际 facade、EKO 原有限 RunTurn、SDK Host 有界投影。旧公开 API 可运行的
+transport 反控先取得真实 RED；依赖新 variant 声明的合同在生产 hunk 后验证，不把
+编译缺类型当产品 RED。
+
+### 初稿验证状态（历史）
+
+当前仅完成 ignored 候选、source review、格式与静态应用检查，Rust、消费者、实际 API
+和新版 native 资格待各自真实执行；当前冻结批不热并。旧提案三类型 retry allowlist 已
+取消，不把旧 static pass 当 runtime retry 通过，不自动晋升 SDK pin 或官网镜像来源。
+
+
+## 当前组合对旧迁移阶段的替代
+
+本文件此前的旧source兼容读取、默认状态合成和旧共享setter/cache描述是迁移阶段记录；
+当前切片由ADR0103、ADR0104、ADR0105取代这些阶段承诺，不继续保留旧格式或默认成功
+wrapper。原生Started/终态、原source物理EOF、首因、执行与投递分离仍由原权威判断。
+进程内adapter_generated只用于拒绝非原source投影，已不存在默认adapter生成成功轨迹。
+
+运行时FinalAnswer事件/on_final_answer、安全最终正文、String便利、非流模型传输、
+当前typed cold/Fork/CAS/工具配对/副作用不重放和合理多Store能力保留。Provider原生
+签名/opaque回放及当前第三方wire字段不是旧内部兼容，不据此删掉。组合候选包含
+存储、配置和调用方迁移；所有源码资格与未来真实编译/运行/消费者/现场资格分别记录。
+
+## 公共请求与工具错误观察的后继字段
+
+统一接口已有 ToolChoice 但两个请求仍用 String，FunctionSpec 无法区分未指定和显式 strict，工具结果进入 Message 后无法保留 success 的错误观察。选择扩展原类型和既有 canonical 投影：请求复用 ToolChoice，函数新增可选 strict，Message 新增可选 tool_result_is_error；不增加 executor、store、结束状态机或跨产品策略。
+
+备选是继续解析字符串、从正文猜错误或关闭 capability；这些会丢形状/事实或绕过已承诺能力，因此不采用。函数参数 strict 和最终输出 schema strict 各自独立；Responses 未指定函数 strict 维持旧 false 默认。provider/model/endpoint 的真实条件仍由既有来源与适配策略约束，协议兼容和模型别名不授全族能力。
+
+后继影响包括手写 serde、File投影/managed import/冷恢复、原 ReAct publisher、typed final-only 请求及独立 SDK consumer。SDK 基础冻结后只由 consumers 组合交其唯一正式 owner。当前字段包为 GREEN-v02 上未编译候选，仅有静态格式/补丁检查；必须由 Frame/Root 在新冻结批中取得实际 RED/GREEN 与消费者证据。响应 metadata/截断 typed 观察仍待裁决，不能沿本段私自增加字段或改变 typed8 ProviderError/allfalse 与原重试内核。
+
+> 上段“GREEN-v02 上未编译候选”和“响应 metadata/截断 typed 观察仍待裁决”是字段包初稿的历史状态，不是当前结论。D1/D2 已获批准；当前 Framework 工作区已经采用 ToolChoice、可选 strict、tool_result_is_error、provider_response 与 IncompleteResponse，响应观察合同以上文“2026-10-29：响应观察和不完整响应承载”及响应观察设计为准。各次编译、协议回放、消费者、SDK 正式 pin、原生现场与发布仍按准确来源和实际回执分别验收；不回写旧候选或旧失败记录。
 
 
 ---
@@ -26748,6 +27208,234 @@ generation，不能互相冒替。取消无native时空events/Ok旁路的旧兼�
 与lint按各自精确源码票分别记录，不以源码审查替代运行，也不预授完整workspace资格。
 原metadata增量task99e4只归e0HEAD六份材料，不关闭原迁移45/#10/旧402。
 SDK Rustinventory/newGitPin、native/MainCI另验；原runtimeFinal通知/回调始终保留。
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0103-current-storage-records
+
+# ADR 0103：统一当前存储格式，取消旧记录和推断恢复
+
+## 当前状态（2026-10-29）
+
+方案已在 Framework 正式工作区采用，尚未提交发布。最新完整冻结组合
+`f327f63e34b7b4fea30d1c34f8559431fd2228172a2d427d8f1eac5912ee75c4`
+含 2831 个文件；同源 `cargo fmt --all`、格式检查以及
+`cargo check -p echo_agent --features subagent,testing --lib --locked` 均自然退出 0，
+编译零警告。此项只证明所选 feature 的当前根库及依赖可编译，不替代全部存储行为、
+SQLite 条件矩阵、examples、消费者、完整工程门禁、真实 native 或 main CI。
+其它 focused 结果保各自源码身份，不合并为本组合的全量通过。
+
+### 初稿阶段状态（历史）
+
+状态：已批准 NoCompat 目标的 ignored 组合实现；尚未编译、测试或正式接纳。
+
+## 背景
+
+框架提供可独立复用的运行状态和会话 Store。旧记录格式、旧计划文本和缺身份的恢复分支混在当前路径中，容易把兼容接纳误当成当前运行许可。已批准的退役清单取消这些旧义务，同时保留 raw Store CRUD、当前消息历史、原生签名、context-only lineage、普通 CAS 和稳定身份删除。
+
+本次属于通用存储机制，归框架；EKO 的删除 tombstone、产品历史和 SDK 的 wire/语言投影由各自 owner 同步。已有版本枚举、日志 manifest、project/restore 函数和 managed 删除协调器足以表达当前行为，不新增 validator、Store、模式字段或执行 owner。
+
+## 候选方案与决策
+
+保留多版本 decoder 会继续承担已取消的义务。新增 mode 字段或并行恢复 owner 会重复已有权威。因此使用既有 writer/decoder 和当前类型，删除兼容分支。
+
+1. 检查点 payload 只写读显式 `schema_version: 3`。裸 `Vec<Message>`、缺版本和版本 1/2 拒绝。cursor、pending effect、`context_only` 仍按当前语义可选；无 cursor 的 runtime-only/raw 保存合法。版本号不代替 transcript receipt。
+2. 文件运行状态 owner 只写读版本 2，必填现有 `RuntimeStateVersion`。raw writer 写 `Unmanaged { digest }`，同一 digest 可由原 CAS 采用为 `Managed { revision: 1 }`；managed/retired 使用原 revision、epoch、pending/ack 校验。raw `Deleting + checkpoint: None + Unmanaged` 崩溃切点保留。scope/index 的版本 1 是当前格式，继续保留。
+3. `AgentCheckpoint.current_plan` 从类型、比较、SQLite 列及读写中删除。计划权威仍为 revisioned TaskRun graph。消息、技能、blocked reason、工作目录、时间和原生内容继续保存。
+4. `ConversationRecord` 的 manifest 必填当前 `message_log`，内存 `messages` 不序列化；旧内嵌聚合布局不读、不自动迁移。当前 append、edit/shorten/Fork generation 替换、冷开、消息 ID 回收、提交字节前沿、孤儿日志清理和 managed receipt 顺序保留。
+5. `project_message` 为包括纯文本在内的当前 runtime Message 写完整 marker。`restore_message` 必须读到当前 marker；缺 marker、坏 JSON、缺 tool ID/name 或相互冲突的 tool 身份均拒绝，不补 `unknown_tool_call` 或空名称。带 marker 的消费者扩展仍由消费者拥有，恢复不改写原件。raw Store 仍可保存仅供展示的应用记录；保存本身不授予 runtime 身份。
+6. SQLite 当前 `CREATE TABLE` 直接声明完整当前列，删除旧 `ALTER` 补列和 duplicate-column 忽略。框架 SQLite backend、事务和普通 CAS 保留；EKO 不启用 SQLite。
+7. 删除无稳定 delete identity 的 `delete_persisted_conversation`、对应 context 包装及旧组合删除/清除推断分支。保留带调用者持久化 `ManagedConversationDelete` 的 managed 删除及原 incarnation clear 协调器；后者继续使用 deadline、settlement、原 scope owner/CAS 和 tombstone。raw CRUD 的显式 `delete_conversation`、`clear_runtime_state`、`clear_runtime_state_scope` 保留。
+
+## 保留约束与跨仓影响
+
+control 退役包已先合入。本次按函数合流，不恢复旧 RecoveryArchive、inspect/commit adapter 或工具来源猜测；`snapshot::derive_context_view_checkpoint` 及当前调用保持。普通 CAS 的 expected epoch/version、stale 拒绝、幂等 replay、pending effect 非重放、ack proof、scope retirement journal、锁、deadline、typed unknown 和原准备/producer owner 保留。
+
+SDK owner 必须同步 checkpoint wire、Host projection、fixture 和生成的语言合同，并解除已删除 helper 的 source-operation 路由。EKO owner 必须移除 checkpoint initializer 中旧字段；缺持久化 managed-delete identity 的旧 tombstone 不得临时制造新身份，须按当前产品恢复策略明确拒绝。框架 snapshot initializer、stream 混合 fixture 与框架/官网说明由各文件 owner 同步。最小提案及精确 base/after SHA 位于 storage-integration/proposals，不直接改跨仓正式文件。
+
+## 验证边界（初稿阶段历史）
+
+旧接纳和迁移测试义务记为 `retired_by_goal`，不计通过，不新增 skip。当前 cold/history/skills/resource/trace、字段保真、工具配对、签名/Parts/approved `None` 与空数组、digest 腐坏、CAS/replay、清除不重放和 owner-first crash cuts 保留或迁为当前格式。
+
+本轮仅可执行 standalone rustfmt、隔离 apply 和只读源码审查；没有 Cargo、类型检查、测试或应用运行证据。正式接纳前应先合齐所有 owner 的调用变化，在冻结组合快照按测试分类执行真实 tests-first 和当前回归；不得借用先前主批或旧候选结果。
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0104-canonical-agent-runtime-kernel
+
+# ADR 0104：Agent完整typed输入与单一原生结算边界
+
+## 当前状态（2026-10-29）
+
+单一内核方案已在 Framework 正式工作区采用，尚未提交发布。完整冻结组合
+`f327f63e34b7b4fea30d1c34f8559431fd2228172a2d427d8f1eac5912ee75c4`
+含 2831 个文件；同源格式化／格式检查和
+`cargo check -p echo_agent --features subagent,testing --lib --locked` 均自然退出 0、
+编译零警告。同源四项响应观察运行时测试也已实际通过，覆盖工具／Guard／Stop、
+用量、请求隔离及失败观察的冷读／Fork/import；它们不代替本 ADR 全部内核场景。
+callback／Hook、examples、完整条件矩阵、EKO／SDK、真实 native 与精确 main CI
+仍按各自来源和实际门禁验收，不能由根库编译或四项通过提前授予。
+
+### 初稿阶段状态（历史）
+
+状态：Root批准NoCompat目标的ignored组合候选。Framework当前producer、consumer、callback与fixture按原规则合流；跨仓owner提案未正式采用，本轮没有Cargo或运行资格。
+
+## 背景
+
+当前trait虽然有Message+invocation方法，默认仍能借Text/聊天→execute回退并保留却不处理history/cwd/tool上界；默认stream wrapper可依据FinalAnswer与EOF合成Started/Settled及重排身份。TurnDriver按是否看到Status选择两套完成语义，普通正文在旧模式能成为Completed。callback带ID默认又降级为旧无ID。这些是旧协议表面，不等价于当前CustomAgent、String、Store或非流能力。
+
+## 候选方案
+
+1. 保原默认多模式加更多flag：仍有约束静默丢失和真假终态混用，不采用。
+2. 新建Agent运行请求/执行器或第二source owner：重复现有typed Message/invocation/ReAct，增加权威，不采用。
+3. 复用现两个typed producer，String/raw/非流便利沿同kernel，只认原Status与EOF：采用。
+
+## 决策
+
+Chat与Execute各保当前上下文语义，以现chat_stream_message_with_invocation_context和execute_stream_message_with_invocation_context为primitive。默认不支持在source开始前明确拒绝，不压Message/Parts、不吞runtime/history/cwd/readonly/positive bound/cancel/resource/input-drain。String转换只增加Message::user；自定义Agent可以显式实现当前两个primitive，保合理能力。ReactAgent/AgentHandle/ProjectAgentAdapter已有覆写由其owner精确保留，不回灌整文件。
+
+非流String只归并同一source，复用AgentOutputProjection，原EOF后验证真正Started/同owner终态/确认正文，保首个原Result错误和必要观察，不从文字完成。运输层FinalAnswer仍是运行时安全正文通知，不为Execution/TaskRun/Goal签成功。TurnDriver只真实Settled可完成，真实usage只LlmUsage，不依ThinkEnd；tail failure和sink failure不能被晚到成功洗掉。取消仍由原producer结算，不由投影器制造Status。
+
+callback当前*_with_id必须接原call id；旧no-ID实现者先由F/SDK/EKO owner迁完再删方法。Token/Think enum同理，producer processor和所有实际消费者先迁；external setter原共享可变状态同ReactAgent snapshot/Handle/EKO adapter同步退，真实configured cwd不是兼容垃圾不能连删。event_envelope的current合同不能猜外部缺失metadata。
+
+## 影响与迁移边界（初稿阶段历史）
+
+当前三文件生产hunk与最终Core旧表面移除hunk分开交付，以调用表列明同期owner依赖。源与回归在F当前firstbatch期间冻结，本线只候选。原driver raw-only fixture须改为显式current typed producer与真实自身Status，原物理EOF/unknown/首因/资源/投递回归不得删；只旧wrapper自动成功、旧TokenThink/UI兼容要求由人类取消，按retired记录，不加skip/matched。
+
+本ADR的Agent内核切片不拥有Store schema；组合的当前存储格式单独遵循ADR0103。SDK pin、EKO产品策略、安全/权限门控不由本切片变更。可选数据库Store仍合法，原body/Reasoning/provider签名/opaque保留；恢复和副作用不重放仍是新版本必须功能。
+
+## 参考与证据限制（初稿阶段历史）
+
+已按规则查官方OpenAI与Anthropic参考：web404、GitHubreset、OpenAI403、Anthropic区域不可用页，未取得正文。完整尝试回执references/，不以HTTP200或失败搜索声称跨产品共识。此取舍依本仓已存在primitive/collector和实际调用路径，不新造机制；外部实现对等性未验证。
+
+## 验收与文档示例（初稿阶段历史）
+
+tests-first定义当前String/typed/rich input、无终态/foreign/尾错、原取消身份/EOFguard、driver完成等反控；原Core output_projection/getter与F首批回归不改。本轮只有静态format/apply/afterSHA资格，实际Cargo与当前18新native定义、原矩阵必须F新窗运行。callback示例demo11的with_id函数hunk单独交F，列其它callback/macro/SDK同步；example原已有可执行链仍须owner同批编译。官网由其owner从正式源投影，不由本线跨写，未正式落地前不宣传完成。
+
+## ReAct调用值与观察API的合流决定
+
+旧 `set_external_context/clear_external_context`、`LegacyExternalContextSnapshot`、capture/swap/build helper 和 Agent 共享 external Mutex/current trace 缓存退役。现有 `AgentInvocationContext` 是唯一调用输入；plain入口先取默认值，排队前由原 close authority 准入cancel并写回同一值，admission/Guard/prepare/final snapshots均从它构造。历史、cwd、readonly/工具正上界、预算、取消、trace sink、delegation、lineage/uplink与匿名resource guards仍按原None语义复制；config conversation fallback保留，runtime.run_id为None是合法状态，绝不回填turn UUID/trace/conversation。
+
+`Agent::current_run_id` 保留原公开签名。SDK `source_operations.rs` 的Session投影与该公开operation实际消费它，不能仅因CLI未调用而删除。观察值只放在现有ActiveTurn内的一个Option<String>，由原lease同incarnation安装和清理；没有active或原runtime.run_id为空即返回None，不持有完整context/resource guards，不产生第二owner/cache。流的transport observation身份可以单独用turn fallback，不能反写该业务run id观察值。
+
+trace沿已有 `start_scoped_trace_run` 返回值显式写入对应快照。传最终admission config.conversation_id，防runtime conversation为空时丢配置fallback；append/finalize/CheckpointResumed均接相同trace值。手动压缩与standalone resume各有本操作scoped trace。Guard前managed恢复只把本次恢复事实暂存当前snapshot，Guard后以占位输入开trace再发布，不提前保存原用户输入。普通cold Chat/Execute由prepare透传同一snapshot并记录实际恢复；Store typed unknown/deadline/CAS错误原样返回，交原ReactStreamTurnOwner保债。
+
+delegate_*便利API保留；plain默认configured conversation、runNone及独立cancel；显式runtime_context参数继续完整值传递，不从getter逐项重拼丢失isolation/lineage/uplink/guards。Core ToolContext原本不携isolation_id，本次不擅改跨层wire；该原能力边界单列由Core owner判断，不能虚称本组补齐了它。
+
+公开差异：setter方法退休；snapshot from_agent仅取配置和默认调用，调用级输入须用现有from_agent_with_invocation；current_run_id由共享预置值收敛为当前ActiveTurn观察。delegate/resume/manual-compress公开签名保持；恢复/prepare的crate-private签名新增显式trace snapshot。没有新SDK wire字段或接受集。本组仅源码/格式/隔离apply资格，保全旧source和失败证据；当前Guard、trace、压缩、脱敏、失败隔离、资源和副作用控制已迁定义，未运行，不用取消旧setter专用验收冒充pass。
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0105-current-config-and-plugin-inputs
+
+# ADR 0105：当前配置形状与插件输入边界
+
+## 状态
+
+当前方案已在 Framework 正式工作区采用，尚未提交发布。完整冻结组合
+`f327f63e34b7b4fea30d1c34f8559431fd2228172a2d427d8f1eac5912ee75c4`
+含 2831 个文件；同源 `cargo fmt --all`、格式检查和
+`cargo check -p echo_agent --features subagent,testing --lib --locked` 均自然退出 0，
+编译零警告。该限定不代表所有权限输入／插件生命周期场景、全部 feature、examples、
+EKO／SDK 消费、完整矩阵或真实 native 已验；后继按准确来源分别验收。
+
+### 初稿阶段状态（历史）
+
+2026-10-29 候选，按用户最新“开发期无需兼容”裁决与 Root 明确范围准备。只写 ignored
+合流 Tree，不表示正式源码已采用或编译/运行已通过。父代理拥有唯一正式整合责任。
+
+## 背景
+
+PermissionMode 当前已有八个稳定 ID，但 FromStr/Serde 还接受旧名称、大小写与空白
+归一。GUI writer 实际发送 canonical ID，SDK 三语言仍有旧别名 parser，需要所属
+owner 同步；去别名不能改变权限决策、默认值或用户直接打开终端/MCP的行为。
+
+Framework ModelConfig 与 SourcedModelConfig 的 config/facts 侧车分成两个形状，前者
+进入 FrameworkConfig 时不能自然携带侧车中的 provider、exact-model 与 caller 来源。
+这些来源事实及直接 context_window 选择是当前合理能力，不因 EKO 是否使用而删除。
+
+A2A/LSP 已具名退役后，prepared/registry 仍专门发现、读取、冻结、hash 和缓存
+lsp.yaml，只维持旧文件诊断/冻结义务。用户最新裁决取消该兼容义务，但保留插件当前
+Skill/Hook/MCP/Agent/Tool、泛型 frozen document、generation、reload和rollback能力。
+
+## 候选方案
+
+1. 继续保留 alias、两种配置与 retired LSP 文档容器：延续已取消义务，不采用。
+2. 去掉整个配置来源、context_window、通用冻结或插件生命周期：会损害当前能力，不采用。
+3. 只保 canonical ID，单一 ModelConfig 承载 facts；插件只消费当前组件，混合断言
+   迁到保留文档：采用。执行、权限、resolver、Store和插件发布仍各用原有权威。
+
+## 决策
+
+PermissionMode 只接受 id() 返回的精确字符串：default、plan、auto-edit、full-auto、
+auto、bubble、dont-ask、strict。旧 ask/accept-edits/autoedit/acceptedits/fullauto/
+bypass/bypass-permissions/bypasspermissions/dontask/strict-confirm/strict-confirmation
+与大小写、首尾空白变体不再解析。八个枚举值、allows_write/requires_interaction/
+uses_classifier和 PermissionPolicy 本体保持；这只收敛输入，不加任何产品权限闸。
+
+ModelConfig 新增 facts: ModelFactInputs。with_model_facts 返回同一 ModelConfig，
+resolve_model_profile_at 与 apply_to_llm_config读取同一来源输入。provider/exact-model/
+有序 caller records 的 source/provenance/version/freshness 不压平、不重新猜测；
+SourcedLlmConfig 仍是当前 client 构建和能力刷新所用的合理 typed 值，不按名字机械删。
+
+当前 context_window 字段及其设置 Some/清除 None 语义保留，它仍形成同一 resolver 的
+CallerOverride，provenance仍为 FrameworkConfig::ModelConfig.context_window；原记录
+version标签即使含历史词也不是运行时兼容分支，不为文案删来源。清除直接 window 不
+抹去 facts；清除 facts 不抹去直接 window。协议选择、温度、max_tokens和压缩设置不变。
+
+移除 SourcedModelConfig Rust类型及其旧 {config,facts} Serde形状，不加兼容type alias。
+ModelConfig 保留当前默认配置语义，拒绝未知字段，以免旧嵌套 config 被忽略后假成功。
+这有真实 Rust public API/Serde形状变化，不能声称“无API变化”：新增 facts字段，
+with_model_facts返回类型改变，旧侧车类型/方法退役；src/lib prelude由父代理同步。
+
+插件不再专门 probe、read、freeze、hash 或缓存 lsp.yaml，移除 _retired_documents 与
+LSP诊断去重。未识别的旧文件属于用户原件，不删除、改写、迁移或恢复执行，也不靠
+旧文件内容改变当前 generation 身份。当前能力是否可用仍由现组件合同决定。
+
+泛型 freeze_document 仍冻结保留的当前 subagent文档；同一普通文件检查覆盖错误类型、
+UTF-8、消失和链接。该检查防本地误配 FIFO/device 阻塞框架，不增加执行权限门控。
+Skill/Hook/MCP/Agent/Tool的声明、变量替换、规范 JSON、同代hash、缓存失效、依赖
+顺序、wire/rollback、取消和清理责任保持原路径，不建立第二生命周期或来源reader。
+
+## 影响：当前调用方与跨仓边界
+
+Frame 当前 ModelConfig 构造除本文件测试外均使用 Default/FrameworkConfig默认；
+src/lib prelude仍需由父代理移除SourcedModelConfig导出。SDK Host当前完整literal位于
+core_profile/wire.rs::framework_from_wire，需要显式 facts: Default::default()；
+现 SDK wire的context_window/config_version与凭据读取/擦除语义不变，不新增SDK字段。
+
+SDK accepted-external-contract已有 ModelConfig现字段，尚未包含 SourcedModelConfig
+或 ModelConfig::with_model_facts身份；新增 facts不会自动加入接受集或冒充三语言合同。
+SDK owner独立核其当前Rust inventory/接受边界与三语言 PermissionMode parser/测试。
+本候选不改SDK wire、accepted manifest、pin或依赖风险合同，未取得新的SDK wire授权。
+
+EKO GUI使用mode.id()写出当前四个选项；旧normalize spelling由其owner去掉。产品对
+internal plan/auto 的GUI呈现仍归EKO，不在本框架切片重新分类或设计六类工具。
+具体 source proposals、精确base/hash和未采用状态保在本批owner-proposals中；本线不
+写CLI/SDK正式文件。模型配置38章与官网镜像由所属owner按新来源同步，不造英文副本。
+
+## 验证与验收变化
+
+旧别名成功、旧侧车shape和 retired LSP冻结/诊断/identity义务retire，不新增skip或写成
+matched/pass。当前八ID roundtrip/旧拼写拒绝、来源fact Serde→resolver→AgentConfig/
+LLM投递、直接window与facts独立清除的断言保留或新增。
+
+旧LSP夹具中的泛型文件错误/缓存/链接/只读冻结不变量迁到当前subagent文档；保留组件
+的四类内容变动、依赖顺序、变量/配置hash、错误隔离、wire/rollback与清理测试仍完整。
+本轮只可有ignored apply/字节/rustfmt及有限源码复审；Cargo/typecheck/实际回归/完整
+矩阵、SDK消费者和native验收均待后继真实窗口，不借旧票标新快照通过。
+
+## 参考与取舍依据
+
+复用现 ModelProfileResolver/ModelFactInputs 的来源优先级与 freshness，不另造resolver。
+配置形状和别名处理采用 Serde 官方 derive机制（rename、alias、default、
+deny_unknown_fields）；本机已安装的serde_derive 1.0.229官方源码与当前Cargo.lock
+registry身份/checksum核对，来源收据在本批references/local-primary-source-receipt.json。
+官方网页检索不可用、直接网站403及GitHub连接失败均保为原事实，不声称已在线验证。
+这里的兼容退役取舍由人类最新裁决决定；Serde只提供精确类型解码，无权限或产品政策。
 
 
 ---
@@ -28397,7 +29085,7 @@ Source: https://echo-agent.dev/en/docs/overview
 
 > 具名退役：当前源码移除 A2A／LSP 的实现、feature、公开出口和专属示例；
 > ACP、MCP、channels、Task/Subagent、通用工具和存储菜单继续保留。
-> 旧插件 `lsp.yaml` 由原 prepare owner 冻结并明确诊断，不启动服务，也不删除用户文件。
+> 旧插件 `lsp.yaml` 仅保留用户原件；当前prepare不probe、读取、冻结、hash或缓存它，不纳入generation身份、不生成LSP专属诊断，也不启动服务。见[ADR0105](../adr/0105-current-config-and-plugin-inputs.md)。
 > 源码同步不代表删后构建、最终锁、SDK正式新Git来源、native或发布资格已通过。
 > 边界和恢复锚点见[ADR0090](../adr/0090-a2a-lsp-retirement-contract.md)。
 
@@ -28724,7 +29412,7 @@ Edit `Cargo.toml` and add dependencies:
 
 ```toml
 [dependencies]
-echo-agent = "0.2.0"
+echo_agent = "0.2.0"
 tokio = { version = "1", features = ["full"] }
 ```
 
@@ -28734,7 +29422,7 @@ tokio = { version = "1", features = ["full"] }
 
 Edit `src/main.rs`:
 
-```rust
+```rust,no_run
 use echo_agent::prelude::*;
 
 #[tokio::main]
@@ -28761,7 +29449,7 @@ This is the simplest possible agent — no tools, just the LLM answering directl
 
 The real power of agents comes from tool use. The `#[tool]` macro defines tools as async functions and auto-generates JSON Schema:
 
-```rust
+```rust,no_run
 use echo_agent::prelude::*;
 use echo_agent::{agent, tool};
 
@@ -28812,21 +29500,18 @@ OPENAI_API_KEY=sk-... cargo run
 
 ## Step 4: Understand the execution loop
 
-Under the hood, the agent runs a ReAct loop:
+执行循环不要求模型调用 think/final 控制工具，也不强制公开私有推理。真实流程是：
 
-```
-User input: "Calculate (3 + 4) * 5"
-  │
-  ├─ Thought: I need to compute 3+4 first
-  ├─ Action:  add(3, 4) → 7
-  │
-  ├─ Thought: Now multiply by 5
-  ├─ Action:  multiply(7, 5) → 35
-  │
-  └─ Final Answer: (3 + 4) * 5 = 35
+```text
+用户 Message
+  -> provider 原生正文 / reasoning / 工具提议
+  -> 有工具则执行并回填真实 ToolResult，再继续同一执行
+  -> 最终候选经过配置的 Guard/Critic、Stop 与持久化
+  -> 当前 runtime FinalAnswer 通知与真实 ExecutionStatus
+  -> 原 source 物理 EOF 后才向调用方返回成功
 ```
 
-Each iteration is **Think → Act → Observe**, repeating until the LLM decides the task is complete.
+工具提议同响应中的 Final 文字不能跳过工具。reasoning-only、截断或异常断流不构成成功。
 
 ---
 
@@ -28834,7 +29519,7 @@ Each iteration is **Think → Act → Observe**, repeating until the LLM decides
 
 Give your agent cross-session memory with a single line:
 
-```rust
+```rust,no_run
 use echo_agent::prelude::*;
 use std::sync::Arc;
 
@@ -28859,39 +29544,153 @@ Want persistence to disk? Swap `InMemoryStore` for `FileStore` or `SqliteStore` 
 
 ---
 
-## Step 6: Streaming output
+## 第六步：原生流与返回形式
 
-Get real-time token-by-token output — ideal for building chat interfaces:
+String/event 返回形式与模型 HTTP streaming 是两个独立选择。下面显式设置
+`model_streaming(false)`，展示完整模型响应仍进入同一原生事件、Guard 和 EOF 路径；
+省略这一行时默认 true，执行与结束规则不变。
 
-```rust
+```rust,no_run
+use echo_agent::agent::{Agent, AgentEvent, AgentOutputProjection, AssistantPhase, ExecutionStatusKind};
+use echo_agent::error::{AgentError, AgentTerminalKind, ReactError};
 use echo_agent::prelude::*;
 use futures::StreamExt;
+use std::io::Write;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let agent = ReactAgentBuilder::new()
         .model("deepseek-v4-flash")
-        .system_prompt("You are a helpful assistant")
+        .system_prompt("你是一个有帮助的助手，请用中文回答。")
+        .model_streaming(false) // 显式使用完整模型响应，仍返回同一原生事件流。
         .build()?;
+    let mut stream = agent.execute_stream("解释 Rust 的异步编程").await?;
+    let owner_run = agent.current_run_id();
+    let mut output = AgentOutputProjection::default();
+    let mut first_error = None;
+    let mut unresolved = None::<ReactError>;
+    let same_source = |error: &ReactError, projection: &AgentOutputProjection| {
+        matches!(error, ReactError::ExecutionNotSettled { run_id, execution_id }
+            if owner_run.as_deref() == Some(run_id.as_str())
+                && execution_id.as_deref().is_some()
+                && execution_id.as_deref() == projection.execution_id())
+    };
 
-    let mut stream = agent.execute_stream("Explain quantum computing").await?;
+    // 持续读取同一原 source 到真实 EOF，再判断是否成功。
     while let Some(event) = stream.next().await {
-        match event? {
-            AgentEvent::Token(t) => print!("{t}"),
-            AgentEvent::FinalAnswer(a) => { println!("\n{a}"); break; }
-            _ => {}
+        let observed = match event {
+            Err(error @ ReactError::ExecutionNotSettled { .. }) => {
+                // 未结算观察不是终态；foreign 观察不会被这条 source 的完成覆盖。
+                if unresolved
+                    .as_ref()
+                    .is_none_or(|prior| same_source(prior, &output))
+                {
+                    unresolved = Some(error);
+                }
+                Ok(())
+            }
+            Ok(AgentEvent::ExecutionStatus(status)) => {
+                output.observe_status(&status).map(|changed| {
+                    if changed
+                        && matches!(
+                            status.status,
+                            ExecutionStatusKind::Settled
+                                | ExecutionStatusKind::Failed
+                                | ExecutionStatusKind::Cancelled
+                        )
+                        && unresolved
+                            .as_ref()
+                            .is_some_and(|prior| same_source(prior, &output))
+                    {
+                        unresolved = None;
+                    }
+                    if let Some(error) = output.terminal_failure() {
+                        first_error.get_or_insert(error);
+                    }
+                })
+            }
+            Ok(AgentEvent::AssistantMessage { block }) => {
+                output.observe_block(&block).map(|delta| {
+                    if let Some(delta) = delta {
+                        // 只显示投影后的可见文本；签名、密文和重放载体不直接输出。
+                        match delta.block.phase {
+                            AssistantPhase::Reasoning if !delta.text.is_empty() => {
+                                println!("\n[推理] {}", delta.text)
+                            }
+                            AssistantPhase::Commentary if !delta.text.is_empty() => {
+                                println!("\n[进度] {}", delta.text)
+                            }
+                            AssistantPhase::Reasoning | AssistantPhase::Commentary => {}
+                            _ => {
+                                print!("{}", delta.text);
+                                std::io::stdout().flush().ok();
+                            }
+                        }
+                    }
+                })
+            }
+            Ok(AgentEvent::LlmUsage {
+                model,
+                prompt_tokens,
+                completion_tokens,
+                total_tokens,
+                usage_reported,
+                ..
+            }) => {
+                if usage_reported {
+                    println!(
+                        "\n[LLM 用量] model={model}, prompt={prompt_tokens}, completion={completion_tokens}, total={total_tokens}"
+                    );
+                } else {
+                    println!("\n[LLM 用量] model={model}，上游未报告用量");
+                }
+                Ok(())
+            }
+            Ok(AgentEvent::FinalAnswer(answer)) => output.confirm_answer(&answer),
+            Ok(AgentEvent::Error { failure, .. }) => Err(match failure.terminal_kind {
+                AgentTerminalKind::Cancelled => AgentError::Cancelled(failure.message).into(),
+                AgentTerminalKind::TimedOut => AgentError::Timeout(failure.message).into(),
+                AgentTerminalKind::PermissionDenied => {
+                    AgentError::PermissionDenied(failure.message).into()
+                }
+                _ => ReactError::Other(failure.message),
+            }),
+            Ok(AgentEvent::Cancelled) => {
+                Err(AgentError::Cancelled("原生 Agent source 已取消".into()).into())
+            }
+            Err(error) => Err(error),
+            _ => Ok(()),
+        };
+        if let Err(error) = observed {
+            first_error.get_or_insert(error);
         }
+    }
+    if let Some(error) = unresolved {
+        return Err(error);
+    }
+    if let Some(error) = first_error {
+        return Err(error);
+    }
+    let final_answer = output.finish()?;
+    // 原 source EOF 后只补尚未展示的安全最终正文，确认通知本身不重印。
+    if let Some(missing) = output.take_final_presentation()? {
+        print!("{missing}");
+        std::io::stdout().flush().ok();
+    }
+    if final_answer.trim().is_empty() {
+        return Err(ReactError::Other(
+            "流式示例返回空答案".into(),
+        ));
     }
     Ok(())
 }
 ```
 
-Add the extra dependency:
-
-```toml
-[dependencies]
-futures = "0.3"
-```
+增加依赖 `futures = "0.3"`。示例只使用 public facade，没有从旧正文补 Started/
+settlement，也没有在最终通知上提前 break。Reasoning 的可见文本和普通正文分开，
+签名/密文不直接打印。完整多轮示例见
+[demo17_chat.rs](../../echo-agent-learning/examples/demo17_chat.rs)，事件与投递边界见
+[10-streaming.md](./10-streaming.md)。本轮只做文本与源码核对，没有执行片段编译或模型验收。
 
 ---
 
@@ -28914,11 +29713,19 @@ Or run the examples from the repo directly:
 ```bash
 cargo run -p echo-agent-learning --example demo01_tools          # Custom tools
 cargo run -p echo-agent-learning --example demo10_streaming      # Streaming output
-cargo run -p echo-agent-learning --example demo04_subagent       # Multi-agent orchestration
-cargo run -p echo-agent-learning --example demo06_mcp            # MCP protocol integration
+cargo run -p echo-agent-learning --example demo04_subagent --features subagent # Multi-agent orchestration
+cargo run -p echo-agent-learning --example demo06_mcp --features mcp # MCP protocol integration
 ```
 
 See the full list of demos in the [echo-agent-learning/examples/](../../echo-agent-learning/examples/) directory.
+
+
+中文入门页的同类片段已接入workspace-only `echo-agent-learning` 的rustdoc编译入口，
+英文页未独立收录。本轮尚未运行Cargo，两个页面都不声称片段已编译；网络／模型示例
+统一为 `no_run`。本地 `scripts/verify.sh` 显式执行
+`cargo test -p echo-agent-learning --doc --all-features --locked`，CI learning 组按既有默认
+feature 执行 `cargo test -p echo-agent-learning --doc --locked`；`--all-targets` 本身不运行
+doctest。完整流式源码仍由现有 `demo17_chat` example编译链覆盖，资格分别记录。
 
 
 ---
@@ -28974,7 +29781,7 @@ execute(task)
           ├─ Execute all tool calls in parallel:
           │     ├─ Human approval check (if tool is marked)
           │     ├─ ToolManager.execute_tool()
-          │     └─ Fire on_tool_start / on_tool_end callbacks
+          │     └─ Fire on_tool_start_with_id / on_tool_end_with_id callbacks
           │
           ├─ 原生最终候选 → 校验/Stop/持久化/结算
           │
@@ -29074,16 +29881,16 @@ impl AgentCallback for MyCallback {
         })
     }
 
-    fn on_tool_start<'a>(&'a self, agent: &'a str, tool: &'a str, args: &'a Value) -> BoxFuture<'a, ()> {
+    fn on_tool_start_with_id<'a>(&'a self, agent: &'a str, call_id: &'a str, tool: &'a str, args: &'a Value) -> BoxFuture<'a, ()> {
         Box::pin(async move {
-            println!("[{}] Calling tool: {} {:?}", agent, tool, args);
+            println!("[{}] 调用工具: {} call_id={call_id} {:?}", agent, tool, args);
         })
     }
 
-    fn on_tool_end<'a>(&'a self, agent: &'a str, tool: &'a str, result: &'a str) -> BoxFuture<'a, ()> {
+    fn on_tool_end_with_id<'a>(&'a self, agent: &'a str, call_id: &'a str, tool: &'a str, result: &'a str) -> BoxFuture<'a, ()> {
         Box::pin(async move {
             let preview: String = result.chars().take(80).collect();
-            println!("[{}] Tool result: {} -> {}", agent, tool, preview);
+            println!("[{}] 工具结果: {} call_id={call_id} -> {}", agent, tool, preview);
         })
     }
 
@@ -29123,10 +29930,10 @@ use std::sync::Arc;
 
 struct LogCallback;
 
-#[async_trait::async_trait]
-impl AgentCallback for LogCallback {
-    async fn on_tool_start(&self, agent: &str, tool: &str, args: &serde_json::Value) {
-        println!("  [{}] Calling {} args={}", agent, tool, args);
+#[echo_agent::callback]
+impl LogCallback {
+    async fn on_tool_start_with_id(&self, agent: &str, call_id: &str, tool: &str, args: &serde_json::Value) {
+        println!("  [{}] 调用工具 {} call_id={call_id} args={}", agent, tool, args);
     }
     async fn on_final_answer(&self, _agent: &str, answer: &str) {
         println!("Final answer: {}", answer);
@@ -29292,8 +30099,9 @@ The documentation authority and its tradeoffs are recorded in
 
 ## 具名退役与保留owner
 
-A2A／LSP 的生产模块、feature 和出口退出；原 registry／prepare 仅冻结旧声明并给通用诊断，
-不再拥有语言服务进程。ProjectRoot、Instruction、scope、MCP/ACP、Task/Subagent、取消、
+A2A／LSP 的生产模块、feature 和出口退出；旧 `lsp.yaml` 仅保留用户原件，当前 registry／prepare
+不专门读取、冻结、hash、缓存或生成LSP诊断，不将它纳入generation身份，也不启动语言服务。
+当前边界见[ADR0105](../adr/0105-current-config-and-plugin-inputs.md)。ProjectRoot、Instruction、scope、MCP/ACP、Task/Subagent、取消、
 持久化和恢复沿原 owner。没有因 EKO 未使用而扩大删除其它合理公共 API。
 源码结构与文档同步不等于删后构建、锁、SDK正式 Git 来源、native或发布完成。
 
@@ -30218,29 +31026,24 @@ Capability and preference profiles are available from the stable
 
 An LLM's context window vanishes after each request ends, and a process can crash mid-loop. Without a runtime checkpoint, a long task interrupted halfway requires starting over, and a user wanting to continue yesterday's conversation must repeat themselves.
 
-`RuntimeStateStore` saves the `AgentCheckpoint` runtime fields (messages + active skills + blocked reason + timestamp) as the run progresses. The next time an Agent is launched with the same `conversation_id`, it restores the previous runtime state — providing **thread continuity**. The public `current_plan` field remains readable in older checkpoints, but ReactAgent does not restore it as a task plan or write it into new checkpoints.
+`RuntimeStateStore` 保存 `AgentCheckpoint` 的当前运行字段（消息、激活技能、blocked reason、working directory 与时间戳）。同一 runtime-state 身份可以恢复当前合法格式，实现线程连续性；计划与依赖图由 `TaskRevisionService` 持有，checkpoint 不保存计划副本。raw Store CRUD仍独立保留，旧格式拒绝不构成删除用户原件或迁移数据的许可。
 
 ### How It Works
 
+```text
+产品 conversation_id
+        │  可由 invocation 显式拆分 runtime_state_id
+        ▼
+FileRuntimeStateStore/runtime_state/_runtime_owners/<编码身份>.json
+  owner：版本2 + 显式 RuntimeStateVersion（Unmanaged/Managed/Retired）
+  checkpoint：schema3 消息payload + active_skills/blocked_reason/working_dir/timestamp
+  managed：保原 epoch/revision/pending effect/ack 证明
+  scope/index：仍为当前版本1
 ```
-conversation_id: "user-123-chat-5"
-                │
-                ▼
-FileRuntimeStateStore (./agent-data/runtime_state/_runtime_owners/):
-<encoded-runtime-id>.json
-{
-  "runtime_state_id": "user-123-chat-5",
-  "scope_id": "user-123-chat-5",
-  "phase": "active",
-  "checkpoint": {
-    "messages_json":  "...full message history...",
-    "current_plan":   null,
-    "active_skills":  ["doc-writing"],
-    "blocked_reason": null,
-    "timestamp":      "2026-06-14T..."
-  }
-}
-```
+
+上图是字段职责示意，不是可直接写入的记录。当前runtime payload不猜旧数组/缺版本，
+无cursor的runtime-only用途仍合法；会话log manifest和当前message marker也按各自合同
+校验。完整格式、raw与managed边界见ADR0103。
 
 ### Usage
 
@@ -30613,7 +31416,7 @@ File Journal batches, checkpoints, and segmented retention markers use identity-
 
 ### AgentCheckpoint
 
-`AgentCheckpoint` is a different checkpoint type. It stores messages, active skills, blocked reason, working directory, and capture time for resuming a ReAct execution through `RuntimeStateStore`. Its public `current_plan` field remains in the stored format for legacy readers and writers. ReactAgent ignores a historical value on restore and writes `None` at new safe points; `TaskRevisionService` owns the revisioned task graph and plan artifact.
+`AgentCheckpoint` 保存 ReAct 继续运行所需的消息、激活技能、blocked reason、working directory 和时间戳，由 `RuntimeStateStore` 持久化。它不承载计划副本；版本化任务图与计划 artifact 由 `TaskRevisionService` 持有。当前payload统一显式schema3，合法无cursor的runtime-only/raw用途仍保留；旧裸数组、缺版本与旧迁移恢复义务退出，不能据此删除通用Store或当前CAS/恢复能力。
 
 Restoration validates assistant tool calls and tool results as paired messages. This prevents provider-invalid context and avoids replaying already completed side effects.
 
@@ -30634,8 +31437,9 @@ keeps the original strictly ordered fact cursor and optional `context_only`
 position/digest bindings for derived occurrences. Full messages and bindings are
 saved in the same runtime CAS; pending checkpoints validate their current view
 against cursor-after. A new same-text turn still gets fresh ordinals, and clearing
-the active view preserves the append frontier. Version 1/2 records remain a legacy
-path without derived-origin proof; older framework readers reject version 3.
+the active view preserves the append frontier.
+当前 reader 只接纳显式 schema version 3；version 1/2、缺版本和旧裸数组明确拒绝，
+不自动迁移或推断来源。合法 runtime-only/raw 保存用途继续保留。
 
 Managed compression releases the Context lock while Store callbacks read its
 coherent pre-view. Candidate observer/cache updates become accepted only after
@@ -30664,31 +31468,28 @@ One shared Agent may process multiple value-scoped invocations: a change in effe
 `runtime_state_id` forces exact reset/restore before model preparation, while same-ID warm context
 is reused. The runtime records `Hydrating(target)` before cancellable mutation and commits
 `Hydrated(target)` only after restore hooks settle; non-exact states are rebuilt. Runtime switches
-also clear rollback snapshots. Restore and save use the same precedence: explicit invocation
-runtime ID, invocation product conversation, legacy external conversation, then configured
-conversation. Together these rules prevent A -> B -> A from writing A messages into B.
+also clear rollback snapshots.
+restore/save 使用同一优先级：显式 invocation runtime ID、invocation 产品 conversation、
+configured conversation。旧 external setter 入口已退役；A -> B -> A 不会把 A 的消息写入 B。
 
 Rotating `runtime_state_id` starts a clean model context without deleting the stable product
 conversation. `save_checkpoint_for_scope` durably indexes each runtime ID under that product
 scope. After its admission/settlement barrier, reset uses
 `clear_persisted_runtime_incarnation` to settle any durable pending projection and retire the exact
-runtime checkpoint while keeping transcript data. It only removes an incarnation-keyed transcript
-for a legacy unmanaged Store pair; managed cleanup cannot safely infer a stable delete identity
-after recreation. Managed product deletion requires a caller-retained `ManagedConversationDelete`
-request and `delete_persisted_conversation_managed`; the request identity is reused across timeout,
-restart, receipt loss, and later conversation recreation. The convenience
-`delete_persisted_conversation` entry remains for legacy unmanaged Store pairs and fails closed for
-managed pairs because it cannot infer whether a call targets an old delete or a recreated epoch.
+runtime checkpoint while keeping transcript data.
+该协调入口只接纳具备 managed 能力的 Store pair，不顺带删除同名 transcript；合法 raw CRUD
+由调用方显式执行。产品删除要求调用方保留稳定 `ManagedConversationDelete` request，并调用
+`delete_persisted_conversation_managed`，在 timeout、重启、回执丢失和新 epoch 重建后仍复用
+同一 request identity。无稳定 identity 的旧 `delete_persisted_conversation` 入口已退役，
+不能由便捷调用猜测旧删除或重建后的目标。
 Managed generations use revision CAS and retirement tombstones, while product deletion persists a
 complete scope manifest, the full dropped-operation set, and an epoch-fenced ConversationStore
 receipt. See [ADR 0006](../adr/0006-runtime-state-scope-lineage.md) and
 [ADR 0056](../adr/0056-durable-transcript-projection-settlement.md).
 
-Managed clear/delete helpers have context-aware variants that preserve a caller-owned absolute
-deadline through the complete saga. Legacy unmanaged Store traits have no context-bearing raw
-operations, so their compatibility helpers retain the historical unbounded contract and the
-context-aware variants reject them as unsupported rather than claiming a deadline they cannot
-enforce.
+managed clear/delete 的 context-aware 变体贯穿同一 caller-owned absolute deadline，
+便利入口也使用既有有界期限。不具备 managed／deadline 能力的 Store pair 返回 Unsupported；
+不保留无界兼容清理路径，也不影响显式 raw Store CRUD。
 
 ### Other checkpoint domains
 
@@ -31459,187 +32260,206 @@ ContextCompressor (the sole compression strategy extension point)
 
 Source: https://echo-agent.dev/en/docs/streaming
 
-# Streaming Output
+# 流式输出与原生执行
 
-## What It Is
+## 当前入口
 
-Streaming output allows the Agent to push Token fragments to the caller as the LLM generates them, rather than waiting for the full response before returning. Users see the Agent "typing" in real time, dramatically improving the interactive experience.
+`execute()` / `chat()` 返回 `String`，对应的流式入口返回
+`BoxStream<'_, Result<AgentEvent>>`。两种返回形式共用原 typed producer、ReAct、
+校验、取消与物理收尾；String 便利方法读取同一原流至 EOF 后投影最终结果。
+`chat` 保留多轮上下文，不能因为请求的是 String 就换成 fresh execute。
 
----
+返回形式不决定模型 HTTP 传输。`model_streaming(true)` 是默认值；显式
+`model_streaming(false)` 让同一执行调用 `LlmClient::chat`，完整响应仍保留原生块、
+工具来源、reasoning 与实际 usage，随后走同一候选校验和结算路径。它不是第二套执行器。
 
-## Problem It Solves
+## 当前事件
 
-Blocking calls have serious UX problems:
-- **Long wait**: Complex reasoning tasks take tens of seconds — the UI freezes
-- **No feedback**: Users have no visibility into what the Agent is "thinking"
-- **Experience gap**: Falls far behind modern AI products (ChatGPT, Claude) in fluency
+| 事件 | 含义 |
+| --- | --- |
+| `AssistantMessage { block }` | 保留请求、块身份、序号、明确阶段与增量；缺阶段保持 Unknown |
+| `ExecutionStatus` | 原 source 的 Started/运行观察及真正终态，不由展示文本推断 |
+| `ToolCall` / `ToolResult` | 保留 call_id、真实调用与完整结果/资源引用 |
+| `LlmUsage` | 每次模型响应的实际报告；未报告时不能把零当成已知用量 |
+| `FinalAnswer(String)` | 当前运行时批准的最终正文通知；不代表原 source 已读到 EOF |
 
-Streaming solves:
-- Time-to-first-token (TTFT) drops from seconds to milliseconds
-- Users see the reasoning process (CoT text) and tool calls in real time
-- Execution can be cancelled mid-generation
+Core 的旧 AgentEvent Token/ThinkStart/ThinkEnd 和旧 String source fallback 已退役。
+provider 原生 reasoning wire、签名/加密回放块及真实 `on_think_*` 回调继续保留。
+显示推理时只取投影后的可见文字，不直接打印完整 block、签名或密文。
 
----
+## 读取同一原流到 EOF
 
-## Event Types
+下面沿用当前 [demo17_chat.rs](../../echo-agent-learning/examples/demo17_chat.rs) 的
+原生投影模式，改为一次 fresh execute。首因和未结算观察保留原值，所有事件都继续
+从同一 source 读取。只有投影接受的同 run/execution 新终态才能解除匹配观察，
+foreign 状态或正文不能解除它。每段正文只展示一次；EOF 后补同 request 尚未显示的
+安全最终正文，FinalAnswer 通知本身不重复打印。
 
-The following is a simplified view of the main event payloads; identity metadata
-and other lifecycle variants are omitted. `execute_stream()` returns `BoxStream<'_, Result<AgentEvent>>` containing:
-
-```rust
-pub enum AgentEvent {
-    Token(String),                               // LLM token fragment (reasoning / final answer)
-    ToolCall { invocation: ToolInvocation },     // LLM decided to call a tool
-    ToolResult { name: String, result: ToolResult }, // tool finished, returning result
-    FinalAnswer(String),                         // final answer generated; cleanup can follow
-}
-```
-
----
-
-## Usage
-
-```rust
+```rust,no_run
+use echo_agent::agent::{Agent, AgentEvent, AgentOutputProjection, AssistantPhase, ExecutionStatusKind};
+use echo_agent::error::{AgentError, AgentTerminalKind, ReactError};
 use echo_agent::prelude::*;
 use futures::StreamExt;
+use std::io::Write;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let config = AgentConfig::new("qwen3-max", "assistant", "You are a helpful assistant")
-        .enable_tool(true);
-
-    let mut agent = ReactAgent::new(config);
-    agent.add_tool(Box::new(CalculatorTool));
-
-    let mut stream = agent.execute_stream("Calculate (3 + 4) * 5 and explain each step").await?;
-
+    let agent = ReactAgentBuilder::new()
+        .model("qwen3-max")
+        .system_prompt("你是一个有帮助的助手，请用中文回答。")
+        .build()?;
+    let mut stream = agent.execute_stream("解释 Rust 的异步编程").await?;
+    let owner_run = agent.current_run_id();
+    let mut output = AgentOutputProjection::default();
     let mut first_error = None;
-    while let Some(event) = stream.next().await {
-        match event {
-            Ok(AgentEvent::Token(token)) => {
-                print!("{}", token);
-                std::io::Write::flush(&mut std::io::stdout()).ok();
-            }
-            Ok(AgentEvent::ToolCall { invocation, .. }) => {
-                println!("\n[Tool call] {} {:?}", invocation.name, invocation.args);
-            }
-            Ok(AgentEvent::ToolResult { name, result, .. }) => {
-                println!("[Tool result] {} -> {}", name, result.output);
-            }
-            Ok(AgentEvent::FinalAnswer(answer)) => {
-                println!("\n[Final answer] {}", answer);
-            }
-            Err(error) => {
-                // Report each observation, but retain the first error value.
-                // Continue polling this same source through cleanup and EOF.
-                eprintln!("[Stream error / observation] {error}");
-                if first_error.is_none() {
-                    first_error = Some(error);
-                }
-            }
-            Ok(event) => println!("[Lifecycle] {event:?}"),
-        }
-    }
-    match first_error {
-        Some(error) => Err(error),
-        None => Ok(()),
-    }
-}
-```
-
----
-
-## 原生块与执行终态
-
-新执行仅以 `AssistantMessage` 的明确 phase/身份/增量区分 reasoning、普通进度与正文，不再双发 Token/ThinkStart/ThinkEnd 副本。块 complete 只结束块；最终候选经 Guard/Critic/Stop、持久化、原 EOF 和 owner Join 后才发布，最后单次 `ExecutionStatus(Settled)` 才提供运行时完成事实。旧变体保留给历史读取与合理公开 custom Agent。
-
-详细字段、恢复呈现资格与 TaskRun 边界见[原生消息合同](../zh/43-native-message-execution.md)。
-
-## Blocking vs Streaming
-
-```rust
-// Blocking: wait for full response
-let answer: String = agent.execute("Hello").await?;
-
-// Streaming: receive events in real time
-let mut stream = agent.execute_stream("Hello").await?;
-while let Some(event) = stream.next().await {
-    match event {
-        Ok(event) => println!("{event:?}"),
-        Err(error) => eprintln!("[Stream error / observation] {error}"),
-    }
-}
-```
-
-Both modes run identical execution logic; only the delivery mechanism differs. `execute()` internally aggregates streaming events and returns the `FinalAnswer` string.
-
----
-
-## Using in a Web Service (SSE)
-
-```rust
-use axum::response::Sse;
-use futures::StreamExt;
-use echo_agent::prelude::*;
-
-async fn chat_sse(task: String) -> Sse<impl futures::Stream<Item = Result<axum::response::sse::Event, std::convert::Infallible>>> {
-    let mut agent = ReactAgent::new(/* config */);
-
-    let event_stream = async_stream::stream! {
-        match agent.execute_stream(&task).await {
-            Ok(mut agent_stream) => {
-                while let Some(event) = agent_stream.next().await {
-                    let data = match event {
-                        Ok(AgentEvent::Token(text)) => serde_json::json!({
-                            "type": "token", "data": text,
-                        }),
-                        Ok(AgentEvent::ToolCall { invocation, .. }) => serde_json::json!({
-                            "type": "tool_call", "name": invocation.name,
-                        }),
-                        Ok(AgentEvent::FinalAnswer(answer)) => serde_json::json!({
-                            "type": "answer", "data": answer,
-                        }),
-                        Err(error) => {
-                            // Emitting an error does not end or replace the original producer.
-                            serde_json::json!({
-                                "type": "stream_error_or_observation", "message": error.to_string(),
-                            })
-                        }
-                        Ok(event) => serde_json::json!({
-                            "type": "lifecycle", "event": event,
-                        }),
-                    };
-                    yield Ok(axum::response::sse::Event::default().data(data.to_string()));
-                }
-            }
-            Err(error) => {
-                let data = serde_json::json!({
-                    "type": "setup_error_or_observation", "message": error.to_string(),
-                });
-                yield Ok(axum::response::sse::Event::default().data(data.to_string()));
-            }
-        }
+    let mut unresolved = None::<ReactError>;
+    let same_source = |error: &ReactError, projection: &AgentOutputProjection| {
+        matches!(error, ReactError::ExecutionNotSettled { run_id, execution_id }
+            if owner_run.as_deref() == Some(run_id.as_str())
+                && execution_id.as_deref().is_some()
+                && execution_id.as_deref() == projection.execution_id())
     };
 
-    Sse::new(event_stream)
+    // 持续读取同一原 source 到真实 EOF，再判断是否成功。
+    while let Some(event) = stream.next().await {
+        let observed = match event {
+            Err(error @ ReactError::ExecutionNotSettled { .. }) => {
+                // 未结算观察不是终态；foreign 观察不会被这条 source 的完成覆盖。
+                if unresolved
+                    .as_ref()
+                    .is_none_or(|prior| same_source(prior, &output))
+                {
+                    unresolved = Some(error);
+                }
+                Ok(())
+            }
+            Ok(AgentEvent::ExecutionStatus(status)) => {
+                output.observe_status(&status).map(|changed| {
+                    if changed
+                        && matches!(
+                            status.status,
+                            ExecutionStatusKind::Settled
+                                | ExecutionStatusKind::Failed
+                                | ExecutionStatusKind::Cancelled
+                        )
+                        && unresolved
+                            .as_ref()
+                            .is_some_and(|prior| same_source(prior, &output))
+                    {
+                        unresolved = None;
+                    }
+                    if let Some(error) = output.terminal_failure() {
+                        first_error.get_or_insert(error);
+                    }
+                })
+            }
+            Ok(AgentEvent::AssistantMessage { block }) => {
+                output.observe_block(&block).map(|delta| {
+                    if let Some(delta) = delta {
+                        // 只显示投影后的可见文本；签名、密文和重放载体不直接输出。
+                        match delta.block.phase {
+                            AssistantPhase::Reasoning if !delta.text.is_empty() => {
+                                println!("\n[推理] {}", delta.text)
+                            }
+                            AssistantPhase::Commentary if !delta.text.is_empty() => {
+                                println!("\n[进度] {}", delta.text)
+                            }
+                            AssistantPhase::Reasoning | AssistantPhase::Commentary => {}
+                            _ => {
+                                print!("{}", delta.text);
+                                std::io::stdout().flush().ok();
+                            }
+                        }
+                    }
+                })
+            }
+            Ok(AgentEvent::LlmUsage {
+                model,
+                prompt_tokens,
+                completion_tokens,
+                total_tokens,
+                usage_reported,
+                ..
+            }) => {
+                if usage_reported {
+                    println!(
+                        "\n[LLM 用量] model={model}, prompt={prompt_tokens}, completion={completion_tokens}, total={total_tokens}"
+                    );
+                } else {
+                    println!("\n[LLM 用量] model={model}，上游未报告用量");
+                }
+                Ok(())
+            }
+            Ok(AgentEvent::FinalAnswer(answer)) => output.confirm_answer(&answer),
+            Ok(AgentEvent::Error { failure, .. }) => Err(match failure.terminal_kind {
+                AgentTerminalKind::Cancelled => AgentError::Cancelled(failure.message).into(),
+                AgentTerminalKind::TimedOut => AgentError::Timeout(failure.message).into(),
+                AgentTerminalKind::PermissionDenied => {
+                    AgentError::PermissionDenied(failure.message).into()
+                }
+                _ => ReactError::Other(failure.message),
+            }),
+            Ok(AgentEvent::Cancelled) => {
+                Err(AgentError::Cancelled("原生 Agent source 已取消".into()).into())
+            }
+            Err(error) => Err(error),
+            _ => Ok(()),
+        };
+        if let Err(error) = observed {
+            first_error.get_or_insert(error);
+        }
+    }
+    if let Some(error) = unresolved {
+        return Err(error);
+    }
+    if let Some(error) = first_error {
+        return Err(error);
+    }
+    let final_answer = output.finish()?;
+    // 原 source EOF 后只补尚未展示的安全最终正文，确认通知本身不重印。
+    if let Some(missing) = output.take_final_presentation()? {
+        print!("{missing}");
+        std::io::stdout().flush().ok();
+    }
+    if final_answer.trim().is_empty() {
+        return Err(ReactError::Other(
+            "流式示例返回空答案".into(),
+        ));
+    }
+    Ok(())
 }
 ```
 
----
+这段代码按当前源码接口整理，本轮没有执行片段编译、模型调用或原生宿主验收。
+完整进度、工具和回调示例见 [demo11_callbacks.rs](../../echo-agent-learning/examples/demo11_callbacks.rs)，
+多轮入口见 [13-chat.md](./13-chat.md)。
 
-## Notes
+## 自定义 Agent 与完整调用值
 
-1. **Tool execution is not streamed**: `execute_tool()` is still blocking — a `ToolResult` event fires only after the tool completes, because tools themselves don't produce incremental output
-2. **`FinalAnswer` is a business result**: Keep consuming the same source to physical EOF; producer cleanup can still fail after the answer. The default cancellation and invocation adapters preserve its first ordinary cleanup error while retaining the original source.
-3. **Error handling**: Every event is `Result<AgentEvent>`. Preserve the first failure or cancellation cause while draining; a later cleanup failure must not replace it. `ExecutionNotSettled` retains its original run/execution identity and remains a separate nonterminal observation. EOF alone does not clear that observation.
+自定义实现应接纳 `execute_stream_message_with_invocation_context` 和/或
+`chat_stream_message_with_invocation_context`，按实际支持能力实现各自 typed producer。
+Message、history、取消、资源、工作目录及工具上界按值进入同一次调用。未实现的入口
+在 source admission 前明确拒绝：当前默认错误分别为 `canonical typed execute invocation`
+和 `canonical typed chat invocation`；不会调用旧 String 方法补正文、猜 Started 或补成功。
+只有 fresh execute 的自定义 Agent 不会自动获得多轮 chat 能力。
 
-The examples above render every stream error or observation and continue the same
-source to EOF. Returning the first error preserves its original value; it does
-not turn `ExecutionNotSettled` into a terminal failure or certify physical
-settlement. Applications that persist execution status should consume the
-canonical `AgentTurnDriver` receipt instead of inferring it from these UI events.
+## 在 SSE 或其它事件接收端中使用
 
-See: `echo-agent-learning/examples/demo10_streaming.rs`
+接收端可序列化原生消息块、工具事实和运行观察，或显示同一投影产生的可见文字。
+`FinalAnswer` 是确认通知，不能被命名为“已关闭”或追加到已经显示的正文。
+投递失败/接收端断开是 delivery 结果，不能代替 producer 的执行/物理结算。
+需要规范化 turn receipt 的宿主使用现有 `AgentTurnDriver`，保留原 source 到 EOF；
+执行结果与投递结果分别判断，不为 UI 新建另一份执行 owner 或 turn summary。
+
+## 完成、失败与取消
+
+- 单块 `complete`、provider 的 `phase=final_answer` 和普通文字均不能证明执行完成。
+- 最终候选继续经过配置的 Guard/Critic、Stop、持久化和原 owner 的实际收尾；
+  只有真实 native status 与原 EOF 满足后才返回成功，尾部错误仍可阻止成功。
+- `ExecutionNotSettled` 是非终态观察；原 run/execution 不能被新身份或 foreign 状态替换。
+- 普通工具还可以发布进度与资源事件，不能把某个工具返回或工具日志当作 Agent 终态。
+
+完整字段与持久化约束见[原生消息与执行结算](../zh/43-native-message-execution.md)。
 
 ---
 
@@ -32255,6 +33075,9 @@ agent.chat("Do you remember my name?").await?;
 
 ---
 
+fresh execute 不追加上一轮 chat；显式传入 history 或恢复运行时上下文时，仍由当前
+typed producer 按既有身份与持久化合同处理。多轮可用历史受预算和压缩策略约束。
+
 ## Core Differences
 
 | | `execute()` / `execute_stream()` | `chat()` / `chat_stream()` |
@@ -32293,7 +33116,7 @@ async fn main() -> Result<()> {
     println!("Agent: {r3}");
 
     // Clear history, start a fresh session
-    agent.reset();
+    agent.reset().await;
 
     Ok(())
 }
@@ -32301,38 +33124,152 @@ async fn main() -> Result<()> {
 
 ### Streaming multi-turn chat
 
-```rust
+```rust,no_run
+use echo_agent::agent::{Agent, AgentEvent, AgentOutputProjection, AssistantPhase, ExecutionStatusKind};
+use echo_agent::error::{AgentError, AgentTerminalKind, ReactError};
 use echo_agent::prelude::*;
 use futures::StreamExt;
 use std::io::Write;
 
 #[tokio::main]
-async fn main() -> Result<()> {
-    let config = AgentConfig::new("qwen3-max", "assistant", "You are a helpful assistant");
-    let mut agent = ReactAgent::new(config);
+async fn main() -> echo_agent::error::Result<()> {
+    println!("  使用 chat_stream() 进行流式多轮对话\n");
+
+    // 使用 AgentBuilder 创建 Agent
+    let agent = ReactAgentBuilder::new()
+        .model("qwen3-max")
+        .name("stream_chat_agent")
+        .system_prompt("你是一个助手，用中文回答，不超过三句话。")
+        .max_iterations(3)
+        .build()?;
 
     let messages = [
-        "I'm learning Rust async programming.",
-        "Can you give me a simple async/await example?",
-        "Based on what I asked, what should I study next?",
+        "我在学习 Rust，想了解异步编程。",
+        "能给我一个 async/await 的简单例子吗？",
     ];
 
     for msg in &messages {
-        println!("User: {msg}");
-        print!("Agent: ");
+        println!("  👤 用户: {msg}");
+        print!("  🤖 Agent: ");
         std::io::stdout().flush().ok();
 
         let mut stream = agent.chat_stream(msg).await?;
+        let owner_run = agent.current_run_id();
+        let mut output = AgentOutputProjection::default();
+        let mut first_error = None;
+        let mut unresolved = None::<ReactError>;
+        let same_source = |error: &ReactError, projection: &AgentOutputProjection| {
+            matches!(error, ReactError::ExecutionNotSettled { run_id, execution_id }
+                if owner_run.as_deref() == Some(run_id.as_str())
+                    && execution_id.as_deref().is_some()
+                    && execution_id.as_deref() == projection.execution_id())
+        };
 
+        // 每轮读取同一 chat source 到真实 EOF，下一轮才复用会话上下文。
         while let Some(event) = stream.next().await {
-            match event? {
-                AgentEvent::Token(token) => {
-                    print!("{token}");
-                    std::io::stdout().flush().ok();
+            let observed = match event {
+                Err(error @ ReactError::ExecutionNotSettled { .. }) => {
+                    // 未结算观察不是终态；foreign 观察不会被这条 source 的完成覆盖。
+                    if unresolved
+                        .as_ref()
+                        .is_none_or(|prior| same_source(prior, &output))
+                    {
+                        unresolved = Some(error);
+                    }
+                    Ok(())
                 }
-                AgentEvent::FinalAnswer(_) => break,
-                _ => {}
+                Ok(AgentEvent::ExecutionStatus(status)) => {
+                    output.observe_status(&status).map(|changed| {
+                        if changed
+                            && matches!(
+                                status.status,
+                                ExecutionStatusKind::Settled
+                                    | ExecutionStatusKind::Failed
+                                    | ExecutionStatusKind::Cancelled
+                            )
+                            && unresolved
+                                .as_ref()
+                                .is_some_and(|prior| same_source(prior, &output))
+                        {
+                            unresolved = None;
+                        }
+                        if let Some(error) = output.terminal_failure() {
+                            first_error.get_or_insert(error);
+                        }
+                    })
+                }
+                Ok(AgentEvent::AssistantMessage { block }) => {
+                    output.observe_block(&block).map(|delta| {
+                        if let Some(delta) = delta {
+                            // 只显示投影后的可见文本；签名、密文和重放载体不直接输出。
+                            match delta.block.phase {
+                                AssistantPhase::Reasoning if !delta.text.is_empty() => {
+                                    println!("\n[推理] {}", delta.text)
+                                }
+                                AssistantPhase::Commentary if !delta.text.is_empty() => {
+                                    println!("\n[进度] {}", delta.text)
+                                }
+                                AssistantPhase::Reasoning | AssistantPhase::Commentary => {}
+                                _ => {
+                                    print!("{}", delta.text);
+                                    std::io::stdout().flush().ok();
+                                }
+                            }
+                        }
+                    })
+                }
+                Ok(AgentEvent::LlmUsage {
+                    model,
+                    prompt_tokens,
+                    completion_tokens,
+                    total_tokens,
+                    usage_reported,
+                    ..
+                }) => {
+                    if usage_reported {
+                        println!(
+                            "\n[LLM 用量] model={model}, prompt={prompt_tokens}, completion={completion_tokens}, total={total_tokens}"
+                        );
+                    } else {
+                        println!("\n[LLM 用量] model={model}，上游未报告用量");
+                    }
+                    Ok(())
+                }
+                Ok(AgentEvent::FinalAnswer(answer)) => output.confirm_answer(&answer),
+                Ok(AgentEvent::Error { failure, .. }) => Err(match failure.terminal_kind {
+                    AgentTerminalKind::Cancelled => AgentError::Cancelled(failure.message).into(),
+                    AgentTerminalKind::TimedOut => AgentError::Timeout(failure.message).into(),
+                    AgentTerminalKind::PermissionDenied => {
+                        AgentError::PermissionDenied(failure.message).into()
+                    }
+                    _ => ReactError::Other(failure.message),
+                }),
+                Ok(AgentEvent::Cancelled) => {
+                    Err(AgentError::Cancelled("原生 Agent source 已取消".into()).into())
+                }
+                Err(error) => Err(error),
+                _ => Ok(()),
+            };
+            if let Err(error) = observed {
+                first_error.get_or_insert(error);
             }
+        }
+        if let Some(error) = unresolved {
+            return Err(error);
+        }
+        if let Some(error) = first_error {
+            return Err(error);
+        }
+        let final_answer = output.finish()?;
+        // 原 source EOF 后只补尚未展示的安全最终正文，确认通知本身不重印。
+        if let Some(missing) = output.take_final_presentation()? {
+            print!("{missing}");
+            std::io::stdout().flush().ok();
+        }
+        if final_answer.trim().is_empty() {
+            return Err(ReactError::Other(
+                "demo17 验收失败：流式对话返回空答案".into(),
+            ));
         }
         println!("\n");
     }
@@ -32383,7 +33320,7 @@ async fn main() -> Result<()> {
 
 ```rust
 // Returns (message count, estimated token count); ReactAgent-specific method
-let (msg_count, token_est) = agent.context_stats();
+let (msg_count, token_est) = agent.context_stats().await;
 println!("Context: {msg_count} messages, ~{token_est} tokens");
 ```
 
@@ -32393,18 +33330,23 @@ println!("Context: {msg_count} messages, ~{token_est} tokens");
 
 ```rust
 // Direct call on a concrete type
-agent.reset();
+agent.reset().await;
 
 // Via a trait object
 let mut agent: Box<dyn Agent> = Box::new(ReactAgent::new(config));
 agent.chat("Turn 1: Hi, I'm Alice").await?;
-agent.reset();                                    // ← trait method, clears context
+agent.reset().await;                                    // ← trait method, clears context
 agent.chat("Turn 2: Who am I?").await?;           // Agent no longer knows "Alice"
 ```
 
-### Cross-process session restoration with RuntimeStateStore
+### 结合 RuntimeStateStore 跨进程续接
 
-The multi-turn history from `chat()` can be persisted with a [`RuntimeStateStore`](../../src/state/mod.rs) (the `SqliteRuntimeStateStore` implementation persists an `AgentCheckpoint` with messages, active skills, and blocked reason). On the next launch, configure the same `conversation_id` and the runtime restores those fields. Task plans belong to the revisioned task graph, not the ReAct checkpoint. See [03-memory.md](./03-memory.md) for the full example.
+当前会话可以配置 RuntimeStateStore 保存运行时上下文；恢复仍需严格匹配
+checkpoint 身份、transcript generation 与当前 Message/history。不能只靠相同
+conversation_id 接受任意旧断点、缺失字段或重放已完成副作用。任务计划仍归版本化
+任务图，不从 ReAct checkpoint 恢复。Store 配对与冷恢复边界见
+[41-persistence-concepts.md](./41-persistence-concepts.md)，记忆能力见
+[03-memory.md](./03-memory.md)。
 
 ---
 
@@ -32421,7 +33363,7 @@ let config = AgentConfig::new("qwen3-max", "assistant", "You are a helpful assis
 let mut agent = ReactAgent::new(config);
 
 // Sliding window: keep only the most recent 20 messages
-agent.set_compressor(SlidingWindowCompressor::new(20));
+agent.set_compressor(SlidingWindowCompressor::new(20)).await;
 
 // chat() will auto-compress when tokens exceed the limit
 agent.chat("First message").await?;
@@ -32430,106 +33372,62 @@ agent.chat("First message").await?;
 
 ---
 
-## Agent Trait Design
+流式例子的循环与当前 demo17 保持一致；本轮只核对源码和文档，未执行片段编译或模型验收。
 
-The `Agent` trait defines the full conversation lifecycle:
+## 当前 Agent typed 合同
 
-```rust
-#[async_trait]
-pub trait Agent: Send + Sync {
-    fn name(&self) -> &str;
-    fn model_name(&self) -> &str;
-    fn system_prompt(&self) -> &str;
+String 与 raw-event 便利入口委托给对应 typed producer；接口使用 `&self` 和
+`BoxFuture`，不使用旧的 `async_trait`/`&mut self` 定义。下面仅列签名关系：
 
-    /// Blocking execution; resets context on every call (single-task mode).
-    /// For continuous dialogue use `chat()`.
-    async fn execute(&mut self, task: &str) -> Result<String>;
-
-    /// Streaming execution; resets context on every call (single-task mode).
-    /// For continuous dialogue use `chat_stream()`.
-    async fn execute_stream(&mut self, task: &str) -> Result<BoxStream<'_, Result<AgentEvent>>>;
-
-    /// Multi-turn chat (blocking). Appends to existing context; history persists across turns.
-    /// Call `reset()` to start a new session. Defaults to `execute()`.
-    async fn chat(&mut self, message: &str) -> Result<String> {
-        self.execute(message).await
-    }
-
-    /// Multi-turn chat (streaming). Appends to existing context; history persists across turns.
-    /// Call `reset()` to start a new session. Defaults to `execute_stream()`.
-    async fn chat_stream(&mut self, message: &str) -> Result<BoxStream<'_, Result<AgentEvent>>> {
-        self.execute_stream(message).await
-    }
-
-    /// Clears conversation history to start a new session. Does not affect `execute()`.
-    /// Default is a no-op; stateful implementations should override.
-    fn reset(&mut self) {}
-}
+```text
+execute / execute_stream
+  -> execute_stream_message_with_invocation_context(Message, CancellationToken, AgentInvocationContext)
+chat / chat_stream
+  -> chat_stream_message_with_invocation_context(Message, CancellationToken, AgentInvocationContext)
+reset(&self) -> Future<Output = ()>
 ```
 
-**Behavior summary by implementation:**
+两个 typed 入口独立声明能力，完整 Message、history、invocation 与资源不能先压成
+String 再回补。实现未提供该入口时，当前默认明确返回 `ReactError::Other`，消息为
+`canonical typed execute invocation` 或 `canonical typed chat invocation`。
+它不是成功响应，也不 fallback 到另一个入口。原生 source 自己提供稳定的
+Started、真实终态及原 EOF；读取方不能根据 FinalAnswer 文本制造这些事实。
 
-| Implementation | `chat()` | `reset()` |
-|---|---|---|
-| `ReactAgent` | Preserves full context | Clears history, keeps system prompt |
-| `MockAgent` | Records call, consumes response queue | Clears call history |
-| `FailingMockAgent` | Always returns error | Clears call history |
-| Custom Agent | Falls back to `execute()` by default | No-op by default |
+| 实现 | 多轮入口 | reset |
+| --- | --- | --- |
+| ReactAgent | 原上下文上的 typed chat；预算压缩/恢复仍按当前 owner | 异步清除会话消息，必须 await |
+| MockAgent | 显式 typed chat 使用配置响应，保完整调用记录与原生状态 | 清除调用历史 |
+| FailingMockAgent | 保留原 typed setup/脚本错误，不合成成功 | 清除调用历史 |
+| 自定义 Agent | 实现自己支持的 typed 入口；缺失入口明确拒绝 | 默认空操作；有会话状态时自行实现 |
 
 ---
 
-## Using in a Web Service (Chatbot API)
+## 在宿主或 Web 接口中使用
 
-```rust
-use axum::{Json, extract::State};
-use echo_agent::prelude::*;
-use std::sync::Arc;
-use tokio::sync::Mutex;
+每个需要独立上下文的会话持有自己的 Agent，或由宿主串行驱动同一会话。
+`Agent: Send + Sync` 不意味着可把同一实例的多轮上下文任意并发写入。
+接收完整 Message 与 history 时使用对应 typed chat 入口；调用级工作目录、工具上界、
+取消和资源放入 `AgentInvocationContext`，不经旧 mutable setter/source fallback 传递。
 
-// Shared Agent state (single-user session example)
-type AgentState = Arc<Mutex<ReactAgent>>;
-
-async fn chat_handler(
-    State(agent): State<AgentState>,
-    Json(req): Json<ChatRequest>,
-) -> Json<ChatResponse> {
-    let mut agent = agent.lock().await;
-    let answer = agent.chat(&req.message).await.unwrap_or_default();
-    Json(ChatResponse { answer })
-}
-
-// Streaming version (SSE)
-async fn chat_stream_handler(
-    State(agent): State<AgentState>,
-    Json(req): Json<ChatRequest>,
-) -> axum::response::Sse<impl futures::Stream<Item = Result<axum::response::sse::Event, std::convert::Infallible>>> {
-    let event_stream = async_stream::stream! {
-        let mut agent = agent.lock().await;
-        if let Ok(mut stream) = agent.chat_stream(&req.message).await {
-            while let Some(event) = stream.next().await {
-                let data = match event {
-                    Ok(AgentEvent::Token(t))       => format!("{{\"type\":\"token\",\"data\":\"{t}\"}}"),
-                    Ok(AgentEvent::FinalAnswer(a))  => format!("{{\"type\":\"done\",\"data\":\"{a}\"}}"),
-                    _ => continue,
-                };
-                yield Ok(axum::response::sse::Event::default().data(data));
-            }
-        }
-    };
-    axum::response::Sse::new(event_stream)
-}
-```
+SSE 只负责运输事实；若接收端断开，投递结果与原执行结果分开记录，原 source 仍须由
+原 owner 收尾。宿主需要持久 turn receipt 时使用既有 `AgentTurnDriver`。
+原生字段与投影示例见 [10-streaming.md](./10-streaming.md)，不把 FinalAnswer 通知
+重命名为物理关闭，不把 transport flush 当成 producer EOF。
 
 ---
 
-## Notes
+## 使用约束
 
-1. **Each user session needs its own Agent instance**: `ReactAgent` is not `Sync` — use a separate instance per user, or wrap with `Arc<Mutex<ReactAgent>>`
-2. **`reset()` only clears in-memory history**: Persisted runtime state in `RuntimeStateStore` is unaffected; `execute()` will still restore it on the next call
-3. **Context growth**: Long conversations accumulate tokens — use `set_compressor()` to prevent context overflow
-4. **Mixing `execute()` and `chat()`**: `execute()` always resets history on each call, discarding any context accumulated by prior `chat()` calls
+1. `reset().await`、`context_stats().await`、`set_compressor(...).await` 都必须等待完成。
+2. Store 恢复、transcript generation 和严格 checkpoint 配对按当前持久化合同处理，
+   不能只凭相同 conversation_id 声称任意旧断点都会自动恢复；见 [41-persistence-concepts.md](./41-persistence-concepts.md)。
+3. 上下文受 token 预算与压缩策略约束；多轮不代表保留无限历史。
+4. fresh execute 与 chat 语义分开；不要用 execute 替代下一轮 chat，也不要在原 stream
+   的最终通知处提前关流后立即写入下一轮。
+5. String/event 返回形式和 `model_streaming(bool)` 是两个独立选择。显式 false 仍走
+   同一 typed 入口、原生校验与 EOF 规则，默认 true 不变。
 
-See: `echo-agent-learning/examples/demo17_chat.rs`
+实际完整示例：[demo17_chat.rs](../../echo-agent-learning/examples/demo17_chat.rs)。
 
 
 ---
@@ -36501,44 +37399,66 @@ let graph = GraphBuilder::new("parallel_processing")
 
 ---
 
-## Streaming Events
+## 流式事件与原 source EOF
 
 ```rust
-let mut stream = graph.run_stream(state).await?;
+use echo_agent::error::ReactError;
+use echo_agent::workflow::WorkflowEvent;
+use futures::StreamExt;
 
+let mut stream = graph.run_stream(state).await?;
+let mut first_error = None;
+let mut unresolved = None;
+let mut completed = None;
 while let Some(event) = stream.next().await {
-    match event? {
-        WorkflowEvent::NodeStart { node_name, step_index } => {
-            println!("▶ Starting node: {} (step {})", node_name, step_index);
+    match event {
+        Ok(WorkflowEvent::NodeStart { node_name, step_index }) => {
+            println!("▶ 开始节点: {node_name} (步骤 {step_index})");
         }
-        WorkflowEvent::NodeEnd { node_name, step_index, elapsed } => {
-            println!("✓ Completed: {} in {:?}", node_name, elapsed);
+        Ok(WorkflowEvent::NodeEnd { node_name, elapsed, .. }) => {
+            println!("✓ 完成节点: {node_name} 耗时 {elapsed:?}");
         }
-        WorkflowEvent::Token { node_name, token } => {
-            print!("{}", token);  // Stream tokens from agent nodes
+        Ok(WorkflowEvent::Token { token, .. }) => print!("{token}"),
+        Ok(WorkflowEvent::NodeError { node_name, error }) => {
+            eprintln!("✗ 节点错误 {node_name}: {error}");
         }
-        WorkflowEvent::NodeError { node_name, error } => {
-            eprintln!("✗ Error in {}: {}", node_name, error);
+        Ok(WorkflowEvent::Completed { result, total_steps, elapsed }) => {
+            completed = Some((result, total_steps, elapsed));
         }
-        WorkflowEvent::Completed { result, total_steps, elapsed } => {
-            println!("\n=== Workflow completed in {:?} ===", elapsed);
-            println!("Result: {}", result);
+        Err(error @ ReactError::ExecutionNotSettled { .. }) => {
+            unresolved.get_or_insert(error);
         }
+        Err(error) => { first_error.get_or_insert(error); }
     }
 }
+if let Some(error) = unresolved { return Err(error); }
+if let Some(error) = first_error { return Err(error); }
+let (_result, total_steps, elapsed) = completed.ok_or_else(|| {
+    ReactError::Other("工作流原流 EOF 前没有成功完成事实".into())
+})?;
+// 节点正文已通过 Token 投影展示，不再次把完整 result 追加到正文。
+println!("\n工作流完成：{total_steps} 步，耗时 {elapsed:?}");
 ```
 
-`NodeError` is a terminal diagnostic event: the stream emits it before ending
-with the same error and never emits `Completed` after a failed node. When a
-parallel branch fails, the workflow cancels and drains its remaining siblings
-so a hung branch cannot mask the failure or outlive caller cancellation.
-Agent nodes forward `AgentEvent::Token` as `WorkflowEvent::Token`; their final
-answer is committed to `SharedState` before `NodeEnd` is emitted.
+`WorkflowEvent::Token` 保留为当前工作流的派生 UI 文本投影，并不是已退役的
+AgentEvent Token。Agent 节点接纳完整 typed Message/Invocation，读取当前
+`AssistantMessage`，由既有 `AgentOutputProjection` 区分 reasoning 和可见正文；
+Reasoning 不折成工作流答案。它核验同 source 的真实 `ExecutionStatus`、保留 typed
+未结算观察和首因，并继续读取原 Agent source 到物理 EOF。只有 finish 成功后才把
+完整安全最终答案写入 `SharedState`，再由原节点路径发出 `NodeEnd`；缺失、合成或
+foreign 终态不能通过。runtime FinalAnswer 通知只确认结果，不能触发提前提交。
 
-`run`, `run_until_interrupt`, checkpoint resume, and `run_stream` all delegate
-node routing, path/step accounting, fan-out, errors, and completion to one
-internal execution loop. Streaming is an event projection of that loop, not a
-second executor.
+最终正文缺口由原投影补齐，不能把确认通知再拼入已经发出的 WorkflowEvent Token。
+如果 UI 选择只在末尾显示完整 `Completed.result`，则可以省略逐段 Token 的显示；
+两种呈现方式不能同时把同一正文追加两次。
+
+`NodeError` 是诊断事件，后续保留原 typed Err；不从诊断字符串重造第一个失败。
+普通失败不会再生成 Completed；并行分支失败后取消并排空 sibling，保留实际物理收尾。
+外层工作流 UI 事件不能为未知 source 补身份或清除未结算观察。
+
+`run`、`run_until_interrupt`、checkpoint resume 与 `run_stream` 共用既有执行循环。
+状态提交、path/step、fan-out、保护 claim 和结算不因增加流式呈现而出现第二套权威。
+此片段使用上文已构造的 graph/state；本轮未执行 Rust 片段编译或工作流验收。
 
 ---
 
@@ -36847,14 +37767,12 @@ Provider adapters or applications that discover exact-model data use
 three-argument `resolve` remain compatibility entry points; they immediately
 translate their values into sourced records and use the same resolver.
 
-`ModelFactInputs` is the serializable sidecar for existing `LlmConfig` and
-`ModelConfig` values. `SourcedLlmConfig` and `SourcedModelConfig` preserve provider,
-exact-model, and ordered caller records without changing the existing public config
-struct shapes. A legacy `ModelConfig::context_window` is converted to a sourced
-caller override. Concrete clients publish an adapter-specific
-`protocol_capabilities` baseline; configurable provider labels cannot change that
-wire contract. Their existing `capabilities` method returns the fresh resolved
-profile instead of the protocol baseline.
+`ModelFactInputs` 保存 provider、exact-model 与有序 caller 来源事实；当前
+`ModelConfig.facts` 直接携带这些事实，`SourcedLlmConfig` 继续服务原 client 构建与刷新。
+`ModelConfig` 新增 `facts` 字段，旧 `SourcedModelConfig { config, facts }` 侧车形状退役。
+当前 `ModelConfig::context_window` 仍形成带原 provenance 的 caller override，清除两类
+输入互不抹除。`protocol_capabilities` 继续是 adapter 固有 wire baseline，`capabilities`
+仍返回 freshness 解析后的 profile；可配置 provider 名称不能改写协议事实。
 
 Use `ReactAgentBuilder::sourced_llm_config` for the LLM sidecar. Every run snapshot resolves
 the current client again and retains `model_fact_sources` and `ignored_model_facts`, so an
@@ -41013,8 +41931,9 @@ Task terminal authority. See [ADR 0060](../adr/0060-task-execution-store-cas-and
 
 ## 退役后生命周期边界
 
-旧LSP声明不再启动manager；原prepare仍持有同generation的完整冻结文本、identity与诊断，
-缓存不重读，失效后重建。Skill/Hook/MCP/Subagent的publication、rollback和cleanup receipt
+旧LSP文件保留为用户原件；当前prepare不probe、读取、冻结、hash或缓存它，不产生专属诊断，
+其内容不参与generation身份，也不恢复语言服务；见[ADR0105](../adr/0105-current-config-and-plugin-inputs.md)。
+通用当前subagent文档冻结继续保留，Skill/Hook/MCP/Subagent的publication、rollback和cleanup receipt
 不因删除组件而丢失。原生reasoning签名、普通assistant phase、最终校验、Stop继续、持久化
 与物理结算仍沿原运行owner；运行时结束不等于EKO TaskRun／Goal完成。
 
@@ -46339,9 +47258,9 @@ Choose option 4.
 - A lookup racing with mutation may receive either the complete old or complete
   new generation. An old generation already in flight may finish normally;
   removal is not redefined as cancellation.
-- Plan 12's result-cache epoch is observed before lookup. Every successful
-  registry mutation advances that epoch and clears the cache, so a displaced
-  Arc cannot publish a result under the replacement generation.
+- 工具owned Arc与结果缓存epoch在原registration_lock内同步取出；所有注册、批量注册、
+  替换和移除沿同一把锁完成发布与cache失效。锁在任何validator、permit或执行await前释放。
+  缓存读取在原cache锁内核对该epoch；原store回填fence继续阻止旧结果进入新代缓存。
 
 ## Framework And Application Boundary
 
@@ -46392,6 +47311,52 @@ timeout, cancellation, and drain tests remain green. The dynamic Tool example,
 Rust public inventory generator, SDK contract checks, independent feature
 checks, Clippy, semantic snapshot/change evidence, and Issue reconciliation are
 also required.
+
+## 2026-10-30：许可与同一工具代次绑定
+
+父Asset的独立源码审查发现：PermissionStage以工具A求值后，START callback可把同名
+工具换成B；原ExecuteStage再次lookup B，仅重核readonly，可能将A的许可误用于B。
+该问题在本地桌面也成立，修复防框架热替换误执行，不为GUI直接终端／MCP增加权限闸。
+
+候选方案是每次异步重新审批、另建generation登记册，或复用原owned Arc。选择最后一项：
+permission与Hook批准持有同一Arc，参数／streaming分类沿相同实例。原两个checked
+draining入口显式接收expected Arc，原get_tool后、validation await／cache／effect前
+同步比较同实例；变化则拒绝本次调用，不能自动给新实现沿用旧许可。已经选中A再
+replace时A仍可正常结束，非checked调用仍是caller-owned执行原语。
+
+这是两项公开Rust签名增量；没有第二工具catalog／executor／审批循环，没有新增
+wire或ToolContext字段。原cache key、write失效和旧结果回填fence不变。
+owned选择与cache epoch同步配对，cache读取另核对同一epoch，约束见下节。
+SDK accepted与Rust inventory的实际影响由后继唯一完整producer列出，不自动新增
+跨语言能力。验证要求保留原permission rewrite／protected path、Plan／readonly与
+物理Join控制，并增加确定性START替换stream／non-stream反例和已选中A继续完成正控。
+
+本段记录批准的修复方向及验收要求，不声明编译、运行或消费者已通过；各票须绑定
+当时精确源码。回滚若恢复不同代许可缺口不可只留下metadata或测试通过声明。
+## 2026-10-30：缓存结果与读取来源保持同代
+
+来源绑定后，成功read结果中的FileRead会作为已授权owned工具的读取事实。仅防止旧结果
+回填不足以保护该事实：A的validator挂起时B替换并填入新缓存，A恢复不能取B的effects；
+反向也不能在B已发布、epoch尚未更新的窗口把旧A缓存记成B来源。
+
+保留原catalog、registration_lock和cache epoch，选择private tuple getter在原注册锁内
+同步取owned Arc与epoch；所有mutator使用同一注册锁。随后释放注册锁／DashMap引用，
+再进入validator、cache、permit、retry与物理执行。原cache读取在与失效／回填相同的
+临界区检查expected epoch，不一致则实际执行已经选中的原工具。已选中A仍允许完成，
+不增加重审批、重试、generation counter、cache key或第二registry。单独提前epoch bump
+会形成反向窗口，因此不选；仅在lookup比epoch无法覆盖发布窗口，也不选。
+
+锁序为mutator的registration→短DashMap→cache；tuple getter是registration→短DashMap，
+cache lookup／store与write失效只取cache，均不反向取得registration。公开get_tool仍返回
+owned Arc，permission与实际Manager通过原expected Arc核对衔接；同步锁不跨await。
+
+验收分层：原方向由实际pipeline、独立A/B provider、写入字节与两个stream模式断言；
+反向由echo_execution自身cfg(test)的单Manager publication observer，真实replace发布后
+暂停，调用原checked stream／nonstream，核B实际读取、完整ToolResult/FileRead与新B缓存。
+跨crate的cfg(test)不传播，反向测试不宣称跑了完整pipeline；不为测试增加公开API、feature、
+生产状态或循环dev-dependency。两个层级共同覆盖源码不变量，后续全量门禁与消费者另验。
+
+本段不代替对应冻结源的实际RED／GREEN、独立复审或全量门禁回执。
 
 
 ---
@@ -46800,6 +47765,12 @@ exact candidates, list/load failure, and dangling summary. Existing unsettled
 timeout tests count both list and load operations and require zero. Eval,
 ReactAgent, TurnDriver, bilingual documentation, SDK zero-diff, semantic,
 Issue, and independent review gates remain required.
+
+## 2026-10-29 当前调用值收敛补记
+
+本段覆盖上文关于共享legacy setter/current trace缓存的当前实现描述；历史验证与回执继续保全。旧set/clear external context已按人类NoCompat裁决退役，当前Eval与工具调用通过既有AgentInvocationContext传值。业务run id仍与trace id分离；current_run_id只观察现有ActiveTurn同incarnation的原runtime.run_id，无active或原值None即None。它不回填trace/turn/conversation，也不能被Eval当作RunStore主键。
+
+当前trace只由start_scoped_trace_run返回值写入对应snapshot，恢复/压缩/失败隔离沿该值。原“安装legacy产品run且运行后共享值仍保留”的测试义务已取消；当前invocation字段、config conversation fallback、runNone、cold/Execute/standalone恢复与typed unknown不伪终结仍须验收。最新ignored候选仅获有限源码/格式/补丁应用资格，尚无本轮编译、测试、SDK/Host/MainCI接受结论。SDK公开shape与方法的当前差异以ADR0104及对应owner窄审为准，上文零API变化声明属于原历史修复。
 
 
 ---
@@ -51361,6 +52332,25 @@ The framework owns evidence validation, durable status transitions, and recall
 eligibility. The embedding host owns who may issue an approval; the framework
 cannot authenticate a self-described reviewer string. `MemoryApproval` is an
 explicit caller receipt, not a permission grant inferred from LLM confidence.
+
+## 2026-10-30：四个公开 Store 安装入口共用原权威约束
+
+`set_store`、`install_store`、`set_memory_store`、`install_memory_store`
+都复用 manager Store 的同一 `Arc` 身份检查。安装 manager 后，另一 Store
+返回既有 `ReactError::Other`，公开 Store、manager、压缩 promoter、自动
+recall 和层级工具保持原后端。同步入口先检查身份并取得 context 锁，锁忙
+返回错误；异步入口等待锁前不发布状态，取得锁后到发布结束之间没有 await。
+
+`set_store` 与 `install_store` 返回既有 `Result<()>`，只调整自动注入
+Store 和 promoter，不注册或替换任何记忆工具；另两个安全入口继续负责
+approved-memory recall/search 与已安装 manager 的层级工具。没有 manager
+时允许真实 A→B 替换，同一 manager Store 的 Arc 克隆也仍合法，不自动
+更换 manager、复制数据或改变应用策略。原始 Store KV 仍为独立调用能力。
+
+`set_store` 属于 SDK 已接受的 external_contract；其 source operation、
+alias 和三语言 raw Store 能力继续保留。Host 必须消费框架错误后才返回成功，
+SDK 错误传播、真实三语言正反控制及 EKO 调用点适配为交付依赖，不能归为
+非阻断遥测。`install_store` 保留原有 async 边界；不新增操作或 wire 合同。
 No second Store, SQLite migration, task state, or approval UI is introduced.
 
 An external writer holding a raw Store can still bypass the layered manager's
@@ -54680,6 +55670,45 @@ providers or a terminal login cannot establish that acceptance. The website
 must mirror the finally qualified framework source, not invent a source pin for
 this uncommitted candidate.
 
+## 2026-10-30：read-before-edit沿实际owned工具提供路径事实
+
+独立源码复核发现两个相邻缺口：成功target read effect被host canonicalize重新解释，
+以及snapshot cwd与合法工具with_base_dir优先级不同。只给snapshot加provider getter
+仍会在cwd=A、tool base=B时核错目标；不能删除base_dir能力或用host同名路径补证。
+
+选择在原Tool trait提供一项同步default方法resolve_file_tracking_path，接该次最终
+parameters／ToolContext，返回原FileSystem Arc及其namespace内路径。缺能力默认明确
+Unsupported；既有文件工具只调用自身原resolve_path，ApplyPatch沿原root／action
+resolver，不建立第二路径validator或来源表。调用在原blocking模式保留资源guard并
+等待真实Join，map锁不跨await。该通用身份机制不依赖EKO的SSH／项目UI策略。
+
+成功FileRead effect路径是已经报告的事实：ReadFileTool只把它绑定自身provider，不再
+事后host／target canonicalize改写。原read-map扩为路径对应source／时间观察，未知
+source只保诊断而不能授权。native按paths_are_native明确声明同一进程namespace，
+non-native仅认同一保留Arc。30分钟TTL与每次prepare清空保持原规则，不新增registry。
+
+公开record_file_read显式接source，这是Rust签名变化；FileReadHistory是原map值的
+非序列化Rust类型别名，不是新wire DTO。ToolContext原16个accepted字段不增，三语言
+既有FileRead／FileEdit String path和ToolResult effects保留。flag关闭不调用新hook，
+成功effect即使来源证明缺失也不被抹掉或改成工具失败；guard开启时没有正确write
+proof须依原Unavailable工具拒绝通道返回，不能猜host／snapshot或新增自动重试。
+真实provider I/O错误保typed原首因，不泛吞成“未读”。
+
+验证包括host／target双向alias、source相同路径隔离、base_dir A/B正反控制、相对／
+绝对cwd、provider失败不落host、flag关闭和默认Unsupported的custom effects保真，
+以及原TTL、资源与Join；真实SSH／SDK／native资格单列。本段是当前方案说明，不
+以源码或结构校验替代同源实测与消费者复审，也不自动把新trait方法接受为语言路由。
+
+## 目录范围合同补充（2026-10-30）
+
+FileSystem 的不可变 namespace 决定读取哪一个目标；工具的显式目录根决定该目标内哪些路径属于本次读取范围，两者不能互相替代。Glob、RepoMap、CodeSearch 的 construction-time `with_base_dir` 继续作为上界；runtime `working_dir` 只作相对路径基准。Grep 保留原 base、working_dir 与 native artifact-root 的允许根集合，non-native provider 不纳入本机 artifact 根；没有任何根时保留无约束读取。
+
+入口及递归实际读取目录项均使用被选 provider 的 canonicalize，复用现有路径 resolver 与 Grep 的原根集合，不新增 validator、权限模式或注册表。根内链接和同根 alias 继续有效；明确越界时整次调用返回范围错误，不返回已累积的部分成功结果。Glob、RepoMap 保留原逻辑路径用于 matcher、显示与分页身份。该检查沿用现有 pathname API，不声称能够原子防止检查后由外部并发替换 symlink；没有新增文件描述符身份或写入机制。
+
+路径校验必须解析实际 I/O 的原路径，不在 provider canonicalize 前折叠 `symlink/..`；已展开的递归目录项不再次拼接相对 base。缺失写目标沿同 provider 解析已有祖先再重建后缀；普通无显式根仍保原 best-effort 行为。保留原忽略构建目录和悬空条目跳过规则，typed provider 故障继续传播。
+
+验收覆盖原工具API的parent path、根/child链接、合法alias、相对base、symlink/..、Grep多根及目标namespace反例，并与旧生产代码使用同一断言；既有full/Glob matcher通过票不能替代目录范围验证。不新增公开API或产品配置，现成示例及官网工具用法保持，采用时由原作者核对对应说明。
+
 
 ---
 
@@ -54912,6 +55941,18 @@ Source: https://echo-agent.dev/en/docs/adr-0101-native-message-execution
 
 # ADR 0101：Framework 原生消息与统一执行终态
 
+## 2026-10-29：响应观察和不完整响应承载
+
+Root 已按完整原生消息目标批准 D1/D2，准确字段、空值与失败合同见所属框架[响应观察设计](../supreme/specs/provider-response-observation/design.md)。现有 `raw.extra` 和 output block 坐标都不能替代 response 级耐久观察。
+
+在现 Message／DeltaMessage 各增加同一可选 `provider_response` 固定记录；ChatResponse／ChatChunk 不再重复挂载。记录只含真实协议／provider／request、model、stop、status、incomplete_details 和原生 usage。可空原件缺失与显式 null 区分；同请求增量是完整观察快照，usage 不双计、跨请求不串。现 projection、摘要和 File／checkpoint/Fork/import 沿同一消息保留，模型历史 wire 剥该观察并保必要 reasoning 回放。
+
+`LlmError::IncompleteResponse { partial: Box<Message> }` 仅承载失败观察；不把 partial 当批准正文、成功 chunk、HTTP／ProviderError 或完成事实。Display 不输出部分正文，原 retry=false、Core AgentFailure 六字段和 SDK 有界投影不扩 raw。真实 provider error、HTTP、取消／资源／EOF 与 AgentEvent 结束权威不变；不新增 executor、Store、总线或状态机。该公共合同已批准，实际实现和各协议／消费者验收分别记录，本文不预授通过。
+
+Chat 不完整工具片段即使尚无原生响应 ID，也必须保留原始稀疏 index。复用现 Source String 与 output_index：只在 D2 partial ToolCall 坐标中用空 request_id 表示未知原生 ID，响应观察仍保 None；实际 ID 后到时回填原请求全部坐标。候选的 Option 字段变更会连带所有 Source／SDK codec，而现有 String 与消费者已经能表达该未知值，故不改变公开形状或新增平行 index。空值不能充当 runtime／跨请求 owner 或成功回放身份；Responses 原空 ID 拒绝不变，依据与范围见响应观察设计。
+
+> 当前范围说明：本页“旧变体暂留”、“默认wrapper”及“无runtime旧source兼容读取”的描述，均为已被ADR0104取代的迁移阶段记录；当前组合不再提供这些兼容路径。原机制/旧运行证据保留，当前切片按ADR0103/0104/0105执行。
+
 ## 状态
 
 已接受，按用户 2026-10-27 明确指令实施；实现与全链路验收未完成。
@@ -54947,12 +55988,10 @@ usage，复用原 ReAct、Guard/Critic/Stop 和 Managed 物理结算，不增加
 String 入口不再另持执行锁、租约或提前结算；execute 独立上下文、chat 历史语义保持。
 回调沿同一 canonical 数据解释，不恢复旧 Token/Think 事件或普通文字 Thought。
 
-旧历史来源由既有 `PreModelContextProjector::recovered_tool_origins` 空默认方法提供，
-新增运行期 `RecoveredToolKind/RecoveredToolOrigin`。EKO 的旧工厂判断留应用；框架仅验证
-来源与参数合同并归一模型副本。原恢复/reconcile、checkpoint、cursor/CAS 和日志保持
-权威，成对旧控制结果保为历史说明，不据旧参数重新发布 final。已核来源的旧 pending
-控制按下述同一恢复路径派生后继；无法结算的真实调用继续暂停，不补结果、不重放副作用。本轮真实归档没有旧控制调用，
-它只证明正常旧 managed 恢复，不能替代 pending 控制正控。
+2026-10-28 用户最新 Goal 明确开发期不承担旧版本兼容。旧内置 think/final 历史
+来源 getter、旧控制断点归一与专用 File recovery CAS adapter 已随本切片退役；
+不再根据旧消息参数、旧工厂版本或来源 hash 生成新的模型历史/最终候选。旧记录、
+日志、固定 tag 与既有恢复包保持原件，不为旧资料缺字段新增解析、迁移或补成功。
 
 以上是实际 Rust 公共 API 增量，包括 RuntimeConfig 的模型传输字段和 compression 类型
 再导出；无新增 Message/Checkpoint serialized 字段或自动三语言合同。SDK 须单独核验
@@ -54973,23 +56012,36 @@ source 默认适配生成的状态为 true；它不授予完成或副作用许�
 枚举的最大 variant 决定其整体大小。此次只调整间接存放，不宣称已测性能收益。
 内部 `ThinkOutcome` 与 mock 响应的同类大载体也只作装箱/解引用，不改变原消息或分支。
 
-## 已知旧控制断点的恢复后继
+响应观察加入后，私有 `IterOutcome::FinalText` 的观察以 `Option<Box<ProviderResponseMetadata>>`
+间接存放，构造后仅在原 driver 交付前解箱；Message／Delta 的公开字段及九字段序列化形状不变。
+公开 testing `StreamChunk::Delta` 直接 Rust 构造改为 `Box<DeltaMessage>`，例如
+`StreamChunk::Delta(Box::new(delta))`；全部合法 delta 原样保留，mock 消费时立即解箱。
+这是真实 Rust 构造签名变化，消费者与 inventory须如实同步；同一已接受字段的值保持无损，
+不新增 testing family、JSON 包装层或独立跨语言目录承诺。原 owner、停止、usage 和失败路径不变。
 
-严格 normal load 先沿原 Store 完成；只有结构或配对的 `SerializationError` 才进入
-纯读检查。原 typed unknown、取消、deadline、IO 错误保持原样；当前记录本来严格合法
-时也保留原错误，不用恢复 CAS 覆盖它。`inspect_runtime_state_for_recovery_with_context`
-默认 `Unsupported`，只有能够保证不 reconcile 写入的后端或薄 adapter 才显式实现。
+## 当前 typed 恢复与 context-view 派生
 
-`prepare_pending_control_checkpoint` 只返回已核来源的只读准备值。自动 stream 与显式
-Resume 在原 admission、execution mutex 和 close authority 下，按原 scope/version/cursor
-核准来源；旧 final 参数仅为历史候选说明，当前模型输出仍经过原 Guard/Critic/Stop、
-持久化与物理结算。真实 pending effect、投递债务、未知或 custom 来源继续由原 owner 处理。
+新执行与显式 Resume 均只沿原 RuntimeStateStore load/reconcile、严格 typed payload
+解码、tool-call/result 配对与必要输入投影进入原 ReAct。无旧 pending-control fallback，
+不会从历史 final 参数产生新候选，来源不明不降级猜测；runtime FinalAnswer 事件和
+on_final_answer 回调仍由原 Guard/结构化/Critic/Stop/持久化/物理结算权威生成。
 
-`RuntimeCheckpointRecoveryRequest` 经 `commit_checkpoint_recovery_with_context` 进入
-原 File Store 的同一 CAS kernel，保留 expected revision、epoch、锁、replay/conflict 语义。
-覆盖前保全并核对完整原始 bytes、SHA/size 和 snapshot；`_recovery_sources` 只作不可变
-恢复原件，不参与正常 runtime 扫描或执行。派生 checkpoint 是正常后继版本，旧 cursor、
-digest 和 journal 不回写。取消或超时观察不得释放仍未知的原 admission 与资源。
+原 File CAS kernel、scope/runtime 锁、expected revision、epoch、replay/conflict 与
+耐久 transcript apply/ack 不变。删除的只有历史来源检查、专用 recovery request/commit
+及新建 _recovery_sources 迁移包的执行分支；已经保存的所有旧恢复原件保持，既有
+路径不会因代码退役而被运行时删除、改写或自动迁移。
+
+`derive_context_view_checkpoint` 从当前严格 payload 派生 context-only view/cursor，
+保原 generation、transcript ordinal 和 context lineage。它由当前 runtime-only 保存
+主路径继续使用，不是旧控制工具兼容机制，不可随旧模块整删。当前恢复仍拒绝真实
+未配对 tool effect、投递债务和 stale hydrated base；取消/超时不代替真实物理结算。原React准备owner覆盖普通Store Load/Guard/准备
+await，并将同一owner转交producer；旧归一化移除不允许caller drop释放仍active的
+mutex/资源束。
+
+原兼容专用成功测试随人类裁决 retire，不写 matched/pass，也不新增 ignore/skip。
+旧模块中当前仍成立的严格配对、cursor损坏拒绝、context lineage、CAS replay、旧
+hydrated revision保护、绝对deadline和typed unknown资源保有断言改由新正常managed
+fixture覆盖。用户新注册同名think/final_answer普通工具仍保正控，不因所在旧模块误退役。源码候选与实际编译/运行验收分开，本ADR不预报新测试通过。
 
 ## 工具资源随同一 canonical 消息保留
 
@@ -55042,6 +56094,64 @@ verifier 是否开启。JSON Object/Schema 的 Unknown 原文、Guard 拒绝或�
 正文已公开而 Critic/Stop/最终确认尚未发生，再检查原工具结果回填、下一主请求与单次
 最终结算。关闭 verifier、晚到 Final、明确 continue、JSON、Guard、Critic 拒绝/错误、
 Stop 继续和 Reasoning 均为相邻反控；不使用额外模型或把 prompt 提醒当作发布证据。
+
+
+## 2026-10-28：有效 SSE 上游错误的统一运行期分类
+
+用户已明确选择仅扩展一个 `LlmError::ProviderError` 变体，保存 provider、error_type、
+原 `code: Option<Value>`、message 与 retryable。code 缺字段和显式 null 分别保留，未知
+type／code 不按 message 措辞归类。它是运行期 Rust 公共增量，不是新的错误 bus、loop 或 Store。
+
+不采用将 HTTP200 流内错误包装为 ApiError529、ToolError 或 InvalidResponse 的方案：前者
+伪造传输事实，后两者丢失供应商明确失败与协议损坏的区别。Malformed payload 仍可沿原
+解析错误拒绝；有效 Chat／Anthropic／Responses SSE error 和 response.failed 明确 error
+走 typed cause，先于 pending finish／usage 处理，不能被后续 DONE 成功覆盖。
+
+本次所有 provider 适配器一律 `retryable=false`。固定官方 SDK 只支持保 body 并 raise，
+不能据此给 overloaded／rate-limit／api_error 自动重试许可。真实 HTTP429／5xx 仍按原
+实际 status 和 retry kernel 处理；ProviderError 分类接原 predicate，不改变次数、退避、
+取消或 circuit permit，不在已开始的流内重新请求模型。截断、停止原因和 runtime 最终
+回答规则保持原义。
+
+AgentFailure／SDK 仍用既有有界投影，不新增 rawValue/provider_code 等 wire 字段；
+http_status 为 None，normalized cause code 为 llm_provider，原 type/code/message 只按原
+预算呈现，不承诺运行期 Value 端到端公开。SDK 外层 operation Retryability 仍 Never，
+可重试 cause 也不能授权重做已经可能产生副作用的 operation。EKO 沿原有限 RunTurn
+失败路径，不另起重试循环。
+
+采用后须分别验证 Core、真实 provider HTTP/SSE、ReAct 原 retry／流收尾、Subagent／
+Workflow 实际 facade、EKO 原有限 RunTurn、SDK Host 有界投影。旧公开 API 可运行的
+transport 反控先取得真实 RED；依赖新 variant 声明的合同在生产 hunk 后验证，不把
+编译缺类型当产品 RED。
+
+### 初稿验证状态（历史）
+
+当前仅完成 ignored 候选、source review、格式与静态应用检查，Rust、消费者、实际 API
+和新版 native 资格待各自真实执行；当前冻结批不热并。旧提案三类型 retry allowlist 已
+取消，不把旧 static pass 当 runtime retry 通过，不自动晋升 SDK pin 或官网镜像来源。
+
+
+## 当前组合对旧迁移阶段的替代
+
+本文件此前的旧source兼容读取、默认状态合成和旧共享setter/cache描述是迁移阶段记录；
+当前切片由ADR0103、ADR0104、ADR0105取代这些阶段承诺，不继续保留旧格式或默认成功
+wrapper。原生Started/终态、原source物理EOF、首因、执行与投递分离仍由原权威判断。
+进程内adapter_generated只用于拒绝非原source投影，已不存在默认adapter生成成功轨迹。
+
+运行时FinalAnswer事件/on_final_answer、安全最终正文、String便利、非流模型传输、
+当前typed cold/Fork/CAS/工具配对/副作用不重放和合理多Store能力保留。Provider原生
+签名/opaque回放及当前第三方wire字段不是旧内部兼容，不据此删掉。组合候选包含
+存储、配置和调用方迁移；所有源码资格与未来真实编译/运行/消费者/现场资格分别记录。
+
+## 公共请求与工具错误观察的后继字段
+
+统一接口已有 ToolChoice 但两个请求仍用 String，FunctionSpec 无法区分未指定和显式 strict，工具结果进入 Message 后无法保留 success 的错误观察。选择扩展原类型和既有 canonical 投影：请求复用 ToolChoice，函数新增可选 strict，Message 新增可选 tool_result_is_error；不增加 executor、store、结束状态机或跨产品策略。
+
+备选是继续解析字符串、从正文猜错误或关闭 capability；这些会丢形状/事实或绕过已承诺能力，因此不采用。函数参数 strict 和最终输出 schema strict 各自独立；Responses 未指定函数 strict 维持旧 false 默认。provider/model/endpoint 的真实条件仍由既有来源与适配策略约束，协议兼容和模型别名不授全族能力。
+
+后继影响包括手写 serde、File投影/managed import/冷恢复、原 ReAct publisher、typed final-only 请求及独立 SDK consumer。SDK 基础冻结后只由 consumers 组合交其唯一正式 owner。当前字段包为 GREEN-v02 上未编译候选，仅有静态格式/补丁检查；必须由 Frame/Root 在新冻结批中取得实际 RED/GREEN 与消费者证据。响应 metadata/截断 typed 观察仍待裁决，不能沿本段私自增加字段或改变 typed8 ProviderError/allfalse 与原重试内核。
+
+> 上段“GREEN-v02 上未编译候选”和“响应 metadata/截断 typed 观察仍待裁决”是字段包初稿的历史状态，不是当前结论。D1/D2 已获批准；当前 Framework 工作区已经采用 ToolChoice、可选 strict、tool_result_is_error、provider_response 与 IncompleteResponse，响应观察合同以上文“2026-10-29：响应观察和不完整响应承载”及响应观察设计为准。各次编译、协议回放、消费者、SDK 正式 pin、原生现场与发布仍按准确来源和实际回执分别验收；不回写旧候选或旧失败记录。
 
 
 ---
@@ -55156,6 +56266,234 @@ generation，不能互相冒替。取消无native时空events/Ok旁路的旧兼�
 与lint按各自精确源码票分别记录，不以源码审查替代运行，也不预授完整workspace资格。
 原metadata增量task99e4只归e0HEAD六份材料，不关闭原迁移45/#10/旧402。
 SDK Rustinventory/newGitPin、native/MainCI另验；原runtimeFinal通知/回调始终保留。
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0103-current-storage-records
+
+# ADR 0103：统一当前存储格式，取消旧记录和推断恢复
+
+## 当前状态（2026-10-29）
+
+方案已在 Framework 正式工作区采用，尚未提交发布。最新完整冻结组合
+`f327f63e34b7b4fea30d1c34f8559431fd2228172a2d427d8f1eac5912ee75c4`
+含 2831 个文件；同源 `cargo fmt --all`、格式检查以及
+`cargo check -p echo_agent --features subagent,testing --lib --locked` 均自然退出 0，
+编译零警告。此项只证明所选 feature 的当前根库及依赖可编译，不替代全部存储行为、
+SQLite 条件矩阵、examples、消费者、完整工程门禁、真实 native 或 main CI。
+其它 focused 结果保各自源码身份，不合并为本组合的全量通过。
+
+### 初稿阶段状态（历史）
+
+状态：已批准 NoCompat 目标的 ignored 组合实现；尚未编译、测试或正式接纳。
+
+## 背景
+
+框架提供可独立复用的运行状态和会话 Store。旧记录格式、旧计划文本和缺身份的恢复分支混在当前路径中，容易把兼容接纳误当成当前运行许可。已批准的退役清单取消这些旧义务，同时保留 raw Store CRUD、当前消息历史、原生签名、context-only lineage、普通 CAS 和稳定身份删除。
+
+本次属于通用存储机制，归框架；EKO 的删除 tombstone、产品历史和 SDK 的 wire/语言投影由各自 owner 同步。已有版本枚举、日志 manifest、project/restore 函数和 managed 删除协调器足以表达当前行为，不新增 validator、Store、模式字段或执行 owner。
+
+## 候选方案与决策
+
+保留多版本 decoder 会继续承担已取消的义务。新增 mode 字段或并行恢复 owner 会重复已有权威。因此使用既有 writer/decoder 和当前类型，删除兼容分支。
+
+1. 检查点 payload 只写读显式 `schema_version: 3`。裸 `Vec<Message>`、缺版本和版本 1/2 拒绝。cursor、pending effect、`context_only` 仍按当前语义可选；无 cursor 的 runtime-only/raw 保存合法。版本号不代替 transcript receipt。
+2. 文件运行状态 owner 只写读版本 2，必填现有 `RuntimeStateVersion`。raw writer 写 `Unmanaged { digest }`，同一 digest 可由原 CAS 采用为 `Managed { revision: 1 }`；managed/retired 使用原 revision、epoch、pending/ack 校验。raw `Deleting + checkpoint: None + Unmanaged` 崩溃切点保留。scope/index 的版本 1 是当前格式，继续保留。
+3. `AgentCheckpoint.current_plan` 从类型、比较、SQLite 列及读写中删除。计划权威仍为 revisioned TaskRun graph。消息、技能、blocked reason、工作目录、时间和原生内容继续保存。
+4. `ConversationRecord` 的 manifest 必填当前 `message_log`，内存 `messages` 不序列化；旧内嵌聚合布局不读、不自动迁移。当前 append、edit/shorten/Fork generation 替换、冷开、消息 ID 回收、提交字节前沿、孤儿日志清理和 managed receipt 顺序保留。
+5. `project_message` 为包括纯文本在内的当前 runtime Message 写完整 marker。`restore_message` 必须读到当前 marker；缺 marker、坏 JSON、缺 tool ID/name 或相互冲突的 tool 身份均拒绝，不补 `unknown_tool_call` 或空名称。带 marker 的消费者扩展仍由消费者拥有，恢复不改写原件。raw Store 仍可保存仅供展示的应用记录；保存本身不授予 runtime 身份。
+6. SQLite 当前 `CREATE TABLE` 直接声明完整当前列，删除旧 `ALTER` 补列和 duplicate-column 忽略。框架 SQLite backend、事务和普通 CAS 保留；EKO 不启用 SQLite。
+7. 删除无稳定 delete identity 的 `delete_persisted_conversation`、对应 context 包装及旧组合删除/清除推断分支。保留带调用者持久化 `ManagedConversationDelete` 的 managed 删除及原 incarnation clear 协调器；后者继续使用 deadline、settlement、原 scope owner/CAS 和 tombstone。raw CRUD 的显式 `delete_conversation`、`clear_runtime_state`、`clear_runtime_state_scope` 保留。
+
+## 保留约束与跨仓影响
+
+control 退役包已先合入。本次按函数合流，不恢复旧 RecoveryArchive、inspect/commit adapter 或工具来源猜测；`snapshot::derive_context_view_checkpoint` 及当前调用保持。普通 CAS 的 expected epoch/version、stale 拒绝、幂等 replay、pending effect 非重放、ack proof、scope retirement journal、锁、deadline、typed unknown 和原准备/producer owner 保留。
+
+SDK owner 必须同步 checkpoint wire、Host projection、fixture 和生成的语言合同，并解除已删除 helper 的 source-operation 路由。EKO owner 必须移除 checkpoint initializer 中旧字段；缺持久化 managed-delete identity 的旧 tombstone 不得临时制造新身份，须按当前产品恢复策略明确拒绝。框架 snapshot initializer、stream 混合 fixture 与框架/官网说明由各文件 owner 同步。最小提案及精确 base/after SHA 位于 storage-integration/proposals，不直接改跨仓正式文件。
+
+## 验证边界（初稿阶段历史）
+
+旧接纳和迁移测试义务记为 `retired_by_goal`，不计通过，不新增 skip。当前 cold/history/skills/resource/trace、字段保真、工具配对、签名/Parts/approved `None` 与空数组、digest 腐坏、CAS/replay、清除不重放和 owner-first crash cuts 保留或迁为当前格式。
+
+本轮仅可执行 standalone rustfmt、隔离 apply 和只读源码审查；没有 Cargo、类型检查、测试或应用运行证据。正式接纳前应先合齐所有 owner 的调用变化，在冻结组合快照按测试分类执行真实 tests-first 和当前回归；不得借用先前主批或旧候选结果。
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0104-canonical-agent-runtime-kernel
+
+# ADR 0104：Agent完整typed输入与单一原生结算边界
+
+## 当前状态（2026-10-29）
+
+单一内核方案已在 Framework 正式工作区采用，尚未提交发布。完整冻结组合
+`f327f63e34b7b4fea30d1c34f8559431fd2228172a2d427d8f1eac5912ee75c4`
+含 2831 个文件；同源格式化／格式检查和
+`cargo check -p echo_agent --features subagent,testing --lib --locked` 均自然退出 0、
+编译零警告。同源四项响应观察运行时测试也已实际通过，覆盖工具／Guard／Stop、
+用量、请求隔离及失败观察的冷读／Fork/import；它们不代替本 ADR 全部内核场景。
+callback／Hook、examples、完整条件矩阵、EKO／SDK、真实 native 与精确 main CI
+仍按各自来源和实际门禁验收，不能由根库编译或四项通过提前授予。
+
+### 初稿阶段状态（历史）
+
+状态：Root批准NoCompat目标的ignored组合候选。Framework当前producer、consumer、callback与fixture按原规则合流；跨仓owner提案未正式采用，本轮没有Cargo或运行资格。
+
+## 背景
+
+当前trait虽然有Message+invocation方法，默认仍能借Text/聊天→execute回退并保留却不处理history/cwd/tool上界；默认stream wrapper可依据FinalAnswer与EOF合成Started/Settled及重排身份。TurnDriver按是否看到Status选择两套完成语义，普通正文在旧模式能成为Completed。callback带ID默认又降级为旧无ID。这些是旧协议表面，不等价于当前CustomAgent、String、Store或非流能力。
+
+## 候选方案
+
+1. 保原默认多模式加更多flag：仍有约束静默丢失和真假终态混用，不采用。
+2. 新建Agent运行请求/执行器或第二source owner：重复现有typed Message/invocation/ReAct，增加权威，不采用。
+3. 复用现两个typed producer，String/raw/非流便利沿同kernel，只认原Status与EOF：采用。
+
+## 决策
+
+Chat与Execute各保当前上下文语义，以现chat_stream_message_with_invocation_context和execute_stream_message_with_invocation_context为primitive。默认不支持在source开始前明确拒绝，不压Message/Parts、不吞runtime/history/cwd/readonly/positive bound/cancel/resource/input-drain。String转换只增加Message::user；自定义Agent可以显式实现当前两个primitive，保合理能力。ReactAgent/AgentHandle/ProjectAgentAdapter已有覆写由其owner精确保留，不回灌整文件。
+
+非流String只归并同一source，复用AgentOutputProjection，原EOF后验证真正Started/同owner终态/确认正文，保首个原Result错误和必要观察，不从文字完成。运输层FinalAnswer仍是运行时安全正文通知，不为Execution/TaskRun/Goal签成功。TurnDriver只真实Settled可完成，真实usage只LlmUsage，不依ThinkEnd；tail failure和sink failure不能被晚到成功洗掉。取消仍由原producer结算，不由投影器制造Status。
+
+callback当前*_with_id必须接原call id；旧no-ID实现者先由F/SDK/EKO owner迁完再删方法。Token/Think enum同理，producer processor和所有实际消费者先迁；external setter原共享可变状态同ReactAgent snapshot/Handle/EKO adapter同步退，真实configured cwd不是兼容垃圾不能连删。event_envelope的current合同不能猜外部缺失metadata。
+
+## 影响与迁移边界（初稿阶段历史）
+
+当前三文件生产hunk与最终Core旧表面移除hunk分开交付，以调用表列明同期owner依赖。源与回归在F当前firstbatch期间冻结，本线只候选。原driver raw-only fixture须改为显式current typed producer与真实自身Status，原物理EOF/unknown/首因/资源/投递回归不得删；只旧wrapper自动成功、旧TokenThink/UI兼容要求由人类取消，按retired记录，不加skip/matched。
+
+本ADR的Agent内核切片不拥有Store schema；组合的当前存储格式单独遵循ADR0103。SDK pin、EKO产品策略、安全/权限门控不由本切片变更。可选数据库Store仍合法，原body/Reasoning/provider签名/opaque保留；恢复和副作用不重放仍是新版本必须功能。
+
+## 参考与证据限制（初稿阶段历史）
+
+已按规则查官方OpenAI与Anthropic参考：web404、GitHubreset、OpenAI403、Anthropic区域不可用页，未取得正文。完整尝试回执references/，不以HTTP200或失败搜索声称跨产品共识。此取舍依本仓已存在primitive/collector和实际调用路径，不新造机制；外部实现对等性未验证。
+
+## 验收与文档示例（初稿阶段历史）
+
+tests-first定义当前String/typed/rich input、无终态/foreign/尾错、原取消身份/EOFguard、driver完成等反控；原Core output_projection/getter与F首批回归不改。本轮只有静态format/apply/afterSHA资格，实际Cargo与当前18新native定义、原矩阵必须F新窗运行。callback示例demo11的with_id函数hunk单独交F，列其它callback/macro/SDK同步；example原已有可执行链仍须owner同批编译。官网由其owner从正式源投影，不由本线跨写，未正式落地前不宣传完成。
+
+## ReAct调用值与观察API的合流决定
+
+旧 `set_external_context/clear_external_context`、`LegacyExternalContextSnapshot`、capture/swap/build helper 和 Agent 共享 external Mutex/current trace 缓存退役。现有 `AgentInvocationContext` 是唯一调用输入；plain入口先取默认值，排队前由原 close authority 准入cancel并写回同一值，admission/Guard/prepare/final snapshots均从它构造。历史、cwd、readonly/工具正上界、预算、取消、trace sink、delegation、lineage/uplink与匿名resource guards仍按原None语义复制；config conversation fallback保留，runtime.run_id为None是合法状态，绝不回填turn UUID/trace/conversation。
+
+`Agent::current_run_id` 保留原公开签名。SDK `source_operations.rs` 的Session投影与该公开operation实际消费它，不能仅因CLI未调用而删除。观察值只放在现有ActiveTurn内的一个Option<String>，由原lease同incarnation安装和清理；没有active或原runtime.run_id为空即返回None，不持有完整context/resource guards，不产生第二owner/cache。流的transport observation身份可以单独用turn fallback，不能反写该业务run id观察值。
+
+trace沿已有 `start_scoped_trace_run` 返回值显式写入对应快照。传最终admission config.conversation_id，防runtime conversation为空时丢配置fallback；append/finalize/CheckpointResumed均接相同trace值。手动压缩与standalone resume各有本操作scoped trace。Guard前managed恢复只把本次恢复事实暂存当前snapshot，Guard后以占位输入开trace再发布，不提前保存原用户输入。普通cold Chat/Execute由prepare透传同一snapshot并记录实际恢复；Store typed unknown/deadline/CAS错误原样返回，交原ReactStreamTurnOwner保债。
+
+delegate_*便利API保留；plain默认configured conversation、runNone及独立cancel；显式runtime_context参数继续完整值传递，不从getter逐项重拼丢失isolation/lineage/uplink/guards。Core ToolContext原本不携isolation_id，本次不擅改跨层wire；该原能力边界单列由Core owner判断，不能虚称本组补齐了它。
+
+公开差异：setter方法退休；snapshot from_agent仅取配置和默认调用，调用级输入须用现有from_agent_with_invocation；current_run_id由共享预置值收敛为当前ActiveTurn观察。delegate/resume/manual-compress公开签名保持；恢复/prepare的crate-private签名新增显式trace snapshot。没有新SDK wire字段或接受集。本组仅源码/格式/隔离apply资格，保全旧source和失败证据；当前Guard、trace、压缩、脱敏、失败隔离、资源和副作用控制已迁定义，未运行，不用取消旧setter专用验收冒充pass。
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0105-current-config-and-plugin-inputs
+
+# ADR 0105：当前配置形状与插件输入边界
+
+## 状态
+
+当前方案已在 Framework 正式工作区采用，尚未提交发布。完整冻结组合
+`f327f63e34b7b4fea30d1c34f8559431fd2228172a2d427d8f1eac5912ee75c4`
+含 2831 个文件；同源 `cargo fmt --all`、格式检查和
+`cargo check -p echo_agent --features subagent,testing --lib --locked` 均自然退出 0，
+编译零警告。该限定不代表所有权限输入／插件生命周期场景、全部 feature、examples、
+EKO／SDK 消费、完整矩阵或真实 native 已验；后继按准确来源分别验收。
+
+### 初稿阶段状态（历史）
+
+2026-10-29 候选，按用户最新“开发期无需兼容”裁决与 Root 明确范围准备。只写 ignored
+合流 Tree，不表示正式源码已采用或编译/运行已通过。父代理拥有唯一正式整合责任。
+
+## 背景
+
+PermissionMode 当前已有八个稳定 ID，但 FromStr/Serde 还接受旧名称、大小写与空白
+归一。GUI writer 实际发送 canonical ID，SDK 三语言仍有旧别名 parser，需要所属
+owner 同步；去别名不能改变权限决策、默认值或用户直接打开终端/MCP的行为。
+
+Framework ModelConfig 与 SourcedModelConfig 的 config/facts 侧车分成两个形状，前者
+进入 FrameworkConfig 时不能自然携带侧车中的 provider、exact-model 与 caller 来源。
+这些来源事实及直接 context_window 选择是当前合理能力，不因 EKO 是否使用而删除。
+
+A2A/LSP 已具名退役后，prepared/registry 仍专门发现、读取、冻结、hash 和缓存
+lsp.yaml，只维持旧文件诊断/冻结义务。用户最新裁决取消该兼容义务，但保留插件当前
+Skill/Hook/MCP/Agent/Tool、泛型 frozen document、generation、reload和rollback能力。
+
+## 候选方案
+
+1. 继续保留 alias、两种配置与 retired LSP 文档容器：延续已取消义务，不采用。
+2. 去掉整个配置来源、context_window、通用冻结或插件生命周期：会损害当前能力，不采用。
+3. 只保 canonical ID，单一 ModelConfig 承载 facts；插件只消费当前组件，混合断言
+   迁到保留文档：采用。执行、权限、resolver、Store和插件发布仍各用原有权威。
+
+## 决策
+
+PermissionMode 只接受 id() 返回的精确字符串：default、plan、auto-edit、full-auto、
+auto、bubble、dont-ask、strict。旧 ask/accept-edits/autoedit/acceptedits/fullauto/
+bypass/bypass-permissions/bypasspermissions/dontask/strict-confirm/strict-confirmation
+与大小写、首尾空白变体不再解析。八个枚举值、allows_write/requires_interaction/
+uses_classifier和 PermissionPolicy 本体保持；这只收敛输入，不加任何产品权限闸。
+
+ModelConfig 新增 facts: ModelFactInputs。with_model_facts 返回同一 ModelConfig，
+resolve_model_profile_at 与 apply_to_llm_config读取同一来源输入。provider/exact-model/
+有序 caller records 的 source/provenance/version/freshness 不压平、不重新猜测；
+SourcedLlmConfig 仍是当前 client 构建和能力刷新所用的合理 typed 值，不按名字机械删。
+
+当前 context_window 字段及其设置 Some/清除 None 语义保留，它仍形成同一 resolver 的
+CallerOverride，provenance仍为 FrameworkConfig::ModelConfig.context_window；原记录
+version标签即使含历史词也不是运行时兼容分支，不为文案删来源。清除直接 window 不
+抹去 facts；清除 facts 不抹去直接 window。协议选择、温度、max_tokens和压缩设置不变。
+
+移除 SourcedModelConfig Rust类型及其旧 {config,facts} Serde形状，不加兼容type alias。
+ModelConfig 保留当前默认配置语义，拒绝未知字段，以免旧嵌套 config 被忽略后假成功。
+这有真实 Rust public API/Serde形状变化，不能声称“无API变化”：新增 facts字段，
+with_model_facts返回类型改变，旧侧车类型/方法退役；src/lib prelude由父代理同步。
+
+插件不再专门 probe、read、freeze、hash 或缓存 lsp.yaml，移除 _retired_documents 与
+LSP诊断去重。未识别的旧文件属于用户原件，不删除、改写、迁移或恢复执行，也不靠
+旧文件内容改变当前 generation 身份。当前能力是否可用仍由现组件合同决定。
+
+泛型 freeze_document 仍冻结保留的当前 subagent文档；同一普通文件检查覆盖错误类型、
+UTF-8、消失和链接。该检查防本地误配 FIFO/device 阻塞框架，不增加执行权限门控。
+Skill/Hook/MCP/Agent/Tool的声明、变量替换、规范 JSON、同代hash、缓存失效、依赖
+顺序、wire/rollback、取消和清理责任保持原路径，不建立第二生命周期或来源reader。
+
+## 影响：当前调用方与跨仓边界
+
+Frame 当前 ModelConfig 构造除本文件测试外均使用 Default/FrameworkConfig默认；
+src/lib prelude仍需由父代理移除SourcedModelConfig导出。SDK Host当前完整literal位于
+core_profile/wire.rs::framework_from_wire，需要显式 facts: Default::default()；
+现 SDK wire的context_window/config_version与凭据读取/擦除语义不变，不新增SDK字段。
+
+SDK accepted-external-contract已有 ModelConfig现字段，尚未包含 SourcedModelConfig
+或 ModelConfig::with_model_facts身份；新增 facts不会自动加入接受集或冒充三语言合同。
+SDK owner独立核其当前Rust inventory/接受边界与三语言 PermissionMode parser/测试。
+本候选不改SDK wire、accepted manifest、pin或依赖风险合同，未取得新的SDK wire授权。
+
+EKO GUI使用mode.id()写出当前四个选项；旧normalize spelling由其owner去掉。产品对
+internal plan/auto 的GUI呈现仍归EKO，不在本框架切片重新分类或设计六类工具。
+具体 source proposals、精确base/hash和未采用状态保在本批owner-proposals中；本线不
+写CLI/SDK正式文件。模型配置38章与官网镜像由所属owner按新来源同步，不造英文副本。
+
+## 验证与验收变化
+
+旧别名成功、旧侧车shape和 retired LSP冻结/诊断/identity义务retire，不新增skip或写成
+matched/pass。当前八ID roundtrip/旧拼写拒绝、来源fact Serde→resolver→AgentConfig/
+LLM投递、直接window与facts独立清除的断言保留或新增。
+
+旧LSP夹具中的泛型文件错误/缓存/链接/只读冻结不变量迁到当前subagent文档；保留组件
+的四类内容变动、依赖顺序、变量/配置hash、错误隔离、wire/rollback与清理测试仍完整。
+本轮只可有ignored apply/字节/rustfmt及有限源码复审；Cargo/typecheck/实际回归/完整
+矩阵、SDK消费者和native验收均待后继真实窗口，不借旧票标新快照通过。
+
+## 参考与取舍依据
+
+复用现 ModelProfileResolver/ModelFactInputs 的来源优先级与 freshness，不另造resolver。
+配置形状和别名处理采用 Serde 官方 derive机制（rename、alias、default、
+deny_unknown_fields）；本机已安装的serde_derive 1.0.229官方源码与当前Cargo.lock
+registry身份/checksum核对，来源收据在本批references/local-primary-source-receipt.json。
+官方网页检索不可用、直接网站403及GitHub连接失败均保为原事实，不声称已在线验证。
+这里的兼容退役取舍由人类最新裁决决定；Serde只提供精确类型解码，无权限或产品政策。
 
 
 ---

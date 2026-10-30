@@ -825,4 +825,28 @@ export const frameworkAdrDocs = [
     },
     filePath: './content/echo-agent/adr/0102-canonical-agent-consumers.md',
   },
+  {
+    slug: 'adr-0103-current-storage-records',
+    title: {
+      zh: 'ADR 0103：统一当前存储格式，取消旧记录和推断恢复',
+      en: 'ADR 0103：统一当前存储格式，取消旧记录和推断恢复',
+    },
+    filePath: './content/echo-agent/adr/0103-current-storage-records.md',
+  },
+  {
+    slug: 'adr-0104-canonical-agent-runtime-kernel',
+    title: {
+      zh: 'ADR 0104：Agent完整typed输入与单一原生结算边界',
+      en: 'ADR 0104：Agent完整typed输入与单一原生结算边界',
+    },
+    filePath: './content/echo-agent/adr/0104-canonical-agent-runtime-kernel.md',
+  },
+  {
+    slug: 'adr-0105-current-config-and-plugin-inputs',
+    title: {
+      zh: 'ADR 0105：当前配置形状与插件输入边界',
+      en: 'ADR 0105：当前配置形状与插件输入边界',
+    },
+    filePath: './content/echo-agent/adr/0105-current-config-and-plugin-inputs.md',
+  },
 ];
