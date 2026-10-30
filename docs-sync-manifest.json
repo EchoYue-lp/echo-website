@@ -1619,9 +1619,9 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "a71a7542d1e6b84b78300fa50ca985860b07190f",
+    "reviewedRevision": "6c0bc7879bc2b3b0dd3b7dd086913405cbafe035",
     "status": "source-reviewed-with-execution-limitations",
-    "authority": "中文为当前产品主维护来源；中文产品页已对照本次clean reviewedRevision的完整文档来源、直接实现与页面承诺完成源码复审。69份英文源与现存英文产品页保留历史参考，不代表当前中文的同步译文。sourceFiles完整登记本次提交来源，旧1a355/138审阅身份及原失败保留在Git与原日志。原31/47/13定向与两条fresh精确风险门禁各按其原快照和范围成立；源码审阅、定向测试、原生App/真实平台、性能、全矩阵、SDK正式pin、main CI和发布资格分别核验，本次不宣称全链路验收或已发布。",
+    "authority": "中文为当前产品主维护来源；中文产品页已对照clean 6c0bc7879bc2b3b0dd3b7dd086913405cbafe035相对原A71的完整文档差异、相关直接实现及页面承诺完成源码复审。69份英文源与现存四个英文产品页保留历史参考，不代表当前中文的同步译文。sourceFiles和8份页面摘要由原生成器登记；A71及更早审阅和失败保原身份。Root正常本地保存所承接的8项Rust、3项前端、后继Source、功能链source-only组合、风险controls8与两次fresh scanner1/gate0分别按原task与globalClosure未检查范围成立，不由官网重跑或合并为全链路验收。真实新App、SSH、手机、IM平台、quiet/性能、SDK正式pin、精确main CI、发行与网站部署继续独立验收。",
     "sourceFiles": [
       {
         "sourcePath": "docs/en/adr/0001-agent-collaboration.md",
@@ -1929,7 +1929,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0008-taskruntime-bounded-query-projections.md",
-        "sha256": "d4b5332fde44b49fa5fc9cc443078f23dae8ff8052266d9d7fb45ec5b48ca650"
+        "sha256": "ad73b67e07ec6a8a1d3ecd8e39d5347facbd130a1b40e5fb78b78f4131c2ead7"
       },
       {
         "sourcePath": "docs/zh/adr/0009-taskruntime-async-io-and-ipc-boundary.md",
@@ -1969,7 +1969,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0018-typed-tool-artifact-projection.md",
-        "sha256": "dde1b2a62afb38655ffe4d66233bfbc25ae11c821b838ade9244344f8ab654d0"
+        "sha256": "7e75621dd36d3ce493937dfbe19e55fe9f01da673de72c3bf0903c29074552e9"
       },
       {
         "sourcePath": "docs/zh/adr/0019-unified-application-services-composition.md",
@@ -2033,7 +2033,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0034-full-direction-agent-communication-matrix.md",
-        "sha256": "b13f6b1766e565732360b7877707be50d1fe30ffe1e4545a283ad9b7679f91f4"
+        "sha256": "a02d4dd0c950254dbd1da2e7edae26135084cdc31f27a07a96d516b0392b531f"
       },
       {
         "sourcePath": "docs/zh/adr/0035-conversation-archive-projection.md",
@@ -2045,7 +2045,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0037-unified-turn-run-binding.md",
-        "sha256": "8befb1bb6aa002ad318d8d97bab837307e22e2c1641c4a91faa58d98f0c5d252"
+        "sha256": "1deb82a09de7063f1d72f9c1de19f9928e39157fbee56ea909109e25086874b5"
       },
       {
         "sourcePath": "docs/zh/adr/0038-builtin-creator-skills.md",
@@ -2081,15 +2081,15 @@
       },
       {
         "sourcePath": "docs/zh/adr/0045-managed-conversation-lifecycle.md",
-        "sha256": "edd3f910b7e683248fa3f11d62f6a955d8ec706945aa339325024f3edb0dbb50"
+        "sha256": "aa5bbad4439f97a8b2a912d2b1e9996078fcc175a682658c418b2f175c2c7697"
       },
       {
         "sourcePath": "docs/zh/adr/0046-plugin-generation-fail-closed.md",
-        "sha256": "59f8fd76e3736c3c8a95ee4f22d02c94837847b4876e8f733ec45cce75d57513"
+        "sha256": "9d47198d43bd55e808c75b26869568fa8c854d300b155fb8c33af62ae777a6e0"
       },
       {
         "sourcePath": "docs/zh/adr/0047-automatic-agent-collaboration.md",
-        "sha256": "17fbe39e7bb171036a7b054fcf590762e96ab2fd1c9e8cc333089a5027590c2c"
+        "sha256": "7dd5358407e8a58ec3130fd31f836916e715227351807d40ebe8b7d89b5d54d3"
       },
       {
         "sourcePath": "docs/zh/adr/0048-context-compression-product-policy.md",
@@ -2105,7 +2105,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0051-ssh-terminal-sessions.md",
-        "sha256": "29d9c396a0dc8bd6cf70e797c2457e353e66a24bfea45355d98b15893427083e"
+        "sha256": "e2e2d900c576df3b0fa2942e2225dde2adfba7d5ebeb32e5e89172229aa48c30"
       },
       {
         "sourcePath": "docs/zh/adr/0052-gui-subagent-depth-policy.md",
@@ -2129,11 +2129,11 @@
       },
       {
         "sourcePath": "docs/zh/adr/0057-native-messages-and-progress-policy.md",
-        "sha256": "0ea6fabacf942f302ee4a0c75ddf63d044925f7b57a7dd9df79c7e8df3f8f916"
+        "sha256": "112bc3aeb55f9d0154e344f5c03a700ab4128b1ba31ff8e144b09e30f84da7f6"
       },
       {
         "sourcePath": "docs/zh/adr/0058-im-native-output-projection.md",
-        "sha256": "c05dde470b45000e26c0b2b756f94d0747325e87e21007a3a0dcbaa2b9c7f2a0"
+        "sha256": "45864769ade639305b3645a5676dba76e815c005abd52e8fdf5e1be32af01c54"
       },
       {
         "sourcePath": "docs/zh/adr/0060-subagent-native-observations.md",
@@ -2153,7 +2153,7 @@
       },
       {
         "sourcePath": "docs/zh/architecture/performance-baseline.md",
-        "sha256": "1a56cd3f96eb015ffb26f403d0d36f0c06c63919901d26f407c20be438132a2e"
+        "sha256": "5e9f6d97a14585d4548e12d3d87502f4d8791f66582951489b0686ca491560e0"
       },
       {
         "sourcePath": "docs/zh/architecture/persistence.md",
@@ -2165,7 +2165,7 @@
       },
       {
         "sourcePath": "docs/zh/architecture/runtime.md",
-        "sha256": "c040d6762b4bd58610e0411569c9989f810733d090268dce281b0683584c4508"
+        "sha256": "9b4238c021f6dde33411569af64fa62c217e82661ab10eef5bb20082282b142d"
       },
       {
         "sourcePath": "docs/zh/configuration.md",
@@ -2185,7 +2185,7 @@
       },
       {
         "sourcePath": "docs/zh/guides/gui-hitl-dialog.md",
-        "sha256": "c74a7d6ae968f295d2cda708d358aa39b2eef4ed7b0756295de4cc557e093c7e"
+        "sha256": "87a2308b50c333f8dce065be8af357ba3da8cc4927501dd8be3ded9826266a3d"
       },
       {
         "sourcePath": "docs/zh/guides/gui-task-runtime-panel.md",
@@ -2235,7 +2235,7 @@
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "9706989ba160745010731e6758ba01652aef816e787ae05e520076fdb4a2ccd6"
+        "sha256": "37c28458ce8abadc92d3011bc7cd2e9151f02d942871647dc0bf074489968735"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
@@ -2243,11 +2243,11 @@
       },
       {
         "destination": "src/docs/content/eko/zh/overview.md",
-        "sha256": "2c7fe37c9e1ef2af7637b68af732b51247f47a0d172f05fc0228fbc1582ad7ad"
+        "sha256": "5ab219ddbc17bf65be6c2be1511362e420cc31e9ca40d520c267d94b13065310"
       },
       {
         "destination": "src/docs/content/eko/zh/storage.md",
-        "sha256": "60ce9321cc86d97fe03ec2d5d3ff4639e7e7ce576568de433b7452dfeb4b386b"
+        "sha256": "cebe7c90f21e72da277389569f1d03d4d485c93284b78206dd8f99bc0d5d5317"
       }
     ]
   }
