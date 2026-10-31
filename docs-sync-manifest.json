@@ -1619,9 +1619,9 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "66760c3f5b950843a7038bc7fd95e48a4850624a",
+    "reviewedRevision": "6fc282f9df33d7898ac95f84c8ff29cb2fce2e01",
     "status": "source-reviewed-with-execution-limitations",
-    "authority": "中文为当前产品主维护来源；在原clean A71/6c0产品复审上，已核对6c0经39c到clean66760c3f5b950843a7038bc7fd95e48a4850624a的实际差异和相关实现。148来源中两份中文风险/性能文档更新，现有8页正文保持；69份英文源和4历史英文页不作当前中文同步译文。原normal生成器登记来源和页面摘要，旧reviewedRevision、失败及原执行epoch保留。39c同cut投影与667性能工程来源修复不增加公开API；局部Run1000测量不作为网站数值、速度比或完整性能保证。原风险/Source/工程/App各保真实具名来源与task/globalClosure未检查范围，来源同步不授SDK/new mainCI、真实App交互/安装/native paint、手机/SSH、发行或部署资格。",
+    "authority": "中文为当前产品主维护来源；在原clean667产品复审上已核对到clean6fc282f9df33d7898ac95f84c8ff29cb2fce2e01的正式runtime文档与相关实现。148来源仅中文runtime.md摘要变化，中文storage收窄普通GUI无plan轻量回合不进UI，明确IM/cron无plan原Run也进入最近任务与历史，其余7页正文保持；69历史英文来源与4历史英文页不作当前中文同步译文。IM/cron原Run历史与最近任务、受控continuation根身份和真实surface结果、journal诊断不逐条发手机沿原应用权威，不新增Framework/SDK API或第二历史store。原329pass/6性能ignore、891pass/4skip的真实runner来源、应用taskSource/final0/globalClosure未检查和risk scanner1/独立gate0各保原执行范围及失败，不重跑或合并为新native/mainCI/发布票。最新6fc App仍待构建，原667 App、SDK正式采用、旧性能和真实手机/SSH/安装/paint/发行/部署资格分别核验。",
     "sourceFiles": [
       {
         "sourcePath": "docs/en/adr/0001-agent-collaboration.md",
@@ -2165,7 +2165,7 @@
       },
       {
         "sourcePath": "docs/zh/architecture/runtime.md",
-        "sha256": "9b4238c021f6dde33411569af64fa62c217e82661ab10eef5bb20082282b142d"
+        "sha256": "fd20da5de552e68b746506d11b4b1b9ebc194d66ad6386f3f965df1c147e9815"
       },
       {
         "sourcePath": "docs/zh/configuration.md",
@@ -2247,7 +2247,7 @@
       },
       {
         "destination": "src/docs/content/eko/zh/storage.md",
-        "sha256": "cebe7c90f21e72da277389569f1d03d4d485c93284b78206dd8f99bc0d5d5317"
+        "sha256": "45acce68ecf0e21772f8f37edbc84c5cdbdec67c9b41e384b5f3fe8606ae4c61"
       }
     ]
   }

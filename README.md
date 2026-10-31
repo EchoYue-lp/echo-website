@@ -4,9 +4,9 @@
 
 品牌展示沿用 `/eko` 路由，官网、发现索引与文档首页展示新名称和音标。框架镜像与产品投影分别记录其真实来源身份。
 
-2026-10-31 当前产品来源：在 clean 应用提交
-`6c0bc7879bc2b3b0dd3b7dd086913405cbafe035` 的既有产品复审上，已核对经 `39c28e7` 到
-`66760c3f5b950843a7038bc7fd95e48a4850624a` 的实际差异、两份中文来源文档及相关实现，现有8页产品承诺保持。
+2026-11-01 当前产品来源：在 clean 应用提交 `66760c3` 的既有产品复审上，
+已核对到 `6fc282f9df33d7898ac95f84c8ff29cb2fce2e01` 的正式 runtime 文档及相关实现差异，
+中文本地数据页同步区分普通 GUI 轻量回合与 IM／cron 无 plan 运行的历史可见性，其余7页正文保持。
 再由原同步器正常生成 `reviewedRevision`、148 项 `sourceFiles`（79中文、69历史英文）及页面摘要。
 状态为 `source-reviewed-with-execution-limitations`。现存四个英文产品页明确标为历史参考并链接当前中文；
 不新增英文副本，也不把历史英文声明为当前中文的同步译文。旧 `1a3551a0…`／138项审阅身份和原失败保留在Git与原日志。
@@ -17,7 +17,7 @@ scanner自然1／精确gate0分别保留。它们均只按原task／globalClosur
 
 2026-10-27 的中文产品页纠正普通 Steer／Goal 文案，并同步已提交首页与聊天呈现。依据是应用提交 `0ebd8984be26affc32a130df7a26b128494d6c65` 中 `docs/zh/adr/0037-unified-turn-run-binding.md`、`docs/zh/adr/0048-context-compression-product-policy.md`、`docs/zh/architecture/runtime.md`、`docs/zh/features.md` 与 `docs/zh/getting-started.md`。普通 Steer 交主模型结合历史理解，已有 Goal 仅用户显式修改或结束；原生消息和后继完整原文恢复保留各自未完成验收。
 
-当时 `docs-sync-manifest.json` 保留旧完整应用审阅的 `reviewedRevision` 与 `sourceFiles`，只刷新中文投影摘要，状态为 `policy-correction-pending-source-review`。后继退役纠正使用 `source-correction-pending-source-review`；这两次页面纠正均不代表dirty来源通过。它们与原失败作为历史保留；clean A71／6c0 的复审是前置历史，当前产品来源以上述 clean 667 的复审和正常生成结果为准。
+当时 `docs-sync-manifest.json` 保留旧完整应用审阅的 `reviewedRevision` 与 `sourceFiles`，只刷新中文投影摘要，状态为 `policy-correction-pending-source-review`。后继退役纠正使用 `source-correction-pending-source-review`；这两次页面纠正均不代表dirty来源通过。它们与原失败作为历史保留；clean A71／6c0／667 的复审是前置历史，当前产品来源以上述 clean 6fc 的复审和正常生成结果为准。
 
 官网只负责展示。框架行为以 [`echo-agent`](https://github.com/EchoYue-lp/echo-agent) 为准；
 Eclip 产品行为以 [`echo-agent-cli`](https://github.com/EchoYue-lp/echo-agent-cli) 为准。
@@ -91,6 +91,16 @@ IM错误前有限排空、共享Store装配和当前只读查询边界；测试�
 两份摘要变化，现有8页正文、路由与Framework镜像保持。39c的同cut健康投影复用仍以原journal、完整派生值和耐久性为约束；
 667的性能runner／report来源修复及局部Run1000结果保留各自真实执行时点，不在官网发布局部数值、速度比或性能保证。
 原风险合同及fresh门禁仍按具名来源成立，来源同步不授予未来输入、native paint、安装或发行资格。
+
+2026-11-01 后继沿原同步器将应用来源推进到 clean `6fc282f9`。148项来源仅
+`docs/zh/architecture/runtime.md` 摘要变化。中文本地数据页将原“无 plan conversation run 不进入任务 UI”收窄为普通 GUI 轻量回合，
+明确 IM／cron 的原 Run 即使没有 plan 也进入最近任务与历史；其余7页正文与历史英文资格保持。
+本次核对 IM／cron 的原 Run 纳入最近任务与历史、续接根身份和真实 surface 结果，以及内部诊断保留在 journal、手机不逐条接收的边界；
+状态仍由原 TaskRun 与 typed Terminal 决定，没有新增 Framework／SDK API 或第二历史 store。
+应用原相关 Rust 组329通过、6项原性能ignore；完整前端891通过、4项原skip并保留真实runner参数；
+应用 task Source／final 为0、globalClosure未检查，官方风险scanner自然1与独立精确gate0分别保留。
+这些结果均按各自来源与范围成立，未重跑或合并为全链路票；6fc的最新App仍待构建，原667 App不取得本次原生验收资格。
+
 仅有中文的原生合同沿原 Markdown 来源回链访问，不为形式新建英文副本；本地源码审阅不授已发布资格。
 assistant phase、reasoning、工具事实、最终发布与 TaskRun／Goal 完成分别验收；本地测试或站点构建不代表真实原生窗口已通过。
 SDK 的正式 pin 仍按其独立来源核准，官网不宣称已更新；网站没有部署。

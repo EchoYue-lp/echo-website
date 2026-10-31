@@ -29061,7 +29061,7 @@ Eclip 面向用户自己的机器，产品层使用普通文件或内存保存�
 - TaskRuntime `events.jsonl` 是 turn-run Goal、用户中途约束与正式任务执行状态的事实权威；`checkpoint.json`、`plan.json`、`run-state.json` 以及有界 artifact/review history segment 都是可重建投影或索引。
 - Task journal 保留 canonical 执行事实，包括中断请求以及结果缺省与显式 null 的区别。原 owner 的未结算 intent 跨重启保留，阻止该 run 重复执行，同时允许恢复其它无关 run。
 - 已确认物理执行完成但结算保存失败时，由同一 owner 仅重试结算持久化与确认，不重新运行 Agent 或工具；资源保留到匹配的完成事实获得持久确认。
-- 每个 store-backed turn 都急切绑定 TaskRun。typed execution provenance 区分内部 conversation turn 与 orchestrated run；无 plan conversation run 保留 journal，但不进入任务 UI。
+- 每个 store-backed turn 都急切绑定 TaskRun。typed execution provenance 区分内部 conversation turn 与 orchestrated run；普通 GUI 的无 plan 轻量回合保留 journal，但不进入任务 UI。IM／cron 的原 Run 即使没有 plan，也进入最近任务与历史，状态仍以原 Run 为准。
 - 普通 chat 同时使用独立 `ChatEventLog` 保存输入输出交付与 surface 重放。它和 TaskRuntime journal 可以关联同一 turn，但互不替代。
 - 输入的持久接收、目标 TaskRun 绑定、进入上下文和执行/完成是不同事实。两份原 journal 不被描述为一个事务；durability 未确认时不冒已准入或重新投向另一个目标。
 - journal 保存完整 user steer 及来源与投递事实；近期四条短文或 400 字符预览不是完整历史。主模型结合历史理解输入，不另建要求解释器、GoalStore 或强制要求/计划/验收流水线。必要早期原文沿原引用与 `read_artifact` 恢复，canonical Goal 保持自己的 revision/hash；后继完整来源投影与冷重开读取资格仍须独立验证。
