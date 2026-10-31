@@ -1619,9 +1619,9 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "6c0bc7879bc2b3b0dd3b7dd086913405cbafe035",
+    "reviewedRevision": "66760c3f5b950843a7038bc7fd95e48a4850624a",
     "status": "source-reviewed-with-execution-limitations",
-    "authority": "中文为当前产品主维护来源；中文产品页已对照clean 6c0bc7879bc2b3b0dd3b7dd086913405cbafe035相对原A71的完整文档差异、相关直接实现及页面承诺完成源码复审。69份英文源与现存四个英文产品页保留历史参考，不代表当前中文的同步译文。sourceFiles和8份页面摘要由原生成器登记；A71及更早审阅和失败保原身份。Root正常本地保存所承接的8项Rust、3项前端、后继Source、功能链source-only组合、风险controls8与两次fresh scanner1/gate0分别按原task与globalClosure未检查范围成立，不由官网重跑或合并为全链路验收。真实新App、SSH、手机、IM平台、quiet/性能、SDK正式pin、精确main CI、发行与网站部署继续独立验收。",
+    "authority": "中文为当前产品主维护来源；在原clean A71/6c0产品复审上，已核对6c0经39c到clean66760c3f5b950843a7038bc7fd95e48a4850624a的实际差异和相关实现。148来源中两份中文风险/性能文档更新，现有8页正文保持；69份英文源和4历史英文页不作当前中文同步译文。原normal生成器登记来源和页面摘要，旧reviewedRevision、失败及原执行epoch保留。39c同cut投影与667性能工程来源修复不增加公开API；局部Run1000测量不作为网站数值、速度比或完整性能保证。原风险/Source/工程/App各保真实具名来源与task/globalClosure未检查范围，来源同步不授SDK/new mainCI、真实App交互/安装/native paint、手机/SSH、发行或部署资格。",
     "sourceFiles": [
       {
         "sourcePath": "docs/en/adr/0001-agent-collaboration.md",
@@ -2145,7 +2145,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0062-current-five-risk-binding.md",
-        "sha256": "035171b07d35a714fa3bcd91d8520fdd4d810780ece7098fda22e72a36f6910f"
+        "sha256": "518612c59c82814a0b5de77d3e81bbcb0df067170029eb986d981abd399c1bb3"
       },
       {
         "sourcePath": "docs/zh/architecture/overview.md",
@@ -2153,7 +2153,7 @@
       },
       {
         "sourcePath": "docs/zh/architecture/performance-baseline.md",
-        "sha256": "5e9f6d97a14585d4548e12d3d87502f4d8791f66582951489b0686ca491560e0"
+        "sha256": "ed766a0077d18acd418707cc8181f8ee375a7ef682e6f121a97dfee854c5ecda"
       },
       {
         "sourcePath": "docs/zh/architecture/persistence.md",
