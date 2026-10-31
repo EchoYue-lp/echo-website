@@ -29034,6 +29034,8 @@ Skills、Plugins、MCP servers、Hooks 与 Browser 控制使用同一个应用�
 
 portable Plugin component 只解析一次，形成不可变 framework `PreparedPluginSet`。Eclip 捕获精确 workspace target，增加 executable Subagent、scoped monitor、theme 与 output style 产品策略。rollback 使用 prepared generation，不重新读取可能已变化的文件。
 
+插件变更已提交但部分组件未启用时，插件页会刷新实际列表与配置，并提示相关诊断。真正失败、回滚或仅验证不会显示为已提交；切换页面或工作空间后，迟到结果不会覆盖当前内容。
+
 ## Memory 与用户工具控制
 
 每个 workspace memory generation 共享一个 `MemoryLayerManager`。成功 mutation 只读取一次 hot memory，并在下一个 model safe point 向 primary、已有 pool Agent 与 future Agent 发布同一个 immutable snapshot。`/reflect`、remember/forget、evidence review、TaskRuntime、Dreaming 和模型工具使用同一 settlement contract。

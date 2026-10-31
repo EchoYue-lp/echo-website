@@ -1619,9 +1619,9 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "6fc282f9df33d7898ac95f84c8ff29cb2fce2e01",
+    "reviewedRevision": "4c2a338cfa8cc1db6893e5e6c1b3fbf96a92a7f8",
     "status": "source-reviewed-with-execution-limitations",
-    "authority": "中文为当前产品主维护来源；在原clean667产品复审上已核对到clean6fc282f9df33d7898ac95f84c8ff29cb2fce2e01的正式runtime文档与相关实现。148来源仅中文runtime.md摘要变化，中文storage收窄普通GUI无plan轻量回合不进UI，明确IM/cron无plan原Run也进入最近任务与历史，其余7页正文保持；69历史英文来源与4历史英文页不作当前中文同步译文。IM/cron原Run历史与最近任务、受控continuation根身份和真实surface结果、journal诊断不逐条发手机沿原应用权威，不新增Framework/SDK API或第二历史store。原329pass/6性能ignore、891pass/4skip的真实runner来源、应用taskSource/final0/globalClosure未检查和risk scanner1/独立gate0各保原执行范围及失败，不重跑或合并为新native/mainCI/发布票。最新6fc App仍待构建，原667 App、SDK正式采用、旧性能和真实手机/SSH/安装/paint/发行/部署资格分别核验。",
+    "authority": "中文为当前产品主维护来源；在6fc既有文档复审与080同文桥接上，已核对clean4c2a338cfa8cc1db6893e5e6c1b3fbf96a92a7f8的正式runtime及插件界面差异。148来源仅中文runtime摘要变化，中文能力页补充已提交伴组件诊断时的实际列表/配置刷新、诊断提示及迟到结果隔离，其余7页不变；69历史英文来源及4历史英文页不作当前中文同步译文。精确revision/sourceFiles和8页摘要由原生成器登记，旧来源/失败/执行epoch保原。应用原31focused、901pass4skip、默认build及正常taskSource/final只按原源与范围成立，本轮网站验证不扩大它们；权限、Framework/SDK API和发行平台不变，不授新App、真实插件操作/native、主线CI、发布或部署资格。",
     "sourceFiles": [
       {
         "sourcePath": "docs/en/adr/0001-agent-collaboration.md",
@@ -2165,7 +2165,7 @@
       },
       {
         "sourcePath": "docs/zh/architecture/runtime.md",
-        "sha256": "fd20da5de552e68b746506d11b4b1b9ebc194d66ad6386f3f965df1c147e9815"
+        "sha256": "dc642d0a1553d00ef6c4c061f3d54f5214e3f7dd8036839c8a366a8ac60e8a41"
       },
       {
         "sourcePath": "docs/zh/configuration.md",
@@ -2235,7 +2235,7 @@
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "37c28458ce8abadc92d3011bc7cd2e9151f02d942871647dc0bf074489968735"
+        "sha256": "f97361670c275f4a2bd3d0c75db81ae9929525e40c074d8313a90dc2a968c099"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
