@@ -1619,9 +1619,9 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "4c2a338cfa8cc1db6893e5e6c1b3fbf96a92a7f8",
+    "reviewedRevision": "23f3fe1f768111647254970a4ee3a67c20d24af4",
     "status": "source-reviewed-with-execution-limitations",
-    "authority": "中文为当前产品主维护来源；在6fc既有文档复审与080同文桥接上，已核对clean4c2a338cfa8cc1db6893e5e6c1b3fbf96a92a7f8的正式runtime及插件界面差异。148来源仅中文runtime摘要变化，中文能力页补充已提交伴组件诊断时的实际列表/配置刷新、诊断提示及迟到结果隔离，其余7页不变；69历史英文来源及4历史英文页不作当前中文同步译文。精确revision/sourceFiles和8页摘要由原生成器登记，旧来源/失败/执行epoch保原。应用原31focused、901pass4skip、默认build及正常taskSource/final只按原源与范围成立，本轮网站验证不扩大它们；权限、Framework/SDK API和发行平台不变，不授新App、真实插件操作/native、主线CI、发布或部署资格。",
+    "authority": "中文为当前产品主维护来源；沿clean4c2产品文档复审核对到clean23f3fe1f768111647254970a4ee3a67c20d24af4的性能工具文档后继。148来源仅中文performance-baseline摘要变化，其他147来源和8页正文（含插件提交伴诊断/刷新/迟到隔离）保持，69历史英文来源/4历史英文页不作当前中文同步译文。原生成器登记真实revision/sourceFiles/page SHA，不重绑旧capsule和原样本epoch；逐程序来源及纯capture工具采用不等于新benchmark、对外性能测量或native完成。网站类型/测试/构建代码与路由正文未变，沿具名4c2站点原通过范围，不冒本次重跑；新来源/文档检查与当前task/globalClosure未检查分别记录。无新Framework/SDK API、权限、发行平台或App/主线CI/发布/部署资格。",
     "sourceFiles": [
       {
         "sourcePath": "docs/en/adr/0001-agent-collaboration.md",
@@ -2153,7 +2153,7 @@
       },
       {
         "sourcePath": "docs/zh/architecture/performance-baseline.md",
-        "sha256": "ed766a0077d18acd418707cc8181f8ee375a7ef682e6f121a97dfee854c5ecda"
+        "sha256": "e4133a33a99bb5cfb790251316e0d7611baee8a5270e5a791ec53ef7aefc49b2"
       },
       {
         "sourcePath": "docs/zh/architecture/persistence.md",

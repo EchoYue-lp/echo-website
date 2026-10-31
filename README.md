@@ -4,9 +4,9 @@
 
 品牌展示沿用 `/eko` 路由，官网、发现索引与文档首页展示新名称和音标。框架镜像与产品投影分别记录其真实来源身份。
 
-2026-11-01 当前产品来源：在既有 clean `6fc282f9` 文档复审及080导入修复的同文桥接上，
-已核对到 `4c2a338cfa8cc1db6893e5e6c1b3fbf96a92a7f8` 的正式 runtime 文档与插件界面差异。
-中文能力页补充插件变更已提交但伴组件诊断时的刷新与提示，其余7页正文保持。
+2026-11-01 当前产品来源：在 clean `4c2a338` 的产品文档复审上，已核对到
+`23f3fe1f768111647254970a4ee3a67c20d24af4` 的性能工程文档差异。
+现有8页正文保持，包括插件变更已提交但伴组件诊断时的刷新与提示。
 再由原同步器正常生成 `reviewedRevision`、148 项 `sourceFiles`（79中文、69历史英文）及页面摘要。
 状态为 `source-reviewed-with-execution-limitations`。现存四个英文产品页明确标为历史参考并链接当前中文；
 不新增英文副本，也不把历史英文声明为当前中文的同步译文。旧 `1a3551a0…`／138项审阅身份和原失败保留在Git与原日志。
@@ -17,7 +17,7 @@ scanner自然1／精确gate0分别保留。它们均只按原task／globalClosur
 
 2026-10-27 的中文产品页纠正普通 Steer／Goal 文案，并同步已提交首页与聊天呈现。依据是应用提交 `0ebd8984be26affc32a130df7a26b128494d6c65` 中 `docs/zh/adr/0037-unified-turn-run-binding.md`、`docs/zh/adr/0048-context-compression-product-policy.md`、`docs/zh/architecture/runtime.md`、`docs/zh/features.md` 与 `docs/zh/getting-started.md`。普通 Steer 交主模型结合历史理解，已有 Goal 仅用户显式修改或结束；原生消息和后继完整原文恢复保留各自未完成验收。
 
-当时 `docs-sync-manifest.json` 保留旧完整应用审阅的 `reviewedRevision` 与 `sourceFiles`，只刷新中文投影摘要，状态为 `policy-correction-pending-source-review`。后继退役纠正使用 `source-correction-pending-source-review`；这两次页面纠正均不代表dirty来源通过。它们与原失败作为历史保留；clean A71／6c0／667／6fc 的复审是前置历史，当前产品来源以上述 clean 4c2 的复审和正常生成结果为准。
+当时 `docs-sync-manifest.json` 保留旧完整应用审阅的 `reviewedRevision` 与 `sourceFiles`，只刷新中文投影摘要，状态为 `policy-correction-pending-source-review`。后继退役纠正使用 `source-correction-pending-source-review`；这两次页面纠正均不代表dirty来源通过。它们与原失败作为历史保留；clean A71／6c0／667／6fc／4c2 的复审是前置历史，当前产品来源以上述 clean 23f3 的复审和正常生成结果为准。
 
 官网只负责展示。框架行为以 [`echo-agent`](https://github.com/EchoYue-lp/echo-agent) 为准；
 Eclip 产品行为以 [`echo-agent-cli`](https://github.com/EchoYue-lp/echo-agent-cli) 为准。
@@ -101,11 +101,16 @@ IM错误前有限排空、共享Store装配和当前只读查询边界；测试�
 应用 task Source／final 为0、globalClosure未检查，官方风险scanner自然1与独立精确gate0分别保留。
 这些结果均按各自来源与范围成立，未重跑或合并为全链路票；该切片验收时6fc的新App仍待构建，原667 App不取得其原生验收资格。
 
-本次4c2后继只补充插件页的实际可见行为：已提交的变更伴随组件诊断时，刷新实际列表与配置并保留诊断；
+此前4c2后继只补充插件页的实际可见行为：已提交的变更伴随组件诊断时，刷新实际列表与配置并保留诊断；
 真正失败、回滚或仅验证不被显示为已提交，迟到结果不覆盖新页面或工作空间。148项来源仅中文runtime摘要变化，
 原同步器将精确来源与该中文能力页摘要一起生成，其他7页与历史英文保持。所属应用的新源31项focused、
 901项完整前端通过／4项原skip、默认build和正常task Source／final各按原回执成立，不由官网重跑或扩大。
 本次没有改变Framework／SDK API、权限或发行平台；新App、真实插件操作、native、main CI与发布资格仍独立，网站未部署。
+
+本次23f3后继仅更新中文 `docs/zh/architecture/performance-baseline.md` 的来源摘要，
+148项来源的其他147项及8页正文不变。新增说明限定逐程序来源、080材料识别与纯捕获合同；
+性能工具的本地采用不改旧capsule、样本或原执行时点，不增加对外测量、速度比或native完成声明。
+站点代码、路由、测试与构建输入保持；其类型、测试和构建结果沿用具名4c2站点切点，本次只重验必要来源与文档。
 
 仅有中文的原生合同沿原 Markdown 来源回链访问，不为形式新建英文副本；本地源码审阅不授已发布资格。
 assistant phase、reasoning、工具事实、最终发布与 TaskRun／Goal 完成分别验收；本地测试或站点构建不代表真实原生窗口已通过。
