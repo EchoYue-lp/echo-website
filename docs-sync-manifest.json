@@ -1619,9 +1619,9 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "61d3ee31c165517f5180aded814c10bdd35617eb",
+    "reviewedRevision": "5132d6b63537892185a3ac48de2e66a9b9366731",
     "status": "source-reviewed-with-execution-limitations",
-    "authority": "中文为当前产品主维护来源；沿clean23f3文档复审核对到clean61d3ee31c165517f5180aded814c10bdd35617eb的Scheduler桌面创建参数边界修复。148来源仅中文runtime摘要变化，其余147来源及8页（含D插件呈现）正文保持；69历史英文源/4历史英文页不作当前中文同步译文。原同步器生成真实revision/sourceFiles/page摘要。桌面顶层命名与REST/嵌套serde/opaque历史游标各守原边界，官网无这些字段调用示例，不增产品API/宣传。应用原9合同/27相关/910pass4skip/默认build/normalSourcefinal只按原源码与fixture范围；mock原生invoke不等新App真实IPC或人工cron验收。站点未变类型/测试/构建输入沿具名4c2结果桥，当前仅必要源文/来源检查，不冒新运行或整Goal/globalClosure/native/mainCI/发布/部署通过。",
+    "authority": "中文为当前产品主维护来源；沿clean61d3文档复审核对到clean5132d6b63537892185a3ac48de2e66a9b9366731的Scheduler原Run历史导航和本次会话载入结果修复。148来源仅中文runtime摘要变化，其余147来源及全部8页（含D插件呈现）正文保持；69历史英文来源/4历史英文页不作当前中文同步译文。原生成器登记真实revision/sourceFiles/page SHA。原Run历史可在无transcript时读取，本次load失败/身份漂移/late不借旧activeId判成功，不造会话/计划/状态或重跑任务；官网无相反页面说明，不扩publicAPI。原相关158/完整928pass4skip及应用类型build/Sourcefinal只保原源码与mock资格；当前App63316仍61d3，不授新App/native/真人Cron/Framework候选或主线CI/发行部署。本站未变工程输入沿原具名4c2检查桥，当前metadata以新来源/docs/site/taskscope核验，不冒新类型/测试/build或globalClosure通过。",
     "sourceFiles": [
       {
         "sourcePath": "docs/en/adr/0001-agent-collaboration.md",
@@ -2165,7 +2165,7 @@
       },
       {
         "sourcePath": "docs/zh/architecture/runtime.md",
-        "sha256": "92e782c186fdaab444dab297a060d1fe79e2cefec250974d1abb6b5df08eddbe"
+        "sha256": "967bcb69208bd8867a31ed2bcf7c6ce6b6f73ff992f41c0cbf40896d140dbd75"
       },
       {
         "sourcePath": "docs/zh/configuration.md",
