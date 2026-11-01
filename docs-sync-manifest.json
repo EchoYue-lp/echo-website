@@ -1619,9 +1619,9 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "23f3fe1f768111647254970a4ee3a67c20d24af4",
+    "reviewedRevision": "61d3ee31c165517f5180aded814c10bdd35617eb",
     "status": "source-reviewed-with-execution-limitations",
-    "authority": "中文为当前产品主维护来源；沿clean4c2产品文档复审核对到clean23f3fe1f768111647254970a4ee3a67c20d24af4的性能工具文档后继。148来源仅中文performance-baseline摘要变化，其他147来源和8页正文（含插件提交伴诊断/刷新/迟到隔离）保持，69历史英文来源/4历史英文页不作当前中文同步译文。原生成器登记真实revision/sourceFiles/page SHA，不重绑旧capsule和原样本epoch；逐程序来源及纯capture工具采用不等于新benchmark、对外性能测量或native完成。网站类型/测试/构建代码与路由正文未变，沿具名4c2站点原通过范围，不冒本次重跑；新来源/文档检查与当前task/globalClosure未检查分别记录。无新Framework/SDK API、权限、发行平台或App/主线CI/发布/部署资格。",
+    "authority": "中文为当前产品主维护来源；沿clean23f3文档复审核对到clean61d3ee31c165517f5180aded814c10bdd35617eb的Scheduler桌面创建参数边界修复。148来源仅中文runtime摘要变化，其余147来源及8页（含D插件呈现）正文保持；69历史英文源/4历史英文页不作当前中文同步译文。原同步器生成真实revision/sourceFiles/page摘要。桌面顶层命名与REST/嵌套serde/opaque历史游标各守原边界，官网无这些字段调用示例，不增产品API/宣传。应用原9合同/27相关/910pass4skip/默认build/normalSourcefinal只按原源码与fixture范围；mock原生invoke不等新App真实IPC或人工cron验收。站点未变类型/测试/构建输入沿具名4c2结果桥，当前仅必要源文/来源检查，不冒新运行或整Goal/globalClosure/native/mainCI/发布/部署通过。",
     "sourceFiles": [
       {
         "sourcePath": "docs/en/adr/0001-agent-collaboration.md",
@@ -2165,7 +2165,7 @@
       },
       {
         "sourcePath": "docs/zh/architecture/runtime.md",
-        "sha256": "dc642d0a1553d00ef6c4c061f3d54f5214e3f7dd8036839c8a366a8ac60e8a41"
+        "sha256": "92e782c186fdaab444dab297a060d1fe79e2cefec250974d1abb6b5df08eddbe"
       },
       {
         "sourcePath": "docs/zh/configuration.md",

@@ -4,8 +4,8 @@
 
 品牌展示沿用 `/eko` 路由，官网、发现索引与文档首页展示新名称和音标。框架镜像与产品投影分别记录其真实来源身份。
 
-2026-11-01 当前产品来源：在 clean `4c2a338` 的产品文档复审上，已核对到
-`23f3fe1f768111647254970a4ee3a67c20d24af4` 的性能工程文档差异。
+2026-11-01 当前产品来源：在 clean `23f3fe1` 的文档复审上，已核对到
+`61d3ee31c165517f5180aded814c10bdd35617eb` 的 Scheduler 桌面创建参数边界修复与文档差异。
 现有8页正文保持，包括插件变更已提交但伴组件诊断时的刷新与提示。
 再由原同步器正常生成 `reviewedRevision`、148 项 `sourceFiles`（79中文、69历史英文）及页面摘要。
 状态为 `source-reviewed-with-execution-limitations`。现存四个英文产品页明确标为历史参考并链接当前中文；
@@ -17,7 +17,7 @@ scanner自然1／精确gate0分别保留。它们均只按原task／globalClosur
 
 2026-10-27 的中文产品页纠正普通 Steer／Goal 文案，并同步已提交首页与聊天呈现。依据是应用提交 `0ebd8984be26affc32a130df7a26b128494d6c65` 中 `docs/zh/adr/0037-unified-turn-run-binding.md`、`docs/zh/adr/0048-context-compression-product-policy.md`、`docs/zh/architecture/runtime.md`、`docs/zh/features.md` 与 `docs/zh/getting-started.md`。普通 Steer 交主模型结合历史理解，已有 Goal 仅用户显式修改或结束；原生消息和后继完整原文恢复保留各自未完成验收。
 
-当时 `docs-sync-manifest.json` 保留旧完整应用审阅的 `reviewedRevision` 与 `sourceFiles`，只刷新中文投影摘要，状态为 `policy-correction-pending-source-review`。后继退役纠正使用 `source-correction-pending-source-review`；这两次页面纠正均不代表dirty来源通过。它们与原失败作为历史保留；clean A71／6c0／667／6fc／4c2 的复审是前置历史，当前产品来源以上述 clean 23f3 的复审和正常生成结果为准。
+当时 `docs-sync-manifest.json` 保留旧完整应用审阅的 `reviewedRevision` 与 `sourceFiles`，只刷新中文投影摘要，状态为 `policy-correction-pending-source-review`。后继退役纠正使用 `source-correction-pending-source-review`；这两次页面纠正均不代表dirty来源通过。它们与原失败作为历史保留；clean A71／6c0／667／6fc／4c2／23f3 的复审是前置历史，当前产品来源以上述 clean 61d3 的复审和正常生成结果为准。
 
 官网只负责展示。框架行为以 [`echo-agent`](https://github.com/EchoYue-lp/echo-agent) 为准；
 Eclip 产品行为以 [`echo-agent-cli`](https://github.com/EchoYue-lp/echo-agent-cli) 为准。
@@ -107,10 +107,16 @@ IM错误前有限排空、共享Store装配和当前只读查询边界；测试�
 901项完整前端通过／4项原skip、默认build和正常task Source／final各按原回执成立，不由官网重跑或扩大。
 本次没有改变Framework／SDK API、权限或发行平台；新App、真实插件操作、native、main CI与发布资格仍独立，网站未部署。
 
-本次23f3后继仅更新中文 `docs/zh/architecture/performance-baseline.md` 的来源摘要，
+此前23f3后继仅更新中文 `docs/zh/architecture/performance-baseline.md` 的来源摘要，
 148项来源的其他147项及8页正文不变。新增说明限定逐程序来源、080材料识别与纯捕获合同；
 性能工具的本地采用不改旧capsule、样本或原执行时点，不增加对外测量、速度比或native完成声明。
 站点代码、路由、测试与构建输入保持；其类型、测试和构建结果沿用具名4c2站点切点，本次只重验必要来源与文档。
+
+本次61d3后继仅更新中文 `docs/zh/architecture/runtime.md` 的来源摘要，其他147项来源与8页正文不变。
+本次核对 Scheduler 创建的桌面顶层参数命名，以及 REST、嵌套编辑字段和 opaque 历史游标的独立边界；
+官网没有这些请求字段的调用示例，不新增产品操作或参数宣传。原9项合同测试、27项相关测试、
+910项完整前端通过／4项原skip与默认build、正常task Source／final各按所属应用原回执成立。
+原生调用边界使用受控mock，不能据此宣称新App真实IPC、人工创建或运行cron已经通过；这些仍待新构建和具名验收。
 
 仅有中文的原生合同沿原 Markdown 来源回链访问，不为形式新建英文副本；本地源码审阅不授已发布资格。
 assistant phase、reasoning、工具事实、最终发布与 TaskRun／Goal 完成分别验收；本地测试或站点构建不代表真实原生窗口已通过。
