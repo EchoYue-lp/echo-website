@@ -8,13 +8,18 @@
 - 至少一个已配置的 LLM provider 与 model
 - GUI 开发需要 Node.js `^20.19.0 || ^22.13.0 || >=24.0.0`、Tauri 2 系统依赖与 Tauri CLI
 
-## 克隆仓库
+## 准备源码
+
+应用的 Cargo manifest 使用相邻的 `../echo-agent`；两个独立仓库需要并排检出。
+下面只取得源码，构建前应按上游交付说明选择已验证且可获取的配套修订，不能将两仓任意 `main` 或本地候选视为已验证组合。
 
 ```bash
+git clone https://github.com/EchoYue-lp/echo-agent.git
 git clone https://github.com/EchoYue-lp/echo-agent-cli.git
 cd echo-agent-cli
-cargo fetch
 ```
+
+选定配套源码后，在应用根目录运行 `cargo fetch --locked`。源码可获取、依赖可解析和实际构建是不同检查。
 
 在 GUI 设置中配置 provider 与 model，也可以使用 `./eko.yaml` 或 `~/.eko/config.yaml`。API key 应放在配置引用的环境变量中，不要把 secret 写进配置文件。
 
@@ -30,7 +35,27 @@ cargo gui-dev
 
 `cargo gui-dev` 是仓库 `.cargo/config.toml` 中的项目 alias，会启动前端开发服务并以 `gui` feature 运行 `echo-agent-tauri`。
 
-桌面生产包使用 `cargo gui-bundle`；裸 Rust binary 不包含完整 Tauri 前端与平台 bundle。
+## 打包与恢复
+
+在同一应用根目录生成桌面包：
+
+```bash
+cargo gui-bundle
+```
+
+它会沿项目配置构建前端和 Release 桌面包；裸 Rust binary 不包含完整 Tauri 前端与平台 bundle。
+例如在 macOS 本机构建后，从生成的完整应用包启动：
+
+```bash
+open target/release/bundle/macos/Eclip.app
+```
+
+包格式和声明版本不代表已经发布。当前本机 arm64 App 的验收不覆盖 Intel、Windows 或正式分发签名／公证；
+其它平台的精确产物和安装方式以对应合格制品及上游打包说明为准。
+
+停止与重开应沿应用正常退出和启动流程，并继续使用原来的产品数据目录。
+不要用旧备份覆盖扫码后认证、配置或历史，也不要为了重开而重放失败或尚未结算的任务。
+正文已经显示不代表工具执行和持久化已经结算；恢复仍以当前版本保存的原始执行事实为准。
 
 ## 选择项目与开始任务
 

@@ -85,9 +85,27 @@ test('source and directory links leave the site through authoritative GitHub URL
   );
 
   await page.goto('/en/docs/chat');
-  await expect(page.getByRole('link', { name: 'RuntimeStateStore' })).toHaveAttribute(
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Multi-Turn Chat Mode', exact: true }),
+  ).toBeVisible();
+  const openNavigation = page.getByRole('button', { name: 'Open documentation navigation' });
+  if (await openNavigation.isVisible()) await openNavigation.click();
+  const chatEntry = page.getByRole('navigation').getByRole('button', {
+    name: 'Chat System',
+    exact: true,
+  });
+  await expect(chatEntry).toBeVisible();
+  await chatEntry.click();
+  await expect(page).toHaveURL(/\/en\/docs\/chat$/);
+  // 当前上游聊天文档回链完整示例；源码文件仍应沿 blob URL 离站，目录沿上面的 tree URL。
+  const chatSource = page.locator('article').getByRole('link', {
+    name: 'demo17_chat.rs',
+    exact: true,
+  });
+  await expect(chatSource).toBeVisible();
+  await expect(chatSource).toHaveAttribute(
     'href',
-    'https://github.com/EchoYue-lp/echo-agent/blob/main/src/state/mod.rs',
+    'https://github.com/EchoYue-lp/echo-agent/blob/main/echo-agent-learning/examples/demo17_chat.rs',
   );
 });
 

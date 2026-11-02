@@ -4,7 +4,56 @@
 
 品牌展示沿用 `/eko` 路由，官网、发现索引与文档首页展示新名称和音标。框架镜像与产品投影分别记录其真实来源身份。
 
-2026-11-01 当前产品来源：在 clean `61d3ee31` 的文档复审上，已核对到
+## 当前来源与发行边界（2026-11-02）
+
+本次文档同步从官网本地提交 `4badb0c` 继续。原同步器已在 Root 给出的共同 clean 窗口自然退出0，
+Framework 镜像绑定 `a8a8511d9ec2cd3da382bd5f7b151ac537374aa8`，Eclip 产品来源绑定
+`20070d3f7171a95926bdd5c8153f5f382767fea2`。322份镜像中7份正文更新，148份产品来源的实际摘要变化以本批manifest为准；
+8份产品页仅中文快速开始变化，其余7页保持。中文ADR按原镜像规则同时进入两种路由，不新增英文译文。
+最初合法WIP导致的 clean-source guard 退出1与其原件保留，不由后继成功覆盖。
+本批上述具名本地切点的派生检查、原完整 `npm run verify`、独审和正常task Source／Final已通过；
+原格式失败和e2e过期链接断言失败保留，后继通过不覆盖原件。`globalClosure`仍为`not_checked`，
+远端main、SDK正式原生主线、App／自动Cron和发布部署资格继续分列，后续上游修改不自动进入本站。
+
+| 对象      | 当前源码／版本                                                 | 已有资格与未完成边界                                                                                                                                                                                                                                                                                                      |
+| --------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework | 本批a8a8511／crate声明0.2.0                                    | 真实双父1376＋f568，本地静态／Runtime3／格式及task Source／Final按原范围成立；文件名修复原67项focused保原切点。[PR201精确七项CI](https://github.com/EchoYue-lp/echo-agent/actions/runs/41294793482)只覆盖mainf568的Stage0，不覆盖a8a后继或完整矩阵。正常registry包不继承消费根patch，现Zstd补丁不能据此宣称可直接发布。   |
+| Eclip     | 本批20070d3／Eclip1.0.0／`com.eko.desktop`                     | 承接指南、工具页、侧栏与b04 Hook恢复；R03新增真实进度测试及原精风险绑定，normal1P／owner3按预期与task Source／Final限其原范围。原前端945P／4既有opt-in未跑与类型／构建资格仍按对应输入；它们不等Tauri实际操作。旧微信／手动cron人工结果不续给本批源码；新自动cron、最终GUI／SSH／恢复组合及Intel／Windows安装运行仍待验。 |
+| SDK       | 正式本地83ae／pin340／accepted5344／routes430；源码包声明0.1.0 | 36测试根修复本身只有PY7／Node16及静态、task Source／Final资格，之后完整语言结果仍须绑定其准确切点。SDK [main747／PR15九项CI](https://github.com/EchoYue-lp/echo-agent-sdk/actions/runs/41327296993)是独立消费者退役阶段，pin008／5352／431；当前原生合流候选八项focused不等最终接收／完整门禁通过。                       |
+| 官网      | package声明0.0.0／private                                      | 本次只是源码投影；旧站点测试／build仅保原输入资格。当前快照的检查、完整构建及部署分别验收，尚未部署。                                                                                                                                                                                                                     |
+
+Framework八个crate的正常package与独立registry消费仍是发行前置；SDK保持source-only、
+Rust `publish=false`／TypeScript `private=true`，本地tgz／wheel／sdist／JAR准备不等上传。
+Eclip的macOS `.app`／`.dmg`、Linux `.deb`／`.AppImage`、Windows MSI／NSIS只是上游声明的打包格式，
+不是已发布平台清单；最终版本、CPU、分发签名／公证、包SHA与安装启动恢复须逐项验收。
+本次不执行包上传、Release或网站部署，也不把未验平台写成已支持的发行产物。
+
+Issue／Finding沿2026-11-01已核增量：101 Issue（94 closed／7 open），203 Finding
+（195 resolved／6 open／2 risk_accepted），不是本次fresh读取或195项行为重测。
+当次仍open的 #10、#32–35、#188、#189保原状态；局部source／focused／main CI不自动关闭它们。
+旧ZIP当前未撤回的观察不代表风险接受或撤换现有修复；本次不修改风险策略或正式状态。
+
+独立SDK的[源码入口](https://github.com/EchoYue-lp/echo-agent-sdk/tree/main/sdks)、
+[TypeScript示例](https://github.com/EchoYue-lp/echo-agent-sdk/tree/main/sdks/typescript/examples)、
+[Python示例](https://github.com/EchoYue-lp/echo-agent-sdk/tree/main/sdks/python/examples)和
+[Java Example](https://github.com/EchoYue-lp/echo-agent-sdk/blob/main/sdks/java/src/main/java/com/echoagent/sdk/Example.java)
+继续由SDK维护并纳入其原编译／完整语言入口；官网不复制合同或生成另一套SDK示例。
+这些链接跟随上游main，不能把其中例子当作本地原生后继的执行回执。
+源码包自包含合同 `docs/sdk/source-packages.md` 当前只在本地83ae保存，尚未进入main747；
+待正式主线接纳后再提供相应公开链接，不以本地文件存在冒充远端已发布。
+
+SDK接收根的215个历史引用仍依赖本地formal83 Git对象，已有远端heads／tags未包含该来源，公开可取前置仍未闭合。
+当前两项外部工具合同缺口继续单列：canonical删除预检接口缺口，以及installed repository Source传task摘要、
+要求`after=task:…`而与真实source摘要冲突。独立strict0不替正常repository Source／Final；
+这些缺口不由官网修工具、schema、ignore或重写历史epoch，也不把SDK源码／八项focused冒原生主线交付。
+
+Hook后继只补事件目录读取错误、显式重新加载与迟到隔离，仍属既有Hooks能力，不新增产品API；
+官网能力页没有相反的错误恢复承诺，因此本批不为该内部接缝另写产品例子。R03只新增测试及原policy／风险决定绑定，
+不改变公开产品行为，中文页的60秒安全点与实际结算边界继续保持；具体指南和验证仍由应用仓库拥有。
+
+## 既有产品来源记录
+
+2026-11-01 产品来源：在 clean `61d3ee31` 的文档复审上，已核对到
 `5132d6b63537892185a3ac48de2e66a9b9366731` 的 Scheduler 原 Run 历史导航与本次会话载入结果修复。
 现有8页正文保持，包括插件变更已提交但伴组件诊断时的刷新与提示。
 再由原同步器正常生成 `reviewedRevision`、148 项 `sourceFiles`（79中文、69历史英文）及页面摘要。
@@ -17,14 +66,14 @@ scanner自然1／精确gate0分别保留。它们均只按原task／globalClosur
 
 2026-10-27 的中文产品页纠正普通 Steer／Goal 文案，并同步已提交首页与聊天呈现。依据是应用提交 `0ebd8984be26affc32a130df7a26b128494d6c65` 中 `docs/zh/adr/0037-unified-turn-run-binding.md`、`docs/zh/adr/0048-context-compression-product-policy.md`、`docs/zh/architecture/runtime.md`、`docs/zh/features.md` 与 `docs/zh/getting-started.md`。普通 Steer 交主模型结合历史理解，已有 Goal 仅用户显式修改或结束；原生消息和后继完整原文恢复保留各自未完成验收。
 
-当时 `docs-sync-manifest.json` 保留旧完整应用审阅的 `reviewedRevision` 与 `sourceFiles`，只刷新中文投影摘要，状态为 `policy-correction-pending-source-review`。后继退役纠正使用 `source-correction-pending-source-review`；这两次页面纠正均不代表dirty来源通过。它们与原失败作为历史保留；clean A71／6c0／667／6fc／4c2／23f3／61d3 的复审是前置历史，当前产品来源以上述 clean 5132 的复审和正常生成结果为准。
+当时 `docs-sync-manifest.json` 保留旧完整应用审阅的 `reviewedRevision` 与 `sourceFiles`，只刷新中文投影摘要，状态为 `policy-correction-pending-source-review`。后继退役纠正使用 `source-correction-pending-source-review`；这两次页面纠正均不代表dirty来源通过。它们与原失败作为历史保留；clean A71／6c0／667／6fc／4c2／23f3／61d3／5132及068的复审是前置历史，当前产品来源以本页顶部具名20070切点和正常生成结果为准。
 
 官网只负责展示。框架行为以 [`echo-agent`](https://github.com/EchoYue-lp/echo-agent) 为准；
 Eclip 产品行为以 [`echo-agent-cli`](https://github.com/EchoYue-lp/echo-agent-cli) 为准。
 
-The framework's cross-language SDK product, protocol contracts, and Host adapters are maintained in
-the independent [`echo-agent-sdk`](https://github.com/EchoYue-lp/echo-agent-sdk) repository. This
-site links to that repository rather than copying its contract or implementation.
+框架的跨语言SDK产品、协议合同与Host适配由独立的
+[`echo-agent-sdk`](https://github.com/EchoYue-lp/echo-agent-sdk)仓库维护；
+官网链接其权威文档与示例，不复制合同或实现。
 
 ## Requirements
 
@@ -122,7 +171,7 @@ IM错误前有限排空、共享Store装配和当前只读查询边界；测试�
 本次核对无会话记录的 Failed Run 直接读取原任务历史，以及会话本次载入失败、身份变化或迟到结果时停止后续导航的边界；
 不补造会话、计划或成功状态，不重新执行任务。官网原有 IM／cron 历史与状态说明已相符，无新增页面或公开API说明。
 原相关158项与完整前端928项通过／4项原skip、类型／默认build及正常task Source／final仅按应用原源码与mock范围成立。
-当前用户App仍为61d3，不能据此宣称新App真人历史入口、原生或自动cron验收通过，Framework独立修复也未由本次提前采用。
+5132来源同步当时用户App仍为61d3，该切片不宣称新App真人历史入口、原生或自动cron验收通过，Framework独立修复也未由该切片提前采用。
 
 仅有中文的原生合同沿原 Markdown 来源回链访问，不为形式新建英文副本；本地源码审阅不授已发布资格。
 assistant phase、reasoning、工具事实、最终发布与 TaskRun／Goal 完成分别验收；本地测试或站点构建不代表真实原生窗口已通过。

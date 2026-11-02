@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "340993201cc937fc8e4783b66be399ef9f14e3d5",
+    "revision": "a8a8511d9ec2cd3da382bd5f7b151ac537374aa8",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -673,7 +673,7 @@
       {
         "sourcePath": "docs/adr/0090-a2a-lsp-retirement-contract.md",
         "destination": "src/docs/content/echo-agent/en/adr/0090-a2a-lsp-retirement-contract.md",
-        "sha256": "ab2260703bf55708412397bca572887099739ca5ad45e7d5f0df396ed4e74e79"
+        "sha256": "a1a5f19e1d0091767d4ecdd0c12e6c622f859abe38f0184902ee54966eda4094"
       },
       {
         "sourcePath": "docs/adr/0091-explicit-hook-approval-intent.md",
@@ -723,7 +723,7 @@
       {
         "sourcePath": "docs/adr/0100-zstd-safe-chain-vendoring.md",
         "destination": "src/docs/content/echo-agent/en/adr/0100-zstd-safe-chain-vendoring.md",
-        "sha256": "84ac6a3612bf68260fefb5a13e3d9f890d2ec170df578e4ce49ac26bf2e35ec0"
+        "sha256": "344880f3b37074425ab8736591a027cbe0ec24b8281557b81f9ff808b25c7510"
       },
       {
         "sourcePath": "docs/adr/0101-native-message-execution.md",
@@ -738,7 +738,7 @@
       {
         "sourcePath": "docs/adr/0103-current-storage-records.md",
         "destination": "src/docs/content/echo-agent/en/adr/0103-current-storage-records.md",
-        "sha256": "f60164e56d67b7984a648ddec88ee19eda3b2a0f9fc898b6c2d9e55887c95bb6"
+        "sha256": "b2d360fa9d0a5f8eb1c51999e3a1653d5c3449ae33e6064c630f9e7302b35770"
       },
       {
         "sourcePath": "docs/adr/0104-canonical-agent-runtime-kernel.md",
@@ -958,7 +958,7 @@
       {
         "sourcePath": "docs/zh/32-plugin-system.md",
         "destination": "src/docs/content/echo-agent/zh/32-plugin-system.md",
-        "sha256": "84f5b82e689c27180920909220497b710042f3063cda2fee661fffd1f205685a"
+        "sha256": "87534e136e0d9bdeef836f89f7aa249da9f4bd7db04eaf2c3bbae959883a0c00"
       },
       {
         "sourcePath": "docs/zh/33-headless-mode.md",
@@ -1478,7 +1478,7 @@
       {
         "sourcePath": "docs/adr/0090-a2a-lsp-retirement-contract.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0090-a2a-lsp-retirement-contract.md",
-        "sha256": "ab2260703bf55708412397bca572887099739ca5ad45e7d5f0df396ed4e74e79"
+        "sha256": "a1a5f19e1d0091767d4ecdd0c12e6c622f859abe38f0184902ee54966eda4094"
       },
       {
         "sourcePath": "docs/adr/0091-explicit-hook-approval-intent.md",
@@ -1528,7 +1528,7 @@
       {
         "sourcePath": "docs/adr/0100-zstd-safe-chain-vendoring.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0100-zstd-safe-chain-vendoring.md",
-        "sha256": "84ac6a3612bf68260fefb5a13e3d9f890d2ec170df578e4ce49ac26bf2e35ec0"
+        "sha256": "344880f3b37074425ab8736591a027cbe0ec24b8281557b81f9ff808b25c7510"
       },
       {
         "sourcePath": "docs/adr/0101-native-message-execution.md",
@@ -1543,7 +1543,7 @@
       {
         "sourcePath": "docs/adr/0103-current-storage-records.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0103-current-storage-records.md",
-        "sha256": "f60164e56d67b7984a648ddec88ee19eda3b2a0f9fc898b6c2d9e55887c95bb6"
+        "sha256": "b2d360fa9d0a5f8eb1c51999e3a1653d5c3449ae33e6064c630f9e7302b35770"
       },
       {
         "sourcePath": "docs/adr/0104-canonical-agent-runtime-kernel.md",
@@ -1619,9 +1619,9 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "5132d6b63537892185a3ac48de2e66a9b9366731",
+    "reviewedRevision": "20070d3f7171a95926bdd5c8153f5f382767fea2",
     "status": "source-reviewed-with-execution-limitations",
-    "authority": "中文为当前产品主维护来源；沿clean61d3文档复审核对到clean5132d6b63537892185a3ac48de2e66a9b9366731的Scheduler原Run历史导航和本次会话载入结果修复。148来源仅中文runtime摘要变化，其余147来源及全部8页（含D插件呈现）正文保持；69历史英文来源/4历史英文页不作当前中文同步译文。原生成器登记真实revision/sourceFiles/page SHA。原Run历史可在无transcript时读取，本次load失败/身份漂移/late不借旧activeId判成功，不造会话/计划/状态或重跑任务；官网无相反页面说明，不扩publicAPI。原相关158/完整928pass4skip及应用类型build/Sourcefinal只保原源码与mock资格；当前App63316仍61d3，不授新App/native/真人Cron/Framework候选或主线CI/发行部署。本站未变工程输入沿原具名4c2检查桥，当前metadata以新来源/docs/site/taskscope核验，不冒新类型/测试/build或globalClosure通过。",
+    "authority": "2026-11-02 Root网站独占资源窗口website-20070-verify-r01，沿共同clean切点原同步器复制F a8a8511d9ec2cd3da382bd5f7b151ac537374aa8与EKO20070d3f7171a95926bdd5c8153f5f382767fea2。CLI20070承接068指南/工具页/侧栏，b04 Hook恢复与R03测试/精风险绑定；产品公开页无需为内部测试/policy新增API或执行承诺，具体差异另留审查。148来源/8产品页及322框架镜像按原生成入口登记，中文当前维护、历史英文不增译。SDK formal83/pin340/5344/430保持，不把receiving747原生/旧83历史refs/source严格通过冒正式native主线。源码/task/focused/完整工程/mainCI/native/包发布部署分别验收，两外部toolgaps保真实限制；本manifest不是App/live/main/发行票。",
     "sourceFiles": [
       {
         "sourcePath": "docs/en/adr/0001-agent-collaboration.md",
@@ -2141,7 +2141,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0061-tool-categories-and-required-tools.md",
-        "sha256": "4f9c75ee7f5fbc122c8906297901fc8310b576d9cf0728e0ff9b568c0ffb69b7"
+        "sha256": "36d87559394397b82960cd726b9b851f5ff3224a09051381c78db72babd7e0c3"
       },
       {
         "sourcePath": "docs/zh/adr/0062-current-five-risk-binding.md",
@@ -2181,7 +2181,7 @@
       },
       {
         "sourcePath": "docs/zh/guides/extension-panel-scope-settlement.md",
-        "sha256": "b1a15ba7f6d7173076febd874cd025b8850454120b32755aa27adf4be92e0cb1"
+        "sha256": "db261cadb4b39a1451ca7dc99931fe255841f07212e586e872a5222e103d1621"
       },
       {
         "sourcePath": "docs/zh/guides/gui-hitl-dialog.md",
@@ -2189,7 +2189,7 @@
       },
       {
         "sourcePath": "docs/zh/guides/gui-task-runtime-panel.md",
-        "sha256": "1c52e3a7e15cc34c64fc3aeea52f105134e6228db2c56e887851a9a99bfcb864"
+        "sha256": "0134191ed62ea9f0d0b735eeec06f7a7198ce14dc4470e5303ec586a9915435f"
       },
       {
         "sourcePath": "docs/zh/guides/hitl-replay-identity.md",
@@ -2201,7 +2201,7 @@
       },
       {
         "sourcePath": "docs/zh/guides/task-run-history.md",
-        "sha256": "2aeac0de01c94fd53182233937f0efa8613b7fa96041ceffddf49ffa3660cb82"
+        "sha256": "1046f527364761e342b66ac7e99db59461bcb84ecc833b4fb3b61a1d119ccf95"
       },
       {
         "sourcePath": "docs/zh/operations/skill-sync.md",
@@ -2239,7 +2239,7 @@
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
-        "sha256": "9afa5fc8005b7b7afd659624ab7c730e30c2d96959c22a0bc8a2ed34d5617f0a"
+        "sha256": "2075460350c9d30e56b4a13b407ff8867fcfdd36aec76c4c39f8b741ea9bd29c"
       },
       {
         "destination": "src/docs/content/eko/zh/overview.md",
