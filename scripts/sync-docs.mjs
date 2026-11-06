@@ -445,8 +445,11 @@ function verifyRecord(record) {
   }
 }
 
-function checkManifest(frameworkRoot, applicationRoot) {
-  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+function checkManifest(
+  frameworkRoot,
+  applicationRoot,
+  manifest = JSON.parse(readFileSync(manifestPath, 'utf8')),
+) {
   const records = [...manifest.framework.files, ...manifest.applicationProjection.files];
   records.forEach(verifyRecord);
   verifyFrameworkAdrIndex(manifest);
@@ -543,6 +546,15 @@ const applicationRoot =
   applicationRootArgument === 'auto' ? discoverApplicationRoot() : applicationRootArgument;
 if (process.argv.includes('--check')) {
   checkManifest(frameworkRoot, applicationRoot);
+} else if (refreshApplicationProjection && !frameworkRoot) {
+  // 产品页面纠正不要求重新审阅框架；原框架正文和来源身份必须先校验并原样保留。
+  // 显式提供 framework-root 时仍走原完整同步，不绕过其 clean-source 检查。
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+  const projection = applicationProjection(undefined, undefined, undefined, undefined, true);
+  const candidate = { ...manifest, applicationProjection: projection };
+  // 同一完整校验先检查候选；错误页面或未登记文件不能在命令失败后留下新摘要。
+  checkManifest(undefined, undefined, candidate);
+  writeFileSync(manifestPath, `${JSON.stringify(candidate, null, 2)}\n`);
 } else {
   if (!frameworkRoot) throw new Error('Pass --framework-root <path> when synchronizing docs.');
   let requiredApplicationRoot;

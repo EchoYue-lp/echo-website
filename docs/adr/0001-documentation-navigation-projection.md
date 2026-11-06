@@ -48,6 +48,11 @@
 clean-source/parity 检查和 source-aware 拒绝逻辑均不变；不引入 schema、第二份 store 或运行时状态。
 对应回归覆盖页面摘要、历史身份保留、脏产品来源不被采纳及非法组合不写 manifest。
 
+2026-11-06 补充：单独执行 `--refresh-application-projection` 且不指定框架来源时，仅核验并
+保留网站已有框架正文、摘要与来源，刷新产品页摘要并保持待来源复审状态。这样不必为产品
+页面纠正重拷含有其它任务 WIP 的框架；显式传入框架来源的完整同步仍保留原 clean-source
+门禁。该操作不推进产品 reviewedRevision/sourceFiles，也不代表发布或完整来源验收。
+
 Framework 正文按 clean `684ad1d9…` 同步，中文产品页只更新可核的退役事实，不新增英文产品副本。
 旧历史/迁移文档、原生 reasoning、最终运行时通知及自定义同名工具保持其来源语义。
 本切片不证明 SDK 新 pin、完整消费者反向状态、App、手机、SSH、完整矩阵或 main CI／发布。

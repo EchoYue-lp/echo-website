@@ -190,6 +190,63 @@ describe('文档同步的固定 Git 来源', () => {
     }
   });
 
+  it('单独纠正产品页时保留已审框架，不要求读取并行修改的来源', () => {
+    const f = fixture();
+    expect(f.run().status).toBe(0);
+    const before = f.manifest();
+    const frameworkPage = join(f.site, before.framework.files[0].destination);
+    const frameworkText = readFileSync(frameworkPage, 'utf8');
+    write(join(f.site, 'src/docs/content/eko/zh/intro.md'), '# 当前轮次总结说明\n');
+    write(join(f.framework, 'docs/zh/intro.md'), '# 其它任务的未审改动\n');
+    const result = spawnSync(
+      process.execPath,
+      [join(f.site, 'scripts/sync-docs.mjs'), '--refresh-application-projection'],
+      { cwd: f.site, encoding: 'utf8' },
+    );
+    expect(result.status, result.stderr).toBe(0);
+    const after = f.manifest();
+    expect(after.framework).toEqual(before.framework);
+    expect(readFileSync(frameworkPage, 'utf8')).toBe(frameworkText);
+    expect(after.applicationProjection.reviewedRevision).toBe(
+      before.applicationProjection.reviewedRevision,
+    );
+    expect(after.applicationProjection.sourceFiles).toEqual(
+      before.applicationProjection.sourceFiles,
+    );
+    expect(after.applicationProjection.status).toBe('source-correction-pending-source-review');
+    const localCheck = spawnSync(
+      process.execPath,
+      [join(f.site, 'scripts/sync-docs.mjs'), '--check'],
+      { cwd: f.site, encoding: 'utf8' },
+    );
+    expect(localCheck.status, localCheck.stderr).toBe(0);
+    // 显式核对脏框架来源仍须失败，页面纠正没有放宽来源门禁。
+    expect(f.run('--check').status).not.toBe(0);
+  });
+
+  it.each(['stale-claim', 'untracked-framework-page'])(
+    '单独纠正产品页遇到 %s 时拒绝且不改 manifest',
+    (failure) => {
+      const f = fixture();
+      expect(f.run().status).toBe(0);
+      const before = readFileSync(join(f.site, 'docs-sync-manifest.json'), 'utf8');
+      write(
+        join(f.site, 'src/docs/content/eko/zh/intro.md'),
+        failure === 'stale-claim' ? '# EchoCoWork\n' : '# 当前产品说明\n',
+      );
+      if (failure === 'untracked-framework-page') {
+        write(join(f.site, 'src/docs/content/echo-agent/zh/unreviewed.md'), '# 未登记页面\n');
+      }
+      const result = spawnSync(
+        process.execPath,
+        [join(f.site, 'scripts/sync-docs.mjs'), '--refresh-application-projection'],
+        { cwd: f.site, encoding: 'utf8' },
+      );
+      expect(result.status).not.toBe(0);
+      expect(readFileSync(join(f.site, 'docs-sync-manifest.json'), 'utf8')).toBe(before);
+    },
+  );
+
   it('没有历史产品审阅身份时拒绝仅刷新页面摘要', () => {
     const f = fixture();
     const manifest = f.manifest();

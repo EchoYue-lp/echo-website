@@ -1620,7 +1620,7 @@
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
     "reviewedRevision": "20070d3f7171a95926bdd5c8153f5f382767fea2",
-    "status": "source-reviewed-with-execution-limitations",
+    "status": "source-correction-pending-source-review",
     "authority": "2026-11-02 Root网站独占资源窗口website-20070-verify-r01，沿共同clean切点原同步器复制F a8a8511d9ec2cd3da382bd5f7b151ac537374aa8与EKO20070d3f7171a95926bdd5c8153f5f382767fea2。CLI20070承接068指南/工具页/侧栏，b04 Hook恢复与R03测试/精风险绑定；产品公开页无需为内部测试/policy新增API或执行承诺，具体差异另留审查。148来源/8产品页及322框架镜像按原生成入口登记，中文当前维护、历史英文不增译。SDK formal83/pin340/5344/430保持，不把receiving747原生/旧83历史refs/source严格通过冒正式native主线。源码/task/focused/完整工程/mainCI/native/包发布部署分别验收，两外部toolgaps保真实限制；本manifest不是App/live/main/发行票。",
     "sourceFiles": [
       {
@@ -2235,7 +2235,7 @@
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "f97361670c275f4a2bd3d0c75db81ae9929525e40c074d8313a90dc2a968c099"
+        "sha256": "e93ee693c3cc86c47b836693a9425574cb7175d04c430717c511d7c08b8fa5e0"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
