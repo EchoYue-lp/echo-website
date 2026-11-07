@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "120e71a6dcabc6c52f1bf9b50dce05ada3ec86a4",
+    "revision": "2b296b7e3bbc92dc73b416488c6dd9862352c113",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -843,7 +843,7 @@
       {
         "sourcePath": "docs/zh/02-tools.md",
         "destination": "src/docs/content/echo-agent/zh/02-tools.md",
-        "sha256": "555b3cb73e311d0d4ca8c049dd5d9eca32c5717861ee0b7d7c0746394fc18493"
+        "sha256": "5f73050169da5f159a51cbbacb8fb78fabc2cd1d9813763c1f511c9c3b8d62bc"
       },
       {
         "sourcePath": "docs/zh/03-memory.md",
