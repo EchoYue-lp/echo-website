@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "a8a8511d9ec2cd3da382bd5f7b151ac537374aa8",
+    "revision": "1f35f0d2f9274c60f9cb009f29675efc33f80422",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -58,7 +58,7 @@
       {
         "sourcePath": "docs/en/11-structured-output.md",
         "destination": "src/docs/content/echo-agent/en/11-structured-output.md",
-        "sha256": "3337596a81944261683bc4e012315e662b16b3e05aa5c5ea6e131f6f50ded07c"
+        "sha256": "3cd06d18b4cd4eb558b67273a4ad7681d21579bf64b76a1cc393daacbf3100e4"
       },
       {
         "sourcePath": "docs/en/12-mock.md",
@@ -668,7 +668,7 @@
       {
         "sourcePath": "docs/adr/0089-non-yanked-media-dependencies.md",
         "destination": "src/docs/content/echo-agent/en/adr/0089-non-yanked-media-dependencies.md",
-        "sha256": "60135861fcb9120af4c2828e8474b83b7e871966023dd3fc63dc40a8a052dd0c"
+        "sha256": "8e4e5cb7c2530f27947bf781dd825628d31b7f04ac9bda748edeb57fb1200c59"
       },
       {
         "sourcePath": "docs/adr/0090-a2a-lsp-retirement-contract.md",
@@ -718,7 +718,7 @@
       {
         "sourcePath": "docs/adr/0099-personal-weixin-channel.md",
         "destination": "src/docs/content/echo-agent/en/adr/0099-personal-weixin-channel.md",
-        "sha256": "f06a386c59882f96a1311764e3e05531a9eda2c6fe79ec33eb9811a29ee5fddd"
+        "sha256": "c69f01185af9eac22a4ee4e7e9a3b20b52c109154a0bf82d52e5b5857fdb7b4c"
       },
       {
         "sourcePath": "docs/adr/0100-zstd-safe-chain-vendoring.md",
@@ -728,7 +728,7 @@
       {
         "sourcePath": "docs/adr/0101-native-message-execution.md",
         "destination": "src/docs/content/echo-agent/en/adr/0101-native-message-execution.md",
-        "sha256": "0b59174833ee86809025b2ad40170fd58b3bc391ec4078023889a2881ac65147"
+        "sha256": "631da6db8b2ac21a47a06d61aefbcde211550bc0d36a87fb307d532e66d60d30"
       },
       {
         "sourcePath": "docs/adr/0102-canonical-agent-consumers.md",
@@ -749,6 +749,16 @@
         "sourcePath": "docs/adr/0105-current-config-and-plugin-inputs.md",
         "destination": "src/docs/content/echo-agent/en/adr/0105-current-config-and-plugin-inputs.md",
         "sha256": "1287219ce45d9604c6718e79683f0f7ea558c57b9ca2b007e9b8d51a4f250150"
+      },
+      {
+        "sourcePath": "docs/adr/0106-file-system-read-session.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0106-file-system-read-session.md",
+        "sha256": "56552c276ae3c5eca1a76aa145b4d5c5744073e34e4660a04996f42a8f57b63d"
+      },
+      {
+        "sourcePath": "docs/adr/0106-provider-http-client-injection.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0106-provider-http-client-injection.md",
+        "sha256": "8f51f62473fc14a8df6b6a43cb5ec90b04b1ec4969113c649a2389caed3bad50"
       },
       {
         "sourcePath": "docs/en/architecture.md",
@@ -818,7 +828,7 @@
       {
         "sourcePath": "docs/zh/02-tools.md",
         "destination": "src/docs/content/echo-agent/zh/02-tools.md",
-        "sha256": "0a90c01b905da39a5742c50f0d580bb537c0774e874a955d35d48aaec644c1dc"
+        "sha256": "555b3cb73e311d0d4ca8c049dd5d9eca32c5717861ee0b7d7c0746394fc18493"
       },
       {
         "sourcePath": "docs/zh/03-memory.md",
@@ -863,7 +873,7 @@
       {
         "sourcePath": "docs/zh/11-structured-output.md",
         "destination": "src/docs/content/echo-agent/zh/11-structured-output.md",
-        "sha256": "17de2aaf5b6d5eaddaf47d27e18b38d708da92d725c7a96e02effe26a251c73b"
+        "sha256": "e534e844f01fae214f2923209960c66e97c6146833c14183fb513892d1042e3b"
       },
       {
         "sourcePath": "docs/zh/12-mock.md",
@@ -883,7 +893,7 @@
       {
         "sourcePath": "docs/zh/15-im-channels.md",
         "destination": "src/docs/content/echo-agent/zh/15-im-channels.md",
-        "sha256": "fa6dd351d72c758dec9ebfad27a6d2df33aea93f4a5b8b69ad9e59c215237f97"
+        "sha256": "68276bc2322beea6f6e18e28ec4de743158e9851cbb2906e944740d97b637977"
       },
       {
         "sourcePath": "docs/zh/17-graph-workflow.md",
@@ -938,7 +948,7 @@
       {
         "sourcePath": "docs/zh/28-config-reference.md",
         "destination": "src/docs/content/echo-agent/zh/28-config-reference.md",
-        "sha256": "d5923276bd592088d6674d4cbbfc56dbb6cec347efa80814588b799fe0162664"
+        "sha256": "e96c957aa0f952ddb21e49124870eff84fcfc91e78cbcce3263283e6727bafb7"
       },
       {
         "sourcePath": "docs/zh/29-long-running-tasks.md",
@@ -1473,7 +1483,7 @@
       {
         "sourcePath": "docs/adr/0089-non-yanked-media-dependencies.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0089-non-yanked-media-dependencies.md",
-        "sha256": "60135861fcb9120af4c2828e8474b83b7e871966023dd3fc63dc40a8a052dd0c"
+        "sha256": "8e4e5cb7c2530f27947bf781dd825628d31b7f04ac9bda748edeb57fb1200c59"
       },
       {
         "sourcePath": "docs/adr/0090-a2a-lsp-retirement-contract.md",
@@ -1523,7 +1533,7 @@
       {
         "sourcePath": "docs/adr/0099-personal-weixin-channel.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0099-personal-weixin-channel.md",
-        "sha256": "f06a386c59882f96a1311764e3e05531a9eda2c6fe79ec33eb9811a29ee5fddd"
+        "sha256": "c69f01185af9eac22a4ee4e7e9a3b20b52c109154a0bf82d52e5b5857fdb7b4c"
       },
       {
         "sourcePath": "docs/adr/0100-zstd-safe-chain-vendoring.md",
@@ -1533,7 +1543,7 @@
       {
         "sourcePath": "docs/adr/0101-native-message-execution.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0101-native-message-execution.md",
-        "sha256": "0b59174833ee86809025b2ad40170fd58b3bc391ec4078023889a2881ac65147"
+        "sha256": "631da6db8b2ac21a47a06d61aefbcde211550bc0d36a87fb307d532e66d60d30"
       },
       {
         "sourcePath": "docs/adr/0102-canonical-agent-consumers.md",
@@ -1554,6 +1564,16 @@
         "sourcePath": "docs/adr/0105-current-config-and-plugin-inputs.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0105-current-config-and-plugin-inputs.md",
         "sha256": "1287219ce45d9604c6718e79683f0f7ea558c57b9ca2b007e9b8d51a4f250150"
+      },
+      {
+        "sourcePath": "docs/adr/0106-file-system-read-session.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0106-file-system-read-session.md",
+        "sha256": "56552c276ae3c5eca1a76aa145b4d5c5744073e34e4660a04996f42a8f57b63d"
+      },
+      {
+        "sourcePath": "docs/adr/0106-provider-http-client-injection.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0106-provider-http-client-injection.md",
+        "sha256": "8f51f62473fc14a8df6b6a43cb5ec90b04b1ec4969113c649a2389caed3bad50"
       },
       {
         "sourcePath": "docs/zh/architecture.md",

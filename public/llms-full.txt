@@ -193,6 +193,8 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0103：统一当前存储格式，取消旧记录和推断恢复 | echo-agent 文档: https://echo-agent.dev/docs/adr-0103-current-storage-records
 - ADR 0104：Agent完整typed输入与单一原生结算边界 | echo-agent 文档: https://echo-agent.dev/docs/adr-0104-canonical-agent-runtime-kernel
 - ADR 0105：当前配置形状与插件输入边界 | echo-agent 文档: https://echo-agent.dev/docs/adr-0105-current-config-and-plugin-inputs
+- ADR 0106：文件提供者的可选只读会话 | echo-agent 文档: https://echo-agent.dev/docs/adr-0106-file-system-read-session
+- ADR 0106：宿主 HTTP 客户端注入与产品身份 | echo-agent 文档: https://echo-agent.dev/docs/adr-0106-provider-http-client-injection
 - 知识库概述 | echo-agent 文档: https://echo-agent.dev/docs/knowledge-overview
 - Agent 设计模式 | echo-agent 文档: https://echo-agent.dev/docs/agent-patterns
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
@@ -360,6 +362,8 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0103：统一当前存储格式，取消旧记录和推断恢复 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0103-current-storage-records
 - ADR 0104：Agent完整typed输入与单一原生结算边界 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0104-canonical-agent-runtime-kernel
 - ADR 0105：当前配置形状与插件输入边界 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0105-current-config-and-plugin-inputs
+- ADR 0106：文件提供者的可选只读会话 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0106-file-system-read-session
+- ADR 0106：宿主 HTTP 客户端注入与产品身份 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0106-provider-http-client-injection
 - Knowledge Base Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/knowledge-overview
 - Agent Design Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/agent-patterns
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive
@@ -1683,6 +1687,11 @@ ToolResult::success("output")
 与普通 `ExecutionFailed` 构造方式不变。超时、取消继续使用已有变体；无法分类的旧错误
 沿原保守分类处理，不通过错误文案决定重试。
 
+Shell的`SandboxExecutor::execute_stream`默认适配可能先完成整个缓冲执行，再返回错误；
+建流失败不代表命令尚未开始。已有`RemoteFailure`中的`ToolFailure`原样进入结果，保留
+已知无副作用、可能/已确认副作用、恢复方式和重试提示；缺少类型化声明的错误与流内失败
+按可能副作用保守处理。耗时记录实际等待，不能把等待后失败一律记作0毫秒。
+
 provider 不新增失败重试。DDG 仍保留 HTML→Instant Answer 原策略，一次逻辑尝试
 可以包含两次 HTTP 请求。只有 ToolManager 执行有限重试，保留有效 Retry-After，
 通过原 context 取消等待；server 最低等待超过现有30秒上限时返回原失败，不提前请求。
@@ -2197,6 +2206,14 @@ Skill 后续激活、资源和脚本保持自身来源；用户级来源不继�
 `FileSystem::open_read` 返回标准 reader，不预先读取整个文件。证据摘要和大小校验
 继续使用原有固定大小缓冲区；provider 保留实际 operation 至真实关闭/结算。
 不支持流式读取时明确 Unsupported，不读本机同名文件。
+
+`grep` 另有可选的内容搜索接缝：`tools::search::ContentSearchProvider` 可在远端
+完成匹配、只回传已经排版的记录，避免把候选文件正文逐文件拉回本机。通过
+`StandardToolPack::with_content_search_provider` 或
+`ReactAgentBuilder::content_search_provider` 注入，默认 `None` 表示既有本机
+遍历。提供者返回 `None` 表示不支持该请求，工具落回本机路径且输出与未注入时
+一致；返回错误则按工具既有映射失败，不降级成“没有匹配”。远端结果只沿用原
+`PageRequest` 分页与输出格式，不新增工具名或模型可见参数。
 
 `list_worktrees` 经同一目标 Git executor 和文件 provider 检查原 marker。
 原本机 worktree 创建/清理仍保留目录身份保护。当前非本机
@@ -4262,7 +4279,7 @@ let report: SalesReport = extractor_agent.extract(&raw_answer, schema).await?;
 1. **模型兼容性**：JSON 格式需要新鲜且明确的结构化输出能力事实。Provider 支持有助于生成合格输出；即使 Provider 忽略提示，本地严格校验也会拒绝不匹配值。显式 `Text` 会按未约束的默认请求发送。
 2. **`additionalProperties: false`**：JSON Schema 中建议始终设置此项，防止模型输出多余字段
 3. **原生模型推理**：旧 CoT 提示开关已退役。推理深度使用 `ReactAgent::set_thinking()` 配置，并由模型能力决定支持方式；结构化输出仍走原本地 Schema 校验。
-4. **temperature**：`extract_json()` 内部固定使用 `temperature=0.0`，保证输出稳定；`AgentConfig::response_format()` 方式仍使用 Agent 默认温度
+4. **temperature**：`extract_json()` 不主动设置温度，沿用 provider/model 的原生缺省；`AgentConfig::response_format()` 的 ReAct 请求仍保留调用方显式配置的温度。通用 `chat_simple()`、Critic、摘要/增量压缩、压缩前记忆提取和后台 review 也不注入固定温度；`SimpleChatOptions::with_temperature()` 等显式 API 继续保留，并由原 provider 规则支持或明确拒绝。
 5. **Schema 引用**：严格校验支持 `$defs` 等本地引用；外部 HTTP/文件 `$ref` 会在模型调用前拒绝。请将外部定义打包进传入的 Schema。
 
 ---
@@ -11281,6 +11298,13 @@ stream 被 drop 后执行。如果消费者回调自身 panic，`SessionHandler`
 该 panic，不会让它从 stream 析构继续传播，也不会污染 replacement session。详见
 [ADR 0057](../adr/0057-channel-generation-delivery-fence.md)。
 
+`SessionHandler::close()` 只在某个保留会话的 handler `close()` 成功、且 session map 中确实移除
+了同一个 session 之后，才同步发布一次 `SessionEndInfo`（`SessionEndReason::Shutdown`）；删除与
+通知之间没有 await 点，因此后继准入创建的新 incarnation 一定排在旧的结束通知之后。handler
+close 失败或被取消时保留原 owner 且不发布结束通知，重复 close 也不会重复发布。应用侧会话协调器
+必须依据该通知释放对应 surface 的 current incarnation，才能接纳停止/重连后同一会话的新
+incarnation；迟到的旧回调仍按 incarnation 校验，不会清除已注册的 replacement。
+
 自定义 Agent driver 应把稳定产品 ID 放在
 `AgentInvocationContext.runtime.conversation_id`，并把 instance 派生的 runtime key 同时传给
 `runtime_state_id` 与 `transcript_generation_id`。这样同一 incarnation 的 checkpoint load/save
@@ -11444,6 +11468,16 @@ GET/POST 使用各自 headers；HTTPS origin 校验及禁用自动重定向防�
 `capture_message_context(target, message_id)` 读取原消息关联，`send_with_context` 将准确 Option 交同一 sender。恢复使用 `validate_message_context(target, message_id, expected)`：None 必须存在真实 `context: null` 关联；Some 必须精确 identity/reference 且原 token record 可读有效。缺关联/字段、身份/reference/token 漂移或不同凭据 generation 均拒绝，不发 HTTP、不借 latest、不修状态、不返回秘密。A2 持久 binding、never-claimed 证明、workspace generation 和 TaskRun 意图留原 host 策略。
 
 typed send 仍等待唯一 producer 的真实 `Accepted`/`Rejected`/`Unknown`；HTTP200、入队、start 不等于成功，Unknown 不准重放。只有真实 authenticated 业务 poll 证明 `WeixinAuthenticatedPoll` Ready；`-14` 停止新收发并要求重新认证。
+
+准入失败按原 frontier 的完整消息身份保留有界、脱敏诊断，显示在原传输观察的 `last_error`。
+context 关联准备中的 Store 读写或 CAS 失败以固定 `context_preparation` 类别记录，原 Store
+错误、token、context 和消息正文不进入诊断；失败消息不交给 handler，不伪造回执或推进 cursor。
+成功 poll、某个 handler 返回 `Ok` 或另一条消息的回执均不清除该失败；同一消息的真实持久
+回执只移除自身诊断，多条消息失败后确认其中一条，其余诊断继续保留。诊断不接管 cursor、
+执行许可或业务结果；已确认接收后的迟到调用失败保留为独立调用警告，不重新准入该消息。
+诊断只补充已确认的 authenticated-poll Ready，不能把认证过期、断连或尚未连接提升为 Ready。
+原准入任务被确认异常时立即发布 Unknown；其它已准入效果、许可及 join 义务继续保留，
+不等物理结算完成才报告故障，也不为更新观察而提前释放原执行。
 
 源码反例使用真实本地 HTTP poll/sender、SessionHandler 与通用文件持久 host：40 条输入、128 单消息页后控制、原长流分段、提前 ACK 持有调用许可及取消 Stop waiter 后的实际 join。此前 Framework focused 已实际通过 135 条渠道用例（含全部 10 条新增或重命名 NoStream 用例）、12 条 facade 用例和 2 条仅编译 doctest；demo38 类型检查、匹配范围的 warning/panic lint、featureless 隔离及 fmt/check 同样通过。前述结果绑定此前的 Rust 输入；下述测试工厂属于后续源码变化，须单独编译和运行验证。受控夹具资格不证明 host 生产持久化、完整合并矩阵、官网镜像、应用恢复、原生 GUI、真实扫码收发或精确 main CI。详见 [ADR 0099](../adr/0099-personal-weixin-channel.md)。
 
@@ -13449,6 +13483,13 @@ overall 边界的 provider-client 默认值；`ChatRequest::with_timeouts` 使�
 
 embedding application 的 YAML schema、模型目录、渠道、TUI/server 设置和产品提示词位于
 `echo-agent-cli` 仓库文档。
+
+
+## 宿主 HTTP 客户端与产品身份
+
+`LlmConfig::build_client_with_http_client(Arc<reqwest::Client>)` 与 `SourcedLlmConfig` 的同名方法允许宿主沿既有工厂注入 HTTP 客户端。代理、TLS 与 `User-Agent` 等传输策略由宿主设置，模型协议、模态和 sourced facts 的优先级仍由同一工厂解析。`build_client()` 保持原默认行为。
+
+应用可用 `reqwest::Client::builder().user_agent("my-app/1.0.0").build()` 创建客户端，再传给工厂；不要在通用框架中硬编码某个应用品牌。注入对 Chat Completions、Responses 和 Anthropic 的普通、流式请求都生效。完整无网络构造示例见 `echo-agent-learning/examples/demo26_provider_factory.rs`；设计取舍见 [HTTP 客户端注入 ADR](../adr/0106-provider-http-client-injection.md)。
 
 
 ---
@@ -25045,6 +25086,20 @@ Public examples, SDK contracts and website instructions do not change because
 media entry points and behavior do not change; existing examples remain in the
 workspace all-target gate. No raw diagnostic archives belong in Git.
 
+## 2026-11-05：Calamine官方安全版本的维护后继
+
+用户已明确批准采用calamine0.38.0并生成新锁候选逐项复评，未预先接受新风险。
+本轮延续上面的Framework唯一vendor owner、相对path消费、Zip9.0.3和唯一registry-origin
+算法，更新calamine发布版本／路径／真实archive checksum，不新增第一方工具API或工具schema。
+依赖本身新增了Reader的样式默认方法及属性／样式类型；本轮不宣称整个第三方Rust API字节等同。
+0.38自带旧私有文件名缓存的Zip9错误传播，以及PR762 CFB修复；本地只保留饱和计数、
+精确Zip约束、去未用dev targets与独立workspace适配。
+
+新quick-xml0.42和真实resolver边变化按精确锁复评，原duplicate版本集合和CLI已接受
+风险不自动扩张。Framework／CLI新锁已经Cargo生成；SDK精pin未切、App未重建。
+旧0.36局部回补的2P及旧风险失败仍按原纪元保留。详细来源、验证与待决范围见
+[vendor说明](../../vendor/README.md)的本日后继，最终门禁与发行资格另验。
+
 
 ---
 
@@ -26864,6 +26919,29 @@ track the API; website mirrors wait the coordinator's qualified producer. SDK
 accepted contracts, real QR/login/messages, native GUI and exact main CI remain
 separate and unverified by this source change.
 
+## 2026-11-07：准入失败观测与准确回执隔离
+
+原 poll owner 按完整 frontier 消息身份记录尚未得到回执的失败诊断；集合规模受原
+`MAX_PENDING_RECEIPTS` 限制，只保存有界类别和关联标识，不保存正文、凭据或 context。
+诊断集合没有消息准入、重试、执行或恢复权，不替代原持久 host、许可、cursor 或发送结果。
+
+消息 context 关联准备中的 Store 读写、损坏关联或 CAS 错误也进入同一集合，类别固定为
+`context_preparation`。原错误文本、正文、token 和 context 不进入诊断；失败消息不交给
+handler、不生成 ACK、不推进 cursor，后续修复存储也只通过该消息的准确回执解除诊断。
+
+handler 返回 `Ok` 和 authenticated poll 成功都不能解除另一条消息的失败。只有原消息
+的真实持久回执或原明确终端拒绝路径清除准确身份；A、B 同时失败后确认 B，A 继续可见。
+已被回执确认或随真实 cursor 提交离开 frontier 的调用若晚到失败，保留脱敏调用警告，
+不将消息重新放入 frontier，也不重放业务效果。
+
+诊断发布仅补充已确认的 `WeixinAuthenticatedPoll` Ready。关闭、认证过期或断连期间的
+迟到调用不能发布新的 Ready，也不能覆盖原传输失败原因。实际模型执行、typed send
+结果与手机收件仍分别验收；本节不更新上文历史验证快照的资格。
+
+原准入任务的异常在捕获时立即发布 Unknown。其它调用即使已经提前 ACK，仍继续持有
+实际效果、许可和 JoinSet 结算责任；故障观察与物理结算分开，不以等待结束或释放原执行
+作为报告故障的条件。
+
 
 ---
 
@@ -27109,6 +27187,30 @@ SDK 独立核验新增 Rust API 与 adapter；本节不代表跨语言合同、�
 native source 的 unknown 只由同一 execution 身份的运行时终态解除，普通 FinalAnswer
 和 foreign 终态不能代替。未提供运行时状态的旧 source 保留原兼容读取，所有路径仍等原
 EOF 才返回 receipt。这里复用同一 driver、原 input lifecycle 与 source，不增加结束总线或 owner。
+
+## Driver 首帧的执行身份与恢复游标
+
+当 caller 未提供 execution_id、last_persisted_sequence 为0，且第一原始item为唯一
+AgentOutputProjection 已验证的真实 Started、合同首因槽为空时，Driver 在首次构造
+EventEnvelope 前只读该真实 execution，固定本次流的有效头。原 inspect/fuse 之后的一项
+Peekable 只缓存同一item，不重复observe、不改变Started顺序；转换失败记原首因槽，仍保
+sink拒绝后的原raw drain、物理EOF、原计时起点和owner。此处不增加公开DTO或执行权威。
+
+caller显式身份保持原值和原冲突拒绝。None+非零游标或prefix-first流全程保None，不迟绑、
+不修改既有头或event_id；调用方不得重置cursor绕过同scope持久前缀。0只是必要输入，Driver
+不拥有历史为空的证明。同一物理source的不同turn各自建立原projection及execution，不能
+复用physical context ID。此修复只覆盖Started-first的fresh流，不承诺prefix-first历史发布。
+
+验收包含加强既有首帧测试、cursor0/41和None前缀字节/event_id不变、显式匹配/冲突、
+prefix/非法首item、同source两turn，以及既有setup/sink拒绝/held EOF和资源回收控制。
+2026-11-02的具名focused先取得原生产区下exact1新增外层身份断言的真实RED。迁移旧fresh
+测试预期后，新test-only切点再次实际NoRun/list并取得0通过/1失败/退出101；保同一整个
+tests区SHA，再采用最小生产桥取得exact1 GREEN。整个`runtime::turn_driver::`实际list55，
+运行55通过/0失败/0忽略，497过滤；原强helper、恢复41/prefix None、显式冲突和原heldEOF
+控制均保留并通过。定向Clippy零警告、整仓fmt write/check自然0，原失败与实际程序/FP/.d
+分别保存在`.echo-semantic/local/framework-native-diagnostics-focused-20261102-r01/`。
+这是Framework Driver定向资格，不替代App真实physical owner连续RunTurn、Cron、GUI、
+独立SDK、完整工程矩阵或main CI验收。
 
 ## 参考
 
@@ -27551,6 +27653,56 @@ deny_unknown_fields）；本机已安装的serde_derive 1.0.229官方源码与�
 registry身份/checksum核对，来源收据在本批references/local-primary-source-receipt.json。
 官方网页检索不可用、直接网站403及GitHub连接失败均保为原事实，不声称已在线验证。
 这里的兼容退役取舍由人类最新裁决决定；Serde只提供精确类型解码，无权限或产品政策。
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0106-file-system-read-session
+
+# ADR 0106：文件提供者的可选只读会话
+
+日期：2026-11-06。
+
+## 背景与候选
+
+远程文件提供者若为每次 stat/read/list 重新建立子通道，通用加载算法会放大连接开销。永久连接池会扩大退出、重连和写入语义；由产品按文件提供者类型向下转换则破坏已有抽象。
+
+采用 `FileSystem::begin_read_session`，默认返回 `None`；支持批次复用的提供者返回 `FileSystemReadSession`，暴露当前目标内的 `files()`，并通过可失败的 `finish` 结算。它表达有界只读传输借用，不承诺事务快照、不缓存跨调用内容、不含任何 SSH 或 Eclip 产品字段。
+
+## 契约与取舍
+
+调用方在原 blocking 边界使用，会话只服务当前读取阶段。实现必须禁止副作用和资源逃逸，并在 Drop 中结算原资源；调用方正常路径显式 finish 以观察关闭错误。丢弃 observer 不能被解释为物理操作取消。现有 FileSystem 实现无需改动即可保持原行为，普通写入 API、错误分类和原资源 owner 不变。`first_existing_path` 默认串行实现；远程提供者可以有界流水化 metadata 并按输入顺序解释结果，不能通过完整目录枚举放大成本，也不能吞掉优先路径的错误。
+
+[openssh-sftp-client](https://docs.rs/openssh-sftp-client/0.15.10/openssh_sftp_client/)支持客户端内请求缓冲，也明确 future 取消不撤回远端操作；[TRAMP](https://raw.githubusercontent.com/emacs-mirror/emacs/master/doc/misc/tramp.texi)复用连接信息并规定失效。这些实现支持有明确生命周期的复用，不支持把取消当回滚。
+
+## 影响与验收
+
+新增默认只读会话和有序 `first_existing_path` trait 方法及一个对象安全的会话 trait，没有依赖变更。编译文档展示使用方式；Eclip 消费者验证一次准备复用、多消息刷新、失败时关闭和真实本地 SFTP 协议。SDK Protocol 和 Host 合同未变化；没有删除现有公共能力。
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0106-provider-http-client-injection
+
+# ADR 0106：宿主 HTTP 客户端注入与产品身份
+
+状态：采用。日期：2026-11-06。
+
+## 背景
+
+应用经 LlmConfig 工厂创建客户端，但既有工厂无法传入宿主已经配置的 reqwest::Client。部分兼容网关拒绝没有 User-Agent 的请求。产品身份属于宿主，框架不能写入 Eclip 或其它具体产品品牌。Chat 与 Responses 已有 with_client 构造入口；Anthropic 缺少工厂内部注入接缝。
+
+## 参考与候选
+
+本机 DeepSeek Harness 0.2.1-rc.5 的 dsh-llm attributionHeaders 在产品边界统一提供真实身份；reqwest 0.12 的 ClientBuilder::user_agent 提供标准传输机制。复用现有 Client 与工厂足以解决问题。
+
+候选一是在所有框架请求中硬编码应用品牌，拒绝：污染产品边界。候选二新增模型配置字段和第二套应用协议分派，拒绝：增加持久化/API 负担或重复事实解析。候选三复用 with_client，在既有 LlmConfig/SourcedLlmConfig 工厂增加显式 HTTP 客户端注入，采用。
+
+## 决策与影响
+
+增加 build_client_with_http_client，原 build_client 委托同一 factory 且保留默认传输行为；不修改 LlmConfig 序列化结构、不新增依赖、不改变协议选择、模型事实优先级、鉴权或生命周期。Anthropic 仅增加内部 client 注入接缝。产品应用构造具有自身 User-Agent 的 reqwest::Client；GUI 连接测试、主 Agent 与 Subagent 经既有 prepare 主路径复用它。
+
+注入客户端是宿主传输策略，不授予模型能力、不改变 provider/endpoint/model 身份、不添加权限门控。已有 examples 纳入编译/执行验证；消费者通过真实 loopback 验证三协议普通/流式请求头与完整结束。
 
 
 ---
@@ -33176,7 +33328,7 @@ let report: SalesReport = extractor_agent.extract(&raw_answer, schema).await?;
 1. **Model compatibility**: JSON response formats require a fresh, affirmative structured-output capability. Provider support helps produce valid output, but the local strict validator rejects a mismatch even if a provider ignores the hint. An explicit `Text` format is sent as the unconstrained provider default.
 2. **`additionalProperties: false`**: Always set this in your JSON Schema to prevent the model from emitting extra fields
 3. **原生模型推理**：旧 CoT 提示开关已退役。推理深度使用 `ReactAgent::set_thinking()` 配置，并由模型能力决定支持方式；结构化输出仍走原本地 Schema 校验。
-4. **Temperature**: `extract_json()` internally uses `temperature=0.0` for stable outputs. The `AgentConfig::response_format()` path uses the Agent's configured temperature
+4. **temperature**：`extract_json()` 不主动设置温度，沿用 provider/model 的原生缺省；`AgentConfig::response_format()` 的 ReAct 请求仍保留调用方显式配置的温度。通用 `chat_simple()`、Critic、摘要/增量压缩、压缩前记忆提取和后台 review 也不注入固定温度；`SimpleChatOptions::with_temperature()` 等显式 API 继续保留，并由原 provider 规则支持或明确拒绝。
 5. **Schema references**: Strict validation supports local references such as `$defs`; external HTTP/file `$ref` targets are rejected before the model call. Bundle external definitions into the supplied schema.
 
 ---
@@ -54232,6 +54384,20 @@ Public examples, SDK contracts and website instructions do not change because
 media entry points and behavior do not change; existing examples remain in the
 workspace all-target gate. No raw diagnostic archives belong in Git.
 
+## 2026-11-05：Calamine官方安全版本的维护后继
+
+用户已明确批准采用calamine0.38.0并生成新锁候选逐项复评，未预先接受新风险。
+本轮延续上面的Framework唯一vendor owner、相对path消费、Zip9.0.3和唯一registry-origin
+算法，更新calamine发布版本／路径／真实archive checksum，不新增第一方工具API或工具schema。
+依赖本身新增了Reader的样式默认方法及属性／样式类型；本轮不宣称整个第三方Rust API字节等同。
+0.38自带旧私有文件名缓存的Zip9错误传播，以及PR762 CFB修复；本地只保留饱和计数、
+精确Zip约束、去未用dev targets与独立workspace适配。
+
+新quick-xml0.42和真实resolver边变化按精确锁复评，原duplicate版本集合和CLI已接受
+风险不自动扩张。Framework／CLI新锁已经Cargo生成；SDK精pin未切、App未重建。
+旧0.36局部回补的2P及旧风险失败仍按原纪元保留。详细来源、验证与待决范围见
+[vendor说明](../../vendor/README.md)的本日后继，最终门禁与发行资格另验。
+
 
 ---
 
@@ -56051,6 +56217,29 @@ track the API; website mirrors wait the coordinator's qualified producer. SDK
 accepted contracts, real QR/login/messages, native GUI and exact main CI remain
 separate and unverified by this source change.
 
+## 2026-11-07：准入失败观测与准确回执隔离
+
+原 poll owner 按完整 frontier 消息身份记录尚未得到回执的失败诊断；集合规模受原
+`MAX_PENDING_RECEIPTS` 限制，只保存有界类别和关联标识，不保存正文、凭据或 context。
+诊断集合没有消息准入、重试、执行或恢复权，不替代原持久 host、许可、cursor 或发送结果。
+
+消息 context 关联准备中的 Store 读写、损坏关联或 CAS 错误也进入同一集合，类别固定为
+`context_preparation`。原错误文本、正文、token 和 context 不进入诊断；失败消息不交给
+handler、不生成 ACK、不推进 cursor，后续修复存储也只通过该消息的准确回执解除诊断。
+
+handler 返回 `Ok` 和 authenticated poll 成功都不能解除另一条消息的失败。只有原消息
+的真实持久回执或原明确终端拒绝路径清除准确身份；A、B 同时失败后确认 B，A 继续可见。
+已被回执确认或随真实 cursor 提交离开 frontier 的调用若晚到失败，保留脱敏调用警告，
+不将消息重新放入 frontier，也不重放业务效果。
+
+诊断发布仅补充已确认的 `WeixinAuthenticatedPoll` Ready。关闭、认证过期或断连期间的
+迟到调用不能发布新的 Ready，也不能覆盖原传输失败原因。实际模型执行、typed send
+结果与手机收件仍分别验收；本节不更新上文历史验证快照的资格。
+
+原准入任务的异常在捕获时立即发布 Unknown。其它调用即使已经提前 ACK，仍继续持有
+实际效果、许可和 JoinSet 结算责任；故障观察与物理结算分开，不以等待结束或释放原执行
+作为报告故障的条件。
+
 
 ---
 
@@ -56296,6 +56485,30 @@ SDK 独立核验新增 Rust API 与 adapter；本节不代表跨语言合同、�
 native source 的 unknown 只由同一 execution 身份的运行时终态解除，普通 FinalAnswer
 和 foreign 终态不能代替。未提供运行时状态的旧 source 保留原兼容读取，所有路径仍等原
 EOF 才返回 receipt。这里复用同一 driver、原 input lifecycle 与 source，不增加结束总线或 owner。
+
+## Driver 首帧的执行身份与恢复游标
+
+当 caller 未提供 execution_id、last_persisted_sequence 为0，且第一原始item为唯一
+AgentOutputProjection 已验证的真实 Started、合同首因槽为空时，Driver 在首次构造
+EventEnvelope 前只读该真实 execution，固定本次流的有效头。原 inspect/fuse 之后的一项
+Peekable 只缓存同一item，不重复observe、不改变Started顺序；转换失败记原首因槽，仍保
+sink拒绝后的原raw drain、物理EOF、原计时起点和owner。此处不增加公开DTO或执行权威。
+
+caller显式身份保持原值和原冲突拒绝。None+非零游标或prefix-first流全程保None，不迟绑、
+不修改既有头或event_id；调用方不得重置cursor绕过同scope持久前缀。0只是必要输入，Driver
+不拥有历史为空的证明。同一物理source的不同turn各自建立原projection及execution，不能
+复用physical context ID。此修复只覆盖Started-first的fresh流，不承诺prefix-first历史发布。
+
+验收包含加强既有首帧测试、cursor0/41和None前缀字节/event_id不变、显式匹配/冲突、
+prefix/非法首item、同source两turn，以及既有setup/sink拒绝/held EOF和资源回收控制。
+2026-11-02的具名focused先取得原生产区下exact1新增外层身份断言的真实RED。迁移旧fresh
+测试预期后，新test-only切点再次实际NoRun/list并取得0通过/1失败/退出101；保同一整个
+tests区SHA，再采用最小生产桥取得exact1 GREEN。整个`runtime::turn_driver::`实际list55，
+运行55通过/0失败/0忽略，497过滤；原强helper、恢复41/prefix None、显式冲突和原heldEOF
+控制均保留并通过。定向Clippy零警告、整仓fmt write/check自然0，原失败与实际程序/FP/.d
+分别保存在`.echo-semantic/local/framework-native-diagnostics-focused-20261102-r01/`。
+这是Framework Driver定向资格，不替代App真实physical owner连续RunTurn、Cron、GUI、
+独立SDK、完整工程矩阵或main CI验收。
 
 ## 参考
 
@@ -56738,6 +56951,56 @@ deny_unknown_fields）；本机已安装的serde_derive 1.0.229官方源码与�
 registry身份/checksum核对，来源收据在本批references/local-primary-source-receipt.json。
 官方网页检索不可用、直接网站403及GitHub连接失败均保为原事实，不声称已在线验证。
 这里的兼容退役取舍由人类最新裁决决定；Serde只提供精确类型解码，无权限或产品政策。
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0106-file-system-read-session
+
+# ADR 0106：文件提供者的可选只读会话
+
+日期：2026-11-06。
+
+## 背景与候选
+
+远程文件提供者若为每次 stat/read/list 重新建立子通道，通用加载算法会放大连接开销。永久连接池会扩大退出、重连和写入语义；由产品按文件提供者类型向下转换则破坏已有抽象。
+
+采用 `FileSystem::begin_read_session`，默认返回 `None`；支持批次复用的提供者返回 `FileSystemReadSession`，暴露当前目标内的 `files()`，并通过可失败的 `finish` 结算。它表达有界只读传输借用，不承诺事务快照、不缓存跨调用内容、不含任何 SSH 或 Eclip 产品字段。
+
+## 契约与取舍
+
+调用方在原 blocking 边界使用，会话只服务当前读取阶段。实现必须禁止副作用和资源逃逸，并在 Drop 中结算原资源；调用方正常路径显式 finish 以观察关闭错误。丢弃 observer 不能被解释为物理操作取消。现有 FileSystem 实现无需改动即可保持原行为，普通写入 API、错误分类和原资源 owner 不变。`first_existing_path` 默认串行实现；远程提供者可以有界流水化 metadata 并按输入顺序解释结果，不能通过完整目录枚举放大成本，也不能吞掉优先路径的错误。
+
+[openssh-sftp-client](https://docs.rs/openssh-sftp-client/0.15.10/openssh_sftp_client/)支持客户端内请求缓冲，也明确 future 取消不撤回远端操作；[TRAMP](https://raw.githubusercontent.com/emacs-mirror/emacs/master/doc/misc/tramp.texi)复用连接信息并规定失效。这些实现支持有明确生命周期的复用，不支持把取消当回滚。
+
+## 影响与验收
+
+新增默认只读会话和有序 `first_existing_path` trait 方法及一个对象安全的会话 trait，没有依赖变更。编译文档展示使用方式；Eclip 消费者验证一次准备复用、多消息刷新、失败时关闭和真实本地 SFTP 协议。SDK Protocol 和 Host 合同未变化；没有删除现有公共能力。
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0106-provider-http-client-injection
+
+# ADR 0106：宿主 HTTP 客户端注入与产品身份
+
+状态：采用。日期：2026-11-06。
+
+## 背景
+
+应用经 LlmConfig 工厂创建客户端，但既有工厂无法传入宿主已经配置的 reqwest::Client。部分兼容网关拒绝没有 User-Agent 的请求。产品身份属于宿主，框架不能写入 Eclip 或其它具体产品品牌。Chat 与 Responses 已有 with_client 构造入口；Anthropic 缺少工厂内部注入接缝。
+
+## 参考与候选
+
+本机 DeepSeek Harness 0.2.1-rc.5 的 dsh-llm attributionHeaders 在产品边界统一提供真实身份；reqwest 0.12 的 ClientBuilder::user_agent 提供标准传输机制。复用现有 Client 与工厂足以解决问题。
+
+候选一是在所有框架请求中硬编码应用品牌，拒绝：污染产品边界。候选二新增模型配置字段和第二套应用协议分派，拒绝：增加持久化/API 负担或重复事实解析。候选三复用 with_client，在既有 LlmConfig/SourcedLlmConfig 工厂增加显式 HTTP 客户端注入，采用。
+
+## 决策与影响
+
+增加 build_client_with_http_client，原 build_client 委托同一 factory 且保留默认传输行为；不修改 LlmConfig 序列化结构、不新增依赖、不改变协议选择、模型事实优先级、鉴权或生命周期。Anthropic 仅增加内部 client 注入接缝。产品应用构造具有自身 User-Agent 的 reqwest::Client；GUI 连接测试、主 Agent 与 Subagent 经既有 prepare 主路径复用它。
+
+注入客户端是宿主传输策略，不授予模型能力、不改变 provider/endpoint/model 身份、不添加权限门控。已有 examples 纳入编译/执行验证；消费者通过真实 loopback 验证三协议普通/流式请求头与完整结束。
 
 
 ---

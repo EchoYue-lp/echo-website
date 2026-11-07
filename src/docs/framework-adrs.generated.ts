@@ -849,4 +849,20 @@ export const frameworkAdrDocs = [
     },
     filePath: './content/echo-agent/adr/0105-current-config-and-plugin-inputs.md',
   },
+  {
+    slug: 'adr-0106-file-system-read-session',
+    title: {
+      zh: 'ADR 0106：文件提供者的可选只读会话',
+      en: 'ADR 0106：文件提供者的可选只读会话',
+    },
+    filePath: './content/echo-agent/adr/0106-file-system-read-session.md',
+  },
+  {
+    slug: 'adr-0106-provider-http-client-injection',
+    title: {
+      zh: 'ADR 0106：宿主 HTTP 客户端注入与产品身份',
+      en: 'ADR 0106：宿主 HTTP 客户端注入与产品身份',
+    },
+    filePath: './content/echo-agent/adr/0106-provider-http-client-injection.md',
+  },
 ];

@@ -193,6 +193,8 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0103：统一当前存储格式，取消旧记录和推断恢复 | echo-agent 文档: https://echo-agent.dev/docs/adr-0103-current-storage-records
 - ADR 0104：Agent完整typed输入与单一原生结算边界 | echo-agent 文档: https://echo-agent.dev/docs/adr-0104-canonical-agent-runtime-kernel
 - ADR 0105：当前配置形状与插件输入边界 | echo-agent 文档: https://echo-agent.dev/docs/adr-0105-current-config-and-plugin-inputs
+- ADR 0106：文件提供者的可选只读会话 | echo-agent 文档: https://echo-agent.dev/docs/adr-0106-file-system-read-session
+- ADR 0106：宿主 HTTP 客户端注入与产品身份 | echo-agent 文档: https://echo-agent.dev/docs/adr-0106-provider-http-client-injection
 - 知识库概述 | echo-agent 文档: https://echo-agent.dev/docs/knowledge-overview
 - Agent 设计模式 | echo-agent 文档: https://echo-agent.dev/docs/agent-patterns
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
@@ -360,6 +362,8 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0103：统一当前存储格式，取消旧记录和推断恢复 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0103-current-storage-records
 - ADR 0104：Agent完整typed输入与单一原生结算边界 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0104-canonical-agent-runtime-kernel
 - ADR 0105：当前配置形状与插件输入边界 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0105-current-config-and-plugin-inputs
+- ADR 0106：文件提供者的可选只读会话 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0106-file-system-read-session
+- ADR 0106：宿主 HTTP 客户端注入与产品身份 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0106-provider-http-client-injection
 - Knowledge Base Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/knowledge-overview
 - Agent Design Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/agent-patterns
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive

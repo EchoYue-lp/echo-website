@@ -172,6 +172,11 @@ ToolResult::success("output")
 与普通 `ExecutionFailed` 构造方式不变。超时、取消继续使用已有变体；无法分类的旧错误
 沿原保守分类处理，不通过错误文案决定重试。
 
+Shell的`SandboxExecutor::execute_stream`默认适配可能先完成整个缓冲执行，再返回错误；
+建流失败不代表命令尚未开始。已有`RemoteFailure`中的`ToolFailure`原样进入结果，保留
+已知无副作用、可能/已确认副作用、恢复方式和重试提示；缺少类型化声明的错误与流内失败
+按可能副作用保守处理。耗时记录实际等待，不能把等待后失败一律记作0毫秒。
+
 provider 不新增失败重试。DDG 仍保留 HTML→Instant Answer 原策略，一次逻辑尝试
 可以包含两次 HTTP 请求。只有 ToolManager 执行有限重试，保留有效 Retry-After，
 通过原 context 取消等待；server 最低等待超过现有30秒上限时返回原失败，不提前请求。
@@ -686,6 +691,14 @@ Skill 后续激活、资源和脚本保持自身来源；用户级来源不继�
 `FileSystem::open_read` 返回标准 reader，不预先读取整个文件。证据摘要和大小校验
 继续使用原有固定大小缓冲区；provider 保留实际 operation 至真实关闭/结算。
 不支持流式读取时明确 Unsupported，不读本机同名文件。
+
+`grep` 另有可选的内容搜索接缝：`tools::search::ContentSearchProvider` 可在远端
+完成匹配、只回传已经排版的记录，避免把候选文件正文逐文件拉回本机。通过
+`StandardToolPack::with_content_search_provider` 或
+`ReactAgentBuilder::content_search_provider` 注入，默认 `None` 表示既有本机
+遍历。提供者返回 `None` 表示不支持该请求，工具落回本机路径且输出与未注入时
+一致；返回错误则按工具既有映射失败，不降级成“没有匹配”。远端结果只沿用原
+`PageRequest` 分页与输出格式，不新增工具名或模型可见参数。
 
 `list_worktrees` 经同一目标 Git executor 和文件 provider 检查原 marker。
 原本机 worktree 创建/清理仍保留目录身份保护。当前非本机
