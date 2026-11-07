@@ -195,6 +195,9 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0105：当前配置形状与插件输入边界 | echo-agent 文档: https://echo-agent.dev/docs/adr-0105-current-config-and-plugin-inputs
 - ADR 0106：文件提供者的可选只读会话 | echo-agent 文档: https://echo-agent.dev/docs/adr-0106-file-system-read-session
 - ADR 0106：宿主 HTTP 客户端注入与产品身份 | echo-agent 文档: https://echo-agent.dev/docs/adr-0106-provider-http-client-injection
+- ADR 0107：分离后台准入与执行生命周期，复用同次保存工作 | echo-agent 文档: https://echo-agent.dev/docs/adr-0107-command-cell-admission-and-save-work
+- ADR 0108：有版本运行事实与稳定缓存前缀 | echo-agent 文档: https://echo-agent.dev/docs/adr-0108-versioned-context-projections
+- ADR 0109：原模型调用的可选观测 | echo-agent 文档: https://echo-agent.dev/docs/adr-0109-model-call-observation
 - 知识库概述 | echo-agent 文档: https://echo-agent.dev/docs/knowledge-overview
 - Agent 设计模式 | echo-agent 文档: https://echo-agent.dev/docs/agent-patterns
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
@@ -364,6 +367,9 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0105：当前配置形状与插件输入边界 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0105-current-config-and-plugin-inputs
 - ADR 0106：文件提供者的可选只读会话 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0106-file-system-read-session
 - ADR 0106：宿主 HTTP 客户端注入与产品身份 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0106-provider-http-client-injection
+- ADR 0107：分离后台准入与执行生命周期，复用同次保存工作 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0107-command-cell-admission-and-save-work
+- ADR 0108：有版本运行事实与稳定缓存前缀 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0108-versioned-context-projections
+- ADR 0109：原模型调用的可选观测 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0109-model-call-observation
 - Knowledge Base Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/knowledge-overview
 - Agent Design Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/agent-patterns
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive
@@ -2619,6 +2625,10 @@ Journal 通常适合承担“已经发生的领域事实”。当前状态、列
 
 ## Checkpoint：稳定边界的状态快照
 
+模型上下文中的版本投影随原 checkpoint 消息信封保存，恢复后仍可按最新版本去重；
+旧版可压缩、最新版受保护，失效以追加版本表达。它是派生上下文，不是新的状态权威。
+固定规则和协议诊断边界见 [ADR 0108](../adr/0108-versioned-context-projections.md)。
+
 ### Reducer checkpoint
 
 `CheckpointedReducer` 将 Journal 事件 fold 为状态，并通过 `CheckpointStore<S>` 保存：
@@ -2698,6 +2708,11 @@ framework 会在模型准备前精确 reset/restore；只有相同 ID 才复用 
 提交 `Hydrated(target)`；非 exact 状态一律重建。identity 切换还会清空 rollback snapshots。
 restore/save 使用相同优先级：显式 invocation runtime ID、invocation 产品 conversation、
 configured conversation。旧 external setter 入口已退役，因此 A -> B -> A 不会把 A 的消息写入 B。
+
+产品scope与runtime ID可以不同，即使runtime ID恰好等于Agent构造时的conversation配置，也不能
+把构造期ID当作本轮产品scope。流准入使用原invocation快照先协调pending投影，后续上下文恢复
+保留同一scope／runtime组合；默认快照的补充协调只适用于真正的默认scope，scope缺省时沿原
+runtime回退。错误scope读仍由Store拒绝，不通过清空checkpoint或弱化归属校验恢复运行。
 
 轮换 `runtime_state_id` 会创建干净的模型上下文，但不会删除稳定产品会话。
 `save_checkpoint_for_scope` 把每个 runtime ID 持久索引到产品 scope。关闭 admission 并完成旧 owner
@@ -2820,6 +2835,10 @@ Trace 与 Journal 都可能包含按时间排列的事件，但职责不同：
 该字段随 Message 手写 serde、既有 MessageProjectionMeta、FileConversationStore、managed import 和冷恢复一起保留；工具 ID/name 必须显式存在且与投影相等。没有该字段不恢复旧控制工具兼容，不放宽当前 canonical marker 校验。snapshot 和请求重建仍使用同一 Message，不新建错误观察 store。
 
 Provider 只在原生支持的边界转换错误位，不能把它或服务同名 execution_status 扩展升级为运行时结束权威。SDK 基础字段与三语言消费由其独立 owner/consumers 组合，不能由框架局部测试推断消费者已验收。
+
+### 同次保存的工作复用与分段观测
+
+FileRuntimeStateStore 的 owner 扫描直接验证刚解码的记录，不再次读取同一文件；CAS 重用请求 payload 的已解析结果。Coordinator 复用 runtime snapshot 的 scope revision，Absent 仍查权威；投影与 checkpoint 共用一次冻结，Context 锁不跨 I/O。原十秒共享预算、文件格式、原件、fsync、CAS/epoch/退休围栏和未知结果恢复保持原合同。debug tracing 的 persistence stage 记录各段单调耗时和剩余预算，阶段离开不表示写入成功。详见 [ADR 0107](../adr/0107-command-cell-admission-and-save-work.md)。
 
 
 ---
@@ -11748,6 +11767,10 @@ watcher 持有 retention lease、复用返回的 byte cursor，并且只在 type
 ```
 Text exported: /path/input.txt -> /path/output.txt
 ```
+
+### 后台启动的接纳边界
+
+`CommandCellRequest.admission` 控制接纳前取消与预算；`cancel` 独立控制已接纳 cell 的生命周期。产品可通过 `resource_admission` 向原 Queued runner 提供异步资源政策，启动回执不等待产品槽。期限从 accepted_at 起算，包含排队；显式停止和 shutdown 沿原 supervisor 结算。保有 terminal observation lease 的消费者须在持久事实结算后释放 lease。详见 [ADR 0107](../adr/0107-command-cell-admission-and-save-work.md)。
 
 
 ---
@@ -27703,6 +27726,152 @@ Source: https://echo-agent.dev/docs/adr-0106-provider-http-client-injection
 增加 build_client_with_http_client，原 build_client 委托同一 factory 且保留默认传输行为；不修改 LlmConfig 序列化结构、不新增依赖、不改变协议选择、模型事实优先级、鉴权或生命周期。Anthropic 仅增加内部 client 注入接缝。产品应用构造具有自身 User-Agent 的 reqwest::Client；GUI 连接测试、主 Agent 与 Subagent 经既有 prepare 主路径复用它。
 
 注入客户端是宿主传输策略，不授予模型能力、不改变 provider/endpoint/model 身份、不添加权限门控。已有 examples 纳入编译/执行验证；消费者通过真实 loopback 验证三协议普通/流式请求头与完整结束。
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0107-command-cell-admission-and-save-work
+
+# ADR 0107：分离后台准入与执行生命周期，复用同次保存工作
+
+状态：实施中，验收证据单独记录。
+
+## 背景
+
+后台命令已持久 prepared，但产品在启动回执前等待全局 shell 许可，导致外层工具超时后命令仍继续。大检查点保存同时存在同一次操作内重复读取、解析和冻结的问题，不能仅凭 CAS 入口 deadline 错误认定物理 CAS 本身耗时十秒。
+
+## 候选与决策
+
+保留原 `BackgroundCommandManager`、Prepared/Queued/Running 和 TaskTracker。`CommandCellAdmission` 仅控制准备及 Start 交接前的取消与预算；`CommandCellRequest.cancel` 和 accepted_at 起算的绝对 deadline 控制已接纳 cell。`CommandCellResourceAdmission` 在原 Queued runner 中获取产品资源，许可保有至物理结算、产物终态及原观察 lease 释放。框架不定义产品资源上限。
+
+不采用增加 timeout、统一免除工具限时、应用另建执行队列等方案。外层工具限时只对已返回结构化后台 cell 回执保留成功；前台晚到成功不能绕过原 timeout。
+
+保存保留原格式、raw/approved 事实、CAS、owner-first 恢复及可重建索引。一次 owner 扫描直接验证已解码记录；CAS 重用本操作已解析的请求 payload；coordinator 使用 runtime snapshot 自带的 scope revision；投影和待保存 checkpoint 使用同一冻结 messages，Context 锁不跨 I/O。
+
+`PersistenceStage` 只记录阶段、单调耗时及原共享预算，不包含正文。阶段结束不表示物理写成功，提交与恢复仍由原 Store 回执决定。没有持久缓存、新数据库、降低校验或增加保存预算。
+
+## 依据与影响
+
+延续设计已核对的 [Tokio shutdown](https://tokio.rs/tokio/topics/shutdown) 的通知、原任务清理、等待模型，以及 [Semaphore](https://docs.rs/tokio/latest/tokio/sync/struct.Semaphore.html) 的异步容量与取消模型。本次浏览工具返回 404，不记为新增网络核验成功。
+
+公共 `CommandCellRequest` 新增两个有 Default 的字段；使用完整 struct literal 的消费者应显式给出 admission/resource_admission，或采用 `..Default::default()`。SDK 独立 pin 不随此次应用集成更新。资源提供者不能启动进程或再拥有执行循环。
+
+## 验收
+
+受控覆盖容量满后的取消、prepared 交接撤回、排队回执、退出 0/101、终态观察持有许可、原前台 timeout；保存覆盖真实只读样本的隔离副本、合成多 scope、CAS/退休/损坏索引和 pending 恢复。定向测试、App、main CI 与发布分列，不相互替代。
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0108-versioned-context-projections
+
+# ADR 0108：有版本运行事实与稳定缓存前缀
+
+状态：已实现，验证范围见本次工程回执；不代表真实模型命中收益验收。
+
+## 背景与候选
+
+在模型每步 prepare 时替换 system/history 边界的运行事实，会使其后的已见历史失去前缀复用。仅改成 tail replacement 仍会删除历史中的旧消息；永久保护每步胶囊会让压缩无法回收。DeepSeek Harness 的历史内更新、ZCode 的稳定/动态分层，以及 [DeepSeek 缓存说明](https://api-docs.deepseek.com/guides/kv_cache) 都支持先保持历史前缀，再独立验证外部缓存收益。
+
+## 决策
+
+扩展既有 `ContextProjection`，保留 `replacing` 的固定指令 generation 语义；`versioned` 在模型安全点追加运行事实。内容版本只与最新版本比较，因此 A→B→A 会追加纠正，同版本重入和恢复后重投影去重。生产者必须使用稳定 marker，并在来源消失时发送 `message: None` 的显式失效版本。首次无值不制造空消息。
+
+版本信封由框架拥有，checkpoint 随原消息保存来源和版本，不增加另一套 store。只有每个 marker 的最新快照受保护，旧版可由原自动/手动 compaction 回收；`PreparedContextTransform` 同时交换消息和去重状态，失败回滚不留下半提交。信封说明新快照仅取代同来源旧快照的当前含义，原始用户请求及真实指令权威不变。
+
+动态内容的角色由宿主明确选择；框架不会自动把 System 降为 User。规则变更允许新 generation 和正常冷 miss。缓存布局只识别带合法版本的通用信封，原始正文中的 `[runtime_context:` 不再作为缓存分段依据。动态 User 消息不推进 Visibility Horizon 的真实用户回合计数。Subagent 继续过滤框架信封，不继承父作用域的当前事实。
+
+三协议在实际请求构造完成后调用 `cache::wire` 摘要。工具完整字段、parts、tool calls/results、需要回传的 reasoning，以及有效请求控制参数均参与规范化；数组保持顺序。Anthropic `cache_control` 单独计算摘要，移动断点不冒充正文变化。普通日志只输出摘要、数量和协议名；隔离对照的首差异路径使用成员序号，不输出任意用户 JSON key 或正文。`common_component_bytes` 是完整相同组件的规范 JSON 字节数，不是 token 数或 HTTP 字节 LCP。无全局请求缓存，不跨会话保存正文。
+
+Anthropic [官方 SDK 合同](https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/resources/messages/messages.py) 明确允许消息正文的字符串简写与单个 Text block 等价。本次核验 blob 为 `013ae7a6f38caf473d6137f232b042a97c763a15`。语义诊断只在消息自身 `content` 边界统一这两种表示，不合并多个块，也不忽略块的其它字段、顺序、工具 JSON 或 reasoning 签名；另列 `wire_representation_hash` 保留实际 body 的表示差异。语义前缀相同不表示原 HTTP JSON 字节相同。
+
+## 影响与取舍
+
+### 信封格式的发布边界
+
+已提交的 v1 只定义 marker 头，marker 后的全部内容都是 Boundary 正文；
+即使正文第一行是 version=1、version="x" 或 version=""，也不能据此推断 Tail。
+本轮早期未发布候选把 Tail version 插入同一 v1 形状，产生了不可逆歧义；
+该候选不构成需要兼容的已接受协议。
+
+因此新写入使用 v2，头部显式写 placement，并以空行结束。Boundary 不含版本字段，
+Tail 必须提供非空 JSON 字符串版本，未知/重复字段、未知 placement 和未终止头部均无效。
+头部终止后不再搜索正文元数据：
+
+~~~text
+<echo-agent-context-projection-v2>
+marker="config"
+placement=boundary
+
+version="x"
+这两行仍是完整正文
+~~~
+
+~~~text
+<echo-agent-context-projection-v2>
+marker="runtime-state"
+placement=tail
+version="semantic-version"
+
+当前来源快照正文
+~~~
+
+该边界参考 [RFC 5322 第 2.1 节](https://www.rfc-editor.org/rfc/rfc5322.txt)
+的空行分离和 [Jekyll front matter](https://jekyllrb.com/docs/front-matter/)
+的显式起止定界：共同原则是先结束头部，再将剩余字节视为正文。本项目只借鉴确定的
+framing，不引入邮件、HTTP 或 YAML 协议。两个主源已实读并留存 SHA。
+
+读取旧发布 v1 时只解析 marker，保留其 Boundary 身份与全部正文；不迁移未发布的
+Tail-v1 候选。新 Tail 的同版本重入和 checkpoint 恢复仍按 v2 元数据去重。
+exact marker 的查询、替换与删除通过同一中立 parser 支持 v1/v2；旧 Boundary 首次
+重新物化为 v2 可产生一次正常 generation 冷 miss，不把该格式切换声称为历史全字节稳定。
+
+公开结构体字面构造需改用 `ContextProjection::replacing` 或 `versioned`；默认 placement 保留边界替换含义。示例 `context_projection_cache` 随 examples 构建。SDK 的精确 pin 独立，不自动更新；工具配对、原厂 ID、签名、权限、发布和 usage 口径均沿原权威。
+
+消费者盘点确认 SDK Host 的 `ExtensionAgentComponentProxy` 仍按其独立精确 revision `340993201cc937fc8e4783b66be399ef9f14e3d5` 构造旧二字段投影。本次不修改该 pin 或已接受的扩展 wire；将来升级 framework pin 时须同步适配构造入口，并单独决定是否向跨语言合同开放版本语义。本地框架与 Eclip 验证不构成该 SDK 新 revision 资格。官网当前没有依赖这份构造 API 的缓存说明，不新增命中率量化宣传。
+
+固定规则仍可能使前缀冷启动。内部合同及真实 adapter 输出稳定只能证明没有内部前置重写；真实命中收益仍需相同 vendor/endpoint/protocol/model 下的连续增长 workload 对照，不能承诺固定 95%。
+
+
+---
+
+Source: https://echo-agent.dev/docs/adr-0109-model-call-observation
+
+# ADR 0109：原模型调用的可选观测
+
+日期：2026-11-07。状态：实现候选，验证与产品验收分别记录。
+
+## 背景与候选
+
+`LlmUsage` 已携带 provider 用量，但缺少可比较的源流时段。用 UI 收到批准块的时间、字符数或整个请求耗时计算 tok/s，会把 Guard 缓冲、首字等待和工具执行混入分母。候选为 UI 估算、provider 专有时间字段、原消费循环的单调时钟观测；采用最后一项，provider 专有信息仍保留其原来源。
+
+## 决策与边界
+
+在 `LlmUsage` 增加可选 `ModelCallObservation`。字段缺失保持缺失，不等于零时间；已有 JSON 无此字段仍能反序列化。它记录本地调用与尝试身份、请求结果、相对首末有效输出、采样数及计数/时段是否可比较。身份不得回填或替换 `ProviderOutputSource.request_id`。
+
+计时在原模型消费循环、批准块释放之前采集。正文、公开推理和工具名/参数的有效源输出计入时段；角色、ID 和纯元数据不作为输出。多 choice、opaque 或无法证明覆盖的输出拒绝计算速度。仅完成、至少两次有效采样、正时长且计数同口径时，提供 `completion_tokens × 1000 / (last − first)`。请求总耗时单独保留，不充当 decode 时长。
+
+失败或取消时，如原 provider 已报告用量，沿原事件保留该用量及失败观测；漏报保持 `usage_reported=false`。观测不授予最终答案、保存确认、TaskRun 终态或重试资格，不改变原失败路径，不增加另一个执行器或存储 owner。应用负责累计范围、展示和可恢复投影，框架不硬编码产品字段或品牌。
+
+## 取舍与影响
+
+参考 ZCode 与 DeepSeek 官方 Harness 的原 usage 记账方式，保留统计与显示生命周期的区分。源流时间是客户端观测，不能当作服务端纯解码基准。旧 producer 和 Subagent 专有事件未携带关联时明确未知；SDK 独立精确 pin 不随本改动升级。
+
+公开事件的构造、完整匹配和序列化消费者须同步检查；现有 learning examples 仍使用 `..` 消费 usage，纳入对应编译验证。无需新增模型工具或 UI 示例。此 ADR 不证明实际 provider、原生 App、远端 main CI 或发布通过。
+
+## 独立审查后的失败用量与重试补全
+
+已确认的原合同要求 `ChatChunk.usage` 只在供应商终止屏障之后公开。Anthropic 的 metadata 阶段及 Chat 的 DONE 前都可能已经报告计数，Responses 的不完整事件也能携带计数。直接提前填原 `usage` 会改变其它消费者的记账合同；仅给 `IncompleteResponse` 加字段又不能覆盖主动取消和原 `ProviderError`，均不采用。新增 chunk 观察字段会触及所有构造和转发，也没有必要。
+
+参考实际安装的官方 `@anthropic-ai/sdk` 0.129.0：`MessageStream` 为逐事件提供当前 snapshot，累计 usage 字段出现时替换而非相加，`message_stop/finalMessage` 保持独立终止边界；DeepSeek 官方 Harness 0.2.2-rc.1 的 Messages adapter 同样维护累计快照、只产出一次 final usage。官方 SDK 参见 [MessageStream 源码](https://github.com/anthropics/anthropic-sdk-typescript/blob/main/src/lib/MessageStream.ts)。本次实际核对的是本机原安装包内对应版本源码及其 SHA，网络查询失败没有冒充在线核验。
+
+采用 `LlmClient::reported_usage` 默认纯查询：通用 trait 默认返回 `None`，没有 I/O、请求、重试或状态 owner；原 adapter 将已经核验来源的 `ProviderResponseMetadata` 及显式 previous typed `Usage` 交给自己既有的规范化器，返回可选 typed `Usage`。Anthropic 复用同一个计数合并 helper，Responses 复用 `ResponsesUsage → Usage`，Chat Completions 复用原 `Usage` 解码。协议或配置 provider 不匹配、没有已报告计数、缺字段或不可表达时，不得伪报 known；已报告的零与缺失保持不同。原 native/raw metadata 不添加字段或改写，原 terminal usage、finish、错误和发布屏障不变。root 不解析 vendor JSON，观测失败也不能替换原 provider 错误。
+
+previous 只属于当前 attempt，在原消费循环接到已核 metadata 后替换更新，不跨重试复用。它保留原 `Usage` 基础字段及缓存分项，不是已经 inclusive 的 UI 总数。Anthropic raw 的显式 null 必须原样保留，而其 normalized 规则会忽略允许的 null、保留旧计数；因此不能每次从零重建，也不能把已 inclusive 的总数当 raw 再加缓存。失败/取消只消费最后已知的 typed 快照一次，不逐 metadata 加账；明确零仍替换旧正数。
+
+全仓查询确认生产 `LlmClient` 实现只有 `OpenAiClient`、`AnthropicClient`、`ResponsesClient`；`LlmConfig::build_client`、Agent builder、模型工厂、Guard/压缩/分类器直接保留该 trait object，没有生产转发 wrapper。其余实现是具名测试模型或测试观察 wrapper，未声明该能力时保持未知；不自动改变 SDK 独立 pin。以后增加生产 proxy 必须无损转发此方法，并保留其配置来源校验。
+
+逻辑 call ID 绑定一次原模型步骤；原 `retry_llm_call` 的每次实际 `call_fn` 执行获得本地 attempt ID 和独立起时，失败也沿原 `LlmUsage` 发一次已知/未知消费观察。成功获取的流继续使用该 attempt 的时钟与身份，不把重试等待拼入其 decode 时段。原 retry 循环、退避、取消和熔断决定不改；最终外层错误不能再把最后一次尝试重复记账。必须直接验证“两次失败、一次成功”为一步三次尝试，前两次未知覆盖保持未知，末次只计一次。
 
 
 ---
@@ -57001,6 +57170,152 @@ Source: https://echo-agent.dev/en/docs/adr-0106-provider-http-client-injection
 增加 build_client_with_http_client，原 build_client 委托同一 factory 且保留默认传输行为；不修改 LlmConfig 序列化结构、不新增依赖、不改变协议选择、模型事实优先级、鉴权或生命周期。Anthropic 仅增加内部 client 注入接缝。产品应用构造具有自身 User-Agent 的 reqwest::Client；GUI 连接测试、主 Agent 与 Subagent 经既有 prepare 主路径复用它。
 
 注入客户端是宿主传输策略，不授予模型能力、不改变 provider/endpoint/model 身份、不添加权限门控。已有 examples 纳入编译/执行验证；消费者通过真实 loopback 验证三协议普通/流式请求头与完整结束。
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0107-command-cell-admission-and-save-work
+
+# ADR 0107：分离后台准入与执行生命周期，复用同次保存工作
+
+状态：实施中，验收证据单独记录。
+
+## 背景
+
+后台命令已持久 prepared，但产品在启动回执前等待全局 shell 许可，导致外层工具超时后命令仍继续。大检查点保存同时存在同一次操作内重复读取、解析和冻结的问题，不能仅凭 CAS 入口 deadline 错误认定物理 CAS 本身耗时十秒。
+
+## 候选与决策
+
+保留原 `BackgroundCommandManager`、Prepared/Queued/Running 和 TaskTracker。`CommandCellAdmission` 仅控制准备及 Start 交接前的取消与预算；`CommandCellRequest.cancel` 和 accepted_at 起算的绝对 deadline 控制已接纳 cell。`CommandCellResourceAdmission` 在原 Queued runner 中获取产品资源，许可保有至物理结算、产物终态及原观察 lease 释放。框架不定义产品资源上限。
+
+不采用增加 timeout、统一免除工具限时、应用另建执行队列等方案。外层工具限时只对已返回结构化后台 cell 回执保留成功；前台晚到成功不能绕过原 timeout。
+
+保存保留原格式、raw/approved 事实、CAS、owner-first 恢复及可重建索引。一次 owner 扫描直接验证已解码记录；CAS 重用本操作已解析的请求 payload；coordinator 使用 runtime snapshot 自带的 scope revision；投影和待保存 checkpoint 使用同一冻结 messages，Context 锁不跨 I/O。
+
+`PersistenceStage` 只记录阶段、单调耗时及原共享预算，不包含正文。阶段结束不表示物理写成功，提交与恢复仍由原 Store 回执决定。没有持久缓存、新数据库、降低校验或增加保存预算。
+
+## 依据与影响
+
+延续设计已核对的 [Tokio shutdown](https://tokio.rs/tokio/topics/shutdown) 的通知、原任务清理、等待模型，以及 [Semaphore](https://docs.rs/tokio/latest/tokio/sync/struct.Semaphore.html) 的异步容量与取消模型。本次浏览工具返回 404，不记为新增网络核验成功。
+
+公共 `CommandCellRequest` 新增两个有 Default 的字段；使用完整 struct literal 的消费者应显式给出 admission/resource_admission，或采用 `..Default::default()`。SDK 独立 pin 不随此次应用集成更新。资源提供者不能启动进程或再拥有执行循环。
+
+## 验收
+
+受控覆盖容量满后的取消、prepared 交接撤回、排队回执、退出 0/101、终态观察持有许可、原前台 timeout；保存覆盖真实只读样本的隔离副本、合成多 scope、CAS/退休/损坏索引和 pending 恢复。定向测试、App、main CI 与发布分列，不相互替代。
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0108-versioned-context-projections
+
+# ADR 0108：有版本运行事实与稳定缓存前缀
+
+状态：已实现，验证范围见本次工程回执；不代表真实模型命中收益验收。
+
+## 背景与候选
+
+在模型每步 prepare 时替换 system/history 边界的运行事实，会使其后的已见历史失去前缀复用。仅改成 tail replacement 仍会删除历史中的旧消息；永久保护每步胶囊会让压缩无法回收。DeepSeek Harness 的历史内更新、ZCode 的稳定/动态分层，以及 [DeepSeek 缓存说明](https://api-docs.deepseek.com/guides/kv_cache) 都支持先保持历史前缀，再独立验证外部缓存收益。
+
+## 决策
+
+扩展既有 `ContextProjection`，保留 `replacing` 的固定指令 generation 语义；`versioned` 在模型安全点追加运行事实。内容版本只与最新版本比较，因此 A→B→A 会追加纠正，同版本重入和恢复后重投影去重。生产者必须使用稳定 marker，并在来源消失时发送 `message: None` 的显式失效版本。首次无值不制造空消息。
+
+版本信封由框架拥有，checkpoint 随原消息保存来源和版本，不增加另一套 store。只有每个 marker 的最新快照受保护，旧版可由原自动/手动 compaction 回收；`PreparedContextTransform` 同时交换消息和去重状态，失败回滚不留下半提交。信封说明新快照仅取代同来源旧快照的当前含义，原始用户请求及真实指令权威不变。
+
+动态内容的角色由宿主明确选择；框架不会自动把 System 降为 User。规则变更允许新 generation 和正常冷 miss。缓存布局只识别带合法版本的通用信封，原始正文中的 `[runtime_context:` 不再作为缓存分段依据。动态 User 消息不推进 Visibility Horizon 的真实用户回合计数。Subagent 继续过滤框架信封，不继承父作用域的当前事实。
+
+三协议在实际请求构造完成后调用 `cache::wire` 摘要。工具完整字段、parts、tool calls/results、需要回传的 reasoning，以及有效请求控制参数均参与规范化；数组保持顺序。Anthropic `cache_control` 单独计算摘要，移动断点不冒充正文变化。普通日志只输出摘要、数量和协议名；隔离对照的首差异路径使用成员序号，不输出任意用户 JSON key 或正文。`common_component_bytes` 是完整相同组件的规范 JSON 字节数，不是 token 数或 HTTP 字节 LCP。无全局请求缓存，不跨会话保存正文。
+
+Anthropic [官方 SDK 合同](https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/resources/messages/messages.py) 明确允许消息正文的字符串简写与单个 Text block 等价。本次核验 blob 为 `013ae7a6f38caf473d6137f232b042a97c763a15`。语义诊断只在消息自身 `content` 边界统一这两种表示，不合并多个块，也不忽略块的其它字段、顺序、工具 JSON 或 reasoning 签名；另列 `wire_representation_hash` 保留实际 body 的表示差异。语义前缀相同不表示原 HTTP JSON 字节相同。
+
+## 影响与取舍
+
+### 信封格式的发布边界
+
+已提交的 v1 只定义 marker 头，marker 后的全部内容都是 Boundary 正文；
+即使正文第一行是 version=1、version="x" 或 version=""，也不能据此推断 Tail。
+本轮早期未发布候选把 Tail version 插入同一 v1 形状，产生了不可逆歧义；
+该候选不构成需要兼容的已接受协议。
+
+因此新写入使用 v2，头部显式写 placement，并以空行结束。Boundary 不含版本字段，
+Tail 必须提供非空 JSON 字符串版本，未知/重复字段、未知 placement 和未终止头部均无效。
+头部终止后不再搜索正文元数据：
+
+~~~text
+<echo-agent-context-projection-v2>
+marker="config"
+placement=boundary
+
+version="x"
+这两行仍是完整正文
+~~~
+
+~~~text
+<echo-agent-context-projection-v2>
+marker="runtime-state"
+placement=tail
+version="semantic-version"
+
+当前来源快照正文
+~~~
+
+该边界参考 [RFC 5322 第 2.1 节](https://www.rfc-editor.org/rfc/rfc5322.txt)
+的空行分离和 [Jekyll front matter](https://jekyllrb.com/docs/front-matter/)
+的显式起止定界：共同原则是先结束头部，再将剩余字节视为正文。本项目只借鉴确定的
+framing，不引入邮件、HTTP 或 YAML 协议。两个主源已实读并留存 SHA。
+
+读取旧发布 v1 时只解析 marker，保留其 Boundary 身份与全部正文；不迁移未发布的
+Tail-v1 候选。新 Tail 的同版本重入和 checkpoint 恢复仍按 v2 元数据去重。
+exact marker 的查询、替换与删除通过同一中立 parser 支持 v1/v2；旧 Boundary 首次
+重新物化为 v2 可产生一次正常 generation 冷 miss，不把该格式切换声称为历史全字节稳定。
+
+公开结构体字面构造需改用 `ContextProjection::replacing` 或 `versioned`；默认 placement 保留边界替换含义。示例 `context_projection_cache` 随 examples 构建。SDK 的精确 pin 独立，不自动更新；工具配对、原厂 ID、签名、权限、发布和 usage 口径均沿原权威。
+
+消费者盘点确认 SDK Host 的 `ExtensionAgentComponentProxy` 仍按其独立精确 revision `340993201cc937fc8e4783b66be399ef9f14e3d5` 构造旧二字段投影。本次不修改该 pin 或已接受的扩展 wire；将来升级 framework pin 时须同步适配构造入口，并单独决定是否向跨语言合同开放版本语义。本地框架与 Eclip 验证不构成该 SDK 新 revision 资格。官网当前没有依赖这份构造 API 的缓存说明，不新增命中率量化宣传。
+
+固定规则仍可能使前缀冷启动。内部合同及真实 adapter 输出稳定只能证明没有内部前置重写；真实命中收益仍需相同 vendor/endpoint/protocol/model 下的连续增长 workload 对照，不能承诺固定 95%。
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0109-model-call-observation
+
+# ADR 0109：原模型调用的可选观测
+
+日期：2026-11-07。状态：实现候选，验证与产品验收分别记录。
+
+## 背景与候选
+
+`LlmUsage` 已携带 provider 用量，但缺少可比较的源流时段。用 UI 收到批准块的时间、字符数或整个请求耗时计算 tok/s，会把 Guard 缓冲、首字等待和工具执行混入分母。候选为 UI 估算、provider 专有时间字段、原消费循环的单调时钟观测；采用最后一项，provider 专有信息仍保留其原来源。
+
+## 决策与边界
+
+在 `LlmUsage` 增加可选 `ModelCallObservation`。字段缺失保持缺失，不等于零时间；已有 JSON 无此字段仍能反序列化。它记录本地调用与尝试身份、请求结果、相对首末有效输出、采样数及计数/时段是否可比较。身份不得回填或替换 `ProviderOutputSource.request_id`。
+
+计时在原模型消费循环、批准块释放之前采集。正文、公开推理和工具名/参数的有效源输出计入时段；角色、ID 和纯元数据不作为输出。多 choice、opaque 或无法证明覆盖的输出拒绝计算速度。仅完成、至少两次有效采样、正时长且计数同口径时，提供 `completion_tokens × 1000 / (last − first)`。请求总耗时单独保留，不充当 decode 时长。
+
+失败或取消时，如原 provider 已报告用量，沿原事件保留该用量及失败观测；漏报保持 `usage_reported=false`。观测不授予最终答案、保存确认、TaskRun 终态或重试资格，不改变原失败路径，不增加另一个执行器或存储 owner。应用负责累计范围、展示和可恢复投影，框架不硬编码产品字段或品牌。
+
+## 取舍与影响
+
+参考 ZCode 与 DeepSeek 官方 Harness 的原 usage 记账方式，保留统计与显示生命周期的区分。源流时间是客户端观测，不能当作服务端纯解码基准。旧 producer 和 Subagent 专有事件未携带关联时明确未知；SDK 独立精确 pin 不随本改动升级。
+
+公开事件的构造、完整匹配和序列化消费者须同步检查；现有 learning examples 仍使用 `..` 消费 usage，纳入对应编译验证。无需新增模型工具或 UI 示例。此 ADR 不证明实际 provider、原生 App、远端 main CI 或发布通过。
+
+## 独立审查后的失败用量与重试补全
+
+已确认的原合同要求 `ChatChunk.usage` 只在供应商终止屏障之后公开。Anthropic 的 metadata 阶段及 Chat 的 DONE 前都可能已经报告计数，Responses 的不完整事件也能携带计数。直接提前填原 `usage` 会改变其它消费者的记账合同；仅给 `IncompleteResponse` 加字段又不能覆盖主动取消和原 `ProviderError`，均不采用。新增 chunk 观察字段会触及所有构造和转发，也没有必要。
+
+参考实际安装的官方 `@anthropic-ai/sdk` 0.129.0：`MessageStream` 为逐事件提供当前 snapshot，累计 usage 字段出现时替换而非相加，`message_stop/finalMessage` 保持独立终止边界；DeepSeek 官方 Harness 0.2.2-rc.1 的 Messages adapter 同样维护累计快照、只产出一次 final usage。官方 SDK 参见 [MessageStream 源码](https://github.com/anthropics/anthropic-sdk-typescript/blob/main/src/lib/MessageStream.ts)。本次实际核对的是本机原安装包内对应版本源码及其 SHA，网络查询失败没有冒充在线核验。
+
+采用 `LlmClient::reported_usage` 默认纯查询：通用 trait 默认返回 `None`，没有 I/O、请求、重试或状态 owner；原 adapter 将已经核验来源的 `ProviderResponseMetadata` 及显式 previous typed `Usage` 交给自己既有的规范化器，返回可选 typed `Usage`。Anthropic 复用同一个计数合并 helper，Responses 复用 `ResponsesUsage → Usage`，Chat Completions 复用原 `Usage` 解码。协议或配置 provider 不匹配、没有已报告计数、缺字段或不可表达时，不得伪报 known；已报告的零与缺失保持不同。原 native/raw metadata 不添加字段或改写，原 terminal usage、finish、错误和发布屏障不变。root 不解析 vendor JSON，观测失败也不能替换原 provider 错误。
+
+previous 只属于当前 attempt，在原消费循环接到已核 metadata 后替换更新，不跨重试复用。它保留原 `Usage` 基础字段及缓存分项，不是已经 inclusive 的 UI 总数。Anthropic raw 的显式 null 必须原样保留，而其 normalized 规则会忽略允许的 null、保留旧计数；因此不能每次从零重建，也不能把已 inclusive 的总数当 raw 再加缓存。失败/取消只消费最后已知的 typed 快照一次，不逐 metadata 加账；明确零仍替换旧正数。
+
+全仓查询确认生产 `LlmClient` 实现只有 `OpenAiClient`、`AnthropicClient`、`ResponsesClient`；`LlmConfig::build_client`、Agent builder、模型工厂、Guard/压缩/分类器直接保留该 trait object，没有生产转发 wrapper。其余实现是具名测试模型或测试观察 wrapper，未声明该能力时保持未知；不自动改变 SDK 独立 pin。以后增加生产 proxy 必须无损转发此方法，并保留其配置来源校验。
+
+逻辑 call ID 绑定一次原模型步骤；原 `retry_llm_call` 的每次实际 `call_fn` 执行获得本地 attempt ID 和独立起时，失败也沿原 `LlmUsage` 发一次已知/未知消费观察。成功获取的流继续使用该 attempt 的时钟与身份，不把重试等待拼入其 decode 时段。原 retry 循环、退避、取消和熔断决定不改；最终外层错误不能再把最后一次尝试重复记账。必须直接验证“两次失败、一次成功”为一步三次尝试，前两次未知覆盖保持未知，末次只计一次。
 
 
 ---

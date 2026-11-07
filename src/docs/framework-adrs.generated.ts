@@ -865,4 +865,28 @@ export const frameworkAdrDocs = [
     },
     filePath: './content/echo-agent/adr/0106-provider-http-client-injection.md',
   },
+  {
+    slug: 'adr-0107-command-cell-admission-and-save-work',
+    title: {
+      zh: 'ADR 0107：分离后台准入与执行生命周期，复用同次保存工作',
+      en: 'ADR 0107：分离后台准入与执行生命周期，复用同次保存工作',
+    },
+    filePath: './content/echo-agent/adr/0107-command-cell-admission-and-save-work.md',
+  },
+  {
+    slug: 'adr-0108-versioned-context-projections',
+    title: {
+      zh: 'ADR 0108：有版本运行事实与稳定缓存前缀',
+      en: 'ADR 0108：有版本运行事实与稳定缓存前缀',
+    },
+    filePath: './content/echo-agent/adr/0108-versioned-context-projections.md',
+  },
+  {
+    slug: 'adr-0109-model-call-observation',
+    title: {
+      zh: 'ADR 0109：原模型调用的可选观测',
+      en: 'ADR 0109：原模型调用的可选观测',
+    },
+    filePath: './content/echo-agent/adr/0109-model-call-observation.md',
+  },
 ];

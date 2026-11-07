@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "1f35f0d2f9274c60f9cb009f29675efc33f80422",
+    "revision": "120e71a6dcabc6c52f1bf9b50dce05ada3ec86a4",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -761,6 +761,21 @@
         "sha256": "8f51f62473fc14a8df6b6a43cb5ec90b04b1ec4969113c649a2389caed3bad50"
       },
       {
+        "sourcePath": "docs/adr/0107-command-cell-admission-and-save-work.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0107-command-cell-admission-and-save-work.md",
+        "sha256": "11c220f201982d317acaef793ec6959aa3eefa3951b19f0afe5b1060fd84477a"
+      },
+      {
+        "sourcePath": "docs/adr/0108-versioned-context-projections.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0108-versioned-context-projections.md",
+        "sha256": "4c77990c26a538cd85cd095e83e3d45624a3ed9db4113985781e2e183c2f2037"
+      },
+      {
+        "sourcePath": "docs/adr/0109-model-call-observation.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0109-model-call-observation.md",
+        "sha256": "a51a3edb990206edb1478fb161929f1d90a1299c5fc99f3d5efe68b746fb00cd"
+      },
+      {
         "sourcePath": "docs/en/architecture.md",
         "destination": "src/docs/content/echo-agent/en/architecture.md",
         "sha256": "c07080846b2956f818bebeb22ebb1906c31cd4f300016baec983d2eabd7b0161"
@@ -1018,12 +1033,12 @@
       {
         "sourcePath": "docs/zh/41-persistence-concepts.md",
         "destination": "src/docs/content/echo-agent/zh/41-persistence-concepts.md",
-        "sha256": "34d2acdd71ecc2ee2fc6640bc034579da9fdb28fd65f4262e55aa541d903c283"
+        "sha256": "7be401747233b71353510b735da26217975b1052c5695b3acfa4f989a4dd8c06"
       },
       {
         "sourcePath": "docs/zh/41-shell-text-tools.md",
         "destination": "src/docs/content/echo-agent/zh/41-shell-text-tools.md",
-        "sha256": "9fd43086c8e471e00b4a5e713756c29bde4160fd046817796ddac97692d26d09"
+        "sha256": "df4e552345cf4d8a6e735acb90c6270e2bf5135ca56cec41d1ed84e3ead52ed7"
       },
       {
         "sourcePath": "docs/zh/42-database-tools.md",
@@ -1574,6 +1589,21 @@
         "sourcePath": "docs/adr/0106-provider-http-client-injection.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0106-provider-http-client-injection.md",
         "sha256": "8f51f62473fc14a8df6b6a43cb5ec90b04b1ec4969113c649a2389caed3bad50"
+      },
+      {
+        "sourcePath": "docs/adr/0107-command-cell-admission-and-save-work.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0107-command-cell-admission-and-save-work.md",
+        "sha256": "11c220f201982d317acaef793ec6959aa3eefa3951b19f0afe5b1060fd84477a"
+      },
+      {
+        "sourcePath": "docs/adr/0108-versioned-context-projections.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0108-versioned-context-projections.md",
+        "sha256": "4c77990c26a538cd85cd095e83e3d45624a3ed9db4113985781e2e183c2f2037"
+      },
+      {
+        "sourcePath": "docs/adr/0109-model-call-observation.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0109-model-call-observation.md",
+        "sha256": "a51a3edb990206edb1478fb161929f1d90a1299c5fc99f3d5efe68b746fb00cd"
       },
       {
         "sourcePath": "docs/zh/architecture.md",

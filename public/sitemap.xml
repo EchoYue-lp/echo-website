@@ -955,6 +955,24 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0106-provider-http-client-injection" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/docs/adr-0107-command-cell-admission-and-save-work</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0107-command-cell-admission-and-save-work" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0107-command-cell-admission-and-save-work" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0107-command-cell-admission-and-save-work" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0108-versioned-context-projections</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0108-versioned-context-projections" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0108-versioned-context-projections" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0108-versioned-context-projections" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0109-model-call-observation</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0109-model-call-observation" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0109-model-call-observation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0109-model-call-observation" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/docs/knowledge-overview</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/knowledge-overview" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/knowledge-overview" />
@@ -1979,6 +1997,24 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0106-provider-http-client-injection" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0106-provider-http-client-injection" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0106-provider-http-client-injection" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0107-command-cell-admission-and-save-work</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0107-command-cell-admission-and-save-work" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0107-command-cell-admission-and-save-work" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0107-command-cell-admission-and-save-work" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0108-versioned-context-projections</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0108-versioned-context-projections" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0108-versioned-context-projections" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0108-versioned-context-projections" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0109-model-call-observation</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0109-model-call-observation" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0109-model-call-observation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0109-model-call-observation" />
   </url>
   <url>
     <loc>https://echo-agent.dev/en/docs/knowledge-overview</loc>
