@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "2b296b7e3bbc92dc73b416488c6dd9862352c113",
+    "revision": "f479f52c26ca5664bed960f2793100382852ffdb",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -763,7 +763,7 @@
       {
         "sourcePath": "docs/adr/0107-command-cell-admission-and-save-work.md",
         "destination": "src/docs/content/echo-agent/en/adr/0107-command-cell-admission-and-save-work.md",
-        "sha256": "11c220f201982d317acaef793ec6959aa3eefa3951b19f0afe5b1060fd84477a"
+        "sha256": "2cef8293f191fb2228164cd90a88e4505a1d33dd9b27c1b2c68cbac011c195d6"
       },
       {
         "sourcePath": "docs/adr/0108-versioned-context-projections.md",
@@ -1038,7 +1038,7 @@
       {
         "sourcePath": "docs/zh/41-shell-text-tools.md",
         "destination": "src/docs/content/echo-agent/zh/41-shell-text-tools.md",
-        "sha256": "df4e552345cf4d8a6e735acb90c6270e2bf5135ca56cec41d1ed84e3ead52ed7"
+        "sha256": "9e253de9a8f79749ed98c884827aa51bbd4f2a721a5e2f36a812e0cbb2060f23"
       },
       {
         "sourcePath": "docs/zh/42-database-tools.md",
@@ -1593,7 +1593,7 @@
       {
         "sourcePath": "docs/adr/0107-command-cell-admission-and-save-work.md",
         "destination": "src/docs/content/echo-agent/zh/adr/0107-command-cell-admission-and-save-work.md",
-        "sha256": "11c220f201982d317acaef793ec6959aa3eefa3951b19f0afe5b1060fd84477a"
+        "sha256": "2cef8293f191fb2228164cd90a88e4505a1d33dd9b27c1b2c68cbac011c195d6"
       },
       {
         "sourcePath": "docs/adr/0108-versioned-context-projections.md",
