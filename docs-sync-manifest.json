@@ -1669,9 +1669,9 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "3c13b2ffbe1794e3541e345128693f999e23117c",
+    "reviewedRevision": "efbf200c0d2ff9c4ff20ba567e2660fa0200e248",
     "status": "source-reviewed",
-    "authority": "2026-11-08 主根协调的本地产品源增量复核：Framework 2b296b7e3bbc92dc73b416488c6dd9862352c113、CLI 3c13b2ffbe1794e3541e345128693f999e23117c 均从主根内干净提交视图读取。本次复核四份当前中文产品页相对 UI68 与 IM15 的呈现、图表、用量和恢复输入事实，依据 CLI 中文配置、GUI指南、ADR0066/0067/0056及对应源码；原20070未改事实沿用历史审查，四份英文明确为历史参考、不增译。代码验证分别绑定R08/R09/R10冻结工作树和R11前端/真实DTO/受控browser，不冒充3c13单独commit构建。R03仅为R11候选包构建/本地签名和资产审计；原生操作、手机、最终依赖风险门禁、main CI及发布另验。尚未采用的SRE物理容量和IM Accepted日志候选不纳入当前产品能力；本次仅本地文档同步，不部署。",
+    "authority": "2026-11-08 主根协调的产品投影增量审查：Framework f479f52c26ca5664bed960f2793100382852ffdb、CLI efbf200c0d2ff9c4ff20ba567e2660fa0200e248 均从主根内干净Git源视图读取，完整153份双语产品源文档纳入摘要。四中文页更新执行准入与未知结算、保留原件的保存、GUI目标/支线快捷命令及紧凑布局；四英文页保留历史参考，Framework332镜像不改。本地Rust完整测试与前端证据分别沿其原冻结工作树和程序，不将提交旧399锁视为已验证构建或借文档审查接受43ed/48ee风险。原五项风险仍未修复；具体风险接受及正式gate仍等待，最终同源App、真实GUI/手机/SSH、mainCI和发布分别验收；仅本地文档同步，不部署。",
     "sourceFiles": [
       {
         "sourcePath": "docs/en/adr/0001-agent-collaboration.md",
@@ -2175,11 +2175,11 @@
       },
       {
         "sourcePath": "docs/zh/adr/0056-personal-weixin-channel.md",
-        "sha256": "f64a042f338ca94d52124c088f786df5b2740fc94da4d09e31b89d50455995cf"
+        "sha256": "c400621679032a3d19c934256238d571e669002c958fa45e94ac9c5430bcad98"
       },
       {
         "sourcePath": "docs/zh/adr/0057-native-messages-and-progress-policy.md",
-        "sha256": "647096bff6389cdd3fa44a768d888d85081cbdc40217a513c7678469f9ee4aae"
+        "sha256": "5a2ab68450eedc312c66beb2926c71f7799040d724bd70006747c936a5426039"
       },
       {
         "sourcePath": "docs/zh/adr/0058-im-native-output-projection.md",
@@ -2203,7 +2203,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0064-background-cell-receipt-ownership.md",
-        "sha256": "fe07062e456702d107fc203db68ab6aeba742005222c38957d505ec1b4656eac"
+        "sha256": "ae3c370e4b613ce6ba81727dee455770b186a129651225160cb269e50ba02d31"
       },
       {
         "sourcePath": "docs/zh/adr/0065-cache-prefix-facts.md",
@@ -2223,7 +2223,7 @@
       },
       {
         "sourcePath": "docs/zh/architecture/performance-baseline.md",
-        "sha256": "e4133a33a99bb5cfb790251316e0d7611baee8a5270e5a791ec53ef7aefc49b2"
+        "sha256": "79f192897d5d85432ba4efff94e179b8817e4be874ca7eed689d09326604707a"
       },
       {
         "sourcePath": "docs/zh/architecture/persistence.md",
@@ -2259,7 +2259,7 @@
       },
       {
         "sourcePath": "docs/zh/guides/gui-task-runtime-panel.md",
-        "sha256": "a7fb0fc0c033b2e941e591da0cba35c4d1430f5d68ce10073b3a372e04204752"
+        "sha256": "01e247110bc2ff7957c0957131cea24f1248ea2a31254946206e7525c614d19f"
       },
       {
         "sourcePath": "docs/zh/guides/hitl-replay-identity.md",
@@ -2305,19 +2305,19 @@
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "14210e4f28f40dbc0edb1f9324a5332f595e5bafb676ddfc34497be722c81c85"
+        "sha256": "8de42a91d5f5ec22ff7e8912f379195eeeda829bd4490626efb08c6de9483f4f"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
-        "sha256": "28c33c1991a8545e23c3a75c4901329a418ddd05bd074fbbbef59b96658c1afe"
+        "sha256": "222d1a33378524c5e4b92d0aea161e5e6ed18778ebe0ee34ea679987720a70b5"
       },
       {
         "destination": "src/docs/content/eko/zh/overview.md",
-        "sha256": "947c0ca9f5ca712708a41921b6f5416cff27a647d8368cff552e4b8d6bdf6582"
+        "sha256": "6962a716545fbf600b4456401479da2e9e05f9f036979b06d7ea0f0c7304609e"
       },
       {
         "destination": "src/docs/content/eko/zh/storage.md",
-        "sha256": "1801746bf4a692274412964f06bb7e433dd0277d4e7cdc3095da8c309cf3305d"
+        "sha256": "ee879e4767f16504d6aed045145368e951f8642cdd0d20bc4dab0a340980ee7e"
       }
     ]
   }
