@@ -10,6 +10,8 @@ Eclip 面向用户自己的机器，产品层使用普通文件或内存保存�
 - 已确认物理执行完成但结算保存失败时，由同一 owner 仅重试结算持久化与确认，不重新运行 Agent 或工具；资源保留到匹配的完成事实获得持久确认。
 - 每个 store-backed turn 都急切绑定 TaskRun。typed execution provenance 区分内部 conversation turn 与 orchestrated run；普通 GUI 的无 plan 轻量回合保留 journal，但不进入任务 UI。IM／cron 的原 Run 即使没有 plan，也进入最近任务与历史，状态仍以原 Run 为准。
 - 普通 chat 同时使用独立 `ChatEventLog` 保存输入输出交付与 surface 重放。它和 TaskRuntime journal 可以关联同一 turn，但互不替代。
+- 当前格式的消息呈现、已保存公开图表和累计用量按原日志及来源坐标读取，不新增执行状态权威。保存确认后和冷恢复继续读取原事实；来源缺失或冲突时保留正文并提示详情未恢复，不从普通文本推测工具成功或图表。
+- 累计用量按实际调用和尝试去重，重复回放不重计，重试或失败中已经报告的消耗仍保留，主链与 Subagent 分列。导入或分叉的历史保留来源，源会话已有用量不作为目标会话的新消耗；缺失报告、价格或速度证据保留未知，统计不冒充金额账单。
 - 输入的持久接收、目标 TaskRun 绑定、进入上下文和执行/完成是不同事实。两份原 journal 不被描述为一个事务；durability 未确认时不冒已准入或重新投向另一个目标。
 - journal 保存完整 user steer 及来源与投递事实；近期四条短文或 400 字符预览不是完整历史。主模型结合历史理解输入，不另建要求解释器、GoalStore 或强制要求/计划/验收流水线。必要早期原文沿原引用与 `read_artifact` 恢复，canonical Goal 保持自己的 revision/hash；后继完整来源投影与冷重开读取资格仍须独立验证。
 - 每个 workspace 拥有本地 memory Store、一个 generation-bound `MemoryLayerManager` 和一个在 model safe point 消费的 immutable hot-memory projection。

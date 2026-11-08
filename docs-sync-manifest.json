@@ -1669,9 +1669,9 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "20070d3f7171a95926bdd5c8153f5f382767fea2",
-    "status": "source-correction-pending-source-review",
-    "authority": "2026-11-02 Root网站独占资源窗口website-20070-verify-r01，沿共同clean切点原同步器复制F a8a8511d9ec2cd3da382bd5f7b151ac537374aa8与EKO20070d3f7171a95926bdd5c8153f5f382767fea2。CLI20070承接068指南/工具页/侧栏，b04 Hook恢复与R03测试/精风险绑定；产品公开页无需为内部测试/policy新增API或执行承诺，具体差异另留审查。148来源/8产品页及322框架镜像按原生成入口登记，中文当前维护、历史英文不增译。SDK formal83/pin340/5344/430保持，不把receiving747原生/旧83历史refs/source严格通过冒正式native主线。源码/task/focused/完整工程/mainCI/native/包发布部署分别验收，两外部toolgaps保真实限制；本manifest不是App/live/main/发行票。",
+    "reviewedRevision": "3c13b2ffbe1794e3541e345128693f999e23117c",
+    "status": "source-reviewed",
+    "authority": "2026-11-08 主根协调的本地产品源增量复核：Framework 2b296b7e3bbc92dc73b416488c6dd9862352c113、CLI 3c13b2ffbe1794e3541e345128693f999e23117c 均从主根内干净提交视图读取。本次复核四份当前中文产品页相对 UI68 与 IM15 的呈现、图表、用量和恢复输入事实，依据 CLI 中文配置、GUI指南、ADR0066/0067/0056及对应源码；原20070未改事实沿用历史审查，四份英文明确为历史参考、不增译。代码验证分别绑定R08/R09/R10冻结工作树和R11前端/真实DTO/受控browser，不冒充3c13单独commit构建。R03仅为R11候选包构建/本地签名和资产审计；原生操作、手机、最终依赖风险门禁、main CI及发布另验。尚未采用的SRE物理容量和IM Accepted日志候选不纳入当前产品能力；本次仅本地文档同步，不部署。",
     "sourceFiles": [
       {
         "sourcePath": "docs/en/adr/0001-agent-collaboration.md",
@@ -1919,7 +1919,7 @@
       },
       {
         "sourcePath": "docs/en/configuration.md",
-        "sha256": "dae80867660f316b71cc54be48d30618099f20f642b13787ba0d4e7369a9155d"
+        "sha256": "fdbfc40de27ad95c3bea309a59dd06d3331e3482a89e29458957e059912f454c"
       },
       {
         "sourcePath": "docs/en/features.md",
@@ -2063,7 +2063,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0029-framework-native-agent-and-model-config.md",
-        "sha256": "0be527694a12fab98032f0198cb0d3f3a06a8eb745aacb030e268da8a29840ed"
+        "sha256": "1e2e9fbf6642fe42cd6958b47ceb7a1fc700762ba17897dae0ba7ef0bfc30f7e"
       },
       {
         "sourcePath": "docs/zh/adr/0030-unified-subagent-prompt-architecture.md",
@@ -2143,7 +2143,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0048-context-compression-product-policy.md",
-        "sha256": "a0db39833cc99f99be4e5c519ae0b45666655fb4666b5c33a0d24989440e82f9"
+        "sha256": "9a4a44d60a857831e8a69165e35decf4267ac9e72ce85fdee63d76e7512839f5"
       },
       {
         "sourcePath": "docs/zh/adr/0049-taskruntime-process-owner-recovery.md",
@@ -2171,15 +2171,15 @@
       },
       {
         "sourcePath": "docs/zh/adr/0055-project-workspaces.md",
-        "sha256": "b25b894b570bb282b08f8d7dbdf5f333423ab8a1bdc7150736c5e4e6c625d237"
+        "sha256": "3898bd47d2176e22e9c355708a603534d675b18e17909c61d25bf5a093fc3f89"
       },
       {
         "sourcePath": "docs/zh/adr/0056-personal-weixin-channel.md",
-        "sha256": "05e78fb7344671965576d85edbfa8a00ff0ada58f8032328b4aae8110882c105"
+        "sha256": "f64a042f338ca94d52124c088f786df5b2740fc94da4d09e31b89d50455995cf"
       },
       {
         "sourcePath": "docs/zh/adr/0057-native-messages-and-progress-policy.md",
-        "sha256": "112bc3aeb55f9d0154e344f5c03a700ab4128b1ba31ff8e144b09e30f84da7f6"
+        "sha256": "647096bff6389cdd3fa44a768d888d85081cbdc40217a513c7678469f9ee4aae"
       },
       {
         "sourcePath": "docs/zh/adr/0058-im-native-output-projection.md",
@@ -2198,6 +2198,26 @@
         "sha256": "518612c59c82814a0b5de77d3e81bbcb0df067170029eb986d981abd399c1bb3"
       },
       {
+        "sourcePath": "docs/zh/adr/0063-project-context-startup.md",
+        "sha256": "e3660e968de96131765dc0b52b105c57a9cec5424127d4fb2c5c06ae7c928847"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0064-background-cell-receipt-ownership.md",
+        "sha256": "fe07062e456702d107fc203db68ab6aeba742005222c38957d505ec1b4656eac"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0065-cache-prefix-facts.md",
+        "sha256": "f7f78585c370451555858a09815b64fceee5b8f25046fbf4684a775fb4d3c936"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0066-turn-presentation-and-usage-projection.md",
+        "sha256": "cf187217d9607d37f72e503486e515f442249b81e18e7659eb91e930b20cdc67"
+      },
+      {
+        "sourcePath": "docs/zh/adr/0067-local-chart-rendering.md",
+        "sha256": "110c53fdbd6b403c3ee646244c4624b0b1c93bdafcbef90384245ad7a79bf8e2"
+      },
+      {
         "sourcePath": "docs/zh/architecture/overview.md",
         "sha256": "b629e413734f82f024546cbb0fb177808ea8f40610ea79761297e289d226fcfb"
       },
@@ -2207,7 +2227,7 @@
       },
       {
         "sourcePath": "docs/zh/architecture/persistence.md",
-        "sha256": "771f74dacfba588e331221e9002a810acb07198fa0d81b8e49f5f7fce957996e"
+        "sha256": "67dfddfd4d26cc503558200ff26306c97b9b55d88e48d1edfb2d4b15b4bf079f"
       },
       {
         "sourcePath": "docs/zh/architecture/providers.md",
@@ -2215,11 +2235,11 @@
       },
       {
         "sourcePath": "docs/zh/architecture/runtime.md",
-        "sha256": "967bcb69208bd8867a31ed2bcf7c6ce6b6f73ff992f41c0cbf40896d140dbd75"
+        "sha256": "9a90b768317debcee8ad67a2a7c49abfda0e85dc26e006e37366ac3568c11efe"
       },
       {
         "sourcePath": "docs/zh/configuration.md",
-        "sha256": "c802deaf00d0bb2fbde8400dece27e63ac2efa0fcfa9338dc6b4f20a9494ee7e"
+        "sha256": "5fbe59d42ced9584e2c6e8ec74bdf2cf081d7624ad641a18e02099283de4118b"
       },
       {
         "sourcePath": "docs/zh/features.md",
@@ -2239,7 +2259,7 @@
       },
       {
         "sourcePath": "docs/zh/guides/gui-task-runtime-panel.md",
-        "sha256": "0134191ed62ea9f0d0b735eeec06f7a7198ce14dc4470e5303ec586a9915435f"
+        "sha256": "a7fb0fc0c033b2e941e591da0cba35c4d1430f5d68ce10073b3a372e04204752"
       },
       {
         "sourcePath": "docs/zh/guides/hitl-replay-identity.md",
@@ -2285,19 +2305,19 @@
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "e93ee693c3cc86c47b836693a9425574cb7175d04c430717c511d7c08b8fa5e0"
+        "sha256": "14210e4f28f40dbc0edb1f9324a5332f595e5bafb676ddfc34497be722c81c85"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
-        "sha256": "2075460350c9d30e56b4a13b407ff8867fcfdd36aec76c4c39f8b741ea9bd29c"
+        "sha256": "28c33c1991a8545e23c3a75c4901329a418ddd05bd074fbbbef59b96658c1afe"
       },
       {
         "destination": "src/docs/content/eko/zh/overview.md",
-        "sha256": "5ab219ddbc17bf65be6c2be1511362e420cc31e9ca40d520c267d94b13065310"
+        "sha256": "947c0ca9f5ca712708a41921b6f5416cff27a647d8368cff552e4b8d6bdf6582"
       },
       {
         "destination": "src/docs/content/eko/zh/storage.md",
-        "sha256": "45acce68ecf0e21772f8f37edbc84c5cdbdec67c9b41e384b5f3fe8606ae4c61"
+        "sha256": "1801746bf4a692274412964f06bb7e433dd0277d4e7cdc3095da8c309cf3305d"
       }
     ]
   }
