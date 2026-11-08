@@ -889,4 +889,12 @@ export const frameworkAdrDocs = [
     },
     filePath: './content/echo-agent/adr/0109-model-call-observation.md',
   },
+  {
+    slug: 'adr-0110-exa-search-provider',
+    title: {
+      zh: 'ADR 0110：在原 SearchProvider 中接入 Exa',
+      en: 'ADR 0110：在原 SearchProvider 中接入 Exa',
+    },
+    filePath: './content/echo-agent/adr/0110-exa-search-provider.md',
+  },
 ];

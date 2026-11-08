@@ -4,7 +4,26 @@
 
 品牌展示沿用 `/eko` 路由，官网、发现索引与文档首页展示新名称和音标。框架镜像与产品投影分别记录其真实来源身份。
 
-## 当前来源与发行边界（2026-11-02）
+## 当前来源与发行边界（2026-11-09）
+
+本次从官网 `6db9cc1210689b326a0cb0ba4d7c11926ac5834b` 继续，使用原 canonical 同步器，
+框架镜像绑定干净整合提交 `4703f0c2d5993ca23c037e24535686d51e90e3bb`，Eclip 产品投影绑定
+干净整合提交 `268b1364a6c4fb4fe51415c234621148e9c97f23`。这些是任务提交来源，尚不表示已经合入 main。
+
+框架带入 Exa 搜索及中文 ADR 0110；中文 ADR 依既有规则逐字出现在两种路由，不新增英文翻译。
+Exa 沿原 SearchProvider 和 `web_search` 的 limit/cursor 合同工作，标准工具包在构造时按非空
+`EXA_API_KEY`、Tavily、Brave、DuckDuckGo 选择，请求失败不换引擎；真实 Exa 服务调用与发布资格另验。
+应用仍使用八页产品投影与完整来源摘要，中文页补充右栏内部滚动、消息列表跟随及个人微信脱敏诊断，
+链接原应用 ADR 0056；历史英文页面保持。精确镜像清单、数量及摘要由 `docs-sync-manifest.json` 记录。
+
+此次同步仅声明源码投影与随后实际执行的站点检查；当前真实手机无回复尚未确认根因或修复，
+脱敏日志、Ready 与发送 Accepted 都不证明手机收件。两仓最终依赖门禁、风险绑定、main 合流与 CI、
+原生综合包及真实平台验收继续分别处理，不由官网来源推进代替。SDK 的独立 pin 与合同保持其自身权威。
+已提交 `6db9cc1` 的 scoped dev-only 依赖修复保持原字节；网站未部署。
+
+下方旧切点与当时验证仅保历史，不作为这些新来源的资格。
+
+## 历史来源与发行边界（2026-11-02）
 
 本次文档同步从官网本地提交 `4badb0c` 继续。原同步器已在 Root 给出的共同 clean 窗口自然退出0，
 Framework 镜像绑定 `a8a8511d9ec2cd3da382bd5f7b151ac537374aa8`，Eclip 产品来源绑定
@@ -66,7 +85,7 @@ scanner自然1／精确gate0分别保留。它们均只按原task／globalClosur
 
 2026-10-27 的中文产品页纠正普通 Steer／Goal 文案，并同步已提交首页与聊天呈现。依据是应用提交 `0ebd8984be26affc32a130df7a26b128494d6c65` 中 `docs/zh/adr/0037-unified-turn-run-binding.md`、`docs/zh/adr/0048-context-compression-product-policy.md`、`docs/zh/architecture/runtime.md`、`docs/zh/features.md` 与 `docs/zh/getting-started.md`。普通 Steer 交主模型结合历史理解，已有 Goal 仅用户显式修改或结束；原生消息和后继完整原文恢复保留各自未完成验收。
 
-当时 `docs-sync-manifest.json` 保留旧完整应用审阅的 `reviewedRevision` 与 `sourceFiles`，只刷新中文投影摘要，状态为 `policy-correction-pending-source-review`。后继退役纠正使用 `source-correction-pending-source-review`；这两次页面纠正均不代表dirty来源通过。它们与原失败作为历史保留；clean A71／6c0／667／6fc／4c2／23f3／61d3／5132及068的复审是前置历史，当前产品来源以本页顶部具名20070切点和正常生成结果为准。
+当时 `docs-sync-manifest.json` 保留旧完整应用审阅的 `reviewedRevision` 与 `sourceFiles`，只刷新中文投影摘要，状态为 `policy-correction-pending-source-review`。后继退役纠正使用 `source-correction-pending-source-review`；这两次页面纠正均不代表dirty来源通过。它们与原失败作为历史保留；clean A71／6c0／667／6fc／4c2／23f3／61d3／5132及068的复审是前置历史，当时产品来源以具名20070切点和正常生成结果为准；当前来源以本页2026-11-09记录和manifest为准。
 
 官网只负责展示。框架行为以 [`echo-agent`](https://github.com/EchoYue-lp/echo-agent) 为准；
 Eclip 产品行为以 [`echo-agent-cli`](https://github.com/EchoYue-lp/echo-agent-cli) 为准。
@@ -114,7 +133,7 @@ clean Git 来源，沿原同步器生成框架正文、ADR 索引和摘要。Ecl
 随后以clean A71／6c0完成产品源码复审，本次沿clean 667复核后继差异，并说明独立终端入口已退出；
 原生控制工具退役与强制分析退出以 Framework 同源文档和实现为准。
 普通 Steer 不自动改写 Goal、不调用独立意图模型的现有说明保持；SDK 正式 pin、完整消费者切换、
-真实 App／手机／SSH、完整矩阵、main CI 与发布仍未由本切片验证。Exa 仍是本地未发布工作，不新增官网承诺。
+真实 App／手机／SSH、完整矩阵、main CI 与发布仍未由本切片验证。该历史切点的Exa尚未纳入官网；2026-11-09后继已从干净整合提交镜像其源码说明，仍不代表真实服务或发行验收。
 
 原生消息、实际工具调用与运行时最终结算的统一路线正在跨仓实现和本地验证。
 ThinkTool／FinalAnswerTool 及工具前强制 CoT 的具名退役，只按真实调用链和上游示例编译／审查验收；

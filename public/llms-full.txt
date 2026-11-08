@@ -198,6 +198,7 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0107：分离后台准入与执行生命周期，复用同次保存工作 | echo-agent 文档: https://echo-agent.dev/docs/adr-0107-command-cell-admission-and-save-work
 - ADR 0108：有版本运行事实与稳定缓存前缀 | echo-agent 文档: https://echo-agent.dev/docs/adr-0108-versioned-context-projections
 - ADR 0109：原模型调用的可选观测 | echo-agent 文档: https://echo-agent.dev/docs/adr-0109-model-call-observation
+- ADR 0110：在原 SearchProvider 中接入 Exa | echo-agent 文档: https://echo-agent.dev/docs/adr-0110-exa-search-provider
 - 知识库概述 | echo-agent 文档: https://echo-agent.dev/docs/knowledge-overview
 - Agent 设计模式 | echo-agent 文档: https://echo-agent.dev/docs/agent-patterns
 - MCP 协议深入 | echo-agent 文档: https://echo-agent.dev/docs/mcp-protocol-deep-dive
@@ -370,6 +371,7 @@ Each capability below is grounded in a production binding in the current applica
 - ADR 0107：分离后台准入与执行生命周期，复用同次保存工作 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0107-command-cell-admission-and-save-work
 - ADR 0108：有版本运行事实与稳定缓存前缀 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0108-versioned-context-projections
 - ADR 0109：原模型调用的可选观测 | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0109-model-call-observation
+- ADR 0110：在原 SearchProvider 中接入 Exa | echo-agent Documentation: https://echo-agent.dev/en/docs/adr-0110-exa-search-provider
 - Knowledge Base Overview | echo-agent Documentation: https://echo-agent.dev/en/docs/knowledge-overview
 - Agent Design Patterns | echo-agent Documentation: https://echo-agent.dev/en/docs/agent-patterns
 - MCP Protocol Deep Dive | echo-agent Documentation: https://echo-agent.dev/en/docs/mcp-protocol-deep-dive
@@ -442,7 +444,7 @@ Source: https://echo-agent.dev/docs/overview
 | ------------------------------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------- |
 | [17 - Graph Workflow](17-graph-workflow.md)       | 图工作流               | LangGraph 风格、SharedState、条件边、fan-out/fan-in                                                        |
 | [18 - Guard 系统](18-guard-system.md)             | 护栏系统               | RuleGuard、LlmGuard、输入/输出过滤                                                                         |
-| [20 - Web 工具](20-web-tools.md)                  | Web 搜索 / 网页获取    | DuckDuckGo / Brave / Tavily 搜索、HTML→文本                                                                |
+| [20 - Web 工具](20-web-tools.md)                  | Web 搜索 / 网页获取    | DuckDuckGo / Brave / Tavily / Exa 搜索、HTML→文本                                                                |
 | [21 - 常用工具速查](21-common-tools.md)           | Tool Guide             | Web 搜索、网页抓取、浏览器自动化、数据工具                                                                 |
 | [22 - 论文检索工具](22-research-tools.md)         | Research               | ArXiv 搜索、Semantic Scholar、PDF 下载、BibTeX 生成                                                        |
 | [23 - Hooks 系统](23-hooks.md)                    | Hooks                  | Skills hooks（31 个事件、7 种动作）、Task hooks、Subagent hooks                                            |
@@ -9496,7 +9498,8 @@ WebSearchTool                      ← 搜索工具（Tool trait 实现）
 SearchProvider trait               ← 搜索引擎抽象接口
     ├─ DuckDuckGoProvider          ← 免费，无需 API Key（默认）
     ├─ BraveSearchProvider         ← 付费 API，高质量
-    └─ TavilyProvider              ← AI 优化搜索，专为 Agent 设计
+    ├─ TavilyProvider              ← AI 优化搜索，专为 Agent 设计
+    └─ ExaSearchProvider           ← Exa 互联网搜索，highlights 作为摘要
 
 WebFetchTool                       ← 网页获取工具（Tool trait 实现）
     └─ HTML → 可读文本（html2text）
@@ -9528,8 +9531,8 @@ let answer = agent.execute("搜索 Rust 2024 edition 新特性").await?;
 ### 自动选择 Provider
 
 ```rust
-// 自动按优先级选择：Tavily > Brave > DuckDuckGo
-// 从环境变量读取 API Key：TAVILY_API_KEY / BRAVE_SEARCH_API_KEY
+// 自动按优先级选择：Exa > Tavily > Brave > DuckDuckGo
+// 从环境变量读取 API Key：EXA_API_KEY / TAVILY_API_KEY / BRAVE_SEARCH_API_KEY
 agent.add_tool(Box::new(WebSearchTool::auto()));
 ```
 
@@ -9542,21 +9545,23 @@ agent.add_tool(Box::new(WebSearchTool::auto()));
 | 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
 | `query` | string | 是 | 搜索关键词 |
-| `max_results` | integer | 否 | 最大返回结果数（默认 5，最大 10） |
+| `limit` | integer | 否 | 每页结果数（默认 5，最大 10）|
+| `cursor` | string | 否 | 使用 `page.next_cursor`，保持 query/limit 相同 |
 
 ### 返回格式
 
+```json
+[
+  {
+    "title": "Rust Programming Language",
+    "url": "https://www.rust-lang.org/",
+    "snippet": "A language empowering everyone to build reliable and efficient software."
+  }
+]
 ```
-搜索结果（共 3 条）:
 
-1. Rust Programming Language
-   https://www.rust-lang.org/
-   A language empowering everyone to build reliable and efficient software.
-
-2. Rust Documentation
-   https://doc.rust-lang.org/
-   The Rust programming language documentation.
-```
+分页在抓取到的最多十条结果内进行。续页会重新搜索；结果快照变化时，需要移除旧 cursor
+重新开始。
 
 ### 搜索引擎 Provider
 
@@ -9598,6 +9603,25 @@ let tool = WebSearchTool::auto();
 
 注册获取 API Key：https://tavily.com/
 
+#### Exa
+
+```rust
+let tool = WebSearchTool::with_exa("your-api-key");
+// 或在创建 Agent 时从 EXA_API_KEY 自动选择：
+let tool = WebSearchTool::auto();
+```
+
+调用 `POST https://api.exa.ai/search`，使用 `type: auto`，将搜索 highlights 映射为
+`snippet`；该后端不抓取完整网页正文。参考 [Exa 官方搜索接口](https://docs.exa.ai/reference/search)。
+
+标准工具包（包括使用该工具包的应用）使用 `auto()`：非空 `EXA_API_KEY` 优先选择 Exa，其次为 Tavily、
+Brave、DuckDuckGo。在构造时选择后端，请求失败不会切换引擎。修改 Key 后需重启或重建
+Agent；`with_duckduckgo()` 等显式构造函数可固定使用某个引擎。
+
+失败复用原HTTP类型：401/402是永久错误；429/5xx是可重试瞬态，保留`http_status`和
+服务端有效`Retry-After`；超时、不完整执行继续沿原权威处理。工具不会读取失败响应正文，
+也不会因失败转到另一个引擎。`web_fetch`仍单独负责读取所选URL。
+
 #### Provider 对比
 
 | Provider | 费用 | 质量 | 延迟 | 说明 |
@@ -9605,6 +9629,7 @@ let tool = WebSearchTool::auto();
 | DuckDuckGo | 免费 | 中 | 较高 | HTML 抓取，无需 Key |
 | Brave | 免费 2000 次/月 | 高 | 低 | 官方 API，稳定可靠 |
 | Tavily | 付费（有免费额度） | 最高 | 低 | AI 优化，专为 Agent 设计 |
+| Exa | API 额度 | — | — | 官方搜索接口；highlights 映射为摘要 |
 
 ---
 
@@ -9693,6 +9718,7 @@ echo_agent = { version = "1.3", features = ["web"] }
 
 | 环境变量 | 说明 |
 |----------|------|
+| `EXA_API_KEY` | Exa Search API Key（非空）|
 | `BRAVE_SEARCH_API_KEY` | Brave Search API Key |
 | `TAVILY_API_KEY` | Tavily API Key |
 
@@ -9759,6 +9785,7 @@ agent.add_tool(Box::new(WebSearchTool::auto()));
 
 `auto()` 的 provider 选择顺序：
 
+- `EXA_API_KEY`（非空）-> Exa
 - `TAVILY_API_KEY` -> Tavily
 - `BRAVE_SEARCH_API_KEY` -> Brave
 - 否则 DuckDuckGo
@@ -27933,6 +27960,60 @@ previous 只属于当前 attempt，在原消费循环接到已核 metadata 后�
 
 ---
 
+Source: https://echo-agent.dev/docs/adr-0110-exa-search-provider
+
+# ADR 0110：在原 SearchProvider 中接入 Exa
+
+状态：原独有分支功能已移植至集成候选；新切点验证、main 合流和官网同步分别验收。
+
+## 背景与候选方案
+
+`web_search` 搜索互联网并返回标题、URL 和摘要；`web_fetch` 读取已选 URL。框架已有通用
+`SearchProvider` 与共享 limit/cursor 分页，Exa 不是应用专属策略，不另建搜索工具、trait、
+应用搜索循环或权限门控。原 `feature/Echoyue/exa-web-search` 的 `4343f0b7` 含独有实现，
+当前集成底座还没有对应 provider，不能以其它后继功能为由丢弃。
+
+候选包括新增独立 Exa 工具、合并搜索/网页获取、只新增构造器但不接标准包。前两种重复
+已有职责，第三种无法让标准包自动选择 Exa。本次复用原 trait 并接通标准包。
+
+## 决策与参考
+
+新增 `providers::exa::ExaSearchProvider`、`WebSearchTool::with_exa(key)`。参考原开发时的
+[Exa 官方搜索接口](https://docs.exa.ai/reference/search)与
+[LangChain Exa 集成](https://docs.langchain.com/oss/python/integrations/tools/exa_search)：
+将厂商传输留在 provider 边界，使用 `POST https://api.exa.ai/search`、Bearer Key、
+`type: auto`、有界 `numResults`，只请求 highlights 并归一化为 `snippet`；不调用 contents
+接口，不改变独立 `web_fetch`。本次官方文档联网复核未成功，未据此宣称新版本线上验证。
+
+`auto()` 在构造时按非空 `EXA_API_KEY` > 原 Tavily > Brave > DuckDuckGo 选择；标准包改用
+`auto()`。无 Exa Key 时沿原三家顺序，显式构造器仍可固定引擎；请求失败不自动换引擎。
+修改环境后须重建工具/Agent。该选择不改变任务重试、权限、模型或发布权威。
+
+原分支错误文字包装已被当前底座取代，因此只移植功能，错误接入现有 `http_body`：
+传输走 `request_error`，非成功响应走 `response_error`，成功 JSON 走原有界读取。
+`RemoteFailure`、`ExecutionNotSettled`、HTTP status 和 Retry-After 保持当前类型权威，
+不恢复统一 transient 或 `ExecutionFailed` 包裹，不解析展示文字决策重试。
+401/402永久失败，429/5xx沿原瞬态规则，已有超时/取消/不完整执行语义不变。
+
+本地场景也必须防止密钥与查询泄漏：失败不读上游响应正文，传输诊断复用原 URL 清理；
+不把 headers 或原始正文写进日志。未新增依赖、锁、feature、配置凭据或持久化 store。
+
+## 影响与验证边界
+
+保留原五个 provider 用例：实际本机 HTTP 请求/Unicode highlights、空与损坏结果、
+分页、错误隐私、数量边界；错误用例增加 typed分类、Retry-After 与工具层 metadata。
+选择测试在独立子进程设置环境，不改父测试全局环境；以非法合成 header 在网络前失败，
+证明标准包安装了 Exa 且未静默换引擎。完整 `web` feature 与 demo41 示例编译须由统一
+构建窗口在新切点实际执行，原分支历史绿色不能代替本次结果。
+
+`web_search` 仍取最多十条结果供本地 limit/cursor 分页；provider直接调用最多100条、0条
+不发请求。中文正式说明、README 和示例 env 同步；旧 ADR0090 已用于 A2A/LSP 退役，
+本次使用0110，不改退役合同、不新建英文镜像。官网在干净框架提交后使用原同步机制处理，
+SDK Host 显式 DuckDuckGo 与独立 pin 保持原状。无具名授权不调用真实 Exa 服务。
+
+
+---
+
 Source: https://echo-agent.dev/docs/knowledge-overview
 
 # echo-agent 知识库
@@ -29471,6 +29552,8 @@ SSH 登录、远端目录验证与真实文件/命令执行各有独立结果；
 
 模型、思考、附件与发送和停止控件位于输入框内，发送和停止沿当前运行状态切换；当前上下文与运行统计位于框下方。连续的工具过程可以展开查看；最终结果发布后，过程默认折叠，最终正文和图表单独保留。统计只显示已有可靠观测，未知项不会由字符数估算。
 
+打开任务运行右栏后，运行历史与详情在右栏内部滚动。聊天自动跟随只滚动消息列表，阅读较早消息时保留位置；回到底部附近后继续跟随，不带动三栏标题整体移动。
+
 普通 Steer 由主模型结合历史理解并按需调整计划，不自动修改 Goal。已有 Goal 通过用户显式操作沿版本校验和安全点修改或结束；普通停止执行保留历史目标。必要原文不可恢复时先恢复相关上下文，再继续受影响的新副作用。
 
 ## 目标与支线快捷命令
@@ -29489,6 +29572,8 @@ SSH 登录、远端目录验证与真实文件/命令执行各有独立结果；
 ## IM 与定时任务
 
 从侧栏“IM 渠道”独立管理 QQ、飞书与个人微信，定时任务继续使用原管理入口。个人微信使用扫码和必要数字确认，当前范围是单个活动账号、扫码本人私聊文字；渠道 Ready、发送 Accepted 与手机实际收件是不同事实。原生 GUI、真实微信和 SSH 验收不由本页构建命令替代。
+
+排查微信连接时可使用既有应用日志中的脱敏传输观察，区分阶段与固定错误类别；这些日志不包含账号、凭据或聊天正文，也不把 Ready 或没有错误当作实际收件。配置与诊断边界见 [个人微信 ADR 0056](https://github.com/EchoYue-lp/echo-agent-cli/blob/main/docs/zh/adr/0056-personal-weixin-channel.md)。
 
 停止渠道服务会等待原执行 owner 和发送收束。“放弃这条待恢复消息”只处理原队列中准确的一项，不撤销已经发生的执行或发送，也不把未知结果改成未发生；有活跃前台或队列版本已变化时会拒绝修改。它和停止当前生成分别处理。
 
@@ -29541,6 +29626,8 @@ Eclip 是基于 `echo-agent` 构建的本地个人 AI 助理。以下内容说�
 
 目标与支线也可通过输入框的 `/goal`、`/side` 快捷管理。裸命令打开原窗口，带内容时直接沿已有创建或更新流程处理；目标更新继续遵守原暂停与版本校验。它们是 GUI 入口，不新增 IM 命令或另一套任务执行器。
 
+任务运行右栏的历史与详情在右栏内部滚动；聊天自动跟随只移动消息列表。阅读历史时保留当前位置，回到底部附近后继续跟随，消息追加与流式更新不会带动三栏标题整体上移。新版原生窗口的操作结果仍须单独验收。
+
 长任务在首次工具操作前及关键发现、计划变化、阻塞或验证结果变化时报告进展。超过 60 秒没有新的自然语言进展时，当前源码在下一模型安全点提醒主模型汇报；长时间工具或模型调用不会为凑固定频率而被打断，也不会另开模型循环。界面的操作、耗时和最后事件时间属于执行观察，不替代助手汇报或完成回执；新版原生窗口仍须单独验收。
 
 启用续接的长任务还会在原 Goal 上下文中收到轮次收尾提示：简短说明本轮推进、实际证据及验证层级、剩余义务、障碍与下一步；没有新增验收证据时明确说明。总 Goal 对模型只读，每轮执行重点可变，用户明确指定的输出格式继续适用。该能力是模型行为提示策略，实际遵循情况须单独验收；总结文字不代替运行时完成回执，也不新增独立反思模型调用。
@@ -29590,6 +29677,8 @@ GUI、IM 与 cron 使用共享应用核心，不各自装配另一份 task、rec
 侧栏“IM 渠道”提供独立的渠道管理，QQ、飞书等现有渠道继续保留；定时任务继续使用原管理入口。个人微信按源码提供扫码、必要数字确认，当前限制为单个活动账号、扫码本人私聊文字，不承诺群聊或混合媒体自动执行。已配置、Ready、发送 Accepted 与手机收到分别验证；cron 通知保留原冻结目标，Unknown 不自动重发。源码或本地 focused 测试不能代替原生 GUI、真实平台与手机验收。
 
 渠道停止或重连会等待原会话的发送和清理结束，旧会话后续片段不会转投新会话。停止前已在途的原发送可能取得 Accepted，仍归原会话记录。待恢复消息可由用户明确放弃，按原工作空间、消息身份及队列版本校验；普通停止当前 turn 继续保留 IM service，和停止渠道服务分别处理。
+
+个人微信的传输诊断复用原观察任务，记录初始状态及阶段、证据或固定错误类别的变化，不输出账号、凭据、消息正文、context、cursor、URL 或原始错误文本。诊断不会改变收发、重试或执行结算；Ready、发送 Accepted 与手机收件仍是独立事实，不能据新增日志宣称实际无回复问题已经修复。精确范围以 [个人微信 ADR 0056](https://github.com/EchoYue-lp/echo-agent-cli/blob/main/docs/zh/adr/0056-personal-weixin-channel.md)为准；当前官网来源锚点记录在同步 manifest，主线与真实平台验收另行核对。
 
 ## Extension 控制
 
@@ -57452,6 +57541,60 @@ previous 只属于当前 attempt，在原消费循环接到已核 metadata 后�
 全仓查询确认生产 `LlmClient` 实现只有 `OpenAiClient`、`AnthropicClient`、`ResponsesClient`；`LlmConfig::build_client`、Agent builder、模型工厂、Guard/压缩/分类器直接保留该 trait object，没有生产转发 wrapper。其余实现是具名测试模型或测试观察 wrapper，未声明该能力时保持未知；不自动改变 SDK 独立 pin。以后增加生产 proxy 必须无损转发此方法，并保留其配置来源校验。
 
 逻辑 call ID 绑定一次原模型步骤；原 `retry_llm_call` 的每次实际 `call_fn` 执行获得本地 attempt ID 和独立起时，失败也沿原 `LlmUsage` 发一次已知/未知消费观察。成功获取的流继续使用该 attempt 的时钟与身份，不把重试等待拼入其 decode 时段。原 retry 循环、退避、取消和熔断决定不改；最终外层错误不能再把最后一次尝试重复记账。必须直接验证“两次失败、一次成功”为一步三次尝试，前两次未知覆盖保持未知，末次只计一次。
+
+
+---
+
+Source: https://echo-agent.dev/en/docs/adr-0110-exa-search-provider
+
+# ADR 0110：在原 SearchProvider 中接入 Exa
+
+状态：原独有分支功能已移植至集成候选；新切点验证、main 合流和官网同步分别验收。
+
+## 背景与候选方案
+
+`web_search` 搜索互联网并返回标题、URL 和摘要；`web_fetch` 读取已选 URL。框架已有通用
+`SearchProvider` 与共享 limit/cursor 分页，Exa 不是应用专属策略，不另建搜索工具、trait、
+应用搜索循环或权限门控。原 `feature/Echoyue/exa-web-search` 的 `4343f0b7` 含独有实现，
+当前集成底座还没有对应 provider，不能以其它后继功能为由丢弃。
+
+候选包括新增独立 Exa 工具、合并搜索/网页获取、只新增构造器但不接标准包。前两种重复
+已有职责，第三种无法让标准包自动选择 Exa。本次复用原 trait 并接通标准包。
+
+## 决策与参考
+
+新增 `providers::exa::ExaSearchProvider`、`WebSearchTool::with_exa(key)`。参考原开发时的
+[Exa 官方搜索接口](https://docs.exa.ai/reference/search)与
+[LangChain Exa 集成](https://docs.langchain.com/oss/python/integrations/tools/exa_search)：
+将厂商传输留在 provider 边界，使用 `POST https://api.exa.ai/search`、Bearer Key、
+`type: auto`、有界 `numResults`，只请求 highlights 并归一化为 `snippet`；不调用 contents
+接口，不改变独立 `web_fetch`。本次官方文档联网复核未成功，未据此宣称新版本线上验证。
+
+`auto()` 在构造时按非空 `EXA_API_KEY` > 原 Tavily > Brave > DuckDuckGo 选择；标准包改用
+`auto()`。无 Exa Key 时沿原三家顺序，显式构造器仍可固定引擎；请求失败不自动换引擎。
+修改环境后须重建工具/Agent。该选择不改变任务重试、权限、模型或发布权威。
+
+原分支错误文字包装已被当前底座取代，因此只移植功能，错误接入现有 `http_body`：
+传输走 `request_error`，非成功响应走 `response_error`，成功 JSON 走原有界读取。
+`RemoteFailure`、`ExecutionNotSettled`、HTTP status 和 Retry-After 保持当前类型权威，
+不恢复统一 transient 或 `ExecutionFailed` 包裹，不解析展示文字决策重试。
+401/402永久失败，429/5xx沿原瞬态规则，已有超时/取消/不完整执行语义不变。
+
+本地场景也必须防止密钥与查询泄漏：失败不读上游响应正文，传输诊断复用原 URL 清理；
+不把 headers 或原始正文写进日志。未新增依赖、锁、feature、配置凭据或持久化 store。
+
+## 影响与验证边界
+
+保留原五个 provider 用例：实际本机 HTTP 请求/Unicode highlights、空与损坏结果、
+分页、错误隐私、数量边界；错误用例增加 typed分类、Retry-After 与工具层 metadata。
+选择测试在独立子进程设置环境，不改父测试全局环境；以非法合成 header 在网络前失败，
+证明标准包安装了 Exa 且未静默换引擎。完整 `web` feature 与 demo41 示例编译须由统一
+构建窗口在新切点实际执行，原分支历史绿色不能代替本次结果。
+
+`web_search` 仍取最多十条结果供本地 limit/cursor 分页；provider直接调用最多100条、0条
+不发请求。中文正式说明、README 和示例 env 同步；旧 ADR0090 已用于 A2A/LSP 退役，
+本次使用0110，不改退役合同、不新建英文镜像。官网在干净框架提交后使用原同步机制处理，
+SDK Host 显式 DuckDuckGo 与独立 pin 保持原状。无具名授权不调用真实 Exa 服务。
 
 
 ---

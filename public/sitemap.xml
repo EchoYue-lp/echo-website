@@ -973,6 +973,12 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0109-model-call-observation" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/docs/adr-0110-exa-search-provider</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0110-exa-search-provider" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0110-exa-search-provider" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0110-exa-search-provider" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/docs/knowledge-overview</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/knowledge-overview" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/knowledge-overview" />
@@ -2015,6 +2021,12 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0109-model-call-observation" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0109-model-call-observation" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0109-model-call-observation" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0110-exa-search-provider</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0110-exa-search-provider" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0110-exa-search-provider" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0110-exa-search-provider" />
   </url>
   <url>
     <loc>https://echo-agent.dev/en/docs/knowledge-overview</loc>

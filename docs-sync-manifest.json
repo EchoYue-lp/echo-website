@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "f479f52c26ca5664bed960f2793100382852ffdb",
+    "revision": "4703f0c2d5993ca23c037e24535686d51e90e3bb",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -776,6 +776,11 @@
         "sha256": "a51a3edb990206edb1478fb161929f1d90a1299c5fc99f3d5efe68b746fb00cd"
       },
       {
+        "sourcePath": "docs/adr/0110-exa-search-provider.md",
+        "destination": "src/docs/content/echo-agent/en/adr/0110-exa-search-provider.md",
+        "sha256": "ace214e5153885b7d003063a094924a0b5076c10392eb088d96a99a62c5f5926"
+      },
+      {
         "sourcePath": "docs/en/architecture.md",
         "destination": "src/docs/content/echo-agent/en/architecture.md",
         "sha256": "c07080846b2956f818bebeb22ebb1906c31cd4f300016baec983d2eabd7b0161"
@@ -923,12 +928,12 @@
       {
         "sourcePath": "docs/zh/20-web-tools.md",
         "destination": "src/docs/content/echo-agent/zh/20-web-tools.md",
-        "sha256": "ddcac514416e227aa07765cd67a258db21ba1e9e8794c5adaab4443fdef37779"
+        "sha256": "90634af095b7b544329b1375a637ad6785856d63565b1ff980a95814b2087bab"
       },
       {
         "sourcePath": "docs/zh/21-common-tools.md",
         "destination": "src/docs/content/echo-agent/zh/21-common-tools.md",
-        "sha256": "96c69bbf2e5bc23920c84b297d805401a61b0ae0b011d1fa98022c3e16d4f21d"
+        "sha256": "3fc922132a343f7eb3011bd5e00e44fe729c9416dec88fed3a2a4afd126422bb"
       },
       {
         "sourcePath": "docs/zh/22-research-tools.md",
@@ -1606,6 +1611,11 @@
         "sha256": "a51a3edb990206edb1478fb161929f1d90a1299c5fc99f3d5efe68b746fb00cd"
       },
       {
+        "sourcePath": "docs/adr/0110-exa-search-provider.md",
+        "destination": "src/docs/content/echo-agent/zh/adr/0110-exa-search-provider.md",
+        "sha256": "ace214e5153885b7d003063a094924a0b5076c10392eb088d96a99a62c5f5926"
+      },
+      {
         "sourcePath": "docs/zh/architecture.md",
         "destination": "src/docs/content/echo-agent/zh/architecture.md",
         "sha256": "065c644ed590e9ed522a1efaba0c812a72beebf21572c0e6c620227c5e965e8b"
@@ -1653,7 +1663,7 @@
       {
         "sourcePath": "docs/zh/README.md",
         "destination": "src/docs/content/echo-agent/zh/README.md",
-        "sha256": "3ae840a0eacfac70de4aac65e284f6abdcdad597f326bcfcf18339d5f0e0eb9f"
+        "sha256": "e2892d2f0aa80a74255f18ff96297424260993320ae1d25a0d3cd918e151158c"
       },
       {
         "sourcePath": "docs/zh/security.md",
@@ -1669,9 +1679,9 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "efbf200c0d2ff9c4ff20ba567e2660fa0200e248",
-    "status": "source-reviewed",
-    "authority": "2026-11-08 主根协调的产品投影增量审查：Framework f479f52c26ca5664bed960f2793100382852ffdb、CLI efbf200c0d2ff9c4ff20ba567e2660fa0200e248 均从主根内干净Git源视图读取，完整153份双语产品源文档纳入摘要。四中文页更新执行准入与未知结算、保留原件的保存、GUI目标/支线快捷命令及紧凑布局；四英文页保留历史参考，Framework332镜像不改。本地Rust完整测试与前端证据分别沿其原冻结工作树和程序，不将提交旧399锁视为已验证构建或借文档审查接受43ed/48ee风险。原五项风险仍未修复；具体风险接受及正式gate仍等待，最终同源App、真实GUI/手机/SSH、mainCI和发布分别验收；仅本地文档同步，不部署。",
+    "reviewedRevision": "268b1364a6c4fb4fe51415c234621148e9c97f23",
+    "status": "source-reviewed-with-execution-limitations",
+    "authority": "2026-11-09 主根协调指定的干净整合来源：Framework 4703f0c2d5993ca23c037e24535686d51e90e3bb、CLI 268b1364a6c4fb4fe51415c234621148e9c97f23；均为精确任务提交，尚不代表 main 合流。沿原同步器核对全部受控框架镜像与应用来源文档，八页产品投影保留既有权威，中文增量仅说明右栏与消息列表滚动边界、个人微信原传输状态的脱敏诊断并链接原 ADR0056；四英文页保持历史参考。Framework Exa ADR0110逐字进入原双语路由，不新增英文译文。该记录仅为源码投影；当前微信无回复未确认根因或修复，Ready、Accepted和新增日志不证明手机收件。最终依赖门禁与风险绑定、main CI、原生综合包、真实GUI/微信/SSH及发布继续独立验收，完整网站门禁待最终main来源锚点后执行；不部署。",
     "sourceFiles": [
       {
         "sourcePath": "docs/en/adr/0001-agent-collaboration.md",
@@ -2175,7 +2185,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0056-personal-weixin-channel.md",
-        "sha256": "c400621679032a3d19c934256238d571e669002c958fa45e94ac9c5430bcad98"
+        "sha256": "e8bae6659928b27a42fd45369380155ec80332d76170307c1aae878e4f2a111c"
       },
       {
         "sourcePath": "docs/zh/adr/0057-native-messages-and-progress-policy.md",
@@ -2259,7 +2269,7 @@
       },
       {
         "sourcePath": "docs/zh/guides/gui-task-runtime-panel.md",
-        "sha256": "01e247110bc2ff7957c0957131cea24f1248ea2a31254946206e7525c614d19f"
+        "sha256": "59356d5b220c7c1642e9a1209faecbdd62a9b08f34eea2c5e7e99d3a6fa4348d"
       },
       {
         "sourcePath": "docs/zh/guides/hitl-replay-identity.md",
@@ -2305,11 +2315,11 @@
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "8de42a91d5f5ec22ff7e8912f379195eeeda829bd4490626efb08c6de9483f4f"
+        "sha256": "6151278806e1b85b04f19f2c2b1746f26f2d6d9ea055bd6c6dd2394f20756e70"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
-        "sha256": "222d1a33378524c5e4b92d0aea161e5e6ed18778ebe0ee34ea679987720a70b5"
+        "sha256": "47ee3187f0d3a4e09851777871fe83619a13a57976382283560f5e0d005fd605"
       },
       {
         "destination": "src/docs/content/eko/zh/overview.md",
