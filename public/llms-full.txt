@@ -29500,6 +29500,8 @@ cd echo-agent-cli
 
 选定配套源码后，在应用根目录运行 `cargo fetch --locked`。源码可获取、依赖可解析和实际构建是不同检查。
 
+构建前请阅读[当前依赖风险说明](https://github.com/EchoYue-lp/echo-agent-cli/blob/main/docs/zh/adr/0062-current-five-risk-binding.md)。本次接受仅绑定其中列出的精确源码与锁文件，五项既有风险仍未修复；后续源码或依赖变化需要重新评估。风险门禁通过也不代表安装包已经完成原生验收或发布。
+
 在 GUI 设置中配置 provider 与 model，也可以使用 `./eko.yaml` 或 `~/.eko/config.yaml`。API key 应放在配置引用的环境变量中，不要把 secret 写进配置文件。
 
 ## 启动 GUI
@@ -29597,6 +29599,8 @@ Eclip 是基于 `echo-agent` 构建的本地个人 AI 助理。以下内容说�
 ## Coding
 
 编码工作使用文件操作、交互式 Shell、Git、隔离 Worktree 和边界明确的 Subagent。工作空间支持已有本地目录、新建目录与 SSH 项目；项目文件和 Agent 命令使用绑定的同一真实目标。Eclip 的 LSP 消费入口及框架的 A2A/LSP 实现已从当前源码退役；MCP、IM、cron、GUI 内置终端、Agent shell 和独立 SDK Host stdio 继续保留。源码退出与各消费者、原生宿主和发布验收分别核对，历史说明见 [LSP 退役与恢复](/docs/lsp)和 [A2A 退役与恢复](/docs/a2a-protocol)。
+
+SSH 命令保留原输入、正常输出与退出状态。取消或超时后会在观察期限内结束等待；远端脚本派生的子进程仍可能运行并持有输出管道，此时保留未知状态与原执行记录，继续跟踪实际结束和回收。重新执行前先核对远端状态，避免重复副作用。精确边界见[项目工作空间 ADR 0055](https://github.com/EchoYue-lp/echo-agent-cli/blob/main/docs/zh/adr/0055-project-workspaces.md)；源码和本地验证不代替真实 SSH 或新版 App 验收。
 
 ## Data analysis
 

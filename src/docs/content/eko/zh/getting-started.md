@@ -21,6 +21,8 @@ cd echo-agent-cli
 
 选定配套源码后，在应用根目录运行 `cargo fetch --locked`。源码可获取、依赖可解析和实际构建是不同检查。
 
+构建前请阅读[当前依赖风险说明](https://github.com/EchoYue-lp/echo-agent-cli/blob/main/docs/zh/adr/0062-current-five-risk-binding.md)。本次接受仅绑定其中列出的精确源码与锁文件，五项既有风险仍未修复；后续源码或依赖变化需要重新评估。风险门禁通过也不代表安装包已经完成原生验收或发布。
+
 在 GUI 设置中配置 provider 与 model，也可以使用 `./eko.yaml` 或 `~/.eko/config.yaml`。API key 应放在配置引用的环境变量中，不要把 secret 写进配置文件。
 
 ## 启动 GUI

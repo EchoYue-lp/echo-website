@@ -6,6 +6,8 @@ Eclip 是基于 `echo-agent` 构建的本地个人 AI 助理。以下内容说�
 
 编码工作使用文件操作、交互式 Shell、Git、隔离 Worktree 和边界明确的 Subagent。工作空间支持已有本地目录、新建目录与 SSH 项目；项目文件和 Agent 命令使用绑定的同一真实目标。Eclip 的 LSP 消费入口及框架的 A2A/LSP 实现已从当前源码退役；MCP、IM、cron、GUI 内置终端、Agent shell 和独立 SDK Host stdio 继续保留。源码退出与各消费者、原生宿主和发布验收分别核对，历史说明见 [LSP 退役与恢复](/docs/lsp)和 [A2A 退役与恢复](/docs/a2a-protocol)。
 
+SSH 命令保留原输入、正常输出与退出状态。取消或超时后会在观察期限内结束等待；远端脚本派生的子进程仍可能运行并持有输出管道，此时保留未知状态与原执行记录，继续跟踪实际结束和回收。重新执行前先核对远端状态，避免重复副作用。精确边界见[项目工作空间 ADR 0055](https://github.com/EchoYue-lp/echo-agent-cli/blob/main/docs/zh/adr/0055-project-workspaces.md)；源码和本地验证不代替真实 SSH 或新版 App 验收。
+
 ## Data analysis
 
 数据工作台与 Polars 工具可以保留可审阅的 Python/R 脚本、清单和产物，使输入、变换与输出可检查。需要的领域方法与工具应由实际配置提供，不表示默认捆绑某个专业 Profile。

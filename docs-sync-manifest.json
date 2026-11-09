@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "framework": {
     "repository": "https://github.com/EchoYue-lp/echo-agent",
-    "revision": "4703f0c2d5993ca23c037e24535686d51e90e3bb",
+    "revision": "3413d64dae23353c6d02c546ac374deded855827",
     "authority": "Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.",
     "files": [
       {
@@ -1679,9 +1679,9 @@
   },
   "applicationProjection": {
     "repository": "https://github.com/EchoYue-lp/echo-agent-cli",
-    "reviewedRevision": "268b1364a6c4fb4fe51415c234621148e9c97f23",
+    "reviewedRevision": "233516378c2b3e8e552ee0842cc8001bdfc6c407",
     "status": "source-reviewed-with-execution-limitations",
-    "authority": "2026-11-09 主根协调指定的干净整合来源：Framework 4703f0c2d5993ca23c037e24535686d51e90e3bb、CLI 268b1364a6c4fb4fe51415c234621148e9c97f23；均为精确任务提交，尚不代表 main 合流。沿原同步器核对全部受控框架镜像与应用来源文档，八页产品投影保留既有权威，中文增量仅说明右栏与消息列表滚动边界、个人微信原传输状态的脱敏诊断并链接原 ADR0056；四英文页保持历史参考。Framework Exa ADR0110逐字进入原双语路由，不新增英文译文。该记录仅为源码投影；当前微信无回复未确认根因或修复，Ready、Accepted和新增日志不证明手机收件。最终依赖门禁与风险绑定、main CI、原生综合包、真实GUI/微信/SSH及发布继续独立验收，完整网站门禁待最终main来源锚点后执行；不部署。",
+    "authority": "2026-11-09 最终实际 main 来源：Framework 3413d64dae23353c6d02c546ac374deded855827、CLI 233516378c2b3e8e552ee0842cc8001bdfc6c407。沿原 canonical collector 重新核对完整干净来源与固定 Git blob、应用 parity；框架镜像逐字同步，应用中文 ADR0055/0062 的实际后继摘要进入完整 sourceFiles。八页产品投影保持既有范围，中文页同步 SSH 输入/有界未知与当前精确依赖风险说明，历史英文页面不新增翻译，不新增应用 ADR 全文镜像。实际镜像、来源、投影和发现路由数量以本次生成产物记录，保原路由边界。五项风险仍未修复，精确人类接受及 scanner1/gate0 分列；网站全量 verify/audit、精确 main CI、综合 App、真实 GUI/手机/SSH 和发布分别验收，源码同步不代替运行或部署资格。",
     "sourceFiles": [
       {
         "sourcePath": "docs/en/adr/0001-agent-collaboration.md",
@@ -2181,7 +2181,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0055-project-workspaces.md",
-        "sha256": "3898bd47d2176e22e9c355708a603534d675b18e17909c61d25bf5a093fc3f89"
+        "sha256": "cda3834971addc72368817e5ea7ac44abe3a4376b05a04caaa90a34dcabb01ea"
       },
       {
         "sourcePath": "docs/zh/adr/0056-personal-weixin-channel.md",
@@ -2205,7 +2205,7 @@
       },
       {
         "sourcePath": "docs/zh/adr/0062-current-five-risk-binding.md",
-        "sha256": "518612c59c82814a0b5de77d3e81bbcb0df067170029eb986d981abd399c1bb3"
+        "sha256": "3be3ad8f41458fe9f8f8e6a1b54af3dbe4b6a9fba42d345fe607580d5356e70f"
       },
       {
         "sourcePath": "docs/zh/adr/0063-project-context-startup.md",
@@ -2315,11 +2315,11 @@
       },
       {
         "destination": "src/docs/content/eko/zh/capabilities.md",
-        "sha256": "6151278806e1b85b04f19f2c2b1746f26f2d6d9ea055bd6c6dd2394f20756e70"
+        "sha256": "a2626aa5b39fa439d95e8c50f26f5840efaf74204b0a5dd9019ce157239ebde7"
       },
       {
         "destination": "src/docs/content/eko/zh/getting-started.md",
-        "sha256": "47ee3187f0d3a4e09851777871fe83619a13a57976382283560f5e0d005fd605"
+        "sha256": "185d3c2c45078d5a42081f72d82eb3bbe303de15e5bb003f42b126d29362da65"
       },
       {
         "destination": "src/docs/content/eko/zh/overview.md",
