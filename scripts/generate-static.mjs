@@ -39,6 +39,7 @@ function renderHtml(route, body, jsonLd) {
   const description = escapeHtml(route.description);
   const structured = JSON.stringify(jsonLd).replaceAll('<', '\\u003c');
   const managedHead = `
+    <link rel="icon" type="image/svg+xml" href="${route.product === 'eko' ? '/app-icon.svg' : '/favicon.svg'}" />
     <title>${title}</title>
     <meta name="description" content="${description}" />
     <link rel="canonical" href="${canonical}" />
@@ -52,18 +53,19 @@ function renderHtml(route, body, jsonLd) {
     <meta property="og:image" content="https://echo-agent.dev/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="echo-agent and EKO" />
+    <meta property="og:image:alt" content="echo-agent and Eclip" />
     <meta property="og:site_name" content="Echo Agent" />
     <meta property="og:locale" content="${locale}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${title}" />
     <meta name="twitter:description" content="${description}" />
     <meta name="twitter:image" content="https://echo-agent.dev/og-image.png" />
-    <meta name="twitter:image:alt" content="echo-agent and EKO" />
+    <meta name="twitter:image:alt" content="echo-agent and Eclip" />
     <script type="application/ld+json">${structured}</script>`;
 
   return baseHtml
     .replace(/<html\s+lang="[^"]*"/, `<html lang="${language}"`)
+    .replace(/\s*<link\s+rel="icon"[^>]*\/>/g, '')
     .replace(/\s*<title>[\s\S]*?<\/title>/, '')
     .replace(/\s*<meta\s+(?:name|property)="(?:description|og:[^"]+|twitter:[^"]+)"[^>]*\/>/g, '')
     .replace(/\s*<link\s+rel="(?:canonical|alternate)"[^>]*\/>/g, '')

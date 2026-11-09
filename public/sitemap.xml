@@ -181,12 +181,6 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/mcp" />
   </url>
   <url>
-    <loc>https://echo-agent.dev/docs/lsp</loc>
-    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/lsp" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/lsp" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/lsp" />
-  </url>
-  <url>
     <loc>https://echo-agent.dev/docs/web-tools</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/web-tools" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/web-tools" />
@@ -853,6 +847,138 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0089-non-yanked-media-dependencies" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/docs/adr-0090-a2a-lsp-retirement-contract</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0090-a2a-lsp-retirement-contract" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0090-a2a-lsp-retirement-contract" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0090-a2a-lsp-retirement-contract" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0091-explicit-hook-approval-intent</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0091-explicit-hook-approval-intent" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0091-explicit-hook-approval-intent" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0091-explicit-hook-approval-intent" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0092-channel-control-observations</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0092-channel-control-observations" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0092-channel-control-observations" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0092-channel-control-observations" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0093-cron-management-receipts</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0093-cron-management-receipts" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0093-cron-management-receipts" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0093-cron-management-receipts" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0094-subagent-tool-boundary-inheritance</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0094-subagent-tool-boundary-inheritance" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0094-subagent-tool-boundary-inheritance" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0094-subagent-tool-boundary-inheritance" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0095-structured-tool-remote-failures</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0095-structured-tool-remote-failures" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0095-structured-tool-remote-failures" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0095-structured-tool-remote-failures" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0096-selective-prepared-plugin-identity</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0096-selective-prepared-plugin-identity" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0096-selective-prepared-plugin-identity" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0096-selective-prepared-plugin-identity" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0097-subagent-registration-admission</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0097-subagent-registration-admission" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0097-subagent-registration-admission" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0097-subagent-registration-admission" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0098-project-file-system-adapter</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0098-project-file-system-adapter" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0098-project-file-system-adapter" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0098-project-file-system-adapter" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0099-personal-weixin-channel</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0099-personal-weixin-channel" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0099-personal-weixin-channel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0099-personal-weixin-channel" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0100-zstd-safe-chain-vendoring</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0100-zstd-safe-chain-vendoring" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0100-zstd-safe-chain-vendoring" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0100-zstd-safe-chain-vendoring" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0101-native-message-execution</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0101-native-message-execution" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0101-native-message-execution" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0101-native-message-execution" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0102-canonical-agent-consumers</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0102-canonical-agent-consumers" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0102-canonical-agent-consumers" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0102-canonical-agent-consumers" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0103-current-storage-records</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0103-current-storage-records" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0103-current-storage-records" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0103-current-storage-records" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0104-canonical-agent-runtime-kernel</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0104-canonical-agent-runtime-kernel" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0104-canonical-agent-runtime-kernel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0104-canonical-agent-runtime-kernel" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0105-current-config-and-plugin-inputs</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0105-current-config-and-plugin-inputs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0105-current-config-and-plugin-inputs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0105-current-config-and-plugin-inputs" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0106-file-system-read-session</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0106-file-system-read-session" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0106-file-system-read-session" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0106-file-system-read-session" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0106-provider-http-client-injection</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0106-provider-http-client-injection" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0106-provider-http-client-injection" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0106-provider-http-client-injection" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0107-command-cell-admission-and-save-work</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0107-command-cell-admission-and-save-work" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0107-command-cell-admission-and-save-work" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0107-command-cell-admission-and-save-work" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0108-versioned-context-projections</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0108-versioned-context-projections" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0108-versioned-context-projections" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0108-versioned-context-projections" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0109-model-call-observation</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0109-model-call-observation" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0109-model-call-observation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0109-model-call-observation" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/adr-0110-exa-search-provider</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0110-exa-search-provider" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0110-exa-search-provider" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0110-exa-search-provider" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/docs/knowledge-overview</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/knowledge-overview" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/knowledge-overview" />
@@ -875,6 +1001,12 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/skill-system-guide" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/skill-system-guide" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/skill-system-guide" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/docs/lsp</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/lsp" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/lsp" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/lsp" />
   </url>
   <url>
     <loc>https://echo-agent.dev/docs/a2a-protocol</loc>
@@ -1097,12 +1229,6 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/mcp" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/mcp" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/mcp" />
-  </url>
-  <url>
-    <loc>https://echo-agent.dev/en/docs/lsp</loc>
-    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/lsp" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/lsp" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/lsp" />
   </url>
   <url>
     <loc>https://echo-agent.dev/en/docs/web-tools</loc>
@@ -1771,6 +1897,138 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0089-non-yanked-media-dependencies" />
   </url>
   <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0090-a2a-lsp-retirement-contract</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0090-a2a-lsp-retirement-contract" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0090-a2a-lsp-retirement-contract" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0090-a2a-lsp-retirement-contract" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0091-explicit-hook-approval-intent</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0091-explicit-hook-approval-intent" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0091-explicit-hook-approval-intent" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0091-explicit-hook-approval-intent" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0092-channel-control-observations</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0092-channel-control-observations" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0092-channel-control-observations" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0092-channel-control-observations" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0093-cron-management-receipts</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0093-cron-management-receipts" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0093-cron-management-receipts" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0093-cron-management-receipts" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0094-subagent-tool-boundary-inheritance</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0094-subagent-tool-boundary-inheritance" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0094-subagent-tool-boundary-inheritance" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0094-subagent-tool-boundary-inheritance" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0095-structured-tool-remote-failures</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0095-structured-tool-remote-failures" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0095-structured-tool-remote-failures" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0095-structured-tool-remote-failures" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0096-selective-prepared-plugin-identity</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0096-selective-prepared-plugin-identity" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0096-selective-prepared-plugin-identity" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0096-selective-prepared-plugin-identity" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0097-subagent-registration-admission</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0097-subagent-registration-admission" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0097-subagent-registration-admission" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0097-subagent-registration-admission" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0098-project-file-system-adapter</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0098-project-file-system-adapter" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0098-project-file-system-adapter" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0098-project-file-system-adapter" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0099-personal-weixin-channel</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0099-personal-weixin-channel" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0099-personal-weixin-channel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0099-personal-weixin-channel" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0100-zstd-safe-chain-vendoring</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0100-zstd-safe-chain-vendoring" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0100-zstd-safe-chain-vendoring" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0100-zstd-safe-chain-vendoring" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0101-native-message-execution</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0101-native-message-execution" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0101-native-message-execution" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0101-native-message-execution" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0102-canonical-agent-consumers</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0102-canonical-agent-consumers" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0102-canonical-agent-consumers" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0102-canonical-agent-consumers" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0103-current-storage-records</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0103-current-storage-records" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0103-current-storage-records" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0103-current-storage-records" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0104-canonical-agent-runtime-kernel</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0104-canonical-agent-runtime-kernel" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0104-canonical-agent-runtime-kernel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0104-canonical-agent-runtime-kernel" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0105-current-config-and-plugin-inputs</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0105-current-config-and-plugin-inputs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0105-current-config-and-plugin-inputs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0105-current-config-and-plugin-inputs" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0106-file-system-read-session</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0106-file-system-read-session" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0106-file-system-read-session" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0106-file-system-read-session" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0106-provider-http-client-injection</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0106-provider-http-client-injection" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0106-provider-http-client-injection" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0106-provider-http-client-injection" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0107-command-cell-admission-and-save-work</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0107-command-cell-admission-and-save-work" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0107-command-cell-admission-and-save-work" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0107-command-cell-admission-and-save-work" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0108-versioned-context-projections</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0108-versioned-context-projections" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0108-versioned-context-projections" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0108-versioned-context-projections" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0109-model-call-observation</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0109-model-call-observation" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0109-model-call-observation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0109-model-call-observation" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/adr-0110-exa-search-provider</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/adr-0110-exa-search-provider" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/adr-0110-exa-search-provider" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/adr-0110-exa-search-provider" />
+  </url>
+  <url>
     <loc>https://echo-agent.dev/en/docs/knowledge-overview</loc>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/knowledge-overview" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/knowledge-overview" />
@@ -1793,6 +2051,12 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/skill-system-guide" />
     <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/skill-system-guide" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/skill-system-guide" />
+  </url>
+  <url>
+    <loc>https://echo-agent.dev/en/docs/lsp</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://echo-agent.dev/docs/lsp" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://echo-agent.dev/en/docs/lsp" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://echo-agent.dev/docs/lsp" />
   </url>
   <url>
     <loc>https://echo-agent.dev/en/docs/a2a-protocol</loc>

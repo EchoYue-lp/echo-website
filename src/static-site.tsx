@@ -90,7 +90,7 @@ function StaticDoc({
     <main className="static-doc-shell">
       <header>
         <a href={withLanguage(product === 'eko' ? '/eko' : '/', language)}>
-          {product === 'eko' ? 'EKO' : 'echo-agent'}
+          {product === 'eko' ? 'Eclip' : 'echo-agent'}
         </a>
         <a href={docsPath(product, language)}>{language === 'zh' ? '文档' : 'Documentation'}</a>
       </header>
@@ -185,7 +185,7 @@ export async function discoveryArtifacts(): Promise<DiscoveryArtifacts> {
   const compact = [
     '# Echo Agent',
     '',
-    '> Official discovery index for echo-agent and EKO. Chinese routes are the default; English routes use `/en`.',
+    '> Official discovery index for echo-agent and Eclip. Chinese routes are the default; English routes use `/en`.',
     '',
     homeText('en', 'echo-agent'),
     '',

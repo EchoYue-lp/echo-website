@@ -721,4 +721,180 @@ export const frameworkAdrDocs = [
     },
     filePath: './content/echo-agent/adr/0089-non-yanked-media-dependencies.md',
   },
+  {
+    slug: 'adr-0090-a2a-lsp-retirement-contract',
+    title: {
+      zh: 'ADR 0090: Retire only A2A and LSP after consumers remove their dependencies',
+      en: 'ADR 0090: Retire only A2A and LSP after consumers remove their dependencies',
+    },
+    filePath: './content/echo-agent/adr/0090-a2a-lsp-retirement-contract.md',
+  },
+  {
+    slug: 'adr-0091-explicit-hook-approval-intent',
+    title: {
+      zh: 'ADR 0091: Preserve explicit hook approval intent through the shared service',
+      en: 'ADR 0091: Preserve explicit hook approval intent through the shared service',
+    },
+    filePath: './content/echo-agent/adr/0091-explicit-hook-approval-intent.md',
+  },
+  {
+    slug: 'adr-0092-channel-control-observations',
+    title: {
+      zh: 'ADR 0092: Observe original channel transports and replace only settled adapters',
+      en: 'ADR 0092: Observe original channel transports and replace only settled adapters',
+    },
+    filePath: './content/echo-agent/adr/0092-channel-control-observations.md',
+  },
+  {
+    slug: 'adr-0093-cron-management-receipts',
+    title: {
+      zh: 'ADR 0093: Cron definition edits and original occurrence observations',
+      en: 'ADR 0093: Cron definition edits and original occurrence observations',
+    },
+    filePath: './content/echo-agent/adr/0093-cron-management-receipts.md',
+  },
+  {
+    slug: 'adr-0094-subagent-tool-boundary-inheritance',
+    title: {
+      zh: 'ADR 0094: Invocation Tool Scope Across Subagent Dispatch',
+      en: 'ADR 0094: Invocation Tool Scope Across Subagent Dispatch',
+    },
+    filePath: './content/echo-agent/adr/0094-subagent-tool-boundary-inheritance.md',
+  },
+  {
+    slug: 'adr-0095-structured-tool-remote-failures',
+    title: {
+      zh: 'ADR 0095: Structured remote Tool failures',
+      en: 'ADR 0095: Structured remote Tool failures',
+    },
+    filePath: './content/echo-agent/adr/0095-structured-tool-remote-failures.md',
+  },
+  {
+    slug: 'adr-0096-selective-prepared-plugin-identity',
+    title: {
+      zh: 'ADR 0096: Selective prepared plugin content identities',
+      en: 'ADR 0096: Selective prepared plugin content identities',
+    },
+    filePath: './content/echo-agent/adr/0096-selective-prepared-plugin-identity.md',
+  },
+  {
+    slug: 'adr-0097-subagent-registration-admission',
+    title: {
+      zh: 'ADR 0097: Admit and Consume One Subagent Registration',
+      en: 'ADR 0097: Admit and Consume One Subagent Registration',
+    },
+    filePath: './content/echo-agent/adr/0097-subagent-registration-admission.md',
+  },
+  {
+    slug: 'adr-0098-project-file-system-adapter',
+    title: {
+      zh: 'ADR 0098: Location-bound file I/O and execution resources',
+      en: 'ADR 0098: Location-bound file I/O and execution resources',
+    },
+    filePath: './content/echo-agent/adr/0098-project-file-system-adapter.md',
+  },
+  {
+    slug: 'adr-0099-personal-weixin-channel',
+    title: {
+      zh: 'ADR 0099: Personal Weixin protocol and durable no-stream admission',
+      en: 'ADR 0099: Personal Weixin protocol and durable no-stream admission',
+    },
+    filePath: './content/echo-agent/adr/0099-personal-weixin-channel.md',
+  },
+  {
+    slug: 'adr-0100-zstd-safe-chain-vendoring',
+    title: {
+      zh: 'ADR 0100：由 Framework 维护 Polars 的 zstd 安全依赖补丁',
+      en: 'ADR 0100：由 Framework 维护 Polars 的 zstd 安全依赖补丁',
+    },
+    filePath: './content/echo-agent/adr/0100-zstd-safe-chain-vendoring.md',
+  },
+  {
+    slug: 'adr-0101-native-message-execution',
+    title: {
+      zh: 'ADR 0101：Framework 原生消息与统一执行终态',
+      en: 'ADR 0101：Framework 原生消息与统一执行终态',
+    },
+    filePath: './content/echo-agent/adr/0101-native-message-execution.md',
+  },
+  {
+    slug: 'adr-0102-canonical-agent-consumers',
+    title: {
+      zh: 'ADR 0102：现有消费者采用唯一原生 Agent 输出',
+      en: 'ADR 0102：现有消费者采用唯一原生 Agent 输出',
+    },
+    filePath: './content/echo-agent/adr/0102-canonical-agent-consumers.md',
+  },
+  {
+    slug: 'adr-0103-current-storage-records',
+    title: {
+      zh: 'ADR 0103：统一当前存储格式，取消旧记录和推断恢复',
+      en: 'ADR 0103：统一当前存储格式，取消旧记录和推断恢复',
+    },
+    filePath: './content/echo-agent/adr/0103-current-storage-records.md',
+  },
+  {
+    slug: 'adr-0104-canonical-agent-runtime-kernel',
+    title: {
+      zh: 'ADR 0104：Agent完整typed输入与单一原生结算边界',
+      en: 'ADR 0104：Agent完整typed输入与单一原生结算边界',
+    },
+    filePath: './content/echo-agent/adr/0104-canonical-agent-runtime-kernel.md',
+  },
+  {
+    slug: 'adr-0105-current-config-and-plugin-inputs',
+    title: {
+      zh: 'ADR 0105：当前配置形状与插件输入边界',
+      en: 'ADR 0105：当前配置形状与插件输入边界',
+    },
+    filePath: './content/echo-agent/adr/0105-current-config-and-plugin-inputs.md',
+  },
+  {
+    slug: 'adr-0106-file-system-read-session',
+    title: {
+      zh: 'ADR 0106：文件提供者的可选只读会话',
+      en: 'ADR 0106：文件提供者的可选只读会话',
+    },
+    filePath: './content/echo-agent/adr/0106-file-system-read-session.md',
+  },
+  {
+    slug: 'adr-0106-provider-http-client-injection',
+    title: {
+      zh: 'ADR 0106：宿主 HTTP 客户端注入与产品身份',
+      en: 'ADR 0106：宿主 HTTP 客户端注入与产品身份',
+    },
+    filePath: './content/echo-agent/adr/0106-provider-http-client-injection.md',
+  },
+  {
+    slug: 'adr-0107-command-cell-admission-and-save-work',
+    title: {
+      zh: 'ADR 0107：分离后台准入与执行生命周期，复用同次保存工作',
+      en: 'ADR 0107：分离后台准入与执行生命周期，复用同次保存工作',
+    },
+    filePath: './content/echo-agent/adr/0107-command-cell-admission-and-save-work.md',
+  },
+  {
+    slug: 'adr-0108-versioned-context-projections',
+    title: {
+      zh: 'ADR 0108：有版本运行事实与稳定缓存前缀',
+      en: 'ADR 0108：有版本运行事实与稳定缓存前缀',
+    },
+    filePath: './content/echo-agent/adr/0108-versioned-context-projections.md',
+  },
+  {
+    slug: 'adr-0109-model-call-observation',
+    title: {
+      zh: 'ADR 0109：原模型调用的可选观测',
+      en: 'ADR 0109：原模型调用的可选观测',
+    },
+    filePath: './content/echo-agent/adr/0109-model-call-observation.md',
+  },
+  {
+    slug: 'adr-0110-exa-search-provider',
+    title: {
+      zh: 'ADR 0110：在原 SearchProvider 中接入 Exa',
+      en: 'ADR 0110：在原 SearchProvider 中接入 Exa',
+    },
+    filePath: './content/echo-agent/adr/0110-exa-search-provider.md',
+  },
 ];

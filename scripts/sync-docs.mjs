@@ -1,7 +1,6 @@
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import {
-  cpSync,
   existsSync,
   mkdirSync,
   readFileSync,
@@ -167,19 +166,14 @@ function verifyFrameworkAdrIndex(manifest) {
   }
 }
 
-function bilingualMarkdownPaths(englishRoot, chineseRoot) {
-  const chinesePaths = new Set(relativeMarkdownPaths(chineseRoot));
-  return relativeMarkdownPaths(englishRoot).filter((path) => chinesePaths.has(path));
-}
-
-function copyTree(sourceRoot, destinationRoot, sourcePrefix, relativePaths) {
+function copyTree(destinationRoot, sourcePrefix, relativePaths, documents) {
   return relativePaths.map((relativePath) => {
-    const source = join(sourceRoot, relativePath);
+    const sourcePath = `${sourcePrefix}/${relativePath}`;
     const destination = join(destinationRoot, relativePath);
     mkdirSync(dirname(destination), { recursive: true });
-    cpSync(source, destination);
+    writeFileSync(destination, documents.get(sourcePath));
     return {
-      sourcePath: `${sourcePrefix}/${relativePath}`.replaceAll('\\', '/'),
+      sourcePath,
       destination: relative(siteRoot, destination).replaceAll('\\', '/'),
       sha256: sha256(destination),
     };
@@ -204,6 +198,98 @@ function assertCleanSource(repositoryRoot, label) {
       `${label} source is dirty; refusing to sync files under a clean HEAD revision:\n${status}`,
     );
   }
+}
+
+function frameworkSnapshot(repositoryRoot) {
+  const root = resolve(repositoryRoot);
+  assertCleanSource(root, 'echo-agent');
+  const revision = gitRevision(root);
+  const tree = execFileSync(
+    'git',
+    [
+      'ls-tree',
+      '-rz',
+      revision,
+      '--',
+      'docs/en',
+      'docs/zh',
+      'docs/adr',
+      'docs/internal/knowledge/en',
+      'docs/internal/knowledge/zh',
+    ],
+    { cwd: root, encoding: 'utf8' },
+  );
+  const tracked = new Map();
+  for (const entry of tree.split('\0').filter(Boolean)) {
+    const separator = entry.indexOf('\t');
+    const sourcePath = entry.slice(separator + 1);
+    if (!sourcePath.endsWith('.md')) continue;
+    const [mode, kind, blob] = entry.slice(0, separator).split(' ');
+    if (kind !== 'blob' || !['100644', '100755'].includes(mode)) {
+      throw new Error(`Framework documentation is not a regular Git file: ${sourcePath}`);
+    }
+    tracked.set(sourcePath, blob);
+  }
+  const pathsBelow = (prefix) =>
+    [...tracked.keys()]
+      .filter((path) => path.startsWith(`${prefix}/`))
+      .map((path) => path.slice(prefix.length + 1))
+      .sort();
+  const pairedPaths = (english, chinese) =>
+    pathsBelow(english).filter((path) => tracked.has(`${chinese}/${path}`));
+  const standardPaths = pairedPaths('docs/en', 'docs/zh');
+  const knowledgePaths = pairedPaths('docs/internal/knowledge/en', 'docs/internal/knowledge/zh');
+  const adrPaths = pathsBelow('docs/adr');
+  if (adrPaths.length === 0) {
+    throw new Error('Framework documentation contains no ADR files.');
+  }
+  // 当前API用法由上游真实示例编译和文档审查确认；这里仅证明固定Git来源与逐字节镜像。
+  // 不从Rust fence、注释、字符串或迁移说明中的名称推断可执行性，以免阻断合法源同步。
+  // 历史ADR、旧版对照及自定义工具均保持来源原文，后继内容只能随合格上游快照更新。
+  const documents = new Map();
+  const files = [];
+  for (const language of ['en', 'zh']) {
+    for (const [sourcePrefix, paths, destinationPrefix] of [
+      [`docs/${language}`, standardPaths, `src/docs/content/echo-agent/${language}`],
+      [
+        `docs/internal/knowledge/${language}`,
+        knowledgePaths,
+        `src/docs/content/echo-agent/${language}/knowledge`,
+      ],
+      ['docs/adr', adrPaths, `src/docs/content/echo-agent/${language}/adr`],
+    ]) {
+      for (const path of paths) {
+        const sourcePath = `${sourcePrefix}/${path}`;
+        if (!documents.has(sourcePath)) {
+          const content = execFileSync('git', ['cat-file', 'blob', tracked.get(sourcePath)], {
+            cwd: root,
+            maxBuffer: 16 * 1024 * 1024,
+          });
+          if (!readFileSync(join(root, sourcePath)).equals(content)) {
+            throw new Error(`Framework documentation differs from HEAD blob: ${sourcePath}`);
+          }
+          documents.set(sourcePath, content);
+        }
+        files.push({
+          sourcePath,
+          destination: `${destinationPrefix}/${path}`,
+          sha256: createHash('sha256').update(documents.get(sourcePath)).digest('hex'),
+        });
+      }
+    }
+  }
+  // 固定同一个 Git 修订和受控集合，不能把忽略文件或途中切换的 HEAD 冒作该来源。
+  if (gitRevision(root) !== revision) {
+    throw new Error('Framework HEAD changed while reading the documentation snapshot.');
+  }
+  return {
+    revision,
+    standardPaths,
+    knowledgePaths,
+    adrPaths,
+    documents,
+    files: files.sort((left, right) => left.destination.localeCompare(right.destination)),
+  };
 }
 
 function assertApplicationParity(applicationRoot) {
@@ -242,11 +328,25 @@ function applicationProjection(
   applicationRevision,
   applicationStatus,
   applicationAuthority,
+  refreshApplicationProjection,
 ) {
   const existingManifest = existsSync(manifestPath)
     ? JSON.parse(readFileSync(manifestPath, 'utf8'))
     : undefined;
   const existingProjection = existingManifest?.applicationProjection;
+  // 未明确审查新产品修订时，整个既有投影（含 sourceFiles）都是原审查身份的一部分。
+  if (refreshApplicationProjection) {
+    if (!existingProjection?.reviewedRevision) {
+      throw new Error('Projection corrections require an existing reviewed application identity.');
+    }
+    // 页面纠正不是重新审查：旧来源身份原样保留，只生成当前站点正文摘要并明确待复审。
+    return {
+      ...existingProjection,
+      status: 'source-correction-pending-source-review',
+      files: projectionFiles(),
+    };
+  }
+  if (!applicationRevision && existingProjection) return existingProjection;
   const reviewedRevision = applicationRevision ?? existingProjection?.reviewedRevision;
   if (!reviewedRevision) {
     throw new Error(
@@ -273,6 +373,7 @@ function syncFramework(
   applicationRevision,
   applicationStatus,
   applicationAuthority,
+  refreshApplicationProjection,
 ) {
   const resolvedRoot = resolve(frameworkRoot);
   for (const required of [
@@ -287,61 +388,47 @@ function syncFramework(
     }
   }
 
+  const snapshot = frameworkSnapshot(resolvedRoot);
+  const projection = applicationProjection(
+    applicationRoot,
+    applicationRevision,
+    applicationStatus,
+    applicationAuthority,
+    refreshApplicationProjection,
+  );
   const destinationRoot = join(contentRoot, 'echo-agent');
   rmSync(destinationRoot, { recursive: true, force: true });
   rmSync(join(contentRoot, 'echo-agent-cli'), { recursive: true, force: true });
 
-  const standardPaths = bilingualMarkdownPaths(
-    join(resolvedRoot, 'docs/en'),
-    join(resolvedRoot, 'docs/zh'),
-  );
-  const knowledgePaths = bilingualMarkdownPaths(
-    join(resolvedRoot, 'docs/internal/knowledge/en'),
-    join(resolvedRoot, 'docs/internal/knowledge/zh'),
-  );
-  const adrRoot = join(resolvedRoot, 'docs/adr');
-  const adrPaths = relativeMarkdownPaths(adrRoot);
-  if (adrPaths.length === 0) {
-    throw new Error('Framework documentation contains no ADR files.');
-  }
+  const { standardPaths, knowledgePaths, adrPaths, documents } = snapshot;
   const files = [];
   for (const language of ['en', 'zh']) {
     files.push(
+      ...copyTree(join(destinationRoot, language), `docs/${language}`, standardPaths, documents),
       ...copyTree(
-        join(resolvedRoot, `docs/${language}`),
-        join(destinationRoot, language),
-        `docs/${language}`,
-        standardPaths,
-      ),
-      ...copyTree(
-        join(resolvedRoot, `docs/internal/knowledge/${language}`),
         join(destinationRoot, language, 'knowledge'),
         `docs/internal/knowledge/${language}`,
         knowledgePaths,
+        documents,
       ),
-      ...copyTree(adrRoot, join(destinationRoot, language, 'adr'), 'docs/adr', adrPaths),
+      ...copyTree(join(destinationRoot, language, 'adr'), 'docs/adr', adrPaths, documents),
     );
   }
   writeFileSync(
     frameworkAdrIndexPath,
-    renderFrameworkAdrIndex(frameworkAdrEntries(adrRoot, adrPaths)),
+    renderFrameworkAdrIndex(frameworkAdrEntries(join(destinationRoot, 'en/adr'), adrPaths)),
   );
 
   const manifest = {
     schemaVersion: 1,
     framework: {
       repository: 'https://github.com/EchoYue-lp/echo-agent',
-      revision: gitRevision(resolvedRoot),
+      revision: snapshot.revision,
       authority:
         'Framework documents with matching English and Chinese source paths are copied without semantic edits. Language-specific contributor material remains authoritative upstream.',
       files: files.sort((left, right) => left.destination.localeCompare(right.destination)),
     },
-    applicationProjection: applicationProjection(
-      applicationRoot,
-      applicationRevision,
-      applicationStatus,
-      applicationAuthority,
-    ),
+    applicationProjection: projection,
   };
 
   writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
@@ -358,8 +445,11 @@ function verifyRecord(record) {
   }
 }
 
-function checkManifest(frameworkRoot, applicationRoot) {
-  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+function checkManifest(
+  frameworkRoot,
+  applicationRoot,
+  manifest = JSON.parse(readFileSync(manifestPath, 'utf8')),
+) {
   const records = [...manifest.framework.files, ...manifest.applicationProjection.files];
   records.forEach(verifyRecord);
   verifyFrameworkAdrIndex(manifest);
@@ -377,17 +467,33 @@ function checkManifest(frameworkRoot, applicationRoot) {
 
   if (frameworkRoot) {
     const resolvedRoot = resolve(frameworkRoot);
-    const currentRevision = gitRevision(resolvedRoot);
+    const snapshot = frameworkSnapshot(resolvedRoot);
+    const currentRevision = snapshot.revision;
     if (currentRevision !== manifest.framework.revision) {
       throw new Error(
         `Framework docs need synchronization: manifest=${manifest.framework.revision}, source=${currentRevision}`,
       );
     }
+    const expected = new Map(snapshot.files.map((record) => [record.destination, record]));
+    const destinations = new Set();
     for (const record of manifest.framework.files) {
-      const source = join(resolvedRoot, record.sourcePath);
-      if (!existsSync(source) || sha256(source) !== record.sha256) {
-        throw new Error(`Framework documentation drifted: ${record.sourcePath}`);
+      const sourceRecord = expected.get(record.destination);
+      if (
+        destinations.has(record.destination) ||
+        !sourceRecord ||
+        sourceRecord.sourcePath !== record.sourcePath ||
+        sourceRecord.sha256 !== record.sha256
+      ) {
+        throw new Error(
+          `Framework documentation is outside the source snapshot: ${record.sourcePath}`,
+        );
       }
+      destinations.add(record.destination);
+    }
+    if (destinations.size !== expected.size) {
+      throw new Error(
+        'Framework manifest omits controlled documentation from the source snapshot.',
+      );
     }
   }
 
@@ -423,24 +529,44 @@ const applicationRootArgument = argumentValue('--application-root');
 const applicationRevision = argumentValue('--application-revision');
 const applicationStatus = argumentValue('--application-status');
 const applicationAuthority = argumentValue('--application-authority');
+const refreshApplicationProjection = process.argv.includes('--refresh-application-projection');
+if (
+  refreshApplicationProjection &&
+  ['--check', '--application-revision', '--application-status', '--application-authority'].some(
+    (option) => process.argv.includes(option),
+  )
+) {
+  throw new Error(
+    'Projection corrections cannot be combined with check or application review metadata changes.',
+  );
+}
 const frameworkRoot =
   frameworkRootArgument === 'auto' ? discoverFrameworkRoot() : frameworkRootArgument;
 const applicationRoot =
   applicationRootArgument === 'auto' ? discoverApplicationRoot() : applicationRootArgument;
 if (process.argv.includes('--check')) {
   checkManifest(frameworkRoot, applicationRoot);
+} else if (refreshApplicationProjection && !frameworkRoot) {
+  // 产品页面纠正不要求重新审阅框架；原框架正文和来源身份必须先校验并原样保留。
+  // 显式提供 framework-root 时仍走原完整同步，不绕过其 clean-source 检查。
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+  const projection = applicationProjection(undefined, undefined, undefined, undefined, true);
+  const candidate = { ...manifest, applicationProjection: projection };
+  // 同一完整校验先检查候选；错误页面或未登记文件不能在命令失败后留下新摘要。
+  checkManifest(undefined, undefined, candidate);
+  writeFileSync(manifestPath, `${JSON.stringify(candidate, null, 2)}\n`);
 } else {
   if (!frameworkRoot) throw new Error('Pass --framework-root <path> when synchronizing docs.');
-  const requiredApplicationRoot = applicationRoot ?? discoverApplicationRoot();
-  assertCleanSource(frameworkRoot, 'echo-agent');
-  assertCleanSource(requiredApplicationRoot, 'echo-agent-cli');
-  assertApplicationParity(requiredApplicationRoot);
+  let requiredApplicationRoot;
   if ((applicationStatus || applicationAuthority) && !applicationRevision) {
     throw new Error(
       'Changing application projection status or authority requires --application-revision <reviewed-sha>.',
     );
   }
   if (applicationRevision) {
+    requiredApplicationRoot = applicationRoot ?? discoverApplicationRoot();
+    assertCleanSource(requiredApplicationRoot, 'echo-agent-cli');
+    assertApplicationParity(requiredApplicationRoot);
     const currentApplicationRevision = gitRevision(resolve(requiredApplicationRoot));
     if (applicationRevision !== currentApplicationRevision) {
       throw new Error(
@@ -454,6 +580,7 @@ if (process.argv.includes('--check')) {
     applicationRevision,
     applicationStatus,
     applicationAuthority,
+    refreshApplicationProjection,
   );
   checkManifest(frameworkRoot, applicationRevision ? requiredApplicationRoot : undefined);
 }

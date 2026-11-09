@@ -43,24 +43,24 @@ export const metadata: Record<Product, Record<'home' | 'docs', Record<Language, 
   eko: {
     home: {
       zh: {
-        title: 'EKO - 本地个人 AI 助理',
+        title: 'Eclip - 本地个人 AI 助理',
         description:
-          'EKO 是面向 Coding、数据处理与分析、学术研究、生物医学文献研究和数十小时长程任务的本地个人 AI 助理。',
+          'Eclip 是面向 Coding、数据处理与分析、学术研究、生物医学文献研究和数十小时长程任务的本地个人 AI 助理。',
       },
       en: {
-        title: 'EKO - Local Personal AI Assistant',
+        title: 'Eclip - Local Personal AI Assistant',
         description:
-          'EKO is a local personal AI assistant for coding, data processing and analysis, academic and biomedical literature research, and long-horizon tasks designed to run for hours.',
+          'Eclip is a local personal AI assistant for coding, data processing and analysis, academic and biomedical literature research, and long-horizon tasks designed to run for hours.',
       },
     },
     docs: {
       zh: {
-        title: 'EKO 文档',
-        description: 'EKO 的安装、启动与本地数据说明。',
+        title: 'Eclip 文档',
+        description: 'Eclip 的安装、启动与本地数据说明。',
       },
       en: {
-        title: 'EKO Documentation',
-        description: 'Installation, startup, and local data guidance for EKO.',
+        title: 'Eclip Documentation',
+        description: 'Installation, startup, and local data guidance for Eclip.',
       },
     },
   },
@@ -124,7 +124,7 @@ export function structuredData(route: StructuredDataRoute): object {
           }
         : {
             '@type': 'SoftwareApplication',
-            name: 'EKO',
+            name: 'Eclip',
             description: route.description,
             applicationCategory: 'DeveloperApplication',
             license: 'https://opensource.org/licenses/MIT',
@@ -156,7 +156,7 @@ export function structuredData(route: StructuredDataRoute): object {
           {
             '@type': 'ListItem',
             position: 1,
-            name: route.product === 'eko' ? 'EKO' : 'echo-agent',
+            name: route.product === 'eko' ? 'Eclip' : 'echo-agent',
             item: `${origin}${withLanguage(route.product === 'eko' ? '/eko' : '/', route.language)}`,
           },
           {
@@ -206,7 +206,7 @@ export function getDocPageMetadata(
   language: Language,
   doc: DocEntry,
 ): PageMetadata {
-  const productName = product === 'eko' ? 'EKO' : 'echo-agent';
+  const productName = product === 'eko' ? 'Eclip' : 'echo-agent';
   return {
     title: `${doc.title[language]} | ${productName} ${language === 'zh' ? '文档' : 'Documentation'}`,
     description:
@@ -276,6 +276,8 @@ function applyMetadata(page: PageMetadata, language: Language, pathname: string)
   setMeta('meta[name="twitter:title"]', page.title);
   setMeta('meta[name="twitter:description"]', page.description);
   setMeta('meta[name="robots"]', 'index, follow');
+  ensureLink('icon').href =
+    basePath === '/eko' || basePath.startsWith('/eko/') ? '/app-icon.svg' : '/favicon.svg';
   ensureLink('canonical').href = canonicalUrl;
   setAlternate('zh-CN', zhUrl);
   setAlternate('en', enUrl);

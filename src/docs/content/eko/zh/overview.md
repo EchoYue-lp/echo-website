@@ -1,6 +1,10 @@
-# EKO
+# Eclip
 
-EKO 是基于 echo-agent 构建的本地个人 AI 助理。TUI、Tauri 桌面界面、CLI/JSONL 和消息 channel 使用同一套 `echo-agent-app-core` 服务；这些 surface 的能力对等是产品契约。
+**/ˈɛk.lɪp/** · **EK-lip**
+
+Eclip 是基于 echo-agent 构建的本地个人 AI 助理，以 GUI 为主入口，保留 IM 消息和 cron 定时任务作为后台触发方式。它们复用同一套会话、TaskRuntime、Subagent、工具、HITL 和记忆服务。
+
+当前源码已退出独立 TUI、REPL、CLI/JSONL 产品入口。GUI 内置终端、Agent shell 和独立 SDK Host stdio 继续保留；源码退出与新版安装包的实际运行验收分别核对。
 
 ## 能力边界
 
@@ -8,10 +12,30 @@ EKO 是基于 echo-agent 构建的本地个人 AI 助理。TUI、Tauri 桌面界
 - 调用工具、技能、hooks、插件和用户配置的 MCP server
 - 在一个 revisioned TaskRun graph 中组织有依赖的 `PlanTask` 与 Subagent 执行；framework `TaskStatus` 是执行权威，Todo 只是只读投影
 - 通过六个有界 `agent_*` 工具发现、检查、发送消息、follow up、等待与中断 Conversation Agent 或精确的 Task Subagent attempt
-- 跨重启恢复基于 cursor 的 Agent wait 与 TaskRun，保持 workspace 与原 TaskRun 身份；GUI、TUI、CLI、JSONL、channel 依据真实且已持久确认的结算回执，为已结算执行发布单一 typed terminal
+- 在已有本地文件夹、新建文件夹或 SSH 远程项目中工作；工作空间就是项目，任务与会话归属该工作空间
+- 从 GUI 管理已有 IM 渠道和定时任务；个人微信按源码提供扫码、必要数字确认与受限的本人私聊文字入口，实际登录和手机收件须分别验证
+- 跨重启恢复基于 cursor 的 Agent wait 与 TaskRun，保持 workspace 与原 TaskRun 身份；已结算执行以真实且已持久确认的结算回执为准
 - 执行结果尚不确定时保持非终态并保留原 owner；未知结果不授权重放或重复执行
-- 通过 scoped 应用权威控制 Skills、prepared Plugin generation、MCP、Hooks、LSP、Browser 与用户直接设置的工具可见性
+- 通过 scoped 应用权威控制 Skills、prepared Plugin generation、MCP、Hooks、Browser 与用户直接设置的工具可见性；Eclip 的 LSP 消费入口已退出
 - 在下一个 model safe point 向 primary、已有 pool Agent 和 future Agent 发布同一个 generation-bound hot memory
 - 用本地文件或内存保存对话、memory、task journal、checkpoint 与产品投影，不要求 SQLite
 
-官网是经过审阅的产品事实投影，不定义 EKO 行为或公共 API。实现与配置以 [EKO 源码仓库](https://github.com/EchoYue-lp/echo-agent-cli)、其中长期维护的文档和 ADR 为准。
+任务可以继续思考或等待后台结果，这些等待本身不占实际命令的执行名额。前台 Shell、后台命令和代码执行共享本助理的同一执行上限；打开或切换工作空间不会另增名额，命令仍在原先选定的本地或远端目标执行。
+
+后台返回回执表示请求已被接纳且可追踪，仍可能排队；它不是已启动或成功的证明。已启动命令的结束和回收尚未确认时，原命令仍保有名额，结果保持未知并继续跟踪，不因页面切换、停止等待或保存异常自动重跑。
+
+默认仅主智能体可以派发首层 Subagent，子智能体不能再次派发。GUI 的“最大 Subagent 总层数”默认 1、可选 1—3，对应默认额外嵌套深度 0；新配置不回写已有 TaskRun 的绑定。
+
+输入框支持 `/goal` 管理目标、`/side` 创建支线。裸命令打开原有窗口；带目标内容或问题时，直接沿原流程更新目标或创建并启动支线。侧栏与正文采用紧凑间距和适量留白，工具详情及未恢复提示仍可展开查看。
+
+普通 Steer 由主模型结合历史理解，并按需调整计划，不自动改写 Goal。已有 Goal 只由用户显式更新或结束；没有 Goal 时智能体可初始化。输入的持久接收、进入模型上下文与执行完成分别记录，必要原文通过既有 journal 与读取入口恢复。
+
+首页使用“把想法变成成果”，从“新建任务、最近任务、工作空间”进入工作；顶部“新建支线对话”入口已移除，已有支线历史和恢复继续保留。助手正文直接对齐，工具与执行详情可展开。当前源码已实现从完整回复分叉到当前工作空间或新 Worktree，并通过对应定向回归。新 Worktree 从 HEAD 创建，不带未提交或未跟踪改动；新版原生窗口与真实 SSH 的使用验收仍须分别完成。
+
+当前源码通过原生消息分别呈现助手正文、Reasoning、工具执行和运行时状态；最终正文确认与物理结算分别记录。已确认正文之后出现清理失败或未结算观察时，正文保留，执行仍显示其真实状态。长任务进度、当前格式的冷恢复与共享消费者各按对应源码和测试范围核验；新版桌面窗口、真实 SSH 和手机收件仍须单独验收。
+
+两段正文之间的连续过程合并为一行，可按需展开。最终结果确认后，中间输出和过程默认收起，最终正文、待处理错误、保存提示与图表继续可见。模型、思考、附件、上下文以及发送和停止控件集中在输入区，下方显示运行统计。
+
+累计用量来自模型实际报告和原有日志；缓存率按已报告的输入加权，缺少可靠速度或费用证据时保留未知。分叉继承的历史不会再次计入目标会话的新消耗。这些观测不承诺固定缓存率、速度或节省费用。
+
+官网是经过审阅的产品事实投影，不定义 Eclip 行为或公共 API。实现与配置以 [Eclip 源码仓库](https://github.com/EchoYue-lp/echo-agent-cli)、其中长期维护的文档和 ADR 为准。

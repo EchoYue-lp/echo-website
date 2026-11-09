@@ -188,11 +188,6 @@ export const frameworkDocCategories: DocCategory[] = [
         filePath: './content/echo-agent/08-mcp.md',
       },
       {
-        slug: 'lsp',
-        title: { zh: 'LSP 集成', en: 'LSP Integration' },
-        filePath: './content/echo-agent/31-lsp-integration.md',
-      },
-      {
         slug: 'web-tools',
         title: { zh: 'Web 工具', en: 'Web Tools' },
         filePath: './content/echo-agent/20-web-tools.md',
@@ -346,9 +341,20 @@ export const frameworkDocCategories: DocCategory[] = [
         title: { zh: '技能系统指南', en: 'Skill System Guide' },
         filePath: './content/echo-agent/knowledge/skill-system.md',
       },
+    ],
+  },
+  {
+    title: { zh: '退役与历史', en: '退役与历史' },
+    icon: 'book',
+    docs: [
+      {
+        slug: 'lsp',
+        title: { zh: 'LSP退役与历史恢复', en: 'LSP退役与历史恢复' },
+        filePath: './content/echo-agent/31-lsp-integration.md',
+      },
       {
         slug: 'a2a-protocol',
-        title: { zh: 'A2A 协议', en: 'A2A Protocol' },
+        title: { zh: 'A2A退役与历史恢复', en: 'A2A退役与历史恢复' },
         filePath: './content/echo-agent/knowledge/a2a-protocol.md',
       },
     ],
@@ -357,7 +363,7 @@ export const frameworkDocCategories: DocCategory[] = [
 
 export const ekoDocCategories: DocCategory[] = [
   {
-    title: { zh: 'EKO', en: 'EKO' },
+    title: { zh: 'Eclip', en: 'Eclip' },
     icon: 'monitor',
     docs: [
       {

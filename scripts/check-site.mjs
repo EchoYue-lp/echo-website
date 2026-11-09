@@ -42,12 +42,12 @@ if (manifest.name !== 'Echo Agent' || manifest.start_url !== '/') {
 }
 
 const pngIcon = manifest.icons?.find(
-  (icon) => icon.src === '/eko-icon.png' && icon.sizes === '256x256' && icon.type === 'image/png',
+  (icon) => icon.src === '/app-icon.png' && icon.sizes === '256x256' && icon.type === 'image/png',
 );
 if (!pngIcon) {
-  throw new Error('manifest.webmanifest must declare the real 256x256 EKO application icon');
+  throw new Error('manifest.webmanifest must declare the real 256x256 Eclip application icon');
 }
-await access(path.join(publicDir, 'eko-icon.png'), constants.R_OK);
+await access(path.join(publicDir, 'app-icon.png'), constants.R_OK);
 
 for (const imageUrl of [
   indexHtml.match(/<meta\s+property="og:image"\s+content="([^"]+)"\s*\/>/)?.[1],
@@ -109,7 +109,7 @@ if (/^Disallow:/m.test(robots) || !robots.includes('Sitemap: https://echo-agent.
   throw new Error('robots.txt must allow crawlers and name the canonical sitemap');
 }
 
-for (const requiredFact of ['echo-agent', 'EKO', '/en/eko/docs/capabilities']) {
+for (const requiredFact of ['echo-agent', 'Eclip', '/en/eko/docs/capabilities']) {
   if (!llms.includes(requiredFact) || !llmsFull.includes(requiredFact)) {
     throw new Error(`LLM discovery files are missing ${requiredFact}`);
   }

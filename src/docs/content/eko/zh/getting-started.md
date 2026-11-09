@@ -1,52 +1,109 @@
-# EKO 快速开始
+# Eclip 快速开始
 
-本页是经过审阅的快速开始投影；精确配置、构建与打包行为以 EKO 仓库长期维护的文档为准。
+本页是经过审阅的快速开始投影；精确配置、构建与打包行为以 Eclip 仓库长期维护的文档为准。
 
 ## 前置条件
 
 - Rust 1.95 或更高版本
 - 至少一个已配置的 LLM provider 与 model
-- GUI 开发需要 Node.js `^20.19.0 || ^22.13.0 || >=24.0.0`、Tauri 2 系统依赖与 Tauri CLI；TUI 和 JSONL 不需要 Node.js
+- GUI 开发需要 Node.js `^20.19.0 || ^22.13.0 || >=24.0.0`、Tauri 2 系统依赖与 Tauri CLI
 
-## 克隆仓库
+## 准备源码
+
+应用的 Cargo manifest 使用相邻的 `../echo-agent`；两个独立仓库需要并排检出。
+下面只取得源码，构建前应按上游交付说明选择已验证且可获取的配套修订，不能将两仓任意 `main` 或本地候选视为已验证组合。
 
 ```bash
+git clone https://github.com/EchoYue-lp/echo-agent.git
 git clone https://github.com/EchoYue-lp/echo-agent-cli.git
 cd echo-agent-cli
-cargo fetch
 ```
 
-TUI/CLI 用户可以配置 `./eko.yaml` 或 `~/.eko/config.yaml`；GUI 用户可以在设置中配置 provider 与 model。API key 应放在配置引用的环境变量中，不要把 secret 写进配置文件。
+选定配套源码后，在应用根目录运行 `cargo fetch --locked`。源码可获取、依赖可解析和实际构建是不同检查。
 
-## 启动 TUI
+构建前请阅读[当前依赖风险说明](https://github.com/EchoYue-lp/echo-agent-cli/blob/main/docs/zh/adr/0062-current-five-risk-binding.md)。本次接受仅绑定其中列出的精确源码与锁文件，五项既有风险仍未修复；后续源码或依赖变化需要重新评估。风险门禁通过也不代表安装包已经完成原生验收或发布。
 
-```bash
-cargo run --bin echo-agent-cli
-```
-
-常用 runtime selector 包括 `--project /path/to/project`、`--model <provider:model>`、`--continue` 与 `--resume <conversation-id>`。
+在 GUI 设置中配置 provider 与 model，也可以使用 `./eko.yaml` 或 `~/.eko/config.yaml`。API key 应放在配置引用的环境变量中，不要把 secret 写进配置文件。
 
 ## 启动 GUI
 
 ```bash
-npm install -g @tauri-apps/cli
+cargo install tauri-cli --version '=2.12.4' --locked
+cd web-frontend
+npm ci
+cd ..
 cargo gui-dev
 ```
 
 `cargo gui-dev` 是仓库 `.cargo/config.toml` 中的项目 alias，会启动前端开发服务并以 `gui` feature 运行 `echo-agent-tauri`。
 
-桌面生产包使用 `cargo gui-bundle`；裸 Rust binary 不包含完整 Tauri 前端与平台 bundle。
+## 打包与恢复
 
-## 运行 JSONL 自动化
+在同一应用根目录生成桌面包：
 
 ```bash
-cargo run --bin echo-agent-cli -- --jsonl "检查当前项目并总结结果"
+cargo gui-bundle
 ```
 
-JSONL 把 canonical chat envelope 逐行写到 stdout，日志保留在 stderr 或日志文件。
+它会沿项目配置构建前端和 Release 桌面包；裸 Rust binary 不包含完整 Tauri 前端与平台 bundle。
+例如在 macOS 本机构建后，从生成的完整应用包启动：
+
+```bash
+open target/release/bundle/macos/Eclip.app
+```
+
+包格式和声明版本不代表已经发布。当前本机 arm64 App 的验收不覆盖 Intel、Windows 或正式分发签名／公证；
+其它平台的精确产物和安装方式以对应合格制品及上游打包说明为准。
+
+停止与重开应沿应用正常退出和启动流程，并继续使用原来的产品数据目录。
+不要用旧备份覆盖扫码后认证、配置或历史，也不要为了重开而重放失败或尚未结算的任务。
+正文已经显示不代表工具执行和持久化已经结算；恢复仍以当前版本保存的原始执行事实为准。
+
+## 选择项目与开始任务
+
+工作空间就是项目。通过工作空间菜单选择已有本地文件夹、新建本地文件夹，或填写 SSH 设备和远程项目目录。“新建任务”只在已选工作空间打开会话草稿，不创建项目目录。
+
+首页标题是“把想法变成成果”，从侧栏“最近任务”或“工作空间”继续已有工作。顶部不再提供“新建支线对话”；已有支线历史、树形导航和恢复能力继续保留。
+
+SSH 登录、远端目录验证与真实文件/命令执行各有独立结果；终端连通不等于远程项目已经验收。项目代码可以在远端，本机产品数据不会因此迁走。
+
+运行中可以继续输入。“已收到”表示输入已经持久保存，不等待当前模型或工具完成，也不表示纠正已经执行。准备或准入失败会保留原输入；迟到回执不能清掉切换任务或编辑后的新草稿。Stop 是独立操作。
+
+后台命令被接纳后可及时返回可追踪回执，无需等待执行名额；排队与运行仍使用原时限。回执只表示请求可追踪，不表示已经运行或成功；可在已有工具与执行详情中查看排队、运行、输出和最终结果。排队时间也计入命令原有时限。
+
+命令结束或回收结果无法确认时，系统保留原记录与未知状态，不把停止等待当作执行结束，也不因观察或保存失败自动重放命令。用户直接打开内置终端、连接 MCP 和配置扩展仍沿原交互入口使用。
+
+模型、思考、附件与发送和停止控件位于输入框内，发送和停止沿当前运行状态切换；当前上下文与运行统计位于框下方。连续的工具过程可以展开查看；最终结果发布后，过程默认折叠，最终正文和图表单独保留。统计只显示已有可靠观测，未知项不会由字符数估算。
+
+打开任务运行右栏后，运行历史与详情在右栏内部滚动。聊天自动跟随只滚动消息列表，阅读较早消息时保留位置；回到底部附近后继续跟随，不带动三栏标题整体移动。
+
+普通 Steer 由主模型结合历史理解并按需调整计划，不自动修改 Goal。已有 Goal 通过用户显式操作沿版本校验和安全点修改或结束；普通停止执行保留历史目标。必要原文不可恢复时先恢复相关上下文，再继续受影响的新副作用。
+
+## 目标与支线快捷命令
+
+在输入框输入 `/` 可补全命令，按 Enter 提交。
+
+| 命令 | 行为 |
+| --- | --- |
+| `/goal` | 打开原目标创建或编辑窗口。 |
+| `/goal 目标内容` | 更新当前目标；没有活动目标时创建并开始处理。 |
+| `/side` | 打开原支线创建窗口。 |
+| `/side 问题` | 从已保存的主对话直接创建并启动支线，继承主对话模型。 |
+
+创建新目标或支线需要可用模型；修改已有目标不触发模型。命令暂不接收附件，失败会保留草稿。已有目标修改沿原暂停、安全点和版本校验流程，更新后仍保持暂停，可从原控件继续。支线不能嵌套创建；切换页面后的迟到回执不会清除新页面草稿。
+
+## IM 与定时任务
+
+从侧栏“IM 渠道”独立管理 QQ、飞书与个人微信，定时任务继续使用原管理入口。个人微信使用扫码和必要数字确认，当前范围是单个活动账号、扫码本人私聊文字；渠道 Ready、发送 Accepted 与手机实际收件是不同事实。原生 GUI、真实微信和 SSH 验收不由本页构建命令替代。
+
+排查微信连接时可使用既有应用日志中的脱敏传输观察，区分阶段与固定错误类别；这些日志不包含账号、凭据或聊天正文，也不把 Ready 或没有错误当作实际收件。配置与诊断边界见 [个人微信 ADR 0056](https://github.com/EchoYue-lp/echo-agent-cli/blob/main/docs/zh/adr/0056-personal-weixin-channel.md)。
+
+停止渠道服务会等待原执行 owner 和发送收束。“放弃这条待恢复消息”只处理原队列中准确的一项，不撤销已经发生的执行或发送，也不把未知结果改成未发生；有活跃前台或队列版本已变化时会拒绝修改。它和停止当前生成分别处理。
+
+当前源码以 GUI 为唯一产品主入口，已退出独立 TUI、REPL、CLI/JSONL 入口。GUI 内置终端与 Agent shell 继续可用；独立 SDK Host 的 stdio 协议仍由 SDK 仓库维护。新版安装包仍须分别完成构建、安装与原生运行验收。
 
 ## 本地数据
 
-EKO 默认使用 `~/.eko/`，可通过 `EKO_DATA_DIR` 覆盖。workspace conversation、TaskRuntime journal、memory、artifact 和 trace 位于对应 workspace 的 `.eko/` 目录。EKO 不启用 SQLite。
+Eclip 默认使用 `~/.eko/`，可通过 `EKO_DATA_DIR` 覆盖。每个工作空间的 conversation、TaskRuntime journal、memory、artifact 和 trace 属于本机产品数据，与本地或远端的项目代码位置分开。Eclip 不启用 SQLite。
 
-更完整的构建、配置与平台打包命令以 [EKO README](https://github.com/EchoYue-lp/echo-agent-cli#readme) 为准。
+更完整的构建、配置与平台打包命令以 [Eclip README](https://github.com/EchoYue-lp/echo-agent-cli#readme) 为准。

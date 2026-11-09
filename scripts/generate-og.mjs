@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const icon = await readFile(path.join(root, 'public', 'eko-icon.png'));
+const icon = await readFile(path.join(root, 'public', 'app-icon.png'));
 const iconUrl = `data:image/png;base64,${icon.toString('base64')}`;
 const browser = await chromium.launch({ headless: true });
 
@@ -25,7 +25,8 @@ try {
       .mark { width: 58px; height: 58px; display: grid; place-items: center; border: 1px solid #6ee7b7; border-radius: 7px; color: #a7f3d0; font: 700 28px ui-monospace, monospace; background: #12251d; }
       .eko-icon { width: 58px; height: 58px; border-radius: 7px; }
       .products { position: relative; display: flex; align-items: center; gap: 22px; margin-top: 76px; }
-      h1 { margin: 0; font-size: 76px; line-height: .95; letter-spacing: 0; font-weight: 680; }
+      h1 { margin: 0; white-space: nowrap; font-size: 68px; line-height: .95; letter-spacing: 0; font-weight: 680; }
+      .pronunciation { margin-left: 10px; color: #a1a1aa; font-size: 22px; font-weight: 400; vertical-align: baseline; }
       .plus { color: #fcd34d; font: 500 54px ui-monospace, monospace; }
       .rule { position: relative; width: 100%; height: 1px; margin-top: 58px; background: #303832; }
       .rule::before { content: ""; display: block; width: 34%; height: 3px; background: #6ee7b7; transform: translateY(-1px); }
@@ -37,7 +38,7 @@ try {
     </style></head><body><main class="canvas">
       <span class="line one"></span><span class="line two"></span><span class="line three"></span>
       <div class="brand"><span class="mark">{ }</span><span>Rust agent framework and local personal AI assistant</span></div>
-      <div class="products"><h1>echo-agent</h1><span class="plus">+</span><img class="eko-icon" src="${iconUrl}" alt=""><h1>EKO</h1></div>
+      <div class="products"><h1>echo-agent</h1><span class="plus">+</span><img class="eko-icon" src="${iconUrl}" alt=""><h1>Eclip<span class="pronunciation">/ˈɛk.lɪp/</span></h1></div>
       <div class="rule"></div>
       <div class="copy">
         <p><strong>Framework</strong>Easy to start. Powerful by composition. Typed, modular, and documented in English and Chinese.</p>
